@@ -58,5 +58,5 @@ To build all available examples simply `zig build examples`. To list available e
 I plan on updating it every mayor release (2.5, 3.0, etc.). Keep in mind these are basically header files, so any implementation stuff should be updatable with some hacks on your side.
 
 ### What's to be done?
- + Set up a proper package build and a build script for the examples
+ + _(Done)_ Set up a proper package build and a build script for the examples
  + Port all the examples
