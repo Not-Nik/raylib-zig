@@ -28,5 +28,5 @@ pub fn build(b: *Builder) void {
 mkdir src
 mkdir raylib-zig
 cp ../lib/* raylib-zig
-cp ../examples/core/BasicWindow.zig src
-mv src/BasicWindow.zig src/main.zig
+cp ../examples/core/basic_window.zig src
+mv src/basic_window.zig src/main.zig

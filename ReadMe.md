@@ -21,11 +21,6 @@ pub fn main() anyerror!void
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
-        // Update
-        //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
-        //----------------------------------------------------------------------------------
-
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
@@ -44,6 +39,9 @@ pub fn main() anyerror!void
     //--------------------------------------------------------------------------------------
 }
 ```
+
+## Technical restrictions
+Due to zig being a relatively new language it does [not have full C ABI support](https://github.com/ziglang/zig/issues/1481) at the moment. For use that mainly means we can't use any functions that returns structs that are less then 16 bytes large.
 
 ## Building the examples
 To build all available examples simply `zig build examples`. To list available examples run `zig build --help`. If you want to run and examples, say `basic_window` run `zig build basic_window`

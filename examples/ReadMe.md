@@ -6,6 +6,14 @@ Making raylib bindings in zig is pretty straight forward since zig has a built-i
 
 Examples using raylib core platform functionality like window creation, inputs, drawing modes and system functionality.
 
-| ## | example  | image  | developer  | new |
-|----|----------|--------|:----------:|:---:|
-| 01 | [core_basic_window](core/BasicWindow.zig) | <img src="core/core_basic_window.png" alt="core_basic_window" width="200"> | ray
+| ## | example  | developer  |
+|----|----------|:----------:|
+| 01 | [core_basic_window](core/basic_window.zig) | ray
+
+### category: models
+
+Examples using raylib models functionality, including models loading/generation and drawing, provided by raylib models module.
+
+| ## | example  | developer  |
+|----|----------|:----------:|
+| 74 | [models_loading](models/models_loading.c) ([Won't build](https://github.com/G3bE/raylib-zig#Technical-restrictions)) | ray

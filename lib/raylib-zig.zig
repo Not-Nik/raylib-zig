@@ -93,7 +93,7 @@ pub const Image = extern struct {
     format: c_int,
 };
 
-pub const struct_Texture2D = extern struct {
+pub const Texture2D = extern struct {
     id: c_uint,
     width: c_int,
     height: c_int,
@@ -142,7 +142,7 @@ pub const Camera3D = extern struct {
     target: Vector3,
     up: Vector3,
     fovy: f32,
-    type: c_int,
+    type: CameraType,
 };
 pub const Camera = Camera3D;
 
@@ -167,12 +167,12 @@ pub const Mesh = extern struct {
     animNormals: [*c]f32,
     boneIds: [*c]c_int,
     boneWeights: [*c]f32,
-    vaoId: uc_int,
-    vboId: [7]uc_int,
+    vaoId: c_uint,
+    vboId: [7]c_uint,
 };
 
 pub const Shader = extern struct {
-    id: uc_int,
+    id: c_uint,
     locs: [32]c_int,
 };
 
@@ -236,17 +236,17 @@ pub const BoundingBox = extern struct {
 };
 
 pub const Wave = extern struct {
-    sampleCount: uc_int,
-    sampleRate: uc_int,
-    sampleSize: uc_int,
-    channels: uc_int,
+    sampleCount: c_uint,
+    sampleRate: c_uint,
+    sampleSize: c_uint,
+    channels: c_uint,
     data: ?*c_void,
 };
 
 pub const Sound = extern struct {
     audioBuffer: ?*c_void,
-    source: uc_int,
-    buffer: uc_int,
+    source: c_uint,
+    buffer: c_uint,
     format: c_int,
 };
 
@@ -254,13 +254,13 @@ pub const MusicData = @OpaqueType();
 pub const Music = ?*MusicData;
 
 pub const AudioStream = extern struct {
-    sampleRate: uc_int,
-    sampleSize: uc_int,
-    channels: uc_int,
+    sampleRate: c_uint,
+    sampleSize: c_uint,
+    channels: c_uint,
     audioBuffer: ?*c_void,
     format: c_int,
-    source: uc_int,
-    buffers: [2]uc_int,
+    source: c_uint,
+    buffers: [2]c_uint,
 };
 
 pub const VrDeviceInfo = extern struct {
@@ -698,10 +698,10 @@ pub extern fn IsGamepadButtonUp(gamepad: c_int, button: c_int) bool;
 pub extern fn GetGamepadButtonPressed() c_int;
 pub extern fn GetGamepadAxisCount(gamepad: c_int) c_int;
 pub extern fn GetGamepadAxisMovement(gamepad: c_int, axis: c_int) f32;
-pub extern fn IsMouseButtonPressed(button: c_int) bool;
-pub extern fn IsMouseButtonDown(button: c_int) bool;
-pub extern fn IsMouseButtonReleased(button: c_int) bool;
-pub extern fn IsMouseButtonUp(button: c_int) bool;
+pub extern fn IsMouseButtonPressed(button: MouseButton) bool;
+pub extern fn IsMouseButtonDown(button: MouseButton) bool;
+pub extern fn IsMouseButtonReleased(button: MouseButton) bool;
+pub extern fn IsMouseButtonUp(button: MouseButton) bool;
 pub extern fn GetMouseX() c_int;
 pub extern fn GetMouseY() c_int;
 pub extern fn GetMousePosition() Vector2;
@@ -721,7 +721,7 @@ pub extern fn GetGestureDragVector() Vector2;
 pub extern fn GetGestureDragAngle() f32;
 pub extern fn GetGesturePinchVector() Vector2;
 pub extern fn GetGesturePinchAngle() f32;
-pub extern fn SetCameraMode(camera: Camera, mode: c_int) void;
+pub extern fn SetCameraMode(camera: Camera, mode: CameraMode) void;
 pub extern fn UpdateCamera(camera: [*c]Camera) void;
 pub extern fn SetCameraPanControl(panKey: c_int) void;
 pub extern fn SetCameraAltControl(altKey: c_int) void;
@@ -1005,13 +1005,13 @@ pub extern fn StopAudioStream(stream: AudioStream) void;
 pub extern fn SetAudioStreamVolume(stream: AudioStream, volume: f32) void;
 pub extern fn SetAudioStreamPitch(stream: AudioStream, pitch: f32) void;
 
+pub const MAP_DIFFUSE = MaterialMapType.MAP_ALBEDO;
+pub const MAP_SPECULAR = MaterialMapType.MAP_METALNESS;
 pub const LOC_MAP_SPECULAR = LOC_MAP_METALNESS;
-pub const MAP_DIFFUSE = MAP_ALBEDO;
 pub const LOC_MAP_DIFFUSE = LOC_MAP_ALBEDO;
 pub const MAX_TOUCH_POINTS = 10;
 pub const ShowWindow = UnhideWindow;
 pub const FormatText = TextFormat;
-pub const MAP_SPECULAR = MAP_METALNESS;
 pub const PI = 3.141593;
 pub const CLITERAL = Color;
 pub const MAX_SHADER_LOCATIONS = 32;
