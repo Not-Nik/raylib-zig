@@ -1,0 +1,4 @@
+zig-cache/
+.idea/
+
+**/.DS_Store
