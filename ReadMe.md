@@ -4,7 +4,7 @@ Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bin
 ## Example
 Basically we can copy the default example with some minor changes:
 ```zig
-usingnamespace @import("raylib-zig.zig"); // Import WIP
+usingnamespace @import("raylib");
 
 pub fn main() anyerror!void
 {
