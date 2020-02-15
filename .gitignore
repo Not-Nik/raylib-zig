@@ -1,4 +1,5 @@
 zig-cache/
 .idea/
+Project/*
 
 **/.DS_Store
