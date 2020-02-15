@@ -53,6 +53,7 @@ The `basic_window` example is the default source file for project setup though
  + Install raylib
  + Execute `projectSetup.sh project_name`, this will create a folder with the name specified
  + You can copy that folder anywhere you want and edit the source
+ + Run `zig build run` at any time to test your project
 
 ### When is the binding updated?
 I plan on updating it every mayor release (2.5, 3.0, etc.). Keep in mind these are basically header files, so any implementation stuff should be updatable with some hacks on your side.
