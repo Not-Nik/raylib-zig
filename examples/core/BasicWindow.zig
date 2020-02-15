@@ -5,7 +5,7 @@
 // Date: 2020-02-15
 //
 
-usingnamespace @import("rayzig.zig");
+usingnamespace @import("raylib-zig.zig");
 
 pub fn main() anyerror!void
 {

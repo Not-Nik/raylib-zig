@@ -5,7 +5,7 @@
 // Date: 2020-02-15
 //
 
-usingnamespace @import("rayzig.zig");
+usingnamespace @import("raylib-zig.zig");
 
 pub const float3 = extern struct {
     v: [3]f32,

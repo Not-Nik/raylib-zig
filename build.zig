@@ -10,7 +10,7 @@ const Builder = @import("std").build.Builder;
 pub fn build(b: *Builder) void
 {
     const mode = b.standardReleaseOptions();
-    const lib = b.addStaticLibrary("Rayzig", "lib/rayzig.zig");
+    const lib = b.addStaticLibrary("raylib-zig", "lib/raylib-zig.zig");
     lib.setBuildMode(mode);
     lib.linkSystemLibrary("raylib");
     lib.install();
