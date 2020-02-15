@@ -1,4 +1,4 @@
-# Rayzig
+# raylib-zig
 Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.
 
 ## Example
