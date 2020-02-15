@@ -14,6 +14,7 @@ pub fn build(b: *Builder) void {
     const exe = b.addExecutable("'"$PROJECT_NAME"'", "src/main.zig");
     exe.setBuildMode(mode);
     exe.linkSystemLibrary("raylib");
+    exe.addPackagePath("raylib", "raylib-zig/raylib-zig.zig");
     exe.install();
 
     const run_cmd = exe.run();
@@ -25,6 +26,7 @@ pub fn build(b: *Builder) void {
 ' >> build.zig
 
 mkdir src
-cp ../lib/* src
+mkdir raylib-zig
+cp ../lib/* raylib-zig
 cp ../examples/core/BasicWindow.zig src
 mv src/BasicWindow.zig src/main.zig

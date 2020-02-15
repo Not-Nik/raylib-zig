@@ -10,14 +10,17 @@ const Builder = @import("std").build.Builder;
 pub fn build(b: *Builder) void
 {
     const mode = b.standardReleaseOptions();
-    const lib = b.addStaticLibrary("raylib-zig", "lib/raylib-zig.zig");
-    lib.setBuildMode(mode);
-    lib.linkSystemLibrary("raylib");
-    lib.install();
 
     var basicWindow = b.addExecutable("BasicWindow", "examples/core/BasicWindow.zig");
     basicWindow.setBuildMode(mode);
+    basicWindow.linkSystemLibrary("raylib");
+    basicWindow.addPackagePath("raylib", "lib/raylib-zig.zig");
 
-    const example_step = b.step("basicWindow", "Creates a basic window and text");
-    example_step.dependOn(&basicWindow.step);
+    const examplesStep = b.step("examples", "Builds all the examples");
+    examplesStep.dependOn(&basicWindow.step);
+
+    const runBasicWindow = basicWindow.run();
+    runBasicWindow.step.dependOn(b.getInstallStep());
+    const basicWindowStep = b.step("basic_window", "Creates a basic window with text");
+    basicWindowStep.dependOn(&runBasicWindow.step);
 }

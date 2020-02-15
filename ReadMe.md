@@ -46,8 +46,7 @@ pub fn main() anyerror!void
 ```
 
 ## Building the examples
-Don't. At the moment im still trying to figure out how to turn the binding into a proper zig package and until then I can't build the examples without destroying the project setup.
-The `basic_window` example is the default source file for project setup though
+To build all available examples simply `zig build examples`. To list available examples run `zig build --help`. If you want to run and examples, say `basic_window` run `zig build basic_window`
 
 ## Building and using
  + Install raylib
