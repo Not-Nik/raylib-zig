@@ -1,5 +1,6 @@
 # raylib-zig
-Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.
+Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.<br>
+Be aware these bindings are for the 2.5.0 release of raylib. 2.6.0 bindings will follow soon.
 
 ## Example
 Basically we can copy the default example with some minor changes:
@@ -41,7 +42,11 @@ pub fn main() anyerror!void
 ```
 
 ## Technical restrictions
-Due to zig being a relatively new language it does [not have full C ABI support](https://github.com/ziglang/zig/issues/1481) at the moment. For use that mainly means we can't use any functions that returns structs that are less then 16 bytes large.
+Due to zig being a relatively new language it does [not have full C ABI support](https://github.com/ziglang/zig/issues/1481) at the moment. For use that mainly means we can't use any functions that return structs that are less then 16 bytes large.
+Here is an incomplete list of some functions affected by this:
++ DrawCircleV
++ DrawRectangleRec
++ DrawModel and all its variations
 
 ## Building the examples
 To build all available examples simply `zig build examples`. To list available examples run `zig build --help`. If you want to run and examples, say `basic_window` run `zig build basic_window`

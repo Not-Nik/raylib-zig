@@ -9,6 +9,14 @@ Examples using raylib core platform functionality like window creation, inputs, 
 | ## | example  | developer  |
 |----|----------|:----------:|
 | 01 | [core_basic_window](core/basic_window.zig) | ray
+|    |
+| 02 | [core_input_keys](core/input_keys.zig) | ray
+|    |
+| 04 | [core_input_mouse_wheel](core/input_mouse_wheel.zig) | ray
+|    |
+| 06 | [core_input_multitouch](core/input_multitouch.zig) | [Berni](https://github.com/Berni8k)
+|    |
+| 08 | [core_2d_camera](core/2d_camera.zig) | ray
 
 ### category: models
 
@@ -16,4 +24,4 @@ Examples using raylib models functionality, including models loading/generation 
 
 | ## | example  | developer  |
 |----|----------|:----------:|
-| 74 | [models_loading](models/models_loading.c) ([Won't build](https://github.com/G3bE/raylib-zig#Technical-restrictions)) | ray
+| 74 | [models_loading](models/models_loading.zig) ([Won't work](https://github.com/G3bE/raylib-zig#Technical-restrictions)) | ray

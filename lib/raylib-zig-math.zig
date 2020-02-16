@@ -7,14 +7,6 @@
 
 usingnamespace @import("raylib-zig.zig");
 
-pub const float3 = extern struct {
-    v: [3]f32,
-};
-
-pub const float16 = extern struct {
-    v: [16]f32,
-};
-
 pub extern fn acosf(arg0: f32) f32;
 pub extern fn acos(arg0: f64) f64;
 pub extern fn acosl(arg0: c_longdouble) c_longdouble;
@@ -228,6 +220,11 @@ pub fn Vector2Distance(v1: Vector2, v2: Vector2) f32 {
     var result: f32 = sqrtf(((v1.x - v2.x) * (v1.x - v2.x)) + ((v1.y - v2.y) * (v1.y - v2.y)));
     return result;
 }
+pub fn Vector2Angle(v1: Vector2, v2: Vector2) f32 {
+    var result: f32 = atan2f(v2.y - v1.y, v2.x - v1.x) * @divTrunc(180.000000, 3.141593);
+    if (result < @intToFloat(f32, 0)) result += 360.000000;
+    return result;
+}
 pub fn Vector2Normalize(v: Vector2) Vector2 {
     var result: Vector2 = Vector2Divide(v, Vector2Length(v));
     return result;
@@ -309,25 +306,6 @@ pub fn MatrixSubtract(left: Matrix, right: Matrix) Matrix {
     result.m15 = (left.m15 - right.m15);
     return result;
 }
-pub fn MatrixRotateXYZ(ang: Vector3) Matrix {
-    var result: Matrix = MatrixIdentity();
-    var cosz: f32 = cosf(-ang.z);
-    var sinz: f32 = sinf(-ang.z);
-    var cosy: f32 = cosf(-ang.y);
-    var siny: f32 = sinf(-ang.y);
-    var cosx: f32 = cosf(-ang.x);
-    var sinx: f32 = sinf(-ang.x);
-    result.m0 = (cosz * cosy);
-    result.m4 = (((cosz * siny) * sinx) - (sinz * cosx));
-    result.m8 = (((cosz * siny) * cosx) + (sinz * sinx));
-    result.m1 = (sinz * cosy);
-    result.m5 = (((sinz * siny) * sinx) + (cosz * cosx));
-    result.m9 = (((sinz * siny) * cosx) - (cosz * sinx));
-    result.m2 = (-siny);
-    result.m6 = (cosy * sinx);
-    result.m10 = (cosy * cosx);
-    return result;
-}
 pub fn MatrixRotateX(angle: f32) Matrix {
     var result: Matrix = MatrixIdentity();
     var cosres: f32 = cosf(angle);
@@ -370,14 +348,9 @@ pub fn QuaternionNlerp(q1: Quaternion, q2: Quaternion, amount: f32) Quaternion {
     return result;
 }
 
-pub const M_PI_2 = 1.570796;
-pub const M_1_PI = 0.318310;
-pub const M_2_SQRTPI = 1.128379;
-pub const M_2_PI = 0.636620;
-pub const M_PI_4 = 0.785398;
-pub const M_PI = 3.141593;
-
 pub const FP_FAST_FMA = 1;
+
+pub const M_PI_2 = 1.570796;
 
 pub const M_LOG10E = 0.434294;
 pub const FP_SUPERNORMAL = 6;
@@ -389,7 +362,6 @@ pub const SING = 2;
 pub const FP_INFINITE = 2;
 pub const FP_QNAN = FP_NAN;
 pub const PLOSS = 6;
-pub const FP_ILOGBNAN = if (@typeId(@typeOf(-1)) == @import("builtin").TypeId.Pointer) @ptrCast(-2147483647, -1) else if (@typeId(@typeOf(-1)) == @import("builtin").TypeId.Int) @intToPtr(-2147483647, -1) else (-2147483647)(-1);
 pub const M_LN2 = 0.693147;
 pub const MATH_ERRNO = 1;
 pub const FP_ZERO = 3;
@@ -398,7 +370,6 @@ pub const UNDERFLOW = 4;
 pub const DOMAIN = 1;
 pub const FP_SUBNORMAL = 5;
 pub const X_TLOSS = 14148475504056880.000000;
-pub const FP_ILOGB0 = if (@typeId(@typeOf(-1)) == @import("builtin").TypeId.Pointer) @ptrCast(-2147483647, -1) else if (@typeId(@typeOf(-1)) == @import("builtin").TypeId.Int) @intToPtr(-2147483647, -1) else (-2147483647)(-1);
 pub const MATH_ERREXCEPT = 2;
 pub const FP_NAN = 1;
 pub const M_SQRT2 = 1.414214;

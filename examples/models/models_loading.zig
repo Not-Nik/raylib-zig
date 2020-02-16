@@ -1,5 +1,5 @@
 //
-// ModelsLoading
+// models_loading
 // Zig version: 
 // Author: Nikolas Wipper
 // Date: 2020-02-15
@@ -86,14 +86,14 @@ pub fn main() anyerror!void
         if (IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON))
         {
             // Check collision between ray and box
-            if (CheckCollisionRayBox(GetMouseRay(GetMousePosition(), camera), bounds))
-            {
-                selected = !selected;
-            }
-            else
-            {
-                selected = false;
-            }
+            //if (CheckCollisionRayBox(GetMouseRay(GetMousePosition(), camera), bounds))
+            //{
+            //    selected = !selected;
+            //}
+            //else
+            //{
+            //    selected = false;
+            //}
         }
         //----------------------------------------------------------------------------------
 
@@ -105,7 +105,7 @@ pub fn main() anyerror!void
 
             BeginMode3D(camera);
 
-                DrawModel(model, position, 1.0, WHITE);        // Draw 3d model with texture
+                //DrawModel(model, position, 1.0, WHITE);        // Draw 3d model with texture
 
                 DrawGrid(20, 10.0);         // Draw a grid
 

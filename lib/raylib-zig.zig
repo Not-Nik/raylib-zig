@@ -682,12 +682,12 @@ pub extern fn GetFileModTime(fileName: [*c]const u8) c_long;
 pub extern fn StorageSaveValue(position: c_int, value: c_int) void;
 pub extern fn StorageLoadValue(position: c_int) c_int;
 pub extern fn OpenURL(url: [*c]const u8) void;
-pub extern fn IsKeyPressed(key: c_int) bool;
-pub extern fn IsKeyDown(key: c_int) bool;
-pub extern fn IsKeyReleased(key: c_int) bool;
-pub extern fn IsKeyUp(key: c_int) bool;
-pub extern fn GetKeyPressed() c_int;
-pub extern fn SetExitKey(key: c_int) void;
+pub extern fn IsKeyPressed(key: KeyboardKey) bool;
+pub extern fn IsKeyDown(key: KeyboardKey) bool;
+pub extern fn IsKeyReleased(key: KeyboardKey) bool;
+pub extern fn IsKeyUp(key: KeyboardKey) bool;
+pub extern fn GetKeyPressed() KeyboardKey;
+pub extern fn SetExitKey(key: KeyboardKey) void;
 pub extern fn IsGamepadAvailable(gamepad: c_int) bool;
 pub extern fn IsGamepadName(gamepad: c_int, name: [*c]const u8) bool;
 pub extern fn GetGamepadName(gamepad: c_int) [*c]const u8;
@@ -1009,12 +1009,14 @@ pub const MAP_DIFFUSE = MaterialMapType.MAP_ALBEDO;
 pub const MAP_SPECULAR = MaterialMapType.MAP_METALNESS;
 pub const LOC_MAP_SPECULAR = LOC_MAP_METALNESS;
 pub const LOC_MAP_DIFFUSE = LOC_MAP_ALBEDO;
+
 pub const MAX_TOUCH_POINTS = 10;
-pub const ShowWindow = UnhideWindow;
-pub const FormatText = TextFormat;
-pub const PI = 3.141593;
-pub const CLITERAL = Color;
+pub const MAX_MATERIAL_MAPS = 12;
 pub const MAX_SHADER_LOCATIONS = 32;
+
+pub const PI = 3.141593;
+
 pub const SpriteFont = Font;
 pub const SubText = TextSubtext;
-pub const MAX_MATERIAL_MAPS = 12;
+pub const ShowWindow = UnhideWindow;
+pub const FormatText = TextFormat;

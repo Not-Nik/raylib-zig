@@ -1,8 +1,8 @@
 //
-// basic_window
-// Zig version: 0.5.0
+// input_keys
+// Zig version: 
 // Author: Nikolas Wipper
-// Date: 2020-02-15
+// Date: 2020-02-16
 //
 
 usingnamespace @import("raylib");
@@ -14,7 +14,9 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, c"raylib-zig [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, c"raylib-zig [core] example - keyboard input");
+
+    var ballPosition = Vector2 { .x = screenWidth/2, .y = screenHeight/2 };
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -24,16 +26,22 @@ pub fn main() anyerror!void
     {
         // Update
         //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
+        if (IsKeyDown(KeyboardKey.KEY_RIGHT)) { ballPosition.x += 2.0; }
+        if (IsKeyDown(KeyboardKey.KEY_LEFT)) { ballPosition.x -= 2.0; }
+        if (IsKeyDown(KeyboardKey.KEY_UP)) { ballPosition.y -= 2.0; }
+        if (IsKeyDown(KeyboardKey.KEY_DOWN)) { ballPosition.y += 2.0; }
         //----------------------------------------------------------------------------------
 
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
 
-            ClearBackground(WHITE);
+            ClearBackground(RAYWHITE);
 
-            DrawText(c"Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+            DrawText(c"move the ball with arrow keys", 10, 10, 20, DARKGRAY);
+
+            DrawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, MAROON);
+            //DrawCircleV(ballPosition, 50, MAROON);
 
         EndDrawing();
         //----------------------------------------------------------------------------------
@@ -44,3 +52,4 @@ pub fn main() anyerror!void
     CloseWindow();        // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 }
+
