@@ -19,7 +19,7 @@ pub fn main() anyerror!void
     var ballPosition = Vector2 { .x = -100.0, .y = -100.0 };
     var ballColor = BEIGE;
 
-    var touchCounter: i32 = 0;
+    var touchCounter: f32 = 0;
     var touchPosition = Vector2 { .x = 0.0, .y = 0.0 };
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
@@ -34,15 +34,15 @@ pub fn main() anyerror!void
 
         ballColor = BEIGE;
 
-        if (IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON)) { ballColor = MAROON };
-        if (IsMouseButtonDown(MouseButton.MOUSE_MIDDLE_BUTTON)) { ballColor = LIME };
-        if (IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON)) { ballColor = DARKBLUE };
+        if (IsMouseButtonDown(MouseButton.MOUSE_LEFT_BUTTON)) { ballColor = MAROON; }
+        if (IsMouseButtonDown(MouseButton.MOUSE_MIDDLE_BUTTON)) { ballColor = LIME; }
+        if (IsMouseButtonDown(MouseButton.MOUSE_RIGHT_BUTTON)) { ballColor = DARKBLUE; }
 
-        if (IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON)) { touchCounter = 10 };
-        if (IsMouseButtonPressed(MouseButton.MOUSE_MIDDLE_BUTTON)) { touchCounter = 10 };
-        if (IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON)) { touchCounter = 10 };
+        if (IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON)) { touchCounter = 10; }
+        if (IsMouseButtonPressed(MouseButton.MOUSE_MIDDLE_BUTTON)) { touchCounter = 10; }
+        if (IsMouseButtonPressed(MouseButton.MOUSE_RIGHT_BUTTON)) { touchCounter = 10; }
 
-        if (touchCounter > 0) { touchCounter -= 1; };
+        if (touchCounter > 0) { touchCounter -= 1; }
         //----------------------------------------------------------------------------------
 
         // Draw
@@ -51,16 +51,17 @@ pub fn main() anyerror!void
 
             ClearBackground(RAYWHITE);
 
-            // Multitouch
-            for (int i = 0; i < MAX_TOUCH_POINTS; ++i)
+            const nums = [_]i32{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+            for (nums) |i|
             {
                 touchPosition = GetTouchPosition(i);                    // Get the touch point
 
-                if ((touchPosition.x >= 0) && (touchPosition.y >= 0))   // Make sure point is not (-1,-1) as this means there is no touch for it
+                if ((touchPosition.x >= 0) and (touchPosition.y >= 0))   // Make sure point is not (-1,-1) as this means there is no touch for it
                 {
                     // Draw circle and touch index number
-                    DrawCircleV(touchPosition, 34, ORANGE);
-                    DrawText(FormatText("%d", i), touchPosition.x - 10, touchPosition.y - 70, 40, BLACK);
+                    DrawCircle(@floatToInt(c_int, touchPosition.x), @floatToInt(c_int, touchPosition.y), 34, ORANGE);
+                    //DrawCircleV(touchPosition, 34, ORANGE);
+                    DrawText(FormatText(c"%d", i), @floatToInt(c_int, touchPosition.x) - 10, @floatToInt(c_int, touchPosition.y) - 70, 40, BLACK);
                 }
             }
 

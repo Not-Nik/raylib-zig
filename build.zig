@@ -72,9 +72,9 @@ pub fn build(b: *Builder) void
     const inputMouseWheelStep = b.step("input_mouse_wheel", "Mouse wheel input");
           inputMouseWheelStep.dependOn(&runInputMouseWheel.step);
 
-    const runInputMouseWheel = inputMouseWheel.run();
-    const inputMouseWheelStep = b.step("input_mouse_wheel", "Mouse wheel input");
-          inputMouseWheelStep.dependOn(&runInputMouseWheel.step);
+    const runInputMultitouch = inputMultitouch.run();
+    const inputMultitouchStep = b.step("input_multitouch", "Multitouch (duh)");
+          inputMultitouchStep.dependOn(&runInputMultitouch.step);
 
     const run2DCamera = twoDCamera.run();
     const twoDCameraStep = b.step("2d_camera", "Shows the functionality of a 2D camera");
