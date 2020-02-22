@@ -1,9 +1,9 @@
 # raylib-zig
 Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.<br>
-Bindings tested onn raylib version 2.6
+Bindings tested on raylib version 2.6
 
 ## Example
-Basically we can copy the default example with some minor changes:
+We can copy the default example with some minor changes:
 ```zig
 usingnamespace @import("raylib");
 
@@ -42,7 +42,7 @@ pub fn main() anyerror!void
 ```
 
 ## Technical restrictions
-Due to zig being a relatively new language it does [not have full C ABI support](https://github.com/ziglang/zig/issues/1481) at the moment. For use that mainly means we can't use any functions that return structs that are less then 16 bytes large.
+Due to zig being a relatively new language it does [not have full C ABI support](https://github.com/ziglang/zig/issues/1481) at the moment. For use that mainly means we can't use any functions that return structs that are less than 16 bytes large.
 Here is an incomplete list of some functions affected by this:
 + DrawCircleV
 + DrawRectangleRec
@@ -58,7 +58,7 @@ To build all available examples simply `zig build examples`. To list available e
  + Run `zig build run` at any time to test your project
 
 ### When is the binding updated?
-I plan on updating it every mayor release (2.5, 3.0, etc.). Keep in mind these are basically header files, so any implementation stuff should be updatable with some hacks on your side.
+I plan on updating it every mayor release (2.5, 3.0, etc.). Keep in mind these are technically header files, so any implementation stuff should be updatable with some hacks on your side.
 
 ### What's to be done?
  + _(Done)_ Set up a proper package build and a build script for the examples
