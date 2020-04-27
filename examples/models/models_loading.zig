@@ -14,7 +14,7 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, c"raylib [models] example - models loading");
+    InitWindow(screenWidth, screenHeight, "raylib [models] example - models loading");
 
     // Define the camera to look into our 3d world
     var camera = Camera {
@@ -25,8 +25,8 @@ pub fn main() anyerror!void
         .type = CameraType.CAMERA_PERSPECTIVE     // Camera mode type
     };
 
-    var model = LoadModel(c"resources/models/castle.obj");                  // Load model
-    var texture = LoadTexture(c"resources/models/castle_diffuse.png");      // Load model texture
+    var model = LoadModel("resources/models/castle.obj");                  // Load model
+    var texture = LoadTexture("resources/models/castle_diffuse.png");      // Load model texture
     model.materials[0].maps[@enumToInt(MAP_DIFFUSE)].texture = texture;                 // Set map diffuse texture
 
     var position = Vector3 { .x = 0.0, .y = 0.0, .z = 0.0 };                // Set model position
@@ -58,9 +58,9 @@ pub fn main() anyerror!void
 
             if (count == 1) // Only support one file dropped
             {
-                if (IsFileExtension(droppedFiles[0], c".obj") or
-                    IsFileExtension(droppedFiles[0], c".gltf") or
-                    IsFileExtension(droppedFiles[0], c".iqm"))       // Model file formats supported
+                if (IsFileExtension(droppedFiles[0], ".obj") or
+                    IsFileExtension(droppedFiles[0], ".gltf") or
+                    IsFileExtension(droppedFiles[0], ".iqm"))       // Model file formats supported
                 {
                     UnloadModel(model);                     // Unload previous model
                     model = LoadModel(droppedFiles[0]);     // Load new model
@@ -70,7 +70,7 @@ pub fn main() anyerror!void
 
                     // TODO: Move camera position from target enough distance to visualize model properly
                 }
-                else if (IsFileExtension(droppedFiles[0], c".png"))  // Texture file formats supported
+                else if (IsFileExtension(droppedFiles[0], ".png"))  // Texture file formats supported
                 {
                     // Unload current model texture and load new one
                     UnloadTexture(texture);
@@ -113,10 +113,10 @@ pub fn main() anyerror!void
 
             EndMode3D();
 
-            DrawText(c"Drag & drop model to load mesh/texture.", 10, GetScreenHeight() - 20, 10, DARKGRAY);
-            if (selected) DrawText(c"MODEL SELECTED", GetScreenWidth() - 110, 10, 10, GREEN);
+            DrawText("Drag & drop model to load mesh/texture.", 10, GetScreenHeight() - 20, 10, DARKGRAY);
+            if (selected) DrawText("MODEL SELECTED", GetScreenWidth() - 110, 10, 10, GREEN);
 
-            DrawText(c"(c) Castle 3D model by Alberto Cano", screenWidth - 200, screenHeight - 20, 10, GRAY);
+            DrawText("(c) Castle 3D model by Alberto Cano", screenWidth - 200, screenHeight - 20, 10, GRAY);
 
             DrawFPS(10, 10);
 

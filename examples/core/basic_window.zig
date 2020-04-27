@@ -1,6 +1,6 @@
 //
 // basic_window
-// Zig version: 0.5.0
+// Zig version: 0.6.0
 // Author: Nikolas Wipper
 // Date: 2020-02-15
 //
@@ -14,7 +14,7 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, c"raylib-zig [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ pub fn main() anyerror!void
 
             ClearBackground(WHITE);
 
-            DrawText(c"Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
 
         EndDrawing();
         //----------------------------------------------------------------------------------

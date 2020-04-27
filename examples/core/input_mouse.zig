@@ -14,7 +14,7 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, c"raylib-zig [core] example - mouse input");
+    InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - mouse input");
 
     var ballPosition = Vector2 { .x = -100.0, .y = -100.0 };
     var ballColor = DARKBLUE;
@@ -43,7 +43,7 @@ pub fn main() anyerror!void
             DrawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, ballColor);
             //DrawCircleV(ballPosition, 40, ballColor);
 
-            DrawText(c"move ball with mouse and click mouse button to change color", 10, 10, 20, DARKGRAY);
+            DrawText("move ball with mouse and click mouse button to change color", 10, 10, 20, DARKGRAY);
 
         EndDrawing();
         //----------------------------------------------------------------------------------

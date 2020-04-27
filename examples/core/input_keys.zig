@@ -14,7 +14,7 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, c"raylib-zig [core] example - keyboard input");
+    InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - keyboard input");
 
     var ballPosition = Vector2 { .x = screenWidth/2, .y = screenHeight/2 };
 
@@ -38,7 +38,7 @@ pub fn main() anyerror!void
 
             ClearBackground(RAYWHITE);
 
-            DrawText(c"move the ball with arrow keys", 10, 10, 20, DARKGRAY);
+            DrawText("move the ball with arrow keys", 10, 10, 20, DARKGRAY);
 
             DrawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, MAROON);
             //DrawCircleV(ballPosition, 50, MAROON);
