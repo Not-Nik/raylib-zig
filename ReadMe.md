@@ -14,7 +14,7 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, c"MyWindow");
+    InitWindow(screenWidth, screenHeight, "MyWindow");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -28,7 +28,7 @@ pub fn main() anyerror!void
 
             ClearBackground(WHITE);
 
-            DrawText(c"Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
 
         EndDrawing();
         //----------------------------------------------------------------------------------

@@ -14,7 +14,7 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, c"raylib-zig [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
 
     var ballPosition = Vector2 { .x = -100.0, .y = -100.0 };
     var ballColor = BEIGE;
@@ -61,7 +61,7 @@ pub fn main() anyerror!void
                     // Draw circle and touch index number
                     DrawCircle(@floatToInt(c_int, touchPosition.x), @floatToInt(c_int, touchPosition.y), 34, ORANGE);
                     //DrawCircleV(touchPosition, 34, ORANGE);
-                    DrawText(FormatText(c"%d", i), @floatToInt(c_int, touchPosition.x) - 10, @floatToInt(c_int, touchPosition.y) - 70, 40, BLACK);
+                    DrawText(FormatText("%d", i), @floatToInt(c_int, touchPosition.x) - 10, @floatToInt(c_int, touchPosition.y) - 70, 40, BLACK);
                 }
             }
 
@@ -69,8 +69,8 @@ pub fn main() anyerror!void
             DrawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 30 + (touchCounter*3), ballColor);
             //DrawCircleV(ballPosition, 30 + (touchCounter*3), ballColor);
 
-            DrawText(c"move ball with mouse and click mouse button to change color", 10, 10, 20, DARKGRAY);
-            DrawText(c"touch the screen at multiple locations to get multiple balls", 10, 30, 20, DARKGRAY);
+            DrawText("move ball with mouse and click mouse button to change color", 10, 10, 20, DARKGRAY);
+            DrawText("touch the screen at multiple locations to get multiple balls", 10, 30, 20, DARKGRAY);
 
         EndDrawing();
         //----------------------------------------------------------------------------------

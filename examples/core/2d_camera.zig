@@ -17,7 +17,7 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, c"raylib-zig [core] example - 2d camera");
+    InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - 2d camera");
 
     var player = Rectangle { .x = 400, .y = 280, .width = 40, .height = 40 };
     var buildings: [MAX_BUILDINGS]Rectangle = undefined;
@@ -107,7 +107,7 @@ pub fn main() anyerror!void
 
             EndMode2D();
 
-            DrawText(c"SCREEN AREA", 640, 10, 20, RED);
+            DrawText("SCREEN AREA", 640, 10, 20, RED);
 
             DrawRectangle(0, 0, screenWidth, 5, RED);
             DrawRectangle(0, 5, 5, screenHeight - 10, RED);
@@ -117,11 +117,11 @@ pub fn main() anyerror!void
             DrawRectangle( 10, 10, 250, 113, Fade(SKYBLUE, 0.5));
             DrawRectangleLines( 10, 10, 250, 113, BLUE);
 
-            DrawText(c"Free 2d camera controls:", 20, 20, 10, BLACK);
-            DrawText(c"- Right/Left to move Offset", 40, 40, 10, DARKGRAY);
-            DrawText(c"- Mouse Wheel to Zoom in-out", 40, 60, 10, DARKGRAY);
-            DrawText(c"- A / S to Rotate", 40, 80, 10, DARKGRAY);
-            DrawText(c"- R to reset Zoom and Rotation", 40, 100, 10, DARKGRAY);
+            DrawText("Free 2d camera controls:", 20, 20, 10, BLACK);
+            DrawText("- Right/Left to move Offset", 40, 40, 10, DARKGRAY);
+            DrawText("- Mouse Wheel to Zoom in-out", 40, 60, 10, DARKGRAY);
+            DrawText("- A / S to Rotate", 40, 80, 10, DARKGRAY);
+            DrawText("- R to reset Zoom and Rotation", 40, 100, 10, DARKGRAY);
 
         EndDrawing();
         //----------------------------------------------------------------------------------
