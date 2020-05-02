@@ -1,6 +1,6 @@
 # raylib-zig
 Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.<br>
-Bindings tested on raylib version 2.6
+Bindings tested on raylib version 3.0
 
 ## Example
 We can copy the default example with some minor changes:

@@ -1,6 +1,8 @@
 zig-cache/
 .idea/
 Project/*
+raylib-headers/raylib.h
+raylib-headers/raymath.h
 
 **/.DS_Store
 **.c
