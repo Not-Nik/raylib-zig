@@ -1,5 +1,5 @@
 //
-// rayzig_math
+// raylib-zig-math
 // Zig version: 0.6.0
 // Author: Nikolas Wipper
 // Date: 2020-02-15

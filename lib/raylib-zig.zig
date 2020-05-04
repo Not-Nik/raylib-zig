@@ -1,5 +1,5 @@
 //
-// rayzig
+// raylib-zig
 // Zig version:
 // Author: Nikolas Wipper
 // Date: 2020-02-15
@@ -227,8 +227,6 @@ pub const Camera3D = extern struct {
     up: Vector3,
     fovy: f32,
     type: CameraType,
-
-    // pub extern fn UpdateCamera(camera: [*c]Camera) void;
 
     pub fn Begin(self: Camera3D) void {
         BeginMode3D(self);
