@@ -90,7 +90,83 @@ pub const Image = extern struct {
     width: c_int,
     height: c_int,
     mipmaps: c_int,
-    format: c_int,
+    format: PixelFormat,
+
+    pub fn init(fileName: [*c]const u8) Image {
+        return LoadImage(fileName);
+    }
+
+    pub fn init(pixels: [*c]Color, width: c_int, height: c_int) Image {
+        return LoadImageEx(pixels, width, height);
+    }
+
+    pub fn init(data: ?*c_void, width: c_int, height: c_int, format: PixelFormat) Image {
+        return LoadImagePro(data, width, height, format);
+    }
+
+    pub fn init(fileName: [*c]const u8, width: c_int, height: c_int, format: PixelFormat, headerSize: c_int) Image {
+        return LoadImageRaw(fileName, width, height, format, headerSize);
+    }
+
+    pub fn init(text: [*c]const u8, fontSize: c_int, color: Color) Image {
+        return ImageText(text, fontSize, color);
+    }
+
+    pub fn init(font: Font, text: [*c]const u8, fontSize: f32, spacing: f32, tint: Color) Image {
+        return ImageTextEx(font, text, fontSize, spacing, tint);
+    }
+
+    pub fn copy(image: Image) Image {
+        return ImageCopy(image);
+    }
+
+    pub fn copy(image: Image, rec: Rectangle) Image {
+        return ImageFromImage(image, rec);
+    }
+
+    pub fn GenColor(width: c_int, height: c_int, color: Color) Image {
+        return GenImageColor(width, height, color);
+    }
+
+    pub fn GenGradientV(width: c_int, height: c_int, top: Color, bottom: Color) Image {
+        return GenImageGradientV(width, height, top, bottom);
+    }
+
+    pub fn GenGradientV(width: c_int, height: c_int, left: Color, right: Color) Image {
+        return GenImageGradientV(width, height, left, right);
+    }
+
+    pub fn GenGradientRadial(width: c_int, height: c_int, density: f32, inner: Color, outer: Color) Image {
+        return GenImageGradientRadial(width, height, density, innter, outer);
+    }
+
+    pub fn GenChecked(width: c_int, height: c_int, checksX: c_int, checksY: c_int, col1: Color, col2: Color) Image {
+        return GenImageChecked(width, height, checksX, checksY, col1, col2);
+    }
+
+    pub fn GenWhiteNoise(width: c_int, height: c_int, factor: f32) Image {
+        return GenImageWhiteNoise(width, height, factor);
+    }
+
+    pub fn GenPerlinNoise(width: c_int, height: c_int, offsetX: c_int, offsetY: c_int, scale: f32) Image {
+        return GenImagePerlinNoise(width, height, offsetX, offsetY, scale);
+    }
+
+    pub fn GenCellular(width: c_int, height: c_int, tileSize: c_int) Image {
+        return GenImageCellular(width, height, tileSize);
+    }
+
+    pub fn GetData(self: Image) [*c]Color {
+        return GetImageData(self);
+    }
+
+    pub fn GetDataNormalized(self: Image) [*c]Color {
+        return GetImageDataNormalized(self);
+    }
+
+    pub fn UseAsWindowIcon(self: Image) void {
+        SetWindowIcon(self);
+    }
 };
 
 pub const Texture2D = extern struct {
@@ -109,6 +185,14 @@ pub const RenderTexture2D = extern struct {
     texture: Texture2D,
     depth: Texture2D,
     depthTexture: bool,
+
+    pub fn Begin(self: RenderTexture2D) void {
+        BeginTextureMode(self);
+    }
+
+    pub fn End(self: RenderTexture2D) void {
+        EndTextureMode();
+    }
 };
 pub const RenderTexture = RenderTexture2D;
 
@@ -143,6 +227,28 @@ pub const Camera3D = extern struct {
     up: Vector3,
     fovy: f32,
     type: CameraType,
+
+    // pub extern fn UpdateCamera(camera: [*c]Camera) void;
+
+    pub fn Begin(self: Camera3D) void {
+        BeginMode3D(self);
+    }
+
+    pub fn Update(self: *Camera3D) void {
+        UpdateCamera(self);
+    }
+
+    pub fn GetMatrix(self: Camera3D) Matrix {
+        return GetCameraMatrix(self);
+    }
+
+    pub fn SetMode(self: Camera3D, mode: CameraMode) void {
+        SetCameraMode(self, mode);
+    }
+
+    pub fn End(self: Camera3D) void {
+        EndMode3D();
+    }
 };
 pub const Camera = Camera3D;
 
@@ -151,6 +257,18 @@ pub const Camera2D = extern struct {
     target: Vector2,
     rotation: f32,
     zoom: f32,
+
+    pub fn Begin(self: Camera2D) void {
+        BeginMode2D(self);
+    }
+
+    pub fn GetMatrix(self: Camera2D) Matrix {
+        return GetCameraMatrix2D(self);
+    }
+
+    pub fn End(self: Camera2D) void {
+        EndMode2D();
+    }
 };
 
 pub const Mesh = extern struct {
@@ -233,6 +351,14 @@ pub const RayHitInfo = extern struct {
 pub const BoundingBox = extern struct {
     min: Vector3,
     max: Vector3,
+
+    pub fn init(mesh: Mesh) BoundingBox {
+        return MeshBoundingBox(mesh);
+    }
+
+    pub fn Draw(self: BoundingBox, color: Color) void {
+        DrawBoundingBox(self, color);
+    }
 };
 
 pub const Wave = extern struct {
@@ -264,7 +390,7 @@ pub const Music = extern struct {
     stream: AudioStream,
 };
 
-pub const struct_VrDeviceInfo = extern struct {
+pub const VrDeviceInfo = extern struct {
     hResolution: c_int,
     vResolution: c_int,
     hScreenSize: f32,
@@ -671,7 +797,7 @@ pub extern fn Fade(color: Color, alpha: f32) Color;
 pub extern fn SetConfigFlags(flags: c_uint) void;
 pub extern fn SetTraceLogLevel(logType: c_int) void;
 pub extern fn SetTraceLogExit(logType: c_int) void;
-pub extern fn SetTraceLogCallback(callback: TraceLogCallback) void;
+//pub extern fn SetTraceLogCallback(callback: TraceLogCallback) void;
 pub extern fn TraceLog(logType: c_int, text: [*c]const u8, ...) void;
 pub extern fn TakeScreenshot(fileName: [*c]const u8) void;
 pub extern fn GetRandomValue(min: c_int, max: c_int) c_int;
@@ -788,8 +914,8 @@ pub extern fn CheckCollisionPointCircle(point: Vector2, center: Vector2, radius:
 pub extern fn CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2) bool;
 pub extern fn LoadImage(fileName: [*c]const u8) Image;
 pub extern fn LoadImageEx(pixels: [*c]Color, width: c_int, height: c_int) Image;
-pub extern fn LoadImagePro(data: ?*c_void, width: c_int, height: c_int, format: c_int) Image;
-pub extern fn LoadImageRaw(fileName: [*c]const u8, width: c_int, height: c_int, format: c_int, headerSize: c_int) Image;
+pub extern fn LoadImagePro(data: ?*c_void, width: c_int, height: c_int, format: PixelFormat) Image;
+pub extern fn LoadImageRaw(fileName: [*c]const u8, width: c_int, height: c_int, format: PixelFormat, headerSize: c_int) Image;
 pub extern fn UnloadImage(image: Image) void;
 pub extern fn ExportImage(image: Image, fileName: [*c]const u8) void;
 pub extern fn ExportImageAsCode(image: Image, fileName: [*c]const u8) void;
@@ -808,7 +934,7 @@ pub extern fn ImageFromImage(image: Image, rec: Rectangle) Image;
 pub extern fn ImageText(text: [*c]const u8, fontSize: c_int, color: Color) Image;
 pub extern fn ImageTextEx(font: Font, text: [*c]const u8, fontSize: f32, spacing: f32, tint: Color) Image;
 pub extern fn ImageToPOT(image: [*c]Image, fillColor: Color) void;
-pub extern fn ImageFormat(image: [*c]Image, newFormat: c_int) void;
+pub extern fn ImageFormat(image: [*c]Image, newFormat: PixelFormat) void;
 pub extern fn ImageAlphaMask(image: [*c]Image, alphaMask: Image) void;
 pub extern fn ImageAlphaClear(image: [*c]Image, color: Color, threshold: f32) void;
 pub extern fn ImageAlphaCrop(image: [*c]Image, threshold: f32) void;
@@ -851,7 +977,7 @@ pub extern fn LoadTextureCubemap(image: Image, layoutType: c_int) TextureCubemap
 pub extern fn LoadRenderTexture(width: c_int, height: c_int) RenderTexture2D;
 pub extern fn UnloadTexture(texture: Texture2D) void;
 pub extern fn UnloadRenderTexture(target: RenderTexture2D) void;
-pub extern fn UpdateTexture(texture: Texture2D, pixels: ?*const c_void) void;
+pub extern fn UpdateTexture(texture: Texture2D, pixels: ?*c_void) void;
 pub extern fn GetTextureData(texture: Texture2D) Image;
 pub extern fn GetScreenData() Image;
 pub extern fn GenTextureMipmaps(texture: [*c]Texture2D) void;
@@ -864,7 +990,7 @@ pub extern fn DrawTextureRec(texture: Texture2D, sourceRec: Rectangle, position:
 pub extern fn DrawTextureQuad(texture: Texture2D, tiling: Vector2, offset: Vector2, quad: Rectangle, tint: Color) void;
 pub extern fn DrawTexturePro(texture: Texture2D, sourceRec: Rectangle, destRec: Rectangle, origin: Vector2, rotation: f32, tint: Color) void;
 pub extern fn DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, destRec: Rectangle, origin: Vector2, rotation: f32, tint: Color) void;
-pub extern fn GetPixelDataSize(width: c_int, height: c_int, format: c_int) c_int;
+pub extern fn GetPixelDataSize(width: c_int, height: c_int, format: PixelFormat) c_int;
 pub extern fn GetFontDefault() Font;
 pub extern fn LoadFont(fileName: [*c]const u8) Font;
 pub extern fn LoadFontEx(fileName: [*c]const u8, fontSize: c_int, fontChars: [*c]c_int, charsCount: c_int) Font;
@@ -971,8 +1097,8 @@ pub extern fn GetShapesTexture() Texture2D;
 pub extern fn GetShapesTextureRec() Rectangle;
 pub extern fn SetShapesTexture(texture: Texture2D, source: Rectangle) void;
 pub extern fn GetShaderLocation(shader: Shader, uniformName: [*c]const u8) c_int;
-pub extern fn SetShaderValue(shader: Shader, uniformLoc: c_int, value: ?*const c_void, uniformType: c_int) void;
-pub extern fn SetShaderValueV(shader: Shader, uniformLoc: c_int, value: ?*const c_void, uniformType: c_int, count: c_int) void;
+pub extern fn SetShaderValue(shader: Shader, uniformLoc: c_int, value: ?*c_void, uniformType: c_int) void;
+pub extern fn SetShaderValueV(shader: Shader, uniformLoc: c_int, value: ?*c_void, uniformType: c_int, count: c_int) void;
 pub extern fn SetShaderValueMatrix(shader: Shader, uniformLoc: c_int, mat: Matrix) void;
 pub extern fn SetShaderValueTexture(shader: Shader, uniformLoc: c_int, texture: Texture2D) void;
 pub extern fn SetMatrixProjection(proj: Matrix) void;
@@ -1002,7 +1128,7 @@ pub extern fn SetMasterVolume(volume: f32) void;
 pub extern fn LoadWave(fileName: [*c]const u8) Wave;
 pub extern fn LoadSound(fileName: [*c]const u8) Sound;
 pub extern fn LoadSoundFromWave(wave: Wave) Sound;
-pub extern fn UpdateSound(sound: Sound, data: ?*const c_void, samplesCount: c_int) void;
+pub extern fn UpdateSound(sound: Sound, data: ?*c_void, samplesCount: c_int) void;
 pub extern fn UnloadWave(wave: Wave) void;
 pub extern fn UnloadSound(sound: Sound) void;
 pub extern fn ExportWave(wave: Wave, fileName: [*c]const u8) void;
@@ -1035,7 +1161,7 @@ pub extern fn SetMusicLoopCount(music: Music, count: c_int) void;
 pub extern fn GetMusicTimeLength(music: Music) f32;
 pub extern fn GetMusicTimePlayed(music: Music) f32;
 pub extern fn InitAudioStream(sampleRate: c_uint, sampleSize: c_uint, channels: c_uint) AudioStream;
-pub extern fn UpdateAudioStream(stream: AudioStream, data: ?*const c_void, samplesCount: c_int) void;
+pub extern fn UpdateAudioStream(stream: AudioStream, data: ?*c_void, samplesCount: c_int) void;
 pub extern fn CloseAudioStream(stream: AudioStream) void;
 pub extern fn IsAudioStreamProcessed(stream: AudioStream) bool;
 pub extern fn PlayAudioStream(stream: AudioStream) void;

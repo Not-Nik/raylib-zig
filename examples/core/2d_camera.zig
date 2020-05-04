@@ -87,7 +87,7 @@ pub fn main() anyerror!void
 
             ClearBackground(RAYWHITE);
 
-            BeginMode2D(camera);
+            camera.Begin();
 
                 DrawRectangle(-6000, 320, 13000, 8000, DARKGRAY);
 
@@ -105,7 +105,7 @@ pub fn main() anyerror!void
                 DrawLine(@floatToInt(c_int, camera.target.x), -screenHeight*10, @floatToInt(c_int, camera.target.x), screenHeight*10, GREEN);
                 DrawLine(-screenWidth*10, @floatToInt(c_int, camera.target.y), screenWidth*10, @floatToInt(c_int, camera.target.y), GREEN);
 
-            EndMode2D();
+            camera.End();
 
             DrawText("SCREEN AREA", 640, 10, 20, RED);
 

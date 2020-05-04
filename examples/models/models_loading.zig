@@ -36,7 +36,7 @@ pub fn main() anyerror!void
     // NOTE: bounds are calculated from the original size of the model,
     // if model is scaled on drawing, bounds must be also scaled
 
-    SetCameraMode(camera, CameraMode.CAMERA_FREE);     // Set a free camera mode
+    camera.SetMode(CameraMode.CAMERA_FREE);     // Set a free camera mode
 
     var selected = false;          // Selected object flag
 
@@ -48,7 +48,7 @@ pub fn main() anyerror!void
     {
         // Update
         //----------------------------------------------------------------------------------
-        UpdateCamera(&camera);
+        camera.Update();
 
         // Load new models/textures on drag&drop
         if (IsFileDropped())
@@ -103,7 +103,7 @@ pub fn main() anyerror!void
 
             ClearBackground(RAYWHITE);
 
-            BeginMode3D(camera);
+            camera.Begin();
 
                 //DrawModel(model, position, 1.0, WHITE);        // Draw 3d model with texture
 
@@ -111,7 +111,7 @@ pub fn main() anyerror!void
 
                 if (selected) DrawBoundingBox(bounds, GREEN);   // Draw selection box
 
-            EndMode3D();
+            camera.End();
 
             DrawText("Drag & drop model to load mesh/texture.", 10, GetScreenHeight() - 20, 10, DARKGRAY);
             if (selected) DrawText("MODEL SELECTED", GetScreenWidth() - 110, 10, 10, GREEN);
