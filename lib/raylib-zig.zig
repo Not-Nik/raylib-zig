@@ -4,6 +4,7 @@
 // Author: Nikolas Wipper
 // Date: 2020-02-15
 //
+const wa = @import("workaround/workaround.zig");
 
 pub const Vector2 = extern struct {
     x: f32,
@@ -774,8 +775,7 @@ pub extern fn BeginTextureMode(target: RenderTexture2D) void;
 pub extern fn EndTextureMode() void;
 pub extern fn BeginScissorMode(x: c_int, y: c_int, width: c_int, height: c_int) void;
 pub extern fn EndScissorMode() void;
-pub extern fn GetMouseRay(mousePosition: Vector2, camera: Camera) Ray;
-pub extern fn WGetMouseRay(mouseX: f32, mouseY: f32, camera: Camera) Ray;
+//pub extern fn GetMouseRay(mousePosition: Vector2, camera: Camera) Ray;
 pub extern fn GetCameraMatrix(camera: Camera) Matrix;
 pub extern fn GetCameraMatrix2D(camera: Camera2D) Matrix;
 pub extern fn GetWorldToScreen(position: Vector3, camera: Camera) Vector2;
@@ -1034,15 +1034,13 @@ pub extern fn DrawCubeV(position: Vector3, size: Vector3, color: Color) void;
 pub extern fn DrawCubeWires(position: Vector3, width: f32, height: f32, length: f32, color: Color) void;
 pub extern fn DrawCubeWiresV(position: Vector3, size: Vector3, color: Color) void;
 pub extern fn DrawCubeTexture(texture: Texture2D, position: Vector3, width: f32, height: f32, length: f32, color: Color) void;
-pub extern fn DrawSphere(centerPos: Vector3, radius: f32, color: Color) void;
-pub extern fn WDrawSphere(posX: f32, posY: f32, posZ: f32, radius: f32, r: u8, g: u8, b: u8, a: u8) void;
+//pub extern fn DrawSphere(centerPos: Vector3, radius: f32, color: Color) void;
 pub extern fn DrawSphereEx(centerPos: Vector3, radius: f32, rings: c_int, slices: c_int, color: Color) void;
 pub extern fn DrawSphereWires(centerPos: Vector3, radius: f32, rings: c_int, slices: c_int, color: Color) void;
 pub extern fn DrawCylinder(position: Vector3, radiusTop: f32, radiusBottom: f32, height: f32, slices: c_int, color: Color) void;
 pub extern fn DrawCylinderWires(position: Vector3, radiusTop: f32, radiusBottom: f32, height: f32, slices: c_int, color: Color) void;
 pub extern fn DrawPlane(centerPos: Vector3, size: Vector2, color: Color) void;
-pub extern fn DrawRay(ray: Ray, color: Color) void;
-pub extern fn WDrawRay(ray: Ray, r: u8, g: u8, b: u8, a: u8) void;
+//pub extern fn DrawRay(ray: Ray, color: Color) void;
 pub extern fn DrawGrid(slices: c_int, spacing: f32) void;
 pub extern fn DrawGizmo(position: Vector3) void;
 pub extern fn LoadModel(fileName: [*c]const u8) Model;
@@ -1188,3 +1186,24 @@ pub const SpriteFont = Font;
 pub const SubText = TextSubtext;
 pub const ShowWindow = UnhideWindow;
 pub const FormatText = TextFormat;
+
+// ---------- WORKAROUND ----------
+pub extern fn WGetMouseRay(mouseX: f32, mouseY: f32, camera: Camera) Ray;
+pub extern fn WDrawSphere(posX: f32, posY: f32, posZ: f32, radius: f32, r: u8, g: u8, b: u8, a: u8) void;
+pub extern fn WDrawRay(ray: Ray, r: u8, g: u8, b: u8, a: u8) void;
+
+
+pub fn GetMouseRay(mousePosition: Vector2, camera: Camera) Ray
+{
+    return WGetMouseRay(mousePosition.x, mousePosition.y, camera);
+}
+
+pub fn DrawSphere(centerPos: Vector3, radius: f32, color: Color) void
+{
+    WDrawSphere(centerPos.x, centerPos.y, centerPos.z, radius, color.r, color.g, color.b, color.a);
+}
+
+pub fn DrawRay(ray: Ray, color: Color) void
+{
+    WDrawRay(ray, color.r, color.g, color.b, color.a);
+}

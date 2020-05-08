@@ -43,14 +43,14 @@ pub fn main() anyerror!void
 
             camera.Begin();
 
-            var ray = WGetMouseRay(screenWidth / 2, screenHeight / 2, camera);
+            var ray = GetMouseRay(Vector2{.x = screenWidth / 2, .y = screenHeight / 2}, camera);
 
             var ray2 = Ray {
                 .position = Vector3{ .x = 1, .y = 0, .z = 1 },
                 .direction = Vector3{ .x = -1, .y = 0, .z = 1 },
             };
 
-            WDrawRay(ray2, 255, 0, 0, 255);
+            DrawRay(ray2, RED);
 
             camera.End();
 

@@ -39,7 +39,7 @@ pub fn main() anyerror!void
 
             camera.Begin();
 
-                WDrawSphere(0, 0, 2, 1, 255, 0, 0, 255);
+                DrawSphere(Vector3 {.x = 0, .y = 0, . z = 2}, 1, RED);
 
             camera.End();
 
