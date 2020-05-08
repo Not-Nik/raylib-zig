@@ -63,3 +63,4 @@ I plan on updating it every mayor release (2.5, 3.0, etc.). Keep in mind these a
 ### What's to be done?
  + _(Done)_ Set up a proper package build and a build script for the examples
  + Port all the examples
+ + Object orientation
