@@ -38,7 +38,7 @@ pub fn main() anyerror!void
             DrawLineBezier(Vector2{.x=50, .y=0}, Vector2{.x=150, .y=100}, 5, RED);
             DrawLineStrip(&[_]Vector2{ Vector2{.x=100, .y=0}, Vector2{.x=160, .y=40}, Vector2{.x=200, .y=100} }, 3, RED);
             // TODO: More testing on all the functions
-            // I'm just getting everything is fine, but you never know
+            // I'm just expecting that everything is fine, but you never know
 
         EndDrawing();
         //----------------------------------------------------------------------------------
