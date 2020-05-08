@@ -14,15 +14,7 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "raylib-zig [core] test - mouse ray");
-
-    var camera = Camera {
-        .position = Vector3 { .x = 0.0, .y = 0.0, .z = 0.0 }, // Camera position
-        .target = Vector3 { .x = 0.0, .y = 0.0, .z = 1.0 },   // Camera looking at point
-        .up = Vector3 { .x = 0.0, .y = 1.0, .z = 0.0 },       // Camera up vector (rotation towards target)
-        .fovy = 80.0,                                         // Camera field-of-view Y
-        .type = CameraType.CAMERA_PERSPECTIVE                 // Camera mode type
-    };
+    InitWindow(screenWidth, screenHeight, "raylib-zig [core] test - draw 2d");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -41,18 +33,12 @@ pub fn main() anyerror!void
 
             ClearBackground(WHITE);
 
-            camera.Begin();
-
-            var ray = GetMouseRay(Vector2{.x = screenWidth / 2, .y = screenHeight / 2}, camera);
-
-            var ray2 = Ray {
-                .position = Vector3{ .x = 1, .y = 0, .z = 1 },
-                .direction = Vector3{ .x = -1, .y = 0, .z = 1 },
-            };
-
-            DrawRay(ray2, RED);
-
-            camera.End();
+            DrawLineV(Vector2{.x=0, .y=0}, Vector2{.x=100, .y=100}, RED);
+            DrawLineEx(Vector2{.x=10, .y=0}, Vector2{.x=110, .y=100}, 5, RED);
+            DrawLineBezier(Vector2{.x=50, .y=0}, Vector2{.x=150, .y=100}, 5, RED);
+            DrawLineStrip(&[_]Vector2{ Vector2{.x=100, .y=0}, Vector2{.x=160, .y=40}, Vector2{.x=200, .y=100} }, 3, RED);
+            // TODO: More testing on all the functions
+            // I'm just getting everything is fine, but you never know
 
         EndDrawing();
         //----------------------------------------------------------------------------------

@@ -15,7 +15,6 @@ pub fn createExe(b: *Builder, name: []const u8, source: []const u8, desc: []cons
     var exe = b.addExecutable(name, source);
     exe.setBuildMode(mode);
     exe.linkSystemLibrary("raylib");
-    exe.addIncludeDir("lib/workaround/");
     exe.addCSourceFile("lib/workaround/workaround.c", &[_][]const u8{});
     exe.addPackagePath("raylib", "lib/raylib-zig.zig");
     exe.addPackagePath("raylib-math", "lib/raylib-zig-math.zig");
@@ -35,7 +34,7 @@ pub fn build(b: *Builder) void
     var inputMultitouch = createExe(b, "input_multitouch" , "examples/core/input_multitouch.zig" , "Multitouch input");
     var twoDCamera      = createExe(b, "2d_camera"        , "examples/core/2d_camera.zig"        , "Shows the functionality of a 2D camera");
     var modelsLoading   = createExe(b, "models_loading"   , "examples/models/models_loading.zig" , "Loads a model and renders it");
-    var mouseRay        = createExe(b, "ray"              , "tests/ray.zig"                      , "Testing workaround on Ray functions");
+    var mouseRay        = createExe(b, "draw_2d"          , "tests/draw_2d.zig"                  , "Testing workaround on 2D drawing functions");
     var drawSphere      = createExe(b, "draw_sphere"      , "tests/draw_sphere.zig"              , "Testing workaround on DrawSphere");
 
     const examplesStep = b.step("examples", "Builds all the examples");
