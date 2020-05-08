@@ -1188,22 +1188,22 @@ pub const ShowWindow = UnhideWindow;
 pub const FormatText = TextFormat;
 
 // ---------- WORKAROUND ----------
-pub extern fn WGetMouseRay(mouseX: f32, mouseY: f32, camera: Camera) Ray;
-pub extern fn WDrawSphere(posX: f32, posY: f32, posZ: f32, radius: f32, r: u8, g: u8, b: u8, a: u8) void;
-pub extern fn WDrawRay(ray: Ray, r: u8, g: u8, b: u8, a: u8) void;
+pub extern fn WGetMouseRay(mousePosition: [*c]const Vector2, camera: Camera) Ray;
+pub extern fn WDrawSphere(centerPos: [*c]const Vector3, radius: f32, color: [*c]const Color) void;
+pub extern fn WDrawRay(ray: Ray, color: [*c]const Color) void;
 
 
 pub fn GetMouseRay(mousePosition: Vector2, camera: Camera) Ray
 {
-    return WGetMouseRay(mousePosition.x, mousePosition.y, camera);
+    return WGetMouseRay(&mousePosition, camera);
 }
 
 pub fn DrawSphere(centerPos: Vector3, radius: f32, color: Color) void
 {
-    WDrawSphere(centerPos.x, centerPos.y, centerPos.z, radius, color.r, color.g, color.b, color.a);
+    WDrawSphere(&centerPos, radius, &color);
 }
 
 pub fn DrawRay(ray: Ray, color: Color) void
 {
-    WDrawRay(ray, color.r, color.g, color.b, color.a);
+    WDrawRay(ray, &color);
 }
