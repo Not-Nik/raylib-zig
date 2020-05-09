@@ -69,7 +69,7 @@ pub fn Vector3Distance(v1: Vector3, v2: Vector3) float
     return WVector3Distance(&v1, &v2);
 }
 
-pub fn Vector3OrthoNormalize(v1: []const Vector3, v2: []const Vector3) void
+pub fn Vector3OrthoNormalize(v1: [*c]const Vector3, v2: [*c]const Vector3) void
 {
     WVector3OrthoNormalize(&v1[0], &v2[0]);
 }
@@ -99,7 +99,7 @@ pub fn QuaternionToMatrix(q: Quaternion) Matrix
     return WQuaternionToMatrix(&q);
 }
 
-pub fn QuaternionToAxisAngle(q: Quaternion, outAxis: []const Vector3, outAngle: []const f32) void
+pub fn QuaternionToAxisAngle(q: Quaternion, outAxis: [*c]const Vector3, outAngle: [*c]const f32) void
 {
     WQuaternionToAxisAngle(&q, &outAxis[0], &outAngle[0]);
 }

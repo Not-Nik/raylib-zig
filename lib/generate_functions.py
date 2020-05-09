@@ -75,7 +75,9 @@ def parse_header(header_name: str, output_file: str, prefix: str):
         func_name = result.group(2)
         arguments = result.group(3)
 
-        if "..." in arguments or return_type in small_structs or return_type == "float3" or return_type == "float16":
+        # Igoring function here because:
+        # a) C va_args are supported in Zig but I
+        if return_type in small_structs or return_type == "float3" or return_type == "float16":
             continue
 
         for struct in small_structs:
@@ -89,6 +91,9 @@ def parse_header(header_name: str, output_file: str, prefix: str):
             for arg in arguments.split(", "):
                 if arg == "void":
                     break
+                if arg == "...":
+                    zig_arguments.append("...")
+                    break
                 arg_type = " ".join(arg.split(" ")[0:-1])  # everything but the last element (for stuff like "const Vector3")
                 arg_type = arg_type.replace("const ", "")  # zig doesn't like const in function arguments that aren't pointer and really we don't need const
                 arg_name = arg.split(" ")[-1]  # last element should be the name
@@ -101,6 +106,10 @@ def parse_header(header_name: str, output_file: str, prefix: str):
             zig_heads.append("pub extern fn " + func_name + "(" + zig_arguments + ") " + return_type + ";")
             continue
 
+        # If we find variable arguments in a workaround function
+        #
+        if "..." in arguments: continue
+
         zig_arguments_w = []  # arguments for the workaround function head on the zig side
         zig_arguments = []  # arguments that are passed to the copied raylib function
         zig_pass = []  # arguments that are passed to the workaround function on the zig side
@@ -108,7 +117,7 @@ def parse_header(header_name: str, output_file: str, prefix: str):
         c_pass = []  # arguments that are passed to the actual raylib function
 
         for arg in arguments.split(", "):
-            if arg == "void": break
+            if arg == "void" : break
             arg_type = " ".join(arg.split(" ")[0:-1]).replace("const ", "")  # everything but the last element (for stuff like "const Vector3"), but discarding const
             arg_name = arg.split(" ")[-1]  # last element should be the name
             arg_type = fix_enums(arg_name, arg_type, func_name)
@@ -142,7 +151,7 @@ def parse_header(header_name: str, output_file: str, prefix: str):
                     zig_name = zig_name[1:]
                     zig_type = "[*c][]const " + zig_type
                 else:
-                    zig_type = "[]const " + zig_type
+                    zig_type = "[*c]const " + zig_type
                 zig_pass_name = "&" + zig_name + "[0]"
             else:  # Normal argument i.e. float, int, etc.
                 zig_pass_name = zig_name

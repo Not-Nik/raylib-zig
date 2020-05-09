@@ -40,8 +40,7 @@ pub fn main() anyerror!void
 
             ClearBackground(RAYWHITE);
 
-            DrawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, ballColor);
-            //DrawCircleV(ballPosition, 40, ballColor);
+            DrawCircleV(ballPosition, 40, ballColor);
 
             DrawText("move ball with mouse and click mouse button to change color", 10, 10, 20, DARKGRAY);
 

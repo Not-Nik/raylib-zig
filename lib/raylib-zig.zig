@@ -743,5 +743,6 @@ pub const PI = 3.141593;
 pub const SpriteFont = Font;
 pub const SubText = TextSubtext;
 pub const ShowWindow = UnhideWindow;
+pub const FormatText = TextFormat;
 
 pub usingnamespace @import("raylib-wa.zig");

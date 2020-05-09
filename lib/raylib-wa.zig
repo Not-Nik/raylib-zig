@@ -56,6 +56,7 @@ pub extern fn SetConfigFlags(flags: c_uint) void;
 pub extern fn SetTraceLogLevel(logType: c_int) void;
 pub extern fn SetTraceLogExit(logType: c_int) void;
 pub extern fn SetTraceLogCallback(callback: TraceLogCallback) void;
+pub extern fn TraceLog(logType: c_int, text: [*c]const u8, ...) void;
 pub extern fn TakeScreenshot(fileName: [*c]const u8) void;
 pub extern fn GetRandomValue(min: c_int, max: c_int) c_int;
 pub extern fn LoadFileData(fileName: [*c]const u8, bytesRead: [*c]const c_uint) [*c]const u8;
@@ -257,6 +258,7 @@ pub extern fn GetGlyphIndex(font: Font, codepoint: c_int) c_int;
 pub extern fn TextCopy(dst: [*c]const u8, src: [*c]const u8) c_int;
 pub extern fn TextIsEqual(text1: [*c]const u8, text2: [*c]const u8) bool;
 pub extern fn TextLength(text: [*c]const u8) c_uint;
+pub extern fn TextFormat(text: [*c]const u8, ...) [*c]const u8;
 pub extern fn TextSubtext(text: [*c]const u8, position: c_int, length: c_int) [*c]const u8;
 pub extern fn TextReplace(text: [*c]const u8, replace: [*c]const u8, by: [*c]const u8) [*c]const u8;
 pub extern fn TextInsert(text: [*c]const u8, insert: [*c]const u8, position: c_int) [*c]const u8;
@@ -460,7 +462,7 @@ pub fn DrawLineBezier(startPos: Vector2, endPos: Vector2, thick: f32, color: Col
     WDrawLineBezier(&startPos, &endPos, thick, &color);
 }
 
-pub fn DrawLineStrip(points: []const Vector2, numPoints: c_int, color: Color) void
+pub fn DrawLineStrip(points: [*c]const Vector2, numPoints: c_int, color: Color) void
 {
     WDrawLineStrip(&points[0], numPoints, &color);
 }
@@ -580,12 +582,12 @@ pub fn DrawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) vo
     WDrawTriangleLines(&v1, &v2, &v3, &color);
 }
 
-pub fn DrawTriangleFan(points: []const Vector2, numPoints: c_int, color: Color) void
+pub fn DrawTriangleFan(points: [*c]const Vector2, numPoints: c_int, color: Color) void
 {
     WDrawTriangleFan(&points[0], numPoints, &color);
 }
 
-pub fn DrawTriangleStrip(points: []const Vector2, pointsCount: c_int, color: Color) void
+pub fn DrawTriangleStrip(points: [*c]const Vector2, pointsCount: c_int, color: Color) void
 {
     WDrawTriangleStrip(&points[0], pointsCount, &color);
 }
@@ -630,7 +632,7 @@ pub fn CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vector2, p3:
     return WCheckCollisionPointTriangle(&point, &p1, &p2, &p3);
 }
 
-pub fn LoadImageEx(pixels: []const Color, width: c_int, height: c_int) Image
+pub fn LoadImageEx(pixels: [*c]const Color, width: c_int, height: c_int) Image
 {
     return WLoadImageEx(&pixels[0], width, height);
 }
@@ -665,112 +667,112 @@ pub fn ImageFromImage(image: Image, rec: Rectangle) Image
     return WImageFromImage(image, &rec);
 }
 
-pub fn ImageText(text: []const u8, fontSize: c_int, color: Color) Image
+pub fn ImageText(text: [*c]const u8, fontSize: c_int, color: Color) Image
 {
     return WImageText(&text[0], fontSize, &color);
 }
 
-pub fn ImageTextEx(font: Font, text: []const u8, fontSize: f32, spacing: f32, tint: Color) Image
+pub fn ImageTextEx(font: Font, text: [*c]const u8, fontSize: f32, spacing: f32, tint: Color) Image
 {
     return WImageTextEx(font, &text[0], fontSize, spacing, &tint);
 }
 
-pub fn ImageToPOT(image: []const Image, fillColor: Color) void
+pub fn ImageToPOT(image: [*c]const Image, fillColor: Color) void
 {
     WImageToPOT(&image[0], &fillColor);
 }
 
-pub fn ImageAlphaClear(image: []const Image, color: Color, threshold: f32) void
+pub fn ImageAlphaClear(image: [*c]const Image, color: Color, threshold: f32) void
 {
     WImageAlphaClear(&image[0], &color, threshold);
 }
 
-pub fn ImageCrop(image: []const Image, crop: Rectangle) void
+pub fn ImageCrop(image: [*c]const Image, crop: Rectangle) void
 {
     WImageCrop(&image[0], &crop);
 }
 
-pub fn ImageResizeCanvas(image: []const Image, newWidth: c_int, newHeight: c_int, offsetX: c_int, offsetY: c_int, color: Color) void
+pub fn ImageResizeCanvas(image: [*c]const Image, newWidth: c_int, newHeight: c_int, offsetX: c_int, offsetY: c_int, color: Color) void
 {
     WImageResizeCanvas(&image[0], newWidth, newHeight, offsetX, offsetY, &color);
 }
 
-pub fn ImageColorTint(image: []const Image, color: Color) void
+pub fn ImageColorTint(image: [*c]const Image, color: Color) void
 {
     WImageColorTint(&image[0], &color);
 }
 
-pub fn ImageColorReplace(image: []const Image, color: Color, replace: Color) void
+pub fn ImageColorReplace(image: [*c]const Image, color: Color, replace: Color) void
 {
     WImageColorReplace(&image[0], &color, &replace);
 }
 
-pub fn ImageClearBackground(dst: []const Image, color: Color) void
+pub fn ImageClearBackground(dst: [*c]const Image, color: Color) void
 {
     WImageClearBackground(&dst[0], &color);
 }
 
-pub fn ImageDrawPixel(dst: []const Image, posX: c_int, posY: c_int, color: Color) void
+pub fn ImageDrawPixel(dst: [*c]const Image, posX: c_int, posY: c_int, color: Color) void
 {
     WImageDrawPixel(&dst[0], posX, posY, &color);
 }
 
-pub fn ImageDrawPixelV(dst: []const Image, position: Vector2, color: Color) void
+pub fn ImageDrawPixelV(dst: [*c]const Image, position: Vector2, color: Color) void
 {
     WImageDrawPixelV(&dst[0], &position, &color);
 }
 
-pub fn ImageDrawLine(dst: []const Image, startPosX: c_int, startPosY: c_int, endPosX: c_int, endPosY: c_int, color: Color) void
+pub fn ImageDrawLine(dst: [*c]const Image, startPosX: c_int, startPosY: c_int, endPosX: c_int, endPosY: c_int, color: Color) void
 {
     WImageDrawLine(&dst[0], startPosX, startPosY, endPosX, endPosY, &color);
 }
 
-pub fn ImageDrawLineV(dst: []const Image, start: Vector2, end: Vector2, color: Color) void
+pub fn ImageDrawLineV(dst: [*c]const Image, start: Vector2, end: Vector2, color: Color) void
 {
     WImageDrawLineV(&dst[0], &start, &end, &color);
 }
 
-pub fn ImageDrawCircle(dst: []const Image, centerX: c_int, centerY: c_int, radius: c_int, color: Color) void
+pub fn ImageDrawCircle(dst: [*c]const Image, centerX: c_int, centerY: c_int, radius: c_int, color: Color) void
 {
     WImageDrawCircle(&dst[0], centerX, centerY, radius, &color);
 }
 
-pub fn ImageDrawCircleV(dst: []const Image, center: Vector2, radius: c_int, color: Color) void
+pub fn ImageDrawCircleV(dst: [*c]const Image, center: Vector2, radius: c_int, color: Color) void
 {
     WImageDrawCircleV(&dst[0], &center, radius, &color);
 }
 
-pub fn ImageDrawRectangle(dst: []const Image, posX: c_int, posY: c_int, width: c_int, height: c_int, color: Color) void
+pub fn ImageDrawRectangle(dst: [*c]const Image, posX: c_int, posY: c_int, width: c_int, height: c_int, color: Color) void
 {
     WImageDrawRectangle(&dst[0], posX, posY, width, height, &color);
 }
 
-pub fn ImageDrawRectangleV(dst: []const Image, position: Vector2, size: Vector2, color: Color) void
+pub fn ImageDrawRectangleV(dst: [*c]const Image, position: Vector2, size: Vector2, color: Color) void
 {
     WImageDrawRectangleV(&dst[0], &position, &size, &color);
 }
 
-pub fn ImageDrawRectangleRec(dst: []const Image, rec: Rectangle, color: Color) void
+pub fn ImageDrawRectangleRec(dst: [*c]const Image, rec: Rectangle, color: Color) void
 {
     WImageDrawRectangleRec(&dst[0], &rec, &color);
 }
 
-pub fn ImageDrawRectangleLines(dst: []const Image, rec: Rectangle, thick: c_int, color: Color) void
+pub fn ImageDrawRectangleLines(dst: [*c]const Image, rec: Rectangle, thick: c_int, color: Color) void
 {
     WImageDrawRectangleLines(&dst[0], &rec, thick, &color);
 }
 
-pub fn ImageDraw(dst: []const Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) void
+pub fn ImageDraw(dst: [*c]const Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) void
 {
     WImageDraw(&dst[0], src, &srcRec, &dstRec, &tint);
 }
 
-pub fn ImageDrawText(dst: []const Image, position: Vector2, text: []const u8, fontSize: c_int, color: Color) void
+pub fn ImageDrawText(dst: [*c]const Image, position: Vector2, text: [*c]const u8, fontSize: c_int, color: Color) void
 {
     WImageDrawText(&dst[0], &position, &text[0], fontSize, &color);
 }
 
-pub fn ImageDrawTextEx(dst: []const Image, position: Vector2, font: Font, text: []const u8, fontSize: f32, spacing: f32, color: Color) void
+pub fn ImageDrawTextEx(dst: [*c]const Image, position: Vector2, font: Font, text: [*c]const u8, fontSize: f32, spacing: f32, color: Color) void
 {
     WImageDrawTextEx(&dst[0], &position, font, &text[0], fontSize, spacing, &color);
 }
@@ -815,27 +817,27 @@ pub fn LoadFontFromImage(image: Image, key: Color, firstChar: c_int) Font
     return WLoadFontFromImage(image, &key, firstChar);
 }
 
-pub fn GenImageFontAtlas(chars: []const CharInfo, recs: [*c][]const Rectangle, charsCount: c_int, fontSize: c_int, padding: c_int, packMethod: c_int) Image
+pub fn GenImageFontAtlas(chars: [*c]const CharInfo, recs: [*c][]const Rectangle, charsCount: c_int, fontSize: c_int, padding: c_int, packMethod: c_int) Image
 {
     return WGenImageFontAtlas(&chars[0], &recs[0], charsCount, fontSize, padding, packMethod);
 }
 
-pub fn DrawText(text: []const u8, posX: c_int, posY: c_int, fontSize: c_int, color: Color) void
+pub fn DrawText(text: [*c]const u8, posX: c_int, posY: c_int, fontSize: c_int, color: Color) void
 {
     WDrawText(&text[0], posX, posY, fontSize, &color);
 }
 
-pub fn DrawTextEx(font: Font, text: []const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void
+pub fn DrawTextEx(font: Font, text: [*c]const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void
 {
     WDrawTextEx(font, &text[0], &position, fontSize, spacing, &tint);
 }
 
-pub fn DrawTextRec(font: Font, text: []const u8, rec: Rectangle, fontSize: f32, spacing: f32, wordWrap: bool, tint: Color) void
+pub fn DrawTextRec(font: Font, text: [*c]const u8, rec: Rectangle, fontSize: f32, spacing: f32, wordWrap: bool, tint: Color) void
 {
     WDrawTextRec(font, &text[0], &rec, fontSize, spacing, wordWrap, &tint);
 }
 
-pub fn DrawTextRecEx(font: Font, text: []const u8, rec: Rectangle, fontSize: f32, spacing: f32, wordWrap: bool, tint: Color, selectStart: c_int, selectLength: c_int, selectTint: Color, selectBackTint: Color) void
+pub fn DrawTextRecEx(font: Font, text: [*c]const u8, rec: Rectangle, fontSize: f32, spacing: f32, wordWrap: bool, tint: Color, selectStart: c_int, selectLength: c_int, selectTint: Color, selectBackTint: Color) void
 {
     WDrawTextRecEx(font, &text[0], &rec, fontSize, spacing, wordWrap, &tint, selectStart, selectLength, &selectTint, &selectBackTint);
 }
@@ -985,7 +987,7 @@ pub fn CheckCollisionRaySphere(ray: Ray, center: Vector3, radius: f32) bool
     return WCheckCollisionRaySphere(ray, &center, radius);
 }
 
-pub fn CheckCollisionRaySphereEx(ray: Ray, center: Vector3, radius: f32, collisionPoint: []const Vector3) bool
+pub fn CheckCollisionRaySphereEx(ray: Ray, center: Vector3, radius: f32, collisionPoint: [*c]const Vector3) bool
 {
     return WCheckCollisionRaySphereEx(ray, &center, radius, &collisionPoint[0]);
 }
@@ -1005,17 +1007,17 @@ pub fn SetShapesTexture(texture: Texture2D, source: Rectangle) void
     WSetShapesTexture(texture, &source);
 }
 
-pub fn GetShaderLocation(shader: Shader, uniformName: []const u8) int
+pub fn GetShaderLocation(shader: Shader, uniformName: [*c]const u8) int
 {
     return WGetShaderLocation(&shader, &uniformName[0]);
 }
 
-pub fn SetShaderValue(shader: Shader, uniformLoc: c_int, value: []const void, uniformType: c_int) void
+pub fn SetShaderValue(shader: Shader, uniformLoc: c_int, value: [*c]const void, uniformType: c_int) void
 {
     WSetShaderValue(&shader, uniformLoc, &value[0], uniformType);
 }
 
-pub fn SetShaderValueV(shader: Shader, uniformLoc: c_int, value: []const void, uniformType: c_int, count: c_int) void
+pub fn SetShaderValueV(shader: Shader, uniformLoc: c_int, value: [*c]const void, uniformType: c_int, count: c_int) void
 {
     WSetShaderValueV(&shader, uniformLoc, &value[0], uniformType, count);
 }

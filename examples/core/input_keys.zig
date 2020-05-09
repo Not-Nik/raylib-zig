@@ -40,8 +40,7 @@ pub fn main() anyerror!void
 
             DrawText("move the ball with arrow keys", 10, 10, 20, DARKGRAY);
 
-            DrawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, MAROON);
-            //DrawCircleV(ballPosition, 50, MAROON);
+            DrawCircleV(ballPosition, 50, MAROON);
 
         EndDrawing();
         //----------------------------------------------------------------------------------

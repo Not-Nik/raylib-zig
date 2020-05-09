@@ -93,14 +93,9 @@ pub fn main() anyerror!void
 
                 for (buildings) |building, i|
                 {
-                    //DrawRectangleRec(building, buildColors[i]);
-                    DrawRectangle(@floatToInt(c_int, building.x), @floatToInt(c_int, building.y),
-                                  @floatToInt(c_int, building.width), @floatToInt(c_int, building.height), buildColors[i]);
+                    DrawRectangleRec(building, buildColors[i]);
                 }
-
-                DrawRectangle(@floatToInt(c_int, player.x), @floatToInt(c_int, player.y),
-                              @floatToInt(c_int, player.width), @floatToInt(c_int, player.height), DARKGRAY);
-                //DrawRectangleRec(player, RED);
+                DrawRectangleRec(player, RED);
 
                 DrawLine(@floatToInt(c_int, camera.target.x), -screenHeight*10, @floatToInt(c_int, camera.target.x), screenHeight*10, GREEN);
                 DrawLine(-screenWidth*10, @floatToInt(c_int, camera.target.y), screenWidth*10, @floatToInt(c_int, camera.target.y), GREEN);
