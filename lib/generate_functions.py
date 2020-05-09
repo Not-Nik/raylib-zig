@@ -37,11 +37,20 @@ def fix_pointer(name: str, t: str):
         pre += "[*c]"
     if len(pre) != 0:
         t = pre + "const " + t
+    return name, t
+
+
+def fix_enums(arg_name, arg_type, func_name):
     # Hacking specifc enums in here
     # Raylib doesn't use the enums but rather the resulting ints
-    if name == "key" and t == "c_int":
-        t = "KeyboardKey"
-    return name, t
+    if arg_type == "int":
+        if arg_name == "key":
+            arg_type = "KeyboardKey"
+        elif arg_name == "button":
+            arg_type = "MouseButton"
+        elif arg_name == "mode" and func_name == "SetCameraMode":
+            arg_type = "CameraMode"
+    return arg_type
 
 
 small_structs = ["Vector2", "Vector3", "Vector4", "Quaternion", "Color", "Rectangle", "Shader"]
@@ -83,6 +92,7 @@ def parse_header(header_name: str, output_file: str, prefix: str):
                 arg_type = " ".join(arg.split(" ")[0:-1])  # everything but the last element (for stuff like "const Vector3")
                 arg_type = arg_type.replace("const ", "")  # zig doesn't like const in function arguments that aren't pointer and really we don't need const
                 arg_name = arg.split(" ")[-1]  # last element should be the name
+                arg_type = fix_enums(arg_name, arg_type, func_name)
 
                 arg_type = c_to_zig_type(arg_type)
                 arg_name, arg_type = fix_pointer(arg_name, arg_type)
@@ -101,6 +111,7 @@ def parse_header(header_name: str, output_file: str, prefix: str):
             if arg == "void": break
             arg_type = " ".join(arg.split(" ")[0:-1]).replace("const ", "")  # everything but the last element (for stuff like "const Vector3"), but discarding const
             arg_name = arg.split(" ")[-1]  # last element should be the name
+            arg_type = fix_enums(arg_name, arg_type, func_name)
             depoint = False  # set to true if we need to dereference a pointer to a small struct in the c workaround
             if arg_type in small_structs:
                 if not arg_name.startswith("*"):

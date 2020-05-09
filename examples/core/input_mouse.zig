@@ -27,7 +27,7 @@ pub fn main() anyerror!void
     {
         // Update
         //----------------------------------------------------------------------------------
-        ballPosition = GetMousePosition();
+        //ballPosition = GetMousePosition();
 
         if (IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON)) { ballColor = MAROON; }
         else if (IsMouseButtonPressed(MouseButton.MOUSE_MIDDLE_BUTTON)) { ballColor = LIME; }

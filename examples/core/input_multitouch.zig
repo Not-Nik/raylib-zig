@@ -30,7 +30,7 @@ pub fn main() anyerror!void
     {
         // Update
         //----------------------------------------------------------------------------------
-        ballPosition = GetMousePosition();
+        //ballPosition = GetMousePosition();
 
         ballColor = BEIGE;
 
@@ -54,14 +54,14 @@ pub fn main() anyerror!void
             const nums = [_]i32{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
             for (nums) |i|
             {
-                touchPosition = GetTouchPosition(i);                    // Get the touch point
+                //touchPosition = GetTouchPosition(i);                    // Get the touch point
 
                 if ((touchPosition.x >= 0) and (touchPosition.y >= 0))   // Make sure point is not (-1,-1) as this means there is no touch for it
                 {
                     // Draw circle and touch index number
                     DrawCircle(@floatToInt(c_int, touchPosition.x), @floatToInt(c_int, touchPosition.y), 34, ORANGE);
                     //DrawCircleV(touchPosition, 34, ORANGE);
-                    DrawText(FormatText("%d", i), @floatToInt(c_int, touchPosition.x) - 10, @floatToInt(c_int, touchPosition.y) - 70, 40, BLACK);
+                    //DrawText(FormatText("%d", i), @floatToInt(c_int, touchPosition.x) - 10, @floatToInt(c_int, touchPosition.y) - 70, 40, BLACK);
                 }
             }
 

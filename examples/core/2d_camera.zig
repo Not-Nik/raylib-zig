@@ -114,7 +114,8 @@ pub fn main() anyerror!void
             DrawRectangle(screenWidth - 5, 5, 5, screenHeight - 10, RED);
             DrawRectangle(0, screenHeight - 5, screenWidth, 5, RED);
 
-            DrawRectangle( 10, 10, 250, 113, Fade(SKYBLUE, 0.5));
+            //DrawRectangle( 10, 10, 250, 113, Fade(SKYBLUE, 0.5));
+            DrawRectangle( 10, 10, 250, 113, SKYBLUE);
             DrawRectangleLines( 10, 10, 250, 113, BLUE);
 
             DrawText("Free 2d camera controls:", 20, 20, 10, BLACK);
