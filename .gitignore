@@ -1,9 +1,9 @@
 zig-cache/
 .idea/
 Project/*
-raylib-headers/raylib.h
-raylib-headers/raymath.h
 
+**/raylib.h
+**/raymath.h
 **/.DS_Store
 **/CMakeLists.txt
 **/cmake-build-debug

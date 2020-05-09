@@ -14,7 +14,7 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - draw sphere");
 
     var camera = Camera {
         .position = Vector3 { .x = 0.0, .y = 0.0, .z = 0.0 }, // Camera position

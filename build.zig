@@ -15,7 +15,7 @@ pub fn createExe(b: *Builder, name: []const u8, source: []const u8, desc: []cons
     var exe = b.addExecutable(name, source);
     exe.setBuildMode(mode);
     exe.linkSystemLibrary("raylib");
-    exe.addCSourceFile("lib/workaround/workaround.c", &[_][]const u8{});
+    exe.addCSourceFile("lib/workaround.c", &[_][]const u8{});
     exe.addPackagePath("raylib", "lib/raylib-zig.zig");
     exe.addPackagePath("raylib-math", "lib/raylib-zig-math.zig");
 

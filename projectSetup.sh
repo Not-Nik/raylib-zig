@@ -14,19 +14,18 @@ pub fn build(b: *Builder) void {
     const exe = b.addExecutable("'"$PROJECT_NAME"'", "src/main.zig");
     exe.setBuildMode(mode);
     exe.linkSystemLibrary("raylib");
+    exe.addCSourceFile("raylib-zig/workaround.c", &[_][]const u8{});
     exe.addPackagePath("raylib", "raylib-zig/raylib-zig.zig");
-    exe.install();
+    exe.addPackagePath("raylib-math", "lib/raylib-zig-math.zig");
 
-    const run_cmd = exe.run();
-    run_cmd.step.dependOn(b.getInstallStep());
-
-    const run_step = b.step("run", "Run the app");
-    run_step.dependOn(&run_cmd.step);
+    const runExe = exe.run();
+    const exeStep = b.step("run", "Runs the app");
+    exeStep.dependOn(&runExe.step);
 }
 ' >> build.zig
 
 mkdir src
 mkdir raylib-zig
-cp ../lib/* raylib-zig
+cp ../lib/** raylib-zig
 cp ../examples/core/basic_window.zig src
 mv src/basic_window.zig src/main.zig
