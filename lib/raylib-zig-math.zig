@@ -1,10 +1,3 @@
-//
-// raylib-zig-math
-// Zig version: 0.6.0
-// Author: Nikolas Wipper
-// Date: 2020-02-15
-//
-
 usingnamespace @import("raylib-zig.zig");
 
 pub extern fn Clamp(value: f32, min: f32, max: f32) f32;
@@ -40,7 +33,7 @@ pub extern fn Vector3Negate(v: Vector3) Vector3;
 pub extern fn Vector3Divide(v: Vector3, div: f32) Vector3;
 pub extern fn Vector3DivideV(v1: Vector3, v2: Vector3) Vector3;
 pub extern fn Vector3Normalize(v: Vector3) Vector3;
-pub extern fn Vector3OrthoNormalize(v1: [*c]Vector3, v2: [*c]Vector3) c_void;
+pub extern fn Vector3OrthoNormalize(v1: [*c]const Vector3, v2: [*c]const Vector3) void;
 pub extern fn Vector3Transform(v: Vector3, mat: Matrix) Vector3;
 pub extern fn Vector3RotateByQuaternion(v: Vector3, q: Quaternion) Vector3;
 pub extern fn Vector3Lerp(v1: Vector3, v2: Vector3, amount: f32) Vector3;
@@ -82,7 +75,7 @@ pub extern fn QuaternionFromVector3ToVector3(from: Vector3, to: Vector3) Quatern
 pub extern fn QuaternionFromMatrix(mat: Matrix) Quaternion;
 pub extern fn QuaternionToMatrix(q: Quaternion) Matrix;
 pub extern fn QuaternionFromAxisAngle(axis: Vector3, angle: f32) Quaternion;
-pub extern fn QuaternionToAxisAngle(q: Quaternion, outAxis: [*c]Vector3, outAngle: [*c]f32) c_void;
+pub extern fn QuaternionToAxisAngle(q: Quaternion, outAxis: [*c]const Vector3, outAngle: [*c]const f32) void;
 pub extern fn QuaternionFromEuler(roll: f32, pitch: f32, yaw: f32) Quaternion;
 pub extern fn QuaternionToEuler(q: Quaternion) Vector3;
 pub extern fn QuaternionTransform(q: Quaternion, mat: Matrix) Quaternion;
