@@ -1189,7 +1189,6 @@ pub const FormatText = TextFormat;
 
 // ---------- WORKAROUND ----------
 pub extern fn WGetMouseRay(mousePosition: [*c]const Vector2, camera: Camera) Ray;
-
 pub extern fn WDrawPixel(posX: c_int, posY: c_int, color: [*c]const Color) void;
 pub extern fn WDrawPixelV(position: [*c]const Vector2, color: [*c]const Color) void;
 pub extern fn WDrawLine(startPosX: c_int, startPosY: c_int, endPosX: c_int, endPosY: c_int, color: [*c]const Color) void;
@@ -1227,14 +1226,11 @@ pub extern fn WDrawPolyLines(center: [*c]const Vector2, sides: c_int, radius: f3
 pub extern fn WCheckCollisionRecs(rec1: [*c]const Rectangle, rec2: [*c]const Rectangle) bool;
 pub extern fn WCheckCollisionCircles(center1: [*c]const Vector2, radius1: f32, center2: [*c]const Vector2, radius2: f32) bool;
 pub extern fn WCheckCollisionCircleRec(center: [*c]const Vector2, radius: f32, rec: [*c]const Rectangle) bool;
-pub extern fn WGetCollisionRec(rec1: [*c]const Rectangle, rec2: [*c]const Rectangle) [*c]const Rectangle;
 pub extern fn WCheckCollisionPointRec(point: [*c]const Vector2, rec: [*c]const Rectangle) bool;
 pub extern fn WCheckCollisionPointCircle(point: [*c]const Vector2, center: [*c]const Vector2, radius: f32) bool;
 pub extern fn WCheckCollisionPointTriangle(point: [*c]const Vector2, p1: [*c]const Vector2, p2: [*c]const Vector2, p3: [*c]const Vector2) bool;
-
 pub extern fn WDrawSphere(centerPos: [*c]const Vector3, radius: f32, color: [*c]const Color) void;
 pub extern fn WDrawRay(ray: Ray, color: [*c]const Color) void;
-
 
 pub fn GetMouseRay(mousePosition: Vector2, camera: Camera) Ray
 {
@@ -1413,37 +1409,32 @@ pub fn DrawPolyLines(center: Vector2, sides: c_int, radius: f32, rotation: f32, 
 
 pub fn CheckCollisionRecs(rec1: Rectangle, rec2: Rectangle) bool
 {
-    WCheckCollisionRecs(&rec1, &rec2);
+    return WCheckCollisionRecs(&rec1, &rec2);
 }
 
 pub fn CheckCollisionCircles(center1: Vector2, radius1: f32, center2: Vector2, radius2: f32) bool
 {
-    WCheckCollisionCircles(&center1, radius1, &center2, radius2);
+    return WCheckCollisionCircles(&center1, radius1, &center2, radius2);
 }
 
 pub fn CheckCollisionCircleRec(center: Vector2, radius: f32, rec: Rectangle) bool
 {
-    WCheckCollisionCircleRec(&center, radius, &rec);
-}
-
-pub fn GetCollisionRec(rec1: Rectangle, rec2: Rectangle) [*c]const Rectangle
-{
-    WGetCollisionRec(&rec1, &rec2);
+    return WCheckCollisionCircleRec(&center, radius, &rec);
 }
 
 pub fn CheckCollisionPointRec(point: Vector2, rec: Rectangle) bool
 {
-    WCheckCollisionPointRec(&point, &rec);
+    return WCheckCollisionPointRec(&point, &rec);
 }
 
 pub fn CheckCollisionPointCircle(point: Vector2, center: Vector2, radius: f32) bool
 {
-    WCheckCollisionPointCircle(&point, &center, radius);
+    return WCheckCollisionPointCircle(&point, &center, radius);
 }
 
 pub fn CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2) bool
 {
-    WCheckCollisionPointTriangle(&point, &p1, &p2, &p3);
+    return WCheckCollisionPointTriangle(&point, &p1, &p2, &p3);
 }
 
 pub fn DrawSphere(centerPos: Vector3, radius: f32, color: Color) void

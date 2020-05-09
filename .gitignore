@@ -7,4 +7,4 @@ raylib-headers/raymath.h
 **/.DS_Store
 **/CMakeLists.txt
 **/cmake-build-debug
-**.c
+examples/**/**.c
