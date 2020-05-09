@@ -83,11 +83,11 @@ pub extern fn DecompressData(compData: [*c]const u8, compDataLength: c_int, data
 pub extern fn SaveStorageValue(position: c_uint, value: c_int) void;
 pub extern fn LoadStorageValue(position: c_uint) c_int;
 pub extern fn OpenURL(url: [*c]const u8) void;
-pub extern fn IsKeyPressed(key: c_int) bool;
-pub extern fn IsKeyDown(key: c_int) bool;
-pub extern fn IsKeyReleased(key: c_int) bool;
-pub extern fn IsKeyUp(key: c_int) bool;
-pub extern fn SetExitKey(key: c_int) void;
+pub extern fn IsKeyPressed(key: KeyboardKey) bool;
+pub extern fn IsKeyDown(key: KeyboardKey) bool;
+pub extern fn IsKeyReleased(key: KeyboardKey) bool;
+pub extern fn IsKeyUp(key: KeyboardKey) bool;
+pub extern fn SetExitKey(key: KeyboardKey) void;
 pub extern fn GetKeyPressed() c_int;
 pub extern fn IsGamepadAvailable(gamepad: c_int) bool;
 pub extern fn IsGamepadName(gamepad: c_int, name: [*c]const u8) bool;

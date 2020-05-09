@@ -37,6 +37,10 @@ def fix_pointer(name: str, t: str):
         pre += "[*c]"
     if len(pre) != 0:
         t = pre + "const " + t
+    # Hacking specifc enums in here
+    # Raylib doesn't use the enums but rather the resulting ints
+    if name == "key" and t == "c_int":
+        t = "KeyboardKey"
     return name, t
 
 
