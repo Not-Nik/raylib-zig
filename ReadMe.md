@@ -48,6 +48,8 @@ Here is an incomplete list of some functions affected by this:
 + DrawRectangleRec
 + DrawModel and all its variations
 
+Parts of these issue are resolved on the [workaround branch](https://github.com/Not-Nik/raylib-zig/tree/workaround)
+
 ## Building the examples
 To build all available examples simply `zig build examples`. To list available examples run `zig build --help`. If you want to run and examples, say `basic_window` run `zig build basic_window`
 
