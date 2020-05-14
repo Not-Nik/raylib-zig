@@ -104,23 +104,23 @@ pub const Image = extern struct {
         return LoadImage(fileName);
     }
 
-    pub fn init(pixels: [*c]Color, width: c_int, height: c_int) Image {
+    pub fn initEx(pixels: [*c]Color, width: c_int, height: c_int) Image {
         return LoadImageEx(pixels, width, height);
     }
 
-    pub fn init(data: ?*c_void, width: c_int, height: c_int, format: PixelFormat) Image {
+    pub fn initPro(data: ?*c_void, width: c_int, height: c_int, format: PixelFormat) Image {
         return LoadImagePro(data, width, height, format);
     }
 
-    pub fn init(fileName: [*c]const u8, width: c_int, height: c_int, format: PixelFormat, headerSize: c_int) Image {
+    pub fn initRaw(fileName: [*c]const u8, width: c_int, height: c_int, format: PixelFormat, headerSize: c_int) Image {
         return LoadImageRaw(fileName, width, height, format, headerSize);
     }
 
-    pub fn init(text: [*c]const u8, fontSize: c_int, color: Color) Image {
+    pub fn initText(text: [*c]const u8, fontSize: c_int, color: Color) Image {
         return ImageText(text, fontSize, color);
     }
 
-    pub fn init(font: Font, text: [*c]const u8, fontSize: f32, spacing: f32, tint: Color) Image {
+    pub fn initTextEx(font: Font, text: [*c]const u8, fontSize: f32, spacing: f32, tint: Color) Image {
         return ImageTextEx(font, text, fontSize, spacing, tint);
     }
 
@@ -128,7 +128,7 @@ pub const Image = extern struct {
         return ImageCopy(image);
     }
 
-    pub fn copy(image: Image, rec: Rectangle) Image {
+    pub fn copyRec(image: Image, rec: Rectangle) Image {
         return ImageFromImage(image, rec);
     }
 
