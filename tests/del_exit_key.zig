@@ -14,17 +14,12 @@ pub fn main() anyerror!void
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "raylib-zig [core] test - draw sphere");
-
-    var camera = Camera {
-        .position = Vector3 { .x = 0.0, .y = 0.0, .z = 0.0 }, // Camera position
-        .target = Vector3 { .x = 0.0, .y = 0.0, .z = 2.0 },   // Camera looking at point
-        .up = Vector3 { .x = 0.0, .y = 1.0, .z = 0.0 },       // Camera up vector (rotation towards target)
-        .fovy = 80.0,                                         // Camera field-of-view Y
-        .type = CameraType.CAMERA_PERSPECTIVE                 // Camera mode type
-    };
+    InitWindow(screenWidth, screenHeight, "raylib-zig [core] test - disable exit key");
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+
+    //SetExitKey(@intToEnum(KeyboardKey, 0));
+    SetExitKey(.KEY_NULL);
     //--------------------------------------------------------------------------------------
 
     // Main game loop
@@ -37,11 +32,7 @@ pub fn main() anyerror!void
 
             ClearBackground(WHITE);
 
-            camera.Begin();
 
-                DrawSphere(Vector3 {.x = 0, .y = 0, . z = 2}, 1, RED);
-
-            camera.End();
 
         EndDrawing();
         //----------------------------------------------------------------------------------

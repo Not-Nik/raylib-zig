@@ -36,6 +36,7 @@ pub fn build(b: *Builder) void
     var modelsLoading   = createExe(b, "models_loading"   , "examples/models/models_loading.zig" , "Loads a model and renders it");
     var mouseRay        = createExe(b, "draw_2d"          , "tests/draw_2d.zig"                  , "Testing workaround on 2D drawing functions");
     var drawSphere      = createExe(b, "draw_sphere"      , "tests/draw_sphere.zig"              , "Testing workaround on DrawSphere");
+    var delExitKey      = createExe(b, "del_exit_key"     , "tests/del_exit_key.zig"             , "Testing disabling of exit key");
 
     const examplesStep = b.step("examples", "Builds all the examples");
           examplesStep.dependOn(&basicWindow.step);

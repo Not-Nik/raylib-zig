@@ -423,6 +423,7 @@ pub const TraceLogType = extern enum(c_int) {
     LOG_NONE = 7,
 };
 pub const KeyboardKey = extern enum(c_int) {
+    KEY_NULL = 0,
     KEY_APOSTROPHE = 39,
     KEY_COMMA = 44,
     KEY_MINUS = 45,
