@@ -7,39 +7,70 @@
 
 const std = @import("std");
 const Builder = std.build.Builder;
+const raylib = @import("lib.zig").Pkg(".");
 
-pub fn createExe(b: *Builder, name: []const u8, source: []const u8, desc: []const u8) *std.build.LibExeObjStep
-{
+const Program = struct {
+    name: []const u8,
+    path: []const u8,
+    desc: []const u8,
+};
+
+pub fn build(b: *Builder) void {
     const mode = b.standardReleaseOptions();
+    const target = b.standardTargetOptions(.{});
 
-    var exe = b.addExecutable(name, source);
-    exe.setBuildMode(mode);
-    exe.linkSystemLibrary("raylib");
-    exe.addPackagePath("raylib", "lib/raylib-zig.zig");
-    exe.addPackagePath("raylib-math", "lib/raylib-zig-math.zig");
+    const examples = [_]Program{
+        .{
+            .name = "basic_window",
+            .path = "examples/core/basic_window.zig",
+            .desc = "Creates a basic window with text",
+        },
+        .{
+            .name = "input_keys",
+            .path = "examples/core/input_keys.zig",
+            .desc = "Simple keyboard input",
+        },
+        .{
+            .name = "input_mouse",
+            .path = "examples/core/input_mouse.zig",
+            .desc = "Simple mouse input",
+        },
+        .{
+            .name = "input_mouse_wheel",
+            .path = "examples/core/input_mouse_wheel.zig",
+            .desc = "Mouse wheel input",
+        },
+        .{
+            .name = "input_multitouch",
+            .path = "examples/core/input_multitouch.zig",
+            .desc = "Multitouch input",
+        },
+        .{
+            .name = "2d_camera",
+            .path = "examples/core/2d_camera.zig",
+            .desc = "Shows the functionality of a 2D camera",
+        },
+        .{
+            .name = "models_loading",
+            .path = "examples/models/models_loading.zig",
+            .desc = "Loads a model and renders it",
+        },
+    };
 
-    const runExe = exe.run();
-    const exeStep = b.step(name, desc);
-    exeStep.dependOn(&runExe.step);
-    return exe;
-}
+    const examples_step = b.step("examples", "Builds all the examples");
 
-pub fn build(b: *Builder) void
-{
-    var basicWindow     = createExe(b, "basic_window"     , "examples/core/basic_window.zig"     , "Creates a basic window with text");
-    var inputKeys       = createExe(b, "input_keys"       , "examples/core/input_keys.zig"       , "Simple keyboard input");
-    var inputMouse      = createExe(b, "input_mouse"      , "examples/core/input_mouse.zig"      , "Simple mouse input");
-    var inputMouseWheel = createExe(b, "input_mouse_wheel", "examples/core/input_mouse_wheel.zig", "Mouse wheel input");
-    var inputMultitouch = createExe(b, "input_multitouch" , "examples/core/input_multitouch.zig" , "Multitouch input");
-    var twoDCamera      = createExe(b, "2d_camera"        , "examples/core/2d_camera.zig"        , "Shows the functionality of a 2D camera");
-    var modelsLoading   = createExe(b, "models_loading"   , "examples/models/models_loading.zig" , "Loads a model and renders it");
+    for (examples) |ex| {
+        const exe = b.addExecutable(ex.name, ex.path);
+        exe.setBuildMode(mode);
+        exe.setTarget(target);
 
-    const examplesStep = b.step("examples", "Builds all the examples");
-          examplesStep.dependOn(&basicWindow.step);
-          examplesStep.dependOn(&inputKeys.step);
-          examplesStep.dependOn(&inputMouse.step);
-          examplesStep.dependOn(&inputMouseWheel.step);
-          examplesStep.dependOn(&inputMultitouch.step);
-          examplesStep.dependOn(&twoDCamera.step);
-          examplesStep.dependOn(&modelsLoading.step);
+        raylib.link(exe);
+        raylib.addAsPackage("raylib", exe);
+        raylib.math.addAsPackage("raylib-math", exe);
+
+        const run_cmd = exe.run();
+        const run_step = b.step(ex.name, ex.desc);
+        run_step.dependOn(&run_cmd.step);
+        examples_step.dependOn(&exe.step);
+    }
 }
