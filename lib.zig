@@ -84,9 +84,9 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                 std.debug.warn("unable to create child process for git. build interrupted\n", .{});
                 std.os.exit(1);
             };
-
+            git_proc.cwd = pkgdir;
             const term = git_proc.spawnAndWait() catch {
-                std.debug.warn("unable to spawn child processfor git. build interrupted\n", .{});
+                std.debug.warn("unable to spawn child process for git. build interrupted\n", .{});
                 std.os.exit(1);
             };
 
