@@ -58,13 +58,15 @@ pub fn build(b: *Builder) void {
     };
 
     const examples_step = b.step("examples", "Builds all the examples");
+    const system_lib = b.option(bool, "system-raylib", "link to preinstalled raylib libraries") orelse false;
 
     for (examples) |ex| {
         const exe = b.addExecutable(ex.name, ex.path);
+
         exe.setBuildMode(mode);
         exe.setTarget(target);
 
-        raylib.link(exe);
+        raylib.link(exe, system_lib);
         raylib.addAsPackage("raylib", exe);
         raylib.math.addAsPackage("raylib-math", exe);
 

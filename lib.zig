@@ -4,12 +4,13 @@ const LibExeObjStep = std.build.LibExeObjStep;
 
 pub fn Pkg(pkgdir: comptime []const u8) type {
     return struct {
-        pub fn link(exe: *LibExeObjStep) void {
+        pub fn link(exe: *LibExeObjStep, system_lib: bool) void {
             const raylibFlags = &[_][]const u8{
                 "-std=c99",
                 "-DPLATFORM_DESKTOP",
                 "-D_POSIX_C_SOURCE",
             };
+
             if (exe.target.toTarget().os.tag == .windows) {
                 exe.linkSystemLibrary("winmm");
                 exe.linkSystemLibrary("gdi32");
@@ -18,6 +19,11 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                 exe.linkSystemLibrary("X11");
             }
             exe.linkLibC();
+
+            if (system_lib) {
+                exe.linkSystemLibrary("raylib");
+                return;
+            }
 
             exe.addSystemIncludeDir(pkgdir ++ "/raylib/src");
             exe.addSystemIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
@@ -30,6 +36,7 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
             exe.addCSourceFile(pkgdir ++ "/raylib/src/textures.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/utils.c", raylibFlags);
         }
+
         pub fn addAsPackage(name: comptime []const u8, to: *LibExeObjStep) void {
             to.addPackagePath(name, pkgdir ++ "/lib/raylib-zig.zig");
         }
