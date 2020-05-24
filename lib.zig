@@ -4,6 +4,7 @@ const LibExeObjStep = std.build.LibExeObjStep;
 
 pub fn Pkg(pkgdir: comptime []const u8) type {
     return struct {
+        var ran_git = false;
         pub fn link(exe: *LibExeObjStep, system_lib: bool) void {
             const raylibFlags = &[_][]const u8{
                 "-std=c99",
@@ -51,6 +52,13 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                 return;
             }
 
+            fetchSubmodules(exe.builder) catch
+                std.debug.warn(
+                \\Warning:
+                \\Unable to fetch git submodule(s) Assuming package folder is not under
+                \\version control. If build fails, this is probably why.
+            , .{});
+
             exe.addSystemIncludeDir(pkgdir ++ "/raylib/src");
             exe.addSystemIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
             exe.addCSourceFile(pkgdir ++ "/raylib/src/core.c", raylibFlags);
@@ -61,6 +69,34 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
             exe.addCSourceFile(pkgdir ++ "/raylib/src/text.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/textures.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/utils.c", raylibFlags);
+        }
+
+        fn fetchSubmodules(b: *Builder) !void {
+            if (ran_git) return;
+            ran_git = true;
+
+            std.debug.warn("attempting to fetch submodule(s)...\n", .{});
+
+            const git_proc = std.ChildProcess.init(
+                &[_][]const u8{ "git", "submodule", "update", "--init" },
+                b.allocator,
+            ) catch {
+                std.debug.warn("unable to create child process for git. build interrupted\n", .{});
+                std.os.exit(1);
+            };
+
+            const term = git_proc.spawnAndWait() catch {
+                std.debug.warn("unable to spawn child processfor git. build interrupted\n", .{});
+                std.os.exit(1);
+            };
+
+            switch (term) {
+                .Exited => |code| if (code != 0) return error.GitFail,
+                else => {
+                    std.debug.warn("git terminated unexpectedly. build interrupted\n", .{});
+                    std.os.exit(1);
+                },
+            }
         }
 
         pub fn addAsPackage(name: comptime []const u8, to: *LibExeObjStep) void {
