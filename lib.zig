@@ -11,12 +11,38 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                 "-D_POSIX_C_SOURCE",
             };
 
-            if (exe.target.toTarget().os.tag == .windows) {
-                exe.linkSystemLibrary("winmm");
-                exe.linkSystemLibrary("gdi32");
-            } else {
-                exe.linkSystemLibrary("m");
-                exe.linkSystemLibrary("X11");
+            switch (exe.target.toTarget().os.tag) {
+                .windows => {
+                    exe.linkSystemLibrary("winmm");
+                    exe.linkSystemLibrary("gdi32");
+                    exe.linkSystemLibrary("opengl32");
+                },
+                .macosx => {
+                    exe.linkFramework("OpenGL");
+                    exe.linkFramework("Cocoa");
+                    exe.linkFramework("IOKit");
+                    exe.linkFramework("CoreAudio");
+                    exe.linkFramework("CoreVideo");
+                },
+                .freebsd, .netbsd, .dragonfly => {
+                    exe.linkSystemLibrary("GL");
+                    exe.linkSystemLibrary("rt");
+                    exe.linkSystemLibrary("dl");
+                    exe.linkSystemLibrary("m");
+                    exe.linkSystemLibrary("X11");
+                    exe.linkSystemLibrary("Xrandr");
+                    exe.linkSystemLibrary("Xinerama");
+                    exe.linkSystemLibrary("Xi");
+                    exe.linkSystemLibrary("Xxf86vm");
+                    exe.linkSystemLibrary("Xcursor");
+                },
+                else => { // linux and possibly others
+                    exe.linkSystemLibrary("GL");
+                    exe.linkSystemLibrary("rt");
+                    exe.linkSystemLibrary("dl");
+                    exe.linkSystemLibrary("m");
+                    exe.linkSystemLibrary("X11");
+                },
             }
             exe.linkLibC();
 
