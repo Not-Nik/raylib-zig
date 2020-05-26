@@ -11,21 +11,30 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                 "-DPLATFORM_DESKTOP",
                 "-D_POSIX_C_SOURCE",
             };
-
-            switch (exe.target.toTarget().os.tag) {
+            const target_os = exe.target.toTarget().os.tag;
+            switch (target_os) {
                 .windows => {
                     exe.linkSystemLibrary("winmm");
                     exe.linkSystemLibrary("gdi32");
                     exe.linkSystemLibrary("opengl32");
                 },
                 .macosx => {
+                    var buffer: [100]u8 = undefined;
+
+                    const frameworkDir = std.fmt.bufPrint(buffer[0..], "/Library/Developer/CommandLineTools/SDKs/MACOSX{}.{}.sdk/System/Library/Frameworks", .{
+                        exe.target.toTarget().os.version_range.semver.max.major,
+                        exe.target.toTarget().os.version_range.semver.max.minor,
+                    }) catch unreachable;
+
+                    exe.addFrameworkDir(frameworkDir);
+                    exe.linkSystemLibrary("glfw");
                     exe.linkFramework("OpenGL");
                     exe.linkFramework("Cocoa");
                     exe.linkFramework("IOKit");
                     exe.linkFramework("CoreAudio");
                     exe.linkFramework("CoreVideo");
                 },
-                .freebsd, .netbsd, .dragonfly => {
+                .freebsd, .openbsd, .netbsd, .dragonfly => {
                     exe.linkSystemLibrary("GL");
                     exe.linkSystemLibrary("rt");
                     exe.linkSystemLibrary("dl");
@@ -59,12 +68,14 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                 \\version control. If build fails, this is probably why.
             , .{});
 
-            exe.addSystemIncludeDir(pkgdir ++ "/raylib/src");
-            exe.addSystemIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
+            exe.addIncludeDir(pkgdir ++ "/raylib/src");
+            exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
+            exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/deps/mingw");
             exe.addCSourceFile(pkgdir ++ "/raylib/src/core.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/models.c", raylibFlags);
+            if (target_os != .macosx)
+                exe.addCSourceFile(pkgdir ++ "/raylib/src/rglfw.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/raudio.c", raylibFlags);
-            exe.addCSourceFile(pkgdir ++ "/raylib/src/rglfw.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/shapes.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/text.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/textures.c", raylibFlags);
