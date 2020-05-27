@@ -10,6 +10,7 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                 "-std=c99",
                 "-DPLATFORM_DESKTOP",
                 "-D_POSIX_C_SOURCE",
+                "-DGL_SILENCE_DEPRECATION"
             };
             const target_os = exe.target.toTarget().os.tag;
             switch (target_os) {
