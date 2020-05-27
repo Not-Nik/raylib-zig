@@ -10,7 +10,7 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                 "-std=c99",
                 "-DPLATFORM_DESKTOP",
                 "-D_POSIX_C_SOURCE",
-                "-DGL_SILENCE_DEPRECATION"
+                "-DGL_SILENCE_DEPRECATION",
             };
             const target_os = exe.target.toTarget().os.tag;
             switch (target_os) {
@@ -19,21 +19,12 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                     exe.linkSystemLibrary("gdi32");
                     exe.linkSystemLibrary("opengl32");
                 },
-                .macosx => {
-                    var buffer: [100]u8 = undefined;
-
-                    const frameworkDir = std.fmt.bufPrint(buffer[0..], "/Library/Developer/CommandLineTools/SDKs/MACOSX{}.{}.sdk/System/Library/Frameworks", .{
-                        exe.target.toTarget().os.version_range.semver.max.major,
-                        exe.target.toTarget().os.version_range.semver.max.minor,
-                    }) catch unreachable;
-
-                    exe.addFrameworkDir(frameworkDir);
-                    exe.linkSystemLibrary("glfw");
-                    exe.linkFramework("OpenGL");
-                    exe.linkFramework("Cocoa");
-                    exe.linkFramework("IOKit");
-                    exe.linkFramework("CoreAudio");
-                    exe.linkFramework("CoreVideo");
+                .macosx => if (system_lib) {
+                    std.debug.warn("TODO: add libraries necessary for system_lib linking on macosx (maybe just glfw?)", .{});
+                    std.os.exit(1);
+                } else {
+                    std.debug.warn("compiling raylib is unsupported on macosx\n", .{});
+                    std.os.exit(1);
                 },
                 .freebsd, .openbsd, .netbsd, .dragonfly => {
                     exe.linkSystemLibrary("GL");
