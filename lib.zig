@@ -6,12 +6,18 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
     return struct {
         var ran_git = false;
         pub fn link(exe: *LibExeObjStep, system_lib: bool) void {
+            if (system_lib) {
+                exe.linkSystemLibrary("raylib");
+                return;
+            }
+
             const raylibFlags = &[_][]const u8{
                 "-std=c99",
                 "-DPLATFORM_DESKTOP",
                 "-D_POSIX_C_SOURCE",
                 "-DGL_SILENCE_DEPRECATION",
             };
+
             const target_os = exe.target.toTarget().os.tag;
             switch (target_os) {
                 .windows => {
@@ -23,11 +29,8 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                     exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/deps/mingw");
                     exe.addCSourceFile(pkgdir ++ "/raylib/src/rglfw.c", raylibFlags);
                 },
-                .macosx => if (system_lib) {
-                    std.debug.warn("TODO: add libraries necessary for system_lib linking on macosx (maybe just glfw?)", .{});
-                    std.os.exit(1);
-                } else {
-                    std.debug.warn("compiling raylib is unsupported on macosx\n", .{});
+                .macosx => {
+                    std.debug.warn("Compiling raylib is unsupported on macOS. Please add '-Dsystem-raylib=true' to your build command to use your system raylib.\n", .{});
                     std.os.exit(1);
                 },
                 .freebsd, .openbsd, .netbsd, .dragonfly => {
@@ -53,11 +56,6 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                 },
             }
             exe.linkLibC();
-
-            if (system_lib) {
-                exe.linkSystemLibrary("raylib");
-                return;
-            }
 
             fetchSubmodules(exe.builder) catch
                 std.debug.warn(
