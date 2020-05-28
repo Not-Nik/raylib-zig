@@ -18,6 +18,10 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                     exe.linkSystemLibrary("winmm");
                     exe.linkSystemLibrary("gdi32");
                     exe.linkSystemLibrary("opengl32");
+                    // build vendored glfw as well
+                    exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
+                    exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/deps/mingw");
+                    exe.addCSourceFile(pkgdir ++ "/raylib/src/rglfw.c", raylibFlags);
                 },
                 .macosx => if (system_lib) {
                     std.debug.warn("TODO: add libraries necessary for system_lib linking on macosx (maybe just glfw?)", .{});
@@ -27,6 +31,7 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                     std.os.exit(1);
                 },
                 .freebsd, .openbsd, .netbsd, .dragonfly => {
+                    exe.linkSystemLibrary("glfw");
                     exe.linkSystemLibrary("GL");
                     exe.linkSystemLibrary("rt");
                     exe.linkSystemLibrary("dl");
@@ -39,6 +44,7 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                     exe.linkSystemLibrary("Xcursor");
                 },
                 else => { // linux and possibly others
+                    exe.linkSystemLibrary("glfw");
                     exe.linkSystemLibrary("GL");
                     exe.linkSystemLibrary("rt");
                     exe.linkSystemLibrary("dl");
@@ -61,12 +67,9 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
             , .{});
 
             exe.addIncludeDir(pkgdir ++ "/raylib/src");
-            exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
-            exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/deps/mingw");
+
             exe.addCSourceFile(pkgdir ++ "/raylib/src/core.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/models.c", raylibFlags);
-            if (target_os != .macosx)
-                exe.addCSourceFile(pkgdir ++ "/raylib/src/rglfw.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/raudio.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/shapes.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/text.c", raylibFlags);
