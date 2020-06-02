@@ -4,6 +4,8 @@
 Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.<br>
 Bindings tested on raylib version 3.0
 
+<br><br><br><br><br>
+
 ## Example
 We can copy the default example with some minor changes:
 ```zig
