@@ -1,3 +1,5 @@
+<img align="left" src="https://github.com/Not-Nik/raylib-zig/blob/master/logo.png" width=256>
+
 # raylib-zig
 Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.<br>
 Bindings tested on raylib version 3.0
