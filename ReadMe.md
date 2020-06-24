@@ -1,8 +1,11 @@
-
 <img align="left" src="https://github.com/Not-Nik/raylib-zig/blob/master/logo/logo.png" width=256>
 
 Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.
-Bindings tested on raylib version 3.0
+
+Bindings tested on raylib version 3.0 and Zig 0.6.0
+
+Thanks to jessrud and sacredbirdman for their contributions to this binding.
+
 
 ## Example
 We can copy the default example with some minor changes:
