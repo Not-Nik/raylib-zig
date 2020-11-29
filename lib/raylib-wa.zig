@@ -55,7 +55,7 @@ pub extern fn GetScreenToWorld2D(position: Vector2, camera: Camera2D) Vector2;
 pub extern fn SetTargetFPS(fps: c_int) void;
 pub extern fn GetFPS() c_int;
 pub extern fn GetFrameTime() f32;
-pub extern fn GetTime() double;
+pub extern fn GetTime() f64;
 pub extern fn ColorToInt(color: Color) c_int;
 pub extern fn ColorNormalize(color: Color) Vector4;
 pub extern fn ColorFromNormalized(normalized: Vector4) Color;

@@ -29,7 +29,7 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
                     exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/deps/mingw");
                     exe.addCSourceFile(pkgdir ++ "/raylib/src/rglfw.c", raylibFlags);
                 },
-                .macosx => {
+                .macos => {
                     std.debug.warn("Compiling raylib is unsupported on macOS. Please add '-Dsystem-raylib=true' to your build command to use your system raylib.\n", .{});
                     std.os.exit(1);
                 },

@@ -13,6 +13,8 @@ def c_to_zig_type(t: str) -> str:
     t = t.replace("const ", "")
     if t == "float":
         t = "f32"
+    if t == "double":
+        t = "f64"
     if t == "int":
         t = "c_int"
     if t == "unsigned int":
