@@ -1,5 +1,4 @@
 import re
-import sys
 
 """
 Automatic utility for generating functions, including workaround functions
@@ -16,6 +15,8 @@ def c_to_zig_type(t: str) -> str:
     t = t.replace("const ", "")
     if t == "float":
         t = "f32"
+    if t == "double":
+        t = "f64"
     if t == "int":
         t = "c_int"
     if t == "unsigned int":
@@ -75,7 +76,7 @@ def parse_header(header_name: str, output_file: str, prefix: str):
         func_name = result.group(2)
         arguments = result.group(3)
 
-        # Igoring function here because:
+        # Ignoring function here because:
         # a) C va_args are supported in Zig but I
         if return_type in small_structs or return_type == "float3" or return_type == "float16":
             continue
@@ -107,7 +108,6 @@ def parse_header(header_name: str, output_file: str, prefix: str):
             continue
 
         # If we find variable arguments in a workaround function
-        #
         if "..." in arguments: continue
 
         zig_arguments_w = []  # arguments for the workaround function head on the zig side

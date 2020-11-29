@@ -50,7 +50,7 @@ pub extern fn GetCameraMatrix2D(camera: Camera2D) Matrix;
 pub extern fn SetTargetFPS(fps: c_int) void;
 pub extern fn GetFPS() c_int;
 pub extern fn GetFrameTime() f32;
-pub extern fn GetTime() double;
+pub extern fn GetTime() f64;
 pub extern fn WColorToInt(color: [*c]const Color) int;
 pub extern fn SetConfigFlags(flags: c_uint) void;
 pub extern fn SetTraceLogLevel(logType: c_int) void;
