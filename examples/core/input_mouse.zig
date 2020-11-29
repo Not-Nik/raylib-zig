@@ -28,6 +28,8 @@ pub fn main() anyerror!void
         // Update
         //----------------------------------------------------------------------------------
         ballPosition = GetMousePosition();
+        ballPosition.x = @intToFloat(f32, GetMouseX());
+        ballPosition.y = @intToFloat(f32, GetMouseY());
 
         if (IsMouseButtonPressed(MouseButton.MOUSE_LEFT_BUTTON)) { ballColor = MAROON; }
         else if (IsMouseButtonPressed(MouseButton.MOUSE_MIDDLE_BUTTON)) { ballColor = LIME; }
