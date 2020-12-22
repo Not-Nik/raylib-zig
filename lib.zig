@@ -105,7 +105,7 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
 
         pub fn addAsPackage(name: comptime []const u8, to: *LibExeObjStep) void {
             to.addPackagePath(name, pkgdir ++ "/lib/raylib-zig.zig");
-            to.addCSourceFile("lib/workaround.c", &[_][]const u8{});
+            to.addCSourceFile(pkgdir ++ "/lib/workaround.c", &[_][]const u8{});
         }
         pub const math = struct {
             pub fn addAsPackage(name: comptime []const u8, to: *LibExeObjStep) void {
