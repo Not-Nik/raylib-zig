@@ -57,12 +57,12 @@ pub fn Pkg(pkgdir: []const u8) type {
             }
             exe.linkLibC();
 
-            fetchSubmodules(exe.builder) catch
-                std.debug.warn(
-                \\Warning:
-                \\Unable to fetch git submodule(s) Assuming package folder is not under
-                \\version control. If build fails, this is probably why.
-            , .{});
+            //fetchSubmodules(exe.builder) catch
+            //    std.debug.warn(
+            //    \\Warning:
+            //    \\Unable to fetch git submodule(s) Assuming package folder is not under
+            //    \\version control. If build fails, this is probably why.
+            //, .{});
 
             exe.addIncludeDir(pkgdir ++ "/raylib/src");
 
