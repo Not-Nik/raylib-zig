@@ -25,7 +25,7 @@ pub fn main() anyerror!void
 
     var spacing: i32 = 0;
 
-    for (buildings) |building, i|
+    for (buildings) |_, i|
     {
         buildings[i].width = @intToFloat(f32, GetRandomValue(50, 200));
         buildings[i].height = @intToFloat(f32, GetRandomValue(100, 800));

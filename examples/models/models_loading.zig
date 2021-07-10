@@ -29,7 +29,7 @@ pub fn main() anyerror!void
     var texture = LoadTexture("resources/models/castle_diffuse.png");      // Load model texture
     model.materials[0].maps[@enumToInt(MAP_DIFFUSE)].texture = texture;                 // Set map diffuse texture
 
-    var position = Vector3 { .x = 0.0, .y = 0.0, .z = 0.0 };                // Set model position
+    //var position = Vector3 { .x = 0.0, .y = 0.0, .z = 0.0 };                // Set model position
 
     var bounds = MeshBoundingBox(model.meshes[0]);  // Set model bounds
 
