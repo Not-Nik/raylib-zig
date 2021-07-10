@@ -2,7 +2,7 @@ const std = @import("std");
 const Builder = std.build.Builder;
 const LibExeObjStep = std.build.LibExeObjStep;
 
-pub fn Pkg(pkgdir: comptime []const u8) type {
+pub fn Pkg(pkgdir: []const u8) type {
     return struct {
         var ran_git = false;
         pub fn link(exe: *LibExeObjStep, system_lib: bool) void {
@@ -103,11 +103,11 @@ pub fn Pkg(pkgdir: comptime []const u8) type {
             }
         }
 
-        pub fn addAsPackage(name: comptime []const u8, to: *LibExeObjStep) void {
+        pub fn addAsPackage(name: []const u8, to: *LibExeObjStep) void {
             to.addPackagePath(name, pkgdir ++ "/lib/raylib-zig.zig");
         }
         pub const math = struct {
-            pub fn addAsPackage(name: comptime []const u8, to: *LibExeObjStep) void {
+            pub fn addAsPackage(name: []const u8, to: *LibExeObjStep) void {
                 to.addPackagePath(name, pkgdir ++ "/lib/raylib-zig-math.zig");
             }
         };
