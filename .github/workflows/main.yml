@@ -1,0 +1,38 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the master branch
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      - name: Setup Zig
+        # You may pin to the exact commit or the version.
+        # uses: goto-bus-stop/setup-zig@41ae19e72e21b9a1380e86ff9f058db709fc8fc6
+        uses: goto-bus-stop/setup-zig@v1.3.0
+        with:
+          # Version of the zig compiler to use (must be 0.3.0 or up)
+          version: 0.8.0 # default is 0.5.0
+
+      # Runs a single command using the runners shell
+      - name: Build examples
+        run: zig build examples
