@@ -26,12 +26,7 @@ jobs:
       - uses: actions/checkout@v2
       
       - name: Setup Zig
-        # You may pin to the exact commit or the version.
-        # uses: goto-bus-stop/setup-zig@41ae19e72e21b9a1380e86ff9f058db709fc8fc6
-        uses: goto-bus-stop/setup-zig@v1.3.0
-        with:
-          # Version of the zig compiler to use (must be 0.3.0 or up)
-          version: 0.6.0 # default is 0.5.0
+        run: sudo snap install --beta zig --classic
 
       # Runs a single command using the runners shell
       - name: Build examples
