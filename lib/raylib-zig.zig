@@ -16,14 +16,6 @@ pub const Vector3 = extern struct {
     z: f32,
 };
 
-pub const float3 = extern struct {
-    v: [3]f32,
-};
-
-pub const float16 = extern struct {
-    v: [16]f32,
-};
-
 pub const Vector4 = extern struct {
     x: f32,
     y: f32,
@@ -177,21 +169,20 @@ pub const Image = extern struct {
     }
 };
 
-pub const Texture2D = extern struct {
+pub const Texture = extern struct {
     id: c_uint,
     width: c_int,
     height: c_int,
     mipmaps: c_int,
     format: c_int,
 };
+pub const Texture2D = Texture;
+pub const TextureCubemap = Texture;
 
-pub const Texture = Texture2D;
-pub const TextureCubemap = Texture2D;
-
-pub const RenderTexture2D = extern struct {
+pub const RenderTexture = extern struct {
     id: c_uint,
-    texture: Texture2D,
-    depth: Texture2D,
+    texture: Texture,
+    depth: Texture,
     depthTexture: bool,
 
     pub fn Begin(self: RenderTexture2D) void {
@@ -202,15 +193,15 @@ pub const RenderTexture2D = extern struct {
         EndTextureMode();
     }
 };
-pub const RenderTexture = RenderTexture2D;
+pub const RenderTexture2D = RenderTexture;
 
 pub const NPatchInfo = extern struct {
-    sourceRec: Rectangle,
+    source: Rectangle,
     left: c_int,
     top: c_int,
     right: c_int,
     bottom: c_int,
-    type: c_int,
+    layout: c_int,
 };
 
 pub const CharInfo = extern struct {
@@ -224,6 +215,7 @@ pub const CharInfo = extern struct {
 pub const Font = extern struct {
     baseSize: c_int,
     charsCount: c_int,
+    charsPadding: c_int,
     texture: Texture2D,
     recs: [*c]Rectangle,
     chars: [*c]CharInfo,
@@ -234,7 +226,7 @@ pub const Camera3D = extern struct {
     target: Vector3,
     up: Vector3,
     fovy: f32,
-    type: CameraType,
+    projection: c_int,
 
     pub fn Begin(self: Camera3D) void {
         BeginMode3D(self);
@@ -309,7 +301,7 @@ pub const MaterialMap = extern struct {
 pub const Material = extern struct {
     shader: Shader,
     maps: [*c]MaterialMap,
-    params: [*c]f32,
+    params: [4]f32,
 };
 
 pub const Transform = extern struct {
@@ -326,8 +318,8 @@ pub const BoneInfo = extern struct {
 pub const Model = extern struct {
     transform: Matrix,
     meshCount: c_int,
-    meshes: [*c]Mesh,
     materialCount: c_int,
+    meshes: [*c]Mesh,
     materials: [*c]Material,
     meshMaterial: [*c]c_int,
     boneCount: c_int,
@@ -337,8 +329,8 @@ pub const Model = extern struct {
 
 pub const ModelAnimation = extern struct {
     boneCount: c_int,
-    bones: [*c]BoneInfo,
     frameCount: c_int,
+    bones: [*c]BoneInfo,
     framePoses: [*c][*c]Transform,
 };
 
@@ -357,14 +349,6 @@ pub const RayHitInfo = extern struct {
 pub const BoundingBox = extern struct {
     min: Vector3,
     max: Vector3,
-
-    pub fn init(mesh: Mesh) BoundingBox {
-        return MeshBoundingBox(mesh);
-    }
-
-    pub fn Draw(self: BoundingBox, color: Color) void {
-        DrawBoundingBox(self, color);
-    }
 };
 
 pub const Wave = extern struct {
@@ -376,24 +360,25 @@ pub const Wave = extern struct {
 };
 
 pub const rAudioBuffer = opaque {};
+
 pub const AudioStream = extern struct {
+    buffer: ?*rAudioBuffer,
     sampleRate: c_uint,
     sampleSize: c_uint,
     channels: c_uint,
-    buffer: ?*rAudioBuffer,
 };
 
 pub const Sound = extern struct {
-    sampleCount: c_uint,
     stream: AudioStream,
+    sampleCount: c_uint,
 };
 
 pub const Music = extern struct {
+    stream: AudioStream,
+    sampleCount: c_uint,
+    looping: bool,
     ctxType: c_int,
     ctxData: ?*c_void,
-    sampleCount: c_uint,
-    loopCount: c_uint,
-    stream: AudioStream,
 };
 
 pub const VrDeviceInfo = extern struct {
@@ -408,19 +393,36 @@ pub const VrDeviceInfo = extern struct {
     lensDistortionValues: [4]f32,
     chromaAbCorrection: [4]f32,
 };
-const ConfigFlag = enum(c_int) {
-    FLAG_RESERVED = 1,
+
+pub const VrStereoConfig = extern struct {
+    projection: [2]Matrix,
+    viewOffset: [2]Matrix,
+    leftLensCenter: [2]f32,
+    rightLensCenter: [2]f32,
+    leftScreenCenter: [2]f32,
+    rightScreenCenter: [2]f32,
+    scale: [2]f32,
+    scaleIn: [2]f32,
+};
+
+pub const ConfigFlags = enum(c_int) {
     FLAG_FULLSCREEN_MODE = 2,
     FLAG_WINDOW_RESIZABLE = 4,
     FLAG_WINDOW_UNDECORATED = 8,
     FLAG_WINDOW_TRANSPARENT = 16,
-    FLAG_WINDOW_HIDDEN = 128,
-    FLAG_WINDOW_ALWAYS_RUN = 256,
     FLAG_MSAA_4X_HINT = 32,
     FLAG_VSYNC_HINT = 64,
+    FLAG_WINDOW_HIDDEN = 128,
+    FLAG_WINDOW_ALWAYS_RUN = 256,
+    FLAG_WINDOW_MINIMIZED = 512,
+    FLAG_WINDOW_MAXIMIZED = 1024,
+    FLAG_WINDOW_UNFOCUSED = 2048,
+    FLAG_WINDOW_TOPMOST = 4096,
+    FLAG_WINDOW_HIGHDPI = 8192,
+    FLAG_INTERLACED_HINT = 65536,
 };
 
-pub const TraceLogType = enum(c_int) {
+pub const TraceLogLevel = enum(c_int) {
     LOG_ALL = 0,
     LOG_TRACE = 1,
     LOG_DEBUG = 2,
@@ -430,6 +432,7 @@ pub const TraceLogType = enum(c_int) {
     LOG_FATAL = 6,
     LOG_NONE = 7,
 };
+
 pub const KeyboardKey = enum(c_int) {
     KEY_NULL = 0,
     KEY_APOSTROPHE = 39,
@@ -537,9 +540,6 @@ pub const KeyboardKey = enum(c_int) {
     KEY_KP_ADD = 334,
     KEY_KP_ENTER = 335,
     KEY_KP_EQUAL = 336,
-};
-
-pub const AndroidButton = enum(c_int) {
     KEY_BACK = 4,
     KEY_MENU = 82,
     KEY_VOLUME_UP = 24,
@@ -552,11 +552,18 @@ pub const MouseButton = enum(c_int) {
     MOUSE_MIDDLE_BUTTON = 2,
 };
 
-pub const GamepadNumber = enum(c_int) {
-    GAMEPAD_PLAYER1 = 0,
-    GAMEPAD_PLAYER2 = 1,
-    GAMEPAD_PLAYER3 = 2,
-    GAMEPAD_PLAYER4 = 3,
+pub const MouseCursor = enum(c_int) {
+    MOUSE_CURSOR_DEFAULT = 0,
+    MOUSE_CURSOR_ARROW = 1,
+    MOUSE_CURSOR_IBEAM = 2,
+    MOUSE_CURSOR_CROSSHAIR = 3,
+    MOUSE_CURSOR_POINTING_HAND = 4,
+    MOUSE_CURSOR_RESIZE_EW = 5,
+    MOUSE_CURSOR_RESIZE_NS = 6,
+    MOUSE_CURSOR_RESIZE_NWSE = 7,
+    MOUSE_CURSOR_RESIZE_NESW = 8,
+    MOUSE_CURSOR_RESIZE_ALL = 9,
+    MOUSE_CURSOR_NOT_ALLOWED = 10,
 };
 
 pub const GamepadButton = enum(c_int) {
@@ -581,116 +588,116 @@ pub const GamepadButton = enum(c_int) {
 };
 
 pub const GamepadAxis = enum(c_int) {
-    GAMEPAD_AXIS_UNKNOWN = 0,
-    GAMEPAD_AXIS_LEFT_X = 1,
-    GAMEPAD_AXIS_LEFT_Y = 2,
-    GAMEPAD_AXIS_RIGHT_X = 3,
-    GAMEPAD_AXIS_RIGHT_Y = 4,
-    GAMEPAD_AXIS_LEFT_TRIGGER = 5,
-    GAMEPAD_AXIS_RIGHT_TRIGGER = 6,
+    GAMEPAD_AXIS_LEFT_X = 0,
+    GAMEPAD_AXIS_LEFT_Y = 1,
+    GAMEPAD_AXIS_RIGHT_X = 2,
+    GAMEPAD_AXIS_RIGHT_Y = 3,
+    GAMEPAD_AXIS_LEFT_TRIGGER = 4,
+    GAMEPAD_AXIS_RIGHT_TRIGGER = 5,
+};
+
+pub const MaterialMapIndex = enum(c_int) {
+    MATERIAL_MAP_ALBEDO = 0,
+    MATERIAL_MAP_METALNESS = 1,
+    MATERIAL_MAP_NORMAL = 2,
+    MATERIAL_MAP_ROUGHNESS = 3,
+    MATERIAL_MAP_OCCLUSION = 4,
+    MATERIAL_MAP_EMISSION = 5,
+    MATERIAL_MAP_HEIGHT = 6,
+    MATERIAL_MAP_BRDG = 7,
+    MATERIAL_MAP_CUBEMAP = 8,
+    MATERIAL_MAP_IRRADIANCE = 9,
+    MATERIAL_MAP_PREFILTER = 10,
 };
 
 pub const ShaderLocationIndex = enum(c_int) {
-    LOC_VERTEX_POSITION = 0,
-    LOC_VERTEX_TEXCOORD01 = 1,
-    LOC_VERTEX_TEXCOORD02 = 2,
-    LOC_VERTEX_NORMAL = 3,
-    LOC_VERTEX_TANGENT = 4,
-    LOC_VERTEX_COLOR = 5,
-    LOC_MATRIX_MVP = 6,
-    LOC_MATRIX_MODEL = 7,
-    LOC_MATRIX_VIEW = 8,
-    LOC_MATRIX_PROJECTION = 9,
-    LOC_VECTOR_VIEW = 10,
-    LOC_COLOR_DIFFUSE = 11,
-    LOC_COLOR_SPECULAR = 12,
-    LOC_COLOR_AMBIENT = 13,
-    LOC_MAP_ALBEDO = 14,
-    LOC_MAP_METALNESS = 15,
-    LOC_MAP_NORMAL = 16,
-    LOC_MAP_ROUGHNESS = 17,
-    LOC_MAP_OCCLUSION = 18,
-    LOC_MAP_EMISSION = 19,
-    LOC_MAP_HEIGHT = 20,
-    LOC_MAP_CUBEMAP = 21,
-    LOC_MAP_IRRADIANCE = 22,
-    LOC_MAP_PREFILTER = 23,
-    LOC_MAP_BRDF = 24,
+    SHADER_LOC_VERTEX_POSITION = 0,
+    SHADER_LOC_VERTEX_TEXCOORD01 = 1,
+    SHADER_LOC_VERTEX_TEXCOORD02 = 2,
+    SHADER_LOC_VERTEX_NORMAL = 3,
+    SHADER_LOC_VERTEX_TANGENT = 4,
+    SHADER_LOC_VERTEX_COLOR = 5,
+    SHADER_LOC_MATRIX_MVP = 6,
+    SHADER_LOC_MATRIX_VIEW = 7,
+    SHADER_LOC_MATRIX_PROJECTION = 8,
+    SHADER_LOC_MATRIX_MODEL = 9,
+    SHADER_LOC_MATRIX_NORMAL = 10,
+    SHADER_LOC_VECTOR_VIEW = 11,
+    SHADER_LOC_COLOR_DIFFUSE = 12,
+    SHADER_LOC_COLOR_SPECULAR = 13,
+    SHADER_LOC_COLOR_AMBIENT = 14,
+    SHADER_LOC_MAP_ALBEDO = 15,
+    SHADER_LOC_MAP_METALNESS = 16,
+    SHADER_LOC_MAP_NORMAL = 17,
+    SHADER_LOC_MAP_ROUGHNESS = 18,
+    SHADER_LOC_MAP_OCCLUSION = 19,
+    SHADER_LOC_MAP_EMISSION = 20,
+    SHADER_LOC_MAP_HEIGHT = 21,
+    SHADER_LOC_MAP_CUBEMAP = 22,
+    SHADER_LOC_MAP_IRRADIANCE = 23,
+    SHADER_LOC_MAP_PREFILTER = 24,
+    SHADER_LOC_MAP_BRDF = 25,
 };
 
 pub const ShaderUniformDataType = enum(c_int) {
-    UNIFORM_FLOAT = 0,
-    UNIFORM_VEC2 = 1,
-    UNIFORM_VEC3 = 2,
-    UNIFORM_VEC4 = 3,
-    UNIFORM_INT = 4,
-    UNIFORM_IVEC2 = 5,
-    UNIFORM_IVEC3 = 6,
-    UNIFORM_IVEC4 = 7,
-    UNIFORM_SAMPLER2D = 8,
-};
-
-pub const MaterialMapType = enum(c_int) {
-    MAP_ALBEDO = 0,
-    MAP_METALNESS = 1,
-    MAP_NORMAL = 2,
-    MAP_ROUGHNESS = 3,
-    MAP_OCCLUSION = 4,
-    MAP_EMISSION = 5,
-    MAP_HEIGHT = 6,
-    MAP_CUBEMAP = 7,
-    MAP_IRRADIANCE = 8,
-    MAP_PREFILTER = 9,
-    MAP_BRDF = 10,
+    SHADER_UNIFORM_FLOAT = 0,
+    SHADER_UNIFORM_VEC2 = 1,
+    SHADER_UNIFORM_VEC3 = 2,
+    SHADER_UNIFORM_VEC4 = 3,
+    SHADER_UNIFORM_INT = 4,
+    SHADER_UNIFORM_IVEC2 = 5,
+    SHADER_UNIFORM_IVEC3 = 6,
+    SHADER_UNIFORM_IVEC4 = 7,
+    SHADER_UNIFORM_SAMPLER2D = 8,
 };
 
 pub const PixelFormat = enum(c_int) {
-    UNCOMPRESSED_GRAYSCALE = 1,
-    UNCOMPRESSED_GRAY_ALPHA = 2,
-    UNCOMPRESSED_R5G6B5 = 3,
-    UNCOMPRESSED_R8G8B8 = 4,
-    UNCOMPRESSED_R5G5B5A1 = 5,
-    UNCOMPRESSED_R4G4B4A4 = 6,
-    UNCOMPRESSED_R8G8B8A8 = 7,
-    UNCOMPRESSED_R32 = 8,
-    UNCOMPRESSED_R32G32B32 = 9,
-    UNCOMPRESSED_R32G32B32A32 = 10,
-    COMPRESSED_DXT1_RGB = 11,
-    COMPRESSED_DXT1_RGBA = 12,
-    COMPRESSED_DXT3_RGBA = 13,
-    COMPRESSED_DXT5_RGBA = 14,
-    COMPRESSED_ETC1_RGB = 15,
-    COMPRESSED_ETC2_RGB = 16,
-    COMPRESSED_ETC2_EAC_RGBA = 17,
-    COMPRESSED_PVRT_RGB = 18,
-    COMPRESSED_PVRT_RGBA = 19,
-    COMPRESSED_ASTC_4x4_RGBA = 20,
-    COMPRESSED_ASTC_8x8_RGBA = 21,
+    PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1,
+    PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA = 2,
+    PIXELFORMAT_UNCOMPRESSED_R5G6B5 = 3,
+    PIXELFORMAT_UNCOMPRESSED_R8G8B8 = 4,
+    PIXELFORMAT_UNCOMPRESSED_R5G5B5A1 = 5,
+    PIXELFORMAT_UNCOMPRESSED_R4G4B4A4 = 6,
+    PIXELFORMAT_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 = 7,
+    PIXELFORMAT_UNCOMPRESSED_R32 = 8,
+    PIXELFORMAT_UNCOMPRESSED_R32G32B32 = 9,
+    PIXELFORMAT_UNCOMPRESSED_R32G32B32A32 = 10,
+    PIXELFORMAT_COMPRESSED_DXT1_RGB = 11,
+    PIXELFORMAT_COMPRESSED_DXT1_RGBA = 12,
+    PIXELFORMAT_COMPRESSED_DXT3_RGBA = 13,
+    PIXELFORMAT_COMPRESSED_DXT5_RGBA = 14,
+    PIXELFORMAT_COMPRESSED_ETC1_RGB = 15,
+    PIXELFORMAT_COMPRESSED_ETC2_RGB = 16,
+    PIXELFORMAT_COMPRESSED_ETC2_EAC_RGBA = 17,
+    PIXELFORMAT_COMPRESSED_PVRT_RGB = 18,
+    PIXELFORMAT_COMPRESSED_PVRT_RGBA = 19,
+    PIXELFORMAT_COMPRESSED_ASTC_4x4_RGBA = 20,
+    PIXELFORMAT_COMPRESSED_ASTC_8x8_RGBA = 21,
 };
 
-pub const TextureFilterMode = enum(c_int) {
-    FILTER_POINT = 0,
-    FILTER_BILINEAR = 1,
-    FILTER_TRILINEAR = 2,
-    FILTER_ANISOTROPIC_4X = 3,
-    FILTER_ANISOTROPIC_8X = 4,
-    FILTER_ANISOTROPIC_16X = 5,
+pub const TextureFilter = enum(c_int) {
+    TEXTURE_FILTER_POINT = 0,
+    TEXTURE_FILTER_BILINEAR = 1,
+    TEXTURE_FILTER_TRILINEAR = 2,
+    TEXTURE_FILTER_ANISOTROPIC_4X = 3,
+    TEXTURE_FILTER_ANISOTROPIC_8X = 4,
+    TEXTURE_FILTER_ANISOTROPIC_16X = 5,
 };
 
-pub const CubemapLayoutType = enum(c_int) {
-    CUBEMAP_AUTO_DETECT = 0,
-    CUBEMAP_LINE_VERTICAL = 1,
-    CUBEMAP_LINE_HORIZONTAL = 2,
-    CUBEMAP_CROSS_THREE_BY_FOUR = 3,
-    CUBEMAP_CROSS_FOUR_BY_THREE = 4,
-    CUBEMAP_PANORAMA = 5,
+pub const TextureWrap = enum(c_int) {
+    TEXTURE_WRAP_REPEAT = 0,
+    TEXTURE_WRAP_CLAMP = 1,
+    TEXTURE_WRAP_MIRROR_REPEAT = 2,
+    TEXTURE_WRAP_MIRROR_CLAMP = 3,
 };
 
-pub const TextureWrapMode = enum(c_int) {
-    WRAP_REPEAT = 0,
-    WRAP_CLAMP = 1,
-    WRAP_MIRROR_REPEAT = 2,
-    WRAP_MIRROR_CLAMP = 3,
+pub const CubemapLayout = enum(c_int) {
+    CUBEMAP_LAYOUT_AUTO_DETECT = 0,
+    CUBEMAP_LAYOUT_LINE_VERTICAL = 1,
+    CUBEMAP_LAYOUT_LINE_HORIZONTAL = 2,
+    CUBEMAP_LAYOUT_CROSS_THREE_BY_FOUR = 3,
+    CUBEMAP_LAYOUT_CROSS_FOUR_BY_THREE = 4,
+    CUBEMAP_LAYOUT_PANORAMA = 5,
 };
 
 pub const FontType = enum(c_int) {
@@ -703,9 +710,12 @@ pub const BlendMode = enum(c_int) {
     BLEND_ALPHA = 0,
     BLEND_ADDITIVE = 1,
     BLEND_MULTIPLIED = 2,
+    BLEND_ADD_COLORS = 3,
+    BLEND_SUBTRACT_COLORS = 4,
+    BLEND_CUSTOM = 5,
 };
 
-pub const GestureType = enum(c_int) {
+pub const Gestures = enum(c_int) {
     GESTURE_NONE = 0,
     GESTURE_TAP = 1,
     GESTURE_DOUBLETAP = 2,
@@ -727,7 +737,7 @@ pub const CameraMode = enum(c_int) {
     CAMERA_THIRD_PERSON = 4,
 };
 
-pub const CameraType = enum(c_int) {
+pub const CameraProjection = enum(c_int) {
     CAMERA_PERSPECTIVE = 0,
     CAMERA_ORTHOGRAPHIC = 1,
 };
@@ -738,10 +748,12 @@ pub const NPatchType = enum(c_int) {
     NPT_3PATCH_HORIZONTAL = 2,
 };
 
-pub const MAP_DIFFUSE = MaterialMapType.MAP_ALBEDO;
-pub const MAP_SPECULAR = MaterialMapType.MAP_METALNESS;
-pub const LOC_MAP_SPECULAR = LOC_MAP_METALNESS;
-pub const LOC_MAP_DIFFUSE = LOC_MAP_ALBEDO;
+pub const TraceLogCallback = ?fn (c_int, [*c]const u8, [*c]struct___va_list_tag) callconv(.C) void;
+pub const LoadFileDataCallback = ?fn ([*c]const u8, [*c]c_uint) callconv(.C) [*c]u8;
+pub const SaveFileDataCallback = ?fn ([*c]const u8, ?*c_void, c_uint) callconv(.C) bool;
+pub const LoadFileTextCallback = ?fn ([*c]const u8) callconv(.C) [*c]u8;
+pub const SaveFileTextCallback = ?fn ([*c]const u8, [*c]u8) callconv(.C) bool;
+
 
 pub const MAX_TOUCH_POINTS = 10;
 pub const MAX_MATERIAL_MAPS = 12;
@@ -753,5 +765,19 @@ pub const SpriteFont = Font;
 pub const SubText = TextSubtext;
 pub const ShowWindow = UnhideWindow;
 pub const FormatText = TextFormat;
+pub const LoadText = LoadFileText;
+pub const GetExtension = GetFileExtension;
+pub const GetImageData = LoadImageColors;
+pub const FILTER_POINT = TEXTURE_FILTER_POINT;
+pub const FILTER_BILINEAR = TEXTURE_FILTER_BILINEAR;
+pub const MAP_DIFFUSE = MATERIAL_MAP_DIFFUSE;
+pub const PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 = PIXELFORMAT_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+pub const SpriteFont = Font;
+
+pub const MATERIAL_MAP_DIFFUSE = MATERIAL_MAP_ALBEDO;
+pub const MATERIAL_MAP_SPECULAR = MATERIAL_MAP_METALNESS;
+pub const SHADER_LOC_MAP_DIFFUSE = SHADER_LOC_MAP_ALBEDO;
+pub const SHADER_LOC_MAP_SPECULAR = SHADER_LOC_MAP_METALNESS;
+
 
 pub usingnamespace @import("raylib-wa.zig");

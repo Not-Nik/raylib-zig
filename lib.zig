@@ -18,20 +18,23 @@ pub fn Pkg(pkgdir: []const u8) type {
                 "-DGL_SILENCE_DEPRECATION",
             };
 
+            exe.linkSystemLibrary("c");
+
             const target_os = exe.target.toTarget().os.tag;
             switch (target_os) {
                 .windows => {
                     exe.linkSystemLibrary("winmm");
                     exe.linkSystemLibrary("gdi32");
                     exe.linkSystemLibrary("opengl32");
-                    // build vendored glfw as well
-                    exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
                     exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/deps/mingw");
-                    exe.addCSourceFile(pkgdir ++ "/raylib/src/rglfw.c", raylibFlags);
                 },
                 .macos => {
-                    std.debug.warn("Compiling raylib is unsupported on macOS. Please add '-Dsystem-raylib=true' to your build command to use your system raylib.\n", .{});
-                    std.os.exit(1);
+                    exe.linkFramework("OpenGL");
+                    exe.linkFramework("Cocoa");
+                    exe.linkFramework("IOKit");
+                    exe.linkFramework("CoreAudio");
+                    exe.linkFramework("CoreVideo");
+                    exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
                 },
                 .freebsd, .openbsd, .netbsd, .dragonfly => {
                     exe.linkSystemLibrary("glfw");
@@ -65,6 +68,7 @@ pub fn Pkg(pkgdir: []const u8) type {
             , .{});
 
             exe.addIncludeDir(pkgdir ++ "/raylib/src");
+            exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
 
             exe.addCSourceFile(pkgdir ++ "/raylib/src/core.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/models.c", raylibFlags);
@@ -73,6 +77,7 @@ pub fn Pkg(pkgdir: []const u8) type {
             exe.addCSourceFile(pkgdir ++ "/raylib/src/text.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/textures.c", raylibFlags);
             exe.addCSourceFile(pkgdir ++ "/raylib/src/utils.c", raylibFlags);
+            exe.addCSourceFile(pkgdir ++ "/raylib/src/rglfw.c", raylibFlags);
         }
 
         fn fetchSubmodules(b: *Builder) !void {
