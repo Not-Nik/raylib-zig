@@ -366,7 +366,7 @@ pub extern fn GetShapesTexture() Texture2D;
 pub extern fn GetShapesTextureRec() Rectangle;
 pub extern fn SetShapesTexture(texture: Texture2D, source: Rectangle) void;
 pub extern fn GetShaderLocation(shader: Shader, uniformName: [*c]const u8) c_int;
-pub extern fn SetShaderValue(shader: Shader, uniformLoc: c_int, value: [*c]const void, uniformType: c_int) void;
+pub extern fn SetShaderValue(shader: Shader, uniformLoc: c_int, value: *const c_void, uniformType: c_int) void;
 pub extern fn SetShaderValueV(shader: Shader, uniformLoc: c_int, value: [*c]const void, uniformType: c_int, count: c_int) void;
 pub extern fn SetShaderValueMatrix(shader: Shader, uniformLoc: c_int, mat: Matrix) void;
 pub extern fn SetShaderValueTexture(shader: Shader, uniformLoc: c_int, texture: Texture2D) void;
@@ -441,5 +441,3 @@ pub extern fn StopAudioStream(stream: AudioStream) void;
 pub extern fn SetAudioStreamVolume(stream: AudioStream, volume: f32) void;
 pub extern fn SetAudioStreamPitch(stream: AudioStream, pitch: f32) void;
 pub extern fn SetAudioStreamBufferSizeDefault(size: c_int) void;
-
-
