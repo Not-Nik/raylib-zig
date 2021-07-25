@@ -36,6 +36,9 @@ def fix_pointer(name: str, t: str):
         pre += "[*c]"
     if len(pre) != 0:
         t = pre + "const " + t
+
+    if t == "[*c]const void":
+        t = "*const c_void"
     return name, t
 
 

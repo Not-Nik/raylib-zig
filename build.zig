@@ -55,6 +55,11 @@ pub fn build(b: *Builder) void {
             .path = "examples/models/models_loading.zig",
             .desc = "Loads a model and renders it",
         },
+        .{
+            .name = "shaders_basic_lighting",
+            .path = "examples/shaders/shaders_basic_lighting.zig",
+            .desc = "Loads a model and renders it",
+        },
     };
 
     const examples_step = b.step("examples", "Builds all the examples");
