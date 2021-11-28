@@ -16,8 +16,8 @@ pub fn main() anyerror!void
 
     InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
 
-    var boxPositionY: i32 = screenHeight / 2 - 40;
-    var scrollSpeed: i32 = 4;            // Scrolling speed in pixels
+    var boxPositionY: f32 = screenHeight / 2 - 40;
+    var scrollSpeed: f32 = 4;            // Scrolling speed in pixels
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -36,10 +36,10 @@ pub fn main() anyerror!void
 
             ClearBackground(WHITE);
 
-            DrawRectangle(screenWidth/2 - 40, boxPositionY, 80, 80, MAROON);
+            DrawRectangle(screenWidth/2 - 40, @floatToInt(c_int, boxPositionY), 80, 80, MAROON);
 
             DrawText("Use mouse wheel to move the cube up and down!", 10, 10, 20, GRAY);
-            DrawText(FormatText("Box position Y: %03i", boxPositionY), 10, 40, 20, LIGHTGRAY);
+            DrawText(FormatText("Box position Y: %03i", @floatToInt(c_int, boxPositionY)), 10, 40, 20, LIGHTGRAY);
 
         EndDrawing();
         //----------------------------------------------------------------------------------

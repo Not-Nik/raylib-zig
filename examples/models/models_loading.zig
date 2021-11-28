@@ -23,7 +23,7 @@ pub fn main() anyerror!void {
         .target = Vector3{ .x = 0.0, .y = 10.0, .z = 0.0 }, // Camera looking at point
         .up = Vector3{ .x = 0.0, .y = 1.0, .z = 0.0 }, // Camera up vector (rotation towards target)
         .fovy = 45.0, // Camera field-of-view Y
-        .type = CameraType.CAMERA_PERSPECTIVE, // Camera mode type
+        .projection = CameraProjection.CAMERA_PERSPECTIVE, // Camera mode type
     };
 
     var model = LoadModel(resourceDir ++ "models/castle.obj"); // Load model

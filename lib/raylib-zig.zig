@@ -226,7 +226,7 @@ pub const Camera3D = extern struct {
     target: Vector3,
     up: Vector3,
     fovy: f32,
-    projection: c_int,
+    projection: CameraProjection,
 
     pub fn Begin(self: Camera3D) void {
         BeginMode3D(self);
@@ -541,7 +541,7 @@ pub const KeyboardKey = enum(c_int) {
     KEY_KP_ENTER = 335,
     KEY_KP_EQUAL = 336,
     KEY_BACK = 4,
-    KEY_MENU = 82,
+    //KEY_MENU = 82,
     KEY_VOLUME_UP = 24,
     KEY_VOLUME_DOWN = 25,
 };
@@ -772,10 +772,9 @@ pub const FILTER_POINT = TEXTURE_FILTER_POINT;
 pub const FILTER_BILINEAR = TEXTURE_FILTER_BILINEAR;
 pub const MAP_DIFFUSE = MATERIAL_MAP_DIFFUSE;
 pub const PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 = PIXELFORMAT_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
-pub const SpriteFont = Font;
 
-pub const MATERIAL_MAP_DIFFUSE = MATERIAL_MAP_ALBEDO;
-pub const MATERIAL_MAP_SPECULAR = MATERIAL_MAP_METALNESS;
+pub const MATERIAL_MAP_DIFFUSE = MaterialMapIndex.MATERIAL_MAP_ALBEDO;
+pub const MATERIAL_MAP_SPECULAR = MaterialMapIndex.MATERIAL_MAP_METALNESS;
 pub const SHADER_LOC_MAP_DIFFUSE = SHADER_LOC_MAP_ALBEDO;
 pub const SHADER_LOC_MAP_SPECULAR = SHADER_LOC_MAP_METALNESS;
 

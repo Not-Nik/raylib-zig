@@ -243,7 +243,7 @@ pub extern fn ImageAlphaClear(image: [*c]const Image, color: Color, threshold: f
 pub extern fn ImageAlphaMask(image: [*c]const Image, alphaMask: Image) void;
 pub extern fn ImageAlphaPremultiply(image: [*c]const Image) void;
 pub extern fn ImageResize(image: [*c]const Image, newWidth: c_int, newHeight: c_int) void;
-pub extern fn ImageResizeNN(image: [*c]const Image, newHeight: int newWidth,int) void;
+pub extern fn ImageResizeNN(image: [*c]const Image, newWidth: c_int, newHeight: c_int) void;
 pub extern fn ImageResizeCanvas(image: [*c]const Image, newWidth: c_int, newHeight: c_int, offsetX: c_int, offsetY: c_int, fill: Color) void;
 pub extern fn ImageMipmaps(image: [*c]const Image) void;
 pub extern fn ImageDither(image: [*c]const Image, rBpp: c_int, gBpp: c_int, bBpp: c_int, aBpp: c_int) void;
@@ -384,7 +384,7 @@ pub extern fn SetModelMeshMaterial(model: [*c]const Model, meshId: c_int, materi
 pub extern fn LoadModelAnimations(fileName: [*c]const u8, animsCount: [*c]const c_int) [*c]const ModelAnimation;
 pub extern fn UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: c_int) void;
 pub extern fn UnloadModelAnimation(anim: ModelAnimation) void;
-pub extern fn UnloadModelAnimations(animations: ModelAnimation*, count: c_uint) void;
+pub extern fn UnloadModelAnimations(animations: [*c]const ModelAnimation, count: c_uint) void;
 pub extern fn IsModelAnimationValid(model: Model, anim: ModelAnimation) bool;
 pub extern fn GenMeshPoly(sides: c_int, radius: f32) Mesh;
 pub extern fn GenMeshPlane(width: f32, length: f32, resX: c_int, resZ: c_int) Mesh;
@@ -445,7 +445,7 @@ pub extern fn WaveCrop(wave: [*c]const Wave, initSample: c_int, finalSample: c_i
 pub extern fn LoadWaveSamples(wave: Wave) [*c]const f32;
 pub extern fn UnloadWaveSamples(samples: [*c]const f32) void;
 pub extern fn LoadMusicStream(fileName: [*c]const u8) Music;
-pub extern fn LoadMusicStreamFromMemory(fileType: [*c]const u8, data: unsigned char*, dataSize: c_int) Music;
+pub extern fn LoadMusicStreamFromMemory(fileType: [*c]const u8, data: [*c]const u8, dataSize: c_int) Music;
 pub extern fn UnloadMusicStream(music: Music) void;
 pub extern fn PlayMusicStream(music: Music) void;
 pub extern fn IsMusicPlaying(music: Music) bool;

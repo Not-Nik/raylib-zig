@@ -69,7 +69,7 @@ pub fn main() anyerror!void
         camera.rotation = Clamp(camera.rotation, -40, 40);
 
         // Camera zoom controls
-        camera.zoom += @intToFloat(f32, GetMouseWheelMove() * @floatToInt(c_int, 0.05));
+        camera.zoom += GetMouseWheelMove() * 0.05;
 
         camera.zoom = Clamp(camera.zoom, 0.1, 3.0);
 

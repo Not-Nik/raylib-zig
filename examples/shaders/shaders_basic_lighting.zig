@@ -32,7 +32,7 @@ pub fn main() !void {
         .target = .{ .x = 0.0, .y = 0.5, .z = 0.0 }, // Camera looking at point
         .up = .{ .x = 0.0, .y = 1.0, .z = 0.0 }, // Camera up vector (rotation towards target)
         .fovy = 45.0, // Camera field-of-view Y
-        .type = CameraType.CAMERA_PERSPECTIVE, // Camera mode type
+        .projection = CameraProjection.CAMERA_PERSPECTIVE, // Camera mode type
     };
 
     // Load models
@@ -54,13 +54,13 @@ pub fn main() !void {
     );
 
     // Get some shader loactions
-    shader.locs[@enumToInt(ShaderLocationIndex.LOC_MATRIX_MODEL)] = GetShaderLocation(shader, "matModel");
-    shader.locs[@enumToInt(ShaderLocationIndex.LOC_VECTOR_VIEW)] = GetShaderLocation(shader, "viewPos");
+    shader.locs[@enumToInt(ShaderLocationIndex.SHADER_LOC_MATRIX_MODEL)] = GetShaderLocation(shader, "matModel");
+    shader.locs[@enumToInt(ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW)] = GetShaderLocation(shader, "viewPos");
 
     // ambient light level
     const ambientLoc = GetShaderLocation(shader, "ambient");
     const ambientVals = [4]f32{ 0.2, 0.2, 0.2, 1.0 };
-    SetShaderValue(shader, ambientLoc, &ambientVals, @enumToInt(ShaderUniformDataType.UNIFORM_VEC4));
+    SetShaderValue(shader, ambientLoc, &ambientVals, @enumToInt(ShaderUniformDataType.SHADER_UNIFORM_VEC4));
 
     var angle: f32 = 6.282;
 
@@ -126,7 +126,7 @@ pub fn main() !void {
 
         // Update the light shader with the camera view position
         const cameraPos = [3]f32{ camera.position.x, camera.position.y, camera.position.z };
-        SetShaderValue(shader, shader.locs[@enumToInt(ShaderLocationIndex.LOC_VECTOR_VIEW)], &cameraPos, @enumToInt(ShaderUniformDataType.UNIFORM_VEC3));
+        SetShaderValue(shader, shader.locs[@enumToInt(ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW)], &cameraPos, @enumToInt(ShaderUniformDataType.SHADER_UNIFORM_VEC3));
         //----------------------------------------------------------------------------------
 
         // Draw
