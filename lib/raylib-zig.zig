@@ -5,6 +5,10 @@
 // Date: 2020-02-15
 //
 
+pub usingnamespace @import("raylib-wa.zig");
+
+const rl = @This();
+
 pub const Vector2 = extern struct {
     x: f32,
     y: f32,
@@ -50,33 +54,33 @@ pub const Color = extern struct {
     a: u8,
 };
 
-pub const LIGHTGRAY  = Color { .r = 200,    .g = 200,   .b = 200,   .a = 255 };
-pub const GRAY       = Color { .r = 130,    .g = 130,   .b = 130,   .a = 255 };
-pub const DARKGRAY   = Color { .r = 80,     .g = 80,    .b = 80,    .a = 255 };
-pub const YELLOW     = Color { .r = 253,    .g = 249,   .b = 0,     .a = 255 };
-pub const GOLD       = Color { .r = 255,    .g = 203,   .b = 0,     .a = 255 };
-pub const ORANGE     = Color { .r = 255,    .g = 161,   .b = 0,     .a = 255 };
-pub const PINK       = Color { .r = 255,    .g = 109,   .b = 194,   .a = 255 };
-pub const RED        = Color { .r = 230,    .g = 41,    .b = 55,    .a = 255 };
-pub const MAROON     = Color { .r = 190,    .g = 33,    .b = 55,    .a = 255 };
-pub const GREEN      = Color { .r = 0,      .g = 228,   .b = 48,    .a = 255 };
-pub const LIME       = Color { .r = 0,      .g = 158,   .b = 47,    .a = 255 };
-pub const DARKGREEN  = Color { .r = 0,      .g = 117,   .b = 44,    .a = 255 };
-pub const SKYBLUE    = Color { .r = 102,    .g = 191,   .b = 255,   .a = 255 };
-pub const BLUE       = Color { .r = 0,      .g = 121,   .b = 241,   .a = 255 };
-pub const DARKBLUE   = Color { .r = 0,      .g = 82,    .b = 172,   .a = 255 };
-pub const PURPLE     = Color { .r = 200,    .g = 122,   .b = 255,   .a = 255 };
-pub const VIOLET     = Color { .r = 135,    .g = 60,    .b = 190,   .a = 255 };
-pub const DARKPURPLE = Color { .r = 112,    .g = 31,    .b = 126,   .a = 255 };
-pub const BEIGE      = Color { .r = 211,    .g = 176,   .b = 131,   .a = 255 };
-pub const BROWN      = Color { .r = 127,    .g = 106,   .b = 79,    .a = 255 };
-pub const DARKBROWN  = Color { .r = 76,     .g = 63,    .b = 47,    .a = 255 };
+pub const LIGHTGRAY = Color{ .r = 200, .g = 200, .b = 200, .a = 255 };
+pub const GRAY = Color{ .r = 130, .g = 130, .b = 130, .a = 255 };
+pub const DARKGRAY = Color{ .r = 80, .g = 80, .b = 80, .a = 255 };
+pub const YELLOW = Color{ .r = 253, .g = 249, .b = 0, .a = 255 };
+pub const GOLD = Color{ .r = 255, .g = 203, .b = 0, .a = 255 };
+pub const ORANGE = Color{ .r = 255, .g = 161, .b = 0, .a = 255 };
+pub const PINK = Color{ .r = 255, .g = 109, .b = 194, .a = 255 };
+pub const RED = Color{ .r = 230, .g = 41, .b = 55, .a = 255 };
+pub const MAROON = Color{ .r = 190, .g = 33, .b = 55, .a = 255 };
+pub const GREEN = Color{ .r = 0, .g = 228, .b = 48, .a = 255 };
+pub const LIME = Color{ .r = 0, .g = 158, .b = 47, .a = 255 };
+pub const DARKGREEN = Color{ .r = 0, .g = 117, .b = 44, .a = 255 };
+pub const SKYBLUE = Color{ .r = 102, .g = 191, .b = 255, .a = 255 };
+pub const BLUE = Color{ .r = 0, .g = 121, .b = 241, .a = 255 };
+pub const DARKBLUE = Color{ .r = 0, .g = 82, .b = 172, .a = 255 };
+pub const PURPLE = Color{ .r = 200, .g = 122, .b = 255, .a = 255 };
+pub const VIOLET = Color{ .r = 135, .g = 60, .b = 190, .a = 255 };
+pub const DARKPURPLE = Color{ .r = 112, .g = 31, .b = 126, .a = 255 };
+pub const BEIGE = Color{ .r = 211, .g = 176, .b = 131, .a = 255 };
+pub const BROWN = Color{ .r = 127, .g = 106, .b = 79, .a = 255 };
+pub const DARKBROWN = Color{ .r = 76, .g = 63, .b = 47, .a = 255 };
 
-pub const WHITE      = Color {.r = 255,     .g = 255,   .b = 255,   .a = 255 };
-pub const BLACK      = Color { .r = 0,      .g = 0,     .b = 0,     .a = 255 };
-pub const BLANK      = Color { .r = 0,      .g = 0,     .b = 0,     .a = 0   };
-pub const MAGENTA    = Color { .r = 255,    .g = 0,     .b = 255,   .a = 255 };
-pub const RAYWHITE   = Color { .r = 245,    .g = 245,   .b = 245,   .a = 255 };
+pub const WHITE = Color{ .r = 255, .g = 255, .b = 255, .a = 255 };
+pub const BLACK = Color{ .r = 0, .g = 0, .b = 0, .a = 255 };
+pub const BLANK = Color{ .r = 0, .g = 0, .b = 0, .a = 0 };
+pub const MAGENTA = Color{ .r = 255, .g = 0, .b = 255, .a = 255 };
+pub const RAYWHITE = Color{ .r = 245, .g = 245, .b = 245, .a = 255 };
 
 pub const Rectangle = extern struct {
     x: f32,
@@ -86,86 +90,70 @@ pub const Rectangle = extern struct {
 };
 
 pub const Image = extern struct {
-    data: ?*c_void,
+    data: ?*anyopaque,
     width: c_int,
     height: c_int,
     mipmaps: c_int,
     format: PixelFormat,
 
     pub fn init(fileName: [*c]const u8) Image {
-        return LoadImage(fileName);
-    }
-
-    pub fn initEx(pixels: [*c]Color, width: c_int, height: c_int) Image {
-        return LoadImageEx(pixels, width, height);
-    }
-
-    pub fn initPro(data: ?*c_void, width: c_int, height: c_int, format: PixelFormat) Image {
-        return LoadImagePro(data, width, height, format);
+        return rl.LoadImage(fileName);
     }
 
     pub fn initRaw(fileName: [*c]const u8, width: c_int, height: c_int, format: PixelFormat, headerSize: c_int) Image {
-        return LoadImageRaw(fileName, width, height, format, headerSize);
+        return rl.LoadImageRaw(fileName, width, height, format, headerSize);
     }
 
     pub fn initText(text: [*c]const u8, fontSize: c_int, color: Color) Image {
-        return ImageText(text, fontSize, color);
+        return rl.ImageText(text, fontSize, color);
     }
 
     pub fn initTextEx(font: Font, text: [*c]const u8, fontSize: f32, spacing: f32, tint: Color) Image {
-        return ImageTextEx(font, text, fontSize, spacing, tint);
+        return rl.ImageTextEx(font, text, fontSize, spacing, tint);
     }
 
     pub fn copy(image: Image) Image {
-        return ImageCopy(image);
+        return rl.ImageCopy(image);
     }
 
     pub fn copyRec(image: Image, rec: Rectangle) Image {
-        return ImageFromImage(image, rec);
+        return rl.ImageFromImage(image, rec);
     }
 
     pub fn GenColor(width: c_int, height: c_int, color: Color) Image {
-        return GenImageColor(width, height, color);
+        return rl.GenImageColor(width, height, color);
     }
 
     pub fn GenGradientV(width: c_int, height: c_int, top: Color, bottom: Color) Image {
-        return GenImageGradientV(width, height, top, bottom);
+        return rl.GenImageGradientV(width, height, top, bottom);
     }
 
     pub fn GenGradientH(width: c_int, height: c_int, left: Color, right: Color) Image {
-        return GenImageGradientH(width, height, left, right);
+        return rl.GenImageGradientH(width, height, left, right);
     }
 
     pub fn GenGradientRadial(width: c_int, height: c_int, density: f32, inner: Color, outer: Color) Image {
-        return GenImageGradientRadial(width, height, density, inner, outer);
+        return rl.GenImageGradientRadial(width, height, density, inner, outer);
     }
 
     pub fn GenChecked(width: c_int, height: c_int, checksX: c_int, checksY: c_int, col1: Color, col2: Color) Image {
-        return GenImageChecked(width, height, checksX, checksY, col1, col2);
+        return rl.GenImageChecked(width, height, checksX, checksY, col1, col2);
     }
 
     pub fn GenWhiteNoise(width: c_int, height: c_int, factor: f32) Image {
-        return GenImageWhiteNoise(width, height, factor);
+        return rl.GenImageWhiteNoise(width, height, factor);
     }
 
     pub fn GenPerlinNoise(width: c_int, height: c_int, offsetX: c_int, offsetY: c_int, scale: f32) Image {
-        return GenImagePerlinNoise(width, height, offsetX, offsetY, scale);
+        return rl.GenImagePerlinNoise(width, height, offsetX, offsetY, scale);
     }
 
     pub fn GenCellular(width: c_int, height: c_int, tileSize: c_int) Image {
-        return GenImageCellular(width, height, tileSize);
-    }
-
-    pub fn GetData(self: Image) [*c]Color {
-        return GetImageData(self);
-    }
-
-    pub fn GetDataNormalized(self: Image) [*c]Color {
-        return GetImageDataNormalized(self);
+        return rl.GenImageCellular(width, height, tileSize);
     }
 
     pub fn UseAsWindowIcon(self: Image) void {
-        SetWindowIcon(self);
+        rl.SetWindowIcon(self);
     }
 };
 
@@ -186,11 +174,11 @@ pub const RenderTexture = extern struct {
     depthTexture: bool,
 
     pub fn Begin(self: RenderTexture2D) void {
-        BeginTextureMode(self);
+        rl.BeginTextureMode(self);
     }
 
     pub fn End(_: RenderTexture2D) void {
-        EndTextureMode();
+        rl.EndTextureMode();
     }
 };
 pub const RenderTexture2D = RenderTexture;
@@ -229,23 +217,23 @@ pub const Camera3D = extern struct {
     projection: CameraProjection,
 
     pub fn Begin(self: Camera3D) void {
-        BeginMode3D(self);
+        rl.BeginMode3D(self);
     }
 
     pub fn Update(self: *Camera3D) void {
-        UpdateCamera(self);
+        rl.UpdateCamera(self);
     }
 
     pub fn GetMatrix(self: Camera3D) Matrix {
-        return GetCameraMatrix(self);
+        return rl.GetCameraMatrix(self);
     }
 
     pub fn SetMode(self: Camera3D, mode: CameraMode) void {
-        SetCameraMode(self, mode);
+        rl.SetCameraMode(self, mode);
     }
 
     pub fn End(_: Camera3D) void {
-        EndMode3D();
+        rl.EndMode3D();
     }
 };
 pub const Camera = Camera3D;
@@ -257,15 +245,15 @@ pub const Camera2D = extern struct {
     zoom: f32,
 
     pub fn Begin(self: Camera2D) void {
-        BeginMode2D(self);
+        rl.BeginMode2D(self);
     }
 
     pub fn GetMatrix(self: Camera2D) Matrix {
-        return GetCameraMatrix2D(self);
+        return rl.GetCameraMatrix2D(self);
     }
 
     pub fn End(_: Camera2D) void {
-        EndMode2D();
+        rl.EndMode2D();
     }
 };
 
@@ -356,7 +344,7 @@ pub const Wave = extern struct {
     sampleRate: c_uint,
     sampleSize: c_uint,
     channels: c_uint,
-    data: ?*c_void,
+    data: ?*anyopaque,
 };
 
 pub const rAudioBuffer = opaque {};
@@ -378,7 +366,7 @@ pub const Music = extern struct {
     sampleCount: c_uint,
     looping: bool,
     ctxType: c_int,
-    ctxData: ?*c_void,
+    ctxData: ?*anyopaque,
 };
 
 pub const VrDeviceInfo = extern struct {
@@ -748,12 +736,11 @@ pub const NPatchType = enum(c_int) {
     NPT_3PATCH_HORIZONTAL = 2,
 };
 
-pub const TraceLogCallback = ?fn (c_int, [*c]const u8, [*c]struct___va_list_tag) callconv(.C) void;
+// pub const TraceLogCallback = ?fn (c_int, [*c]const u8, [*c]struct___va_list_tag) callconv(.C) void;
 pub const LoadFileDataCallback = ?fn ([*c]const u8, [*c]c_uint) callconv(.C) [*c]u8;
-pub const SaveFileDataCallback = ?fn ([*c]const u8, ?*c_void, c_uint) callconv(.C) bool;
+pub const SaveFileDataCallback = ?fn ([*c]const u8, ?*anyopaque, c_uint) callconv(.C) bool;
 pub const LoadFileTextCallback = ?fn ([*c]const u8) callconv(.C) [*c]u8;
 pub const SaveFileTextCallback = ?fn ([*c]const u8, [*c]u8) callconv(.C) bool;
-
 
 pub const MAX_TOUCH_POINTS = 10;
 pub const MAX_MATERIAL_MAPS = 12;
@@ -761,22 +748,18 @@ pub const MAX_SHADER_LOCATIONS = 32;
 
 pub const PI = 3.141593;
 
-pub const SpriteFont = Font;
-pub const SubText = TextSubtext;
-pub const ShowWindow = UnhideWindow;
-pub const FormatText = TextFormat;
-pub const LoadText = LoadFileText;
-pub const GetExtension = GetFileExtension;
-pub const GetImageData = LoadImageColors;
-pub const FILTER_POINT = TEXTURE_FILTER_POINT;
-pub const FILTER_BILINEAR = TEXTURE_FILTER_BILINEAR;
+pub const SpriteFont = rl.Font;
+pub const SubText = rl.TextSubtext;
+pub const FormatText = rl.TextFormat;
+pub const LoadText = rl.LoadFileText;
+pub const GetExtension = rl.GetFileExtension;
+pub const GetImageData = rl.LoadImageColors;
+pub const FILTER_POINT = TextureFilter.TEXTURE_FILTER_POINT;
+pub const FILTER_BILINEAR = TextureFilter.TEXTURE_FILTER_BILINEAR;
 pub const MAP_DIFFUSE = MATERIAL_MAP_DIFFUSE;
-pub const PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 = PIXELFORMAT_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
+pub const PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 = PixelFormat.PIXELFORMAT_PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
 
 pub const MATERIAL_MAP_DIFFUSE = MaterialMapIndex.MATERIAL_MAP_ALBEDO;
 pub const MATERIAL_MAP_SPECULAR = MaterialMapIndex.MATERIAL_MAP_METALNESS;
-pub const SHADER_LOC_MAP_DIFFUSE = SHADER_LOC_MAP_ALBEDO;
-pub const SHADER_LOC_MAP_SPECULAR = SHADER_LOC_MAP_METALNESS;
-
-
-pub usingnamespace @import("raylib-wa.zig");
+pub const SHADER_LOC_MAP_DIFFUSE = ShaderLocationIndex.SHADER_LOC_MAP_ALBEDO;
+pub const SHADER_LOC_MAP_SPECULAR = ShaderLocationIndex.SHADER_LOC_MAP_METALNESS;

@@ -1,3 +1,5 @@
+#!/bin/env bash
+
 if [ "$#" -ne 1 ]; then
   PROJECT_NAME='Project'
 else
