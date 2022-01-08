@@ -61,7 +61,7 @@ pub fn Pkg(pkgdir: []const u8) type {
             exe.linkLibC();
 
             fetchSubmodules(exe.builder) catch
-                std.debug.warn(
+                std.debug.print(
                 \\Warning:
                 \\Unable to fetch git submodule(s) Assuming package folder is not under
                 \\version control. If build fails, this is probably why.
@@ -84,25 +84,25 @@ pub fn Pkg(pkgdir: []const u8) type {
             if (ran_git) return;
             ran_git = true;
 
-            std.debug.warn("attempting to fetch submodule(s)...\n", .{});
+            std.debug.print("attempting to fetch submodule(s)...\n", .{});
 
             const git_proc = std.ChildProcess.init(
                 &[_][]const u8{ "git", "submodule", "update", "--init" },
                 b.allocator,
             ) catch {
-                std.debug.warn("unable to create child process for git. build interrupted\n", .{});
+                std.debug.print("unable to create child process for git. build interrupted\n", .{});
                 std.os.exit(1);
             };
             git_proc.cwd = pkgdir;
             const term = git_proc.spawnAndWait() catch {
-                std.debug.warn("unable to spawn child process for git. build interrupted\n", .{});
+                std.debug.print("unable to spawn child process for git. build interrupted\n", .{});
                 std.os.exit(1);
             };
 
             switch (term) {
                 .Exited => |code| if (code != 0) return error.GitFail,
                 else => {
-                    std.debug.warn("git terminated unexpectedly. build interrupted\n", .{});
+                    std.debug.print("git terminated unexpectedly. build interrupted\n", .{});
                     std.os.exit(1);
                 },
             }
