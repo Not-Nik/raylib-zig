@@ -1,10 +1,10 @@
-![logo](https://github.com/Not-Nik/raylib-zig/blob/master/logo/logo.png)
+![logo](https://github.com/Not-Nik/raylib-zig/raw/devel/logo/logo.png)
 
 # raylib-zig
 
 Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.
 
-Bindings tested on raylib version 3.7 and Zig 0.9.0-dev
+Bindings tested on raylib version 4.0.0-dev and Zig 0.9.0
 
 Thanks to jessrud, mbcrocci, rcorre, Gertkeno and sacredbirdman for their contributions to this binding.
 
@@ -15,50 +15,44 @@ The binding currently only supports a subset of raylib. For more information rea
 We can copy the default example with some minor changes:
 
 ```zig
-usingnamespace @import("raylib");
+const rl = @import("raylib");
 
-pub fn main() anyerror!void
-{
+pub fn main() anyerror!void {
     // Initialization
     //--------------------------------------------------------------------------------------
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "MyWindow");
+    rl.InitWindow(screenWidth, screenHeight, "MyWindow");
 
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
-    {
+    while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
+        // Update
+        //----------------------------------------------------------------------------------
+        // TODO: Update your variables here
+        //----------------------------------------------------------------------------------
+
         // Draw
         //----------------------------------------------------------------------------------
-        BeginDrawing();
+        rl.BeginDrawing();
 
-            ClearBackground(WHITE);
+        rl.ClearBackground(rl.WHITE);
 
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        rl.DrawText("Congrats! You created your first window!", 190, 200, 20, rl.LIGHTGRAY);
 
-        EndDrawing();
+        rl.EndDrawing();
         //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
+    rl.CloseWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 }
 ```
-
-## Technical restrictions
-
-Due to zig being a relatively new language it does [not have full C ABI support](https://github.com/ziglang/zig/issues/1481) at the moment. For use that mainly means we
-can't use any functions that return structs that are less than 16 bytes large. Here is an incomplete list of some functions affected by this:
-
-+ DrawCircleV
-+ DrawRectangleRec
-+ DrawModel and all its variations
 
 ## Building the examples
 

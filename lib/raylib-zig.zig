@@ -1,6 +1,6 @@
 //
 // raylib-zig
-// Zig version:
+// Zig version: 0.9.0
 // Author: Nikolas Wipper
 // Date: 2020-02-15
 //

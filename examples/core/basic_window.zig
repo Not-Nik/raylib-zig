@@ -19,8 +19,7 @@ pub fn main() anyerror!void {
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!rl.WindowShouldClose()) // Detect window close button or ESC key
-    {
+    while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
         // Update
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
