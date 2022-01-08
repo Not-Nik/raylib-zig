@@ -14,7 +14,7 @@ pub fn Pkg(pkgdir: []const u8) type {
             const raylibFlags = &[_][]const u8{
                 "-std=c99",
                 "-DPLATFORM_DESKTOP",
-                "-D_POSIX_C_SOURCE",
+                "-D_POSIX_C_SOURCE=199309L",
                 "-DGL_SILENCE_DEPRECATION",
             };
 
