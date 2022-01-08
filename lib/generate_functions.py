@@ -3,7 +3,7 @@ import re
 """
 Automatic utility for generating raylib function headers. Simply put
 raylib.h in the working directory of this script and execute.
-Tested with raylib version 3.0.0
+Tested with raylib version 3.7.0
 """
 
 C_TO_ZIG = {
@@ -17,7 +17,7 @@ C_TO_ZIG = {
     "unsigned int": "c_uint",
 }
 
-# Some c types have a different size on different systems
+# Some c types have a different sizes on different systems
 # and zig knows that so we tell it to get the system specific size for us
 def c_to_zig_type(c: str) -> str:
     c = c.replace("const ", "")
@@ -56,9 +56,6 @@ def fix_enums(arg_name, arg_type, func_name):
         elif arg_name == "gesture":
             arg_type = "Gestures"
     return arg_type
-
-
-small_structs = ["Vector2", "Vector3", "Vector4", "Quaternion", "Color", "Rectangle", "Shader"]
 
 
 def parse_header(header_name: str, output_file: str, prefix: str):

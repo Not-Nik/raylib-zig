@@ -152,10 +152,6 @@ pub const Image = extern struct {
         return rl.GenImageCellular(width, height, tileSize);
     }
 
-    pub fn GetData(self: Image) [*c]Color {
-        return GetImageData(self);
-    }
-
     pub fn UseAsWindowIcon(self: Image) void {
         rl.SetWindowIcon(self);
     }
