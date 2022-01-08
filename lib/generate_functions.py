@@ -137,4 +137,4 @@ def parse_header(header_name: str, output_file: str, prefix: str):
 
 
 parse_header("raylib.h", "raylib-wa.zig", "RLAPI ")
-parse_header("raymath.h", "raylib-zig-math.zig", "RMDEF ")
+parse_header("raymath.h", "raylib-zig-math.zig", "RMAPI ")

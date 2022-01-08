@@ -25,31 +25,31 @@ pub fn build(b: *Builder) void {
             .path = "examples/core/basic_window.zig",
             .desc = "Creates a basic window with text",
         },
-        // .{
-        //     .name = "input_keys",
-        //     .path = "examples/core/input_keys.zig",
-        //     .desc = "Simple keyboard input",
-        // },
-        // .{
-        //     .name = "input_mouse",
-        //     .path = "examples/core/input_mouse.zig",
-        //     .desc = "Simple mouse input",
-        // },
-        // .{
-        //     .name = "input_mouse_wheel",
-        //     .path = "examples/core/input_mouse_wheel.zig",
-        //     .desc = "Mouse wheel input",
-        // },
-        // .{
-        //     .name = "input_multitouch",
-        //     .path = "examples/core/input_multitouch.zig",
-        //     .desc = "Multitouch input",
-        // },
-        // .{
-        //     .name = "2d_camera",
-        //     .path = "examples/core/2d_camera.zig",
-        //     .desc = "Shows the functionality of a 2D camera",
-        // },
+        .{
+            .name = "input_keys",
+            .path = "examples/core/input_keys.zig",
+            .desc = "Simple keyboard input",
+        },
+        .{
+            .name = "input_mouse",
+            .path = "examples/core/input_mouse.zig",
+            .desc = "Simple mouse input",
+        },
+        .{
+            .name = "input_mouse_wheel",
+            .path = "examples/core/input_mouse_wheel.zig",
+            .desc = "Mouse wheel input",
+        },
+        .{
+            .name = "input_multitouch",
+            .path = "examples/core/input_multitouch.zig",
+            .desc = "Multitouch input",
+        },
+        .{
+            .name = "2d_camera",
+            .path = "examples/core/2d_camera.zig",
+            .desc = "Shows the functionality of a 2D camera",
+        },
         // .{
         //     .name = "models_loading",
         //     .path = "examples/models/models_loading.zig",
