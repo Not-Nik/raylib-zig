@@ -1,4 +1,11 @@
-usingnamespace @import("raylib-zig.zig");
+const rl = @import("raylib-zig.zig");
+
+const Matrix = rl.Matrix;
+const Quaternion = rl.Quaternion;
+const Vector2 = rl.Vector2;
+const Vector3 = rl.Vector3;
+const float16 = rl.float16;
+const float3 = rl.float3;
 
 pub extern fn Clamp(value: f32, min: f32, max: f32) f32;
 pub extern fn Lerp(start: f32, end: f32, amount: f32) f32;

@@ -5,22 +5,21 @@
 // Date: 2020-02-15
 //
 
-usingnamespace @import("raylib");
+const rl = @import("raylib");
 
-pub fn main() anyerror!void
-{
+pub fn main() anyerror!void {
     // Initialization
     //--------------------------------------------------------------------------------------
     const screenWidth = 800;
     const screenHeight = 450;
 
-    InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
+    rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
 
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    while (!rl.WindowShouldClose()) // Detect window close button or ESC key
     {
         // Update
         //----------------------------------------------------------------------------------
@@ -29,18 +28,18 @@ pub fn main() anyerror!void
 
         // Draw
         //----------------------------------------------------------------------------------
-        BeginDrawing();
+        rl.BeginDrawing();
 
-            ClearBackground(WHITE);
+        rl.ClearBackground(rl.WHITE);
 
-            DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        rl.DrawText("Congrats! You created your first window!", 190, 200, 20, rl.LIGHTGRAY);
 
-        EndDrawing();
+        rl.EndDrawing();
         //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    CloseWindow();        // Close window and OpenGL context
+    rl.CloseWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 }
