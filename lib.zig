@@ -1,6 +1,7 @@
 const std = @import("std");
 const Builder = std.build.Builder;
 const LibExeObjStep = std.build.LibExeObjStep;
+const rl = @import("raylib/src/build.zig").Pkg("raylib/src");
 
 pub fn Pkg(pkgdir: []const u8) type {
     return struct {
@@ -9,16 +10,9 @@ pub fn Pkg(pkgdir: []const u8) type {
             if (system_lib) {
                 exe.linkSystemLibrary("raylib");
                 return;
+            } else {
+                exe.linkLibrary(rl.addRaylib(exe.builder, exe.target));
             }
-
-            const raylibFlags = &[_][]const u8{
-                "-std=c99",
-                "-DPLATFORM_DESKTOP",
-                "-D_POSIX_C_SOURCE=199309L",
-                "-DGL_SILENCE_DEPRECATION",
-            };
-
-            exe.linkSystemLibrary("c");
 
             const target_os = exe.target.toTarget().os.tag;
             switch (target_os) {
@@ -26,7 +20,6 @@ pub fn Pkg(pkgdir: []const u8) type {
                     exe.linkSystemLibrary("winmm");
                     exe.linkSystemLibrary("gdi32");
                     exe.linkSystemLibrary("opengl32");
-                    exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/deps/mingw");
                 },
                 .macos => {
                     exe.linkFramework("OpenGL");
@@ -34,10 +27,8 @@ pub fn Pkg(pkgdir: []const u8) type {
                     exe.linkFramework("IOKit");
                     exe.linkFramework("CoreAudio");
                     exe.linkFramework("CoreVideo");
-                    exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
                 },
                 .freebsd, .openbsd, .netbsd, .dragonfly => {
-                    exe.linkSystemLibrary("glfw");
                     exe.linkSystemLibrary("GL");
                     exe.linkSystemLibrary("rt");
                     exe.linkSystemLibrary("dl");
@@ -50,60 +41,11 @@ pub fn Pkg(pkgdir: []const u8) type {
                     exe.linkSystemLibrary("Xcursor");
                 },
                 else => { // linux and possibly others
-                    exe.linkSystemLibrary("glfw");
                     exe.linkSystemLibrary("GL");
                     exe.linkSystemLibrary("rt");
                     exe.linkSystemLibrary("dl");
                     exe.linkSystemLibrary("m");
                     exe.linkSystemLibrary("X11");
-                },
-            }
-            exe.linkLibC();
-
-            fetchSubmodules(exe.builder) catch
-                std.debug.print(
-                \\Warning:
-                \\Unable to fetch git submodule(s) Assuming package folder is not under
-                \\version control. If build fails, this is probably why.
-            , .{});
-
-            exe.addIncludeDir(pkgdir ++ "/raylib/src");
-            exe.addIncludeDir(pkgdir ++ "/raylib/src/external/glfw/include");
-
-            exe.addCSourceFile(pkgdir ++ "/raylib/src/core.c", raylibFlags);
-            exe.addCSourceFile(pkgdir ++ "/raylib/src/models.c", raylibFlags);
-            exe.addCSourceFile(pkgdir ++ "/raylib/src/raudio.c", raylibFlags);
-            exe.addCSourceFile(pkgdir ++ "/raylib/src/shapes.c", raylibFlags);
-            exe.addCSourceFile(pkgdir ++ "/raylib/src/text.c", raylibFlags);
-            exe.addCSourceFile(pkgdir ++ "/raylib/src/textures.c", raylibFlags);
-            exe.addCSourceFile(pkgdir ++ "/raylib/src/utils.c", raylibFlags);
-            exe.addCSourceFile(pkgdir ++ "/raylib/src/rglfw.c", raylibFlags);
-        }
-
-        fn fetchSubmodules(b: *Builder) !void {
-            if (ran_git) return;
-            ran_git = true;
-
-            std.debug.print("attempting to fetch submodule(s)...\n", .{});
-
-            const git_proc = std.ChildProcess.init(
-                &[_][]const u8{ "git", "submodule", "update", "--init" },
-                b.allocator,
-            ) catch {
-                std.debug.print("unable to create child process for git. build interrupted\n", .{});
-                std.os.exit(1);
-            };
-            git_proc.cwd = pkgdir;
-            const term = git_proc.spawnAndWait() catch {
-                std.debug.print("unable to spawn child process for git. build interrupted\n", .{});
-                std.os.exit(1);
-            };
-
-            switch (term) {
-                .Exited => |code| if (code != 0) return error.GitFail,
-                else => {
-                    std.debug.print("git terminated unexpectedly. build interrupted\n", .{});
-                    std.os.exit(1);
                 },
             }
         }

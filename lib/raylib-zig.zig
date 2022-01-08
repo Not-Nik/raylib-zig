@@ -144,10 +144,6 @@ pub const Image = extern struct {
         return rl.GenImageWhiteNoise(width, height, factor);
     }
 
-    pub fn GenPerlinNoise(width: c_int, height: c_int, offsetX: c_int, offsetY: c_int, scale: f32) Image {
-        return rl.GenImagePerlinNoise(width, height, offsetX, offsetY, scale);
-    }
-
     pub fn GenCellular(width: c_int, height: c_int, tileSize: c_int) Image {
         return rl.GenImageCellular(width, height, tileSize);
     }
