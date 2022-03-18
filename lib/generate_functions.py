@@ -17,29 +17,31 @@ C_TO_ZIG = {
     "unsigned int": "c_uint",
 }
 
+
 # Some c types have a different sizes on different systems
 # and zig knows that so we tell it to get the system specific size for us
 def c_to_zig_type(c: str) -> str:
+    const = "const " if "const " in c else ""
     c = c.replace("const ", "")
     z = C_TO_ZIG.get(c)
 
     if z is not None:
-        return z
+        return const + z
 
-    return c
+    return const + c
 
 
 def fix_pointer(name: str, t: str):
-    t = t.replace("const ", "")
     pre = ""
     while name.startswith("*"):
         name = name[1:]
         pre += "[*c]"
-    if len(pre) != 0:
-        t = pre + "const " + t
+    t = pre + t
 
     if t == "[*c]const void":
         t = "*const anyopaque"
+    elif t == "[*c]void":
+        t = "*anyopaque"
     return name, t
 
 
@@ -75,7 +77,6 @@ def parse_header(header_name: str, output_file: str, prefix: str):
             pass
         elif line.startswith("typedef "):
             zig_types.add(line.split(' ')[2].replace(';', '').strip())
-
 
         if not line.startswith(prefix):
             continue
@@ -114,14 +115,13 @@ def parse_header(header_name: str, output_file: str, prefix: str):
                 zig_arguments.append("...")
                 continue
             arg_type = " ".join(arg.split(" ")[0:-1])  # everything but the last element (for stuff like "const Vector3")
-            arg_type = arg_type.replace("const ", "")  # we'll add that later if needed
             arg_name = arg.split(" ")[-1]  # last element should be the name
             arg_type = fix_enums(arg_name, arg_type, func_name)
 
             arg_type = c_to_zig_type(arg_type)
             arg_name, arg_type = fix_pointer(arg_name, arg_type)
 
-            zig_types.add(arg_type)
+            zig_types.add(arg_type.replace("const ", ""))
             zig_arguments.append(arg_name + ": " + arg_type)  # put everything together
         zig_arguments = ", ".join(zig_arguments)
         zig_heads.append("pub extern fn " + func_name + "(" + zig_arguments + ") " + return_type + ";")
