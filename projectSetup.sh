@@ -11,7 +11,7 @@ touch build.zig
 echo "generating project files..."
 echo 'const std = @import("std");
 const Builder = std.build.Builder;
-const raylib = @import("raylib-zig/lib.zig").Pkg("raylib-zig"); //call .Pkg() with the folder raylib-zig is in relative to project build.zig
+const raylib = @import("raylib-zig/lib.zig"); //call .Pkg() with the folder raylib-zig is in relative to project build.zig
 
 
 pub fn build(b: *Builder) void {
@@ -39,4 +39,4 @@ pub fn build(b: *Builder) void {
 mkdir src
 cp ../examples/core/basic_window.zig src/main.zig
 echo "cloning raylib-zig inside of project..."
-git clone ../ raylib-zig
+git clone ../ raylib-zig --recursive
