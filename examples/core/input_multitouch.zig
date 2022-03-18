@@ -59,8 +59,7 @@ pub fn main() anyerror!void
                 if ((touchPosition.x >= 0) and (touchPosition.y >= 0))   // Make sure point is not (-1,-1) as this means there is no touch for it
                 {
                     // Draw circle and touch index number
-                    rl.DrawCircle(@floatToInt(c_int, touchPosition.x), @floatToInt(c_int, touchPosition.y), 34, rl.ORANGE);
-                    //DrawCircleV(touchPosition, 34, ORANGE);
+                    rl.DrawCircleV(touchPosition, 34, rl.ORANGE);
                     rl.DrawText(rl.FormatText("%d", i), @floatToInt(c_int, touchPosition.x) - 10, @floatToInt(c_int, touchPosition.y) - 70, 40, rl.BLACK);
                 }
             }

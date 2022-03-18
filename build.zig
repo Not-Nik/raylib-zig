@@ -7,7 +7,7 @@
 
 const std = @import("std");
 const Builder = std.build.Builder;
-const raylib = @import("lib.zig").Pkg(".");
+const raylib = @import("lib.zig");
 
 const Program = struct {
     name: []const u8,
