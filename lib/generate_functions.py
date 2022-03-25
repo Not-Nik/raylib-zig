@@ -52,7 +52,10 @@ def fix_enums(arg_name, arg_type, func_name):
         if arg_name == "key":
             arg_type = "KeyboardKey"
         elif arg_name == "button":
-            arg_type = "MouseButton"
+            if "Gamepad" in func_name:
+                arg_type = "GamepadButton"
+            else:
+                arg_type = "MouseButton"
         elif arg_name == "mode" and func_name == "SetCameraMode":
             arg_type = "CameraMode"
         elif arg_name == "gesture":
