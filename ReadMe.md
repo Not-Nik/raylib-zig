@@ -8,7 +8,7 @@ Bindings tested on raylib version 4.0.0-dev and Zig 0.9.0
 
 Thanks to jessrud, mbcrocci, rcorre, Gertkeno and sacredbirdman for their contributions to this binding.
 
-The binding currently only supports a subset of raylib. For more information read [here](https://github.com/Not-Nik/raylib-zig#technical-restrictions).
+The binding currently only supports a subset of raylib. For more information read [here](#technical-restrictions).
 
 ## Example
 
@@ -53,6 +53,11 @@ pub fn main() anyerror!void {
     //--------------------------------------------------------------------------------------
 }
 ```
+
+## Technical restrictions
+
+Due to zig being a relatively new language it does [not have full C ABI support](https://github.com/ziglang/zig/issues/1481) at the moment. For use that mainly means we
+can't use any functions that return structs that are less than 16 bytes large.
 
 ## Building the examples
 
