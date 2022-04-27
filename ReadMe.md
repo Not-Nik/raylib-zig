@@ -8,7 +8,7 @@ Bindings tested on raylib version 3.0 and Zig 0.9.0-dev
 
 Thanks to jessrud and sacredbirdman for their contributions to this binding.
 
-The binding currently only supports a subset of raylib. For more information read [here](https://github.com/Not-Nik/raylib-zig#technical-restrictions). Some of these issues are fixed on the [workaround branch](https://github.com/Not-Nik/raylib-zig/tree/workaround), however, this is entirely experimental.
+The binding currently only supports a subset of raylib. For more information read [here](#technical-restrictions). Some of these issues are fixed on the [workaround branch](https://github.com/Not-Nik/raylib-zig/tree/workaround), however, this is entirely experimental.
 
 ## Example
 We can copy the default example with some minor changes:
