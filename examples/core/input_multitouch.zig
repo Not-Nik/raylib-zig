@@ -34,13 +34,13 @@ pub fn main() anyerror!void
 
         ballColor = rl.BEIGE;
 
-        if (rl.IsMouseButtonDown(rl.MouseButton.MOUSE_LEFT_BUTTON)) { ballColor = rl.MAROON; }
-        if (rl.IsMouseButtonDown(rl.MouseButton.MOUSE_MIDDLE_BUTTON)) { ballColor = rl.LIME; }
-        if (rl.IsMouseButtonDown(rl.MouseButton.MOUSE_RIGHT_BUTTON)) { ballColor = rl.DARKBLUE; }
+        if (rl.IsMouseButtonDown(rl.MouseButton.MOUSE_BUTTON_LEFT)) { ballColor = rl.MAROON; }
+        if (rl.IsMouseButtonDown(rl.MouseButton.MOUSE_BUTTON_MIDDLE)) { ballColor = rl.LIME; }
+        if (rl.IsMouseButtonDown(rl.MouseButton.MOUSE_BUTTON_RIGHT)) { ballColor = rl.DARKBLUE; }
 
-        if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_LEFT_BUTTON)) { touchCounter = 10; }
-        if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_MIDDLE_BUTTON)) { touchCounter = 10; }
-        if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_RIGHT_BUTTON)) { touchCounter = 10; }
+        if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_LEFT)) { touchCounter = 10; }
+        if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_MIDDLE)) { touchCounter = 10; }
+        if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_RIGHT)) { touchCounter = 10; }
 
         if (touchCounter > 0) { touchCounter -= 1; }
         //----------------------------------------------------------------------------------

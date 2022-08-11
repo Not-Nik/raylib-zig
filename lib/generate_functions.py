@@ -42,6 +42,8 @@ def fix_pointer(name: str, t: str):
         t = "*const anyopaque"
     elif t == "[*c]void":
         t = "*anyopaque"
+    elif len(pre) == 0:
+        t = t.replace("const ", "")
     return name, t
 
 
@@ -139,5 +141,6 @@ def parse_header(header_name: str, output_file: str, prefix: str):
     print("\n".join(zig_functions), file=zigheader)
 
 
-parse_header("raylib.h", "raylib-wa.zig", "RLAPI ")
-parse_header("raymath.h", "raylib-zig-math.zig", "RMAPI ")
+if __name__ == "__main__":
+    parse_header("raylib.h", "raylib-wa.zig", "RLAPI ")
+    parse_header("raymath.h", "raylib-zig-math.zig", "RMAPI ")

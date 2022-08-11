@@ -31,9 +31,9 @@ pub fn main() anyerror!void
         ballPosition.x = @intToFloat(f32, rl.GetMouseX());
         ballPosition.y = @intToFloat(f32, rl.GetMouseY());
 
-        if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_LEFT_BUTTON)) { ballColor = rl.MAROON; }
-        else if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_MIDDLE_BUTTON)) { ballColor = rl.LIME; }
-        else if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_RIGHT_BUTTON)) { ballColor = rl.DARKBLUE; }
+        if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_LEFT)) { ballColor = rl.MAROON; }
+        else if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_MIDDLE)) { ballColor = rl.LIME; }
+        else if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_RIGHT)) { ballColor = rl.DARKBLUE; }
         //----------------------------------------------------------------------------------
 
         // Draw

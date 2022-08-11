@@ -265,7 +265,7 @@ pub const Mesh = extern struct {
     indices: [*c]c_ushort,
     animVertices: [*c]f32,
     animNormals: [*c]f32,
-    boneIds: [*c]c_int,
+    boneIds: [*c]u8,
     boneWeights: [*c]f32,
     vaoId: c_uint,
     vboId: [*c]c_uint,
@@ -336,7 +336,7 @@ pub const BoundingBox = extern struct {
 };
 
 pub const Wave = extern struct {
-    sampleCount: c_uint,
+    frameCount: c_uint,
     sampleRate: c_uint,
     sampleSize: c_uint,
     channels: c_uint,
@@ -344,9 +344,11 @@ pub const Wave = extern struct {
 };
 
 pub const rAudioBuffer = opaque {};
+pub const rAudioProcessor = opaque {};
 
 pub const AudioStream = extern struct {
     buffer: ?*rAudioBuffer,
+    processor: ?*rAudioProcessor,
     sampleRate: c_uint,
     sampleSize: c_uint,
     channels: c_uint,
@@ -389,6 +391,12 @@ pub const VrStereoConfig = extern struct {
     scaleIn: [2]f32,
 };
 
+pub const FilePathList = extern struct {
+    capacity: c_uint,
+    count: c_uint,
+    paths: [*c][*c]u8,
+};
+
 pub const ConfigFlags = enum(c_int) {
     FLAG_FULLSCREEN_MODE = 2,
     FLAG_WINDOW_RESIZABLE = 4,
@@ -403,6 +411,7 @@ pub const ConfigFlags = enum(c_int) {
     FLAG_WINDOW_UNFOCUSED = 2048,
     FLAG_WINDOW_TOPMOST = 4096,
     FLAG_WINDOW_HIGHDPI = 8192,
+    FLAG_WINDOW_MOUSE_PASSTHROUGH = 16384,
     FLAG_INTERLACED_HINT = 65536,
 };
 
@@ -531,9 +540,13 @@ pub const KeyboardKey = enum(c_int) {
 };
 
 pub const MouseButton = enum(c_int) {
-    MOUSE_LEFT_BUTTON = 0,
-    MOUSE_RIGHT_BUTTON = 1,
-    MOUSE_MIDDLE_BUTTON = 2,
+    MOUSE_BUTTON_LEFT = 0,
+    MOUSE_BUTTON_RIGHT = 1,
+    MOUSE_BUTTON_MIDDLE = 2,
+    MOUSE_BUTTON_SIDE = 3,
+    MOUSE_BUTTON_EXTRA = 4,
+    MOUSE_BUTTON_FORWARD = 5,
+    MOUSE_BUTTON_BACK = 6,
 };
 
 pub const MouseCursor = enum(c_int) {
@@ -588,10 +601,10 @@ pub const MaterialMapIndex = enum(c_int) {
     MATERIAL_MAP_OCCLUSION = 4,
     MATERIAL_MAP_EMISSION = 5,
     MATERIAL_MAP_HEIGHT = 6,
-    MATERIAL_MAP_BRDG = 7,
-    MATERIAL_MAP_CUBEMAP = 8,
-    MATERIAL_MAP_IRRADIANCE = 9,
-    MATERIAL_MAP_PREFILTER = 10,
+    MATERIAL_MAP_CUBEMAP = 7,
+    MATERIAL_MAP_IRRADIANCE = 8,
+    MATERIAL_MAP_PREFILTER = 9,
+    MATERIAL_MAP_BRDF = 10,
 };
 
 pub const ShaderLocationIndex = enum(c_int) {
@@ -696,6 +709,7 @@ pub const BlendMode = enum(c_int) {
     BLEND_MULTIPLIED = 2,
     BLEND_ADD_COLORS = 3,
     BLEND_SUBTRACT_COLORS = 4,
+    BLEND_ALPHA_PREMULTIPLY = 5,
     BLEND_CUSTOM = 5,
 };
 
@@ -727,9 +741,9 @@ pub const CameraProjection = enum(c_int) {
 };
 
 pub const NPatchType = enum(c_int) {
-    NPT_9PATCH = 0,
-    NPT_3PATCH_VERTICAL = 1,
-    NPT_3PATCH_HORIZONTAL = 2,
+    NPATCH_NINE_PATCH = 0,
+    NPATCH_THREE_PATCH_VERTICAL = 1,
+    NPATCH_THREE_PATCH_HORIZONTAL = 2,
 };
 
 // pub const TraceLogCallback = ?fn (c_int, [*c]const u8, [*c]struct___va_list_tag) callconv(.C) void;

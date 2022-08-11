@@ -4,9 +4,9 @@
 
 Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.
 
-Bindings tested on raylib version 4.0.0-dev and Zig 0.9.0
+Bindings tested on raylib version 4.2.0 and Zig 0.9.1
 
-Thanks to jessrud, mbcrocci, rcorre, Gertkeno and sacredbirdman for their contributions to this binding.
+Thanks to @jessrud, @mbcrocci, @franciscod, @Gertkeno, @alanoliveira, @sacredbirdman, @rcorre and @Ivan-Velickovic for their contributions to this binding.
 
 The binding currently only supports a subset of raylib. For more information read [here](#technical-restrictions).
 
