@@ -323,10 +323,10 @@ pub const Ray = extern struct {
     direction: Vector3,
 };
 
-pub const RayHitInfo = extern struct {
+pub const RayCollision = extern struct {
     hit: bool,
     distance: f32,
-    position: Vector3,
+    point: Vector3,
     normal: Vector3,
 };
 
