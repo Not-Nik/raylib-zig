@@ -5,8 +5,16 @@ const Quaternion = rl.Quaternion;
 const Vector2 = rl.Vector2;
 const Vector3 = rl.Vector3;
 const Vector4 = rl.Vector4;
-const float16 = rl.float16;
+
+// Undefined, see "technical restrictions" in README.md
 const float3 = rl.float3;
+// pub const float3 = extern struct {
+//     v: [3]f32,
+// };
+
+pub const float16 = extern struct {
+    v: [16]f32,
+};
 
 pub extern fn Clamp(value: f32, min: f32, max: f32) f32;
 pub extern fn Lerp(start: f32, end: f32, amount: f32) f32;
