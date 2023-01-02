@@ -7,7 +7,7 @@ var ran_git = false;
 const srcdir = getSrcDir();
 
 fn getSrcDir() []const u8 {
-    return std.fs.path.dirname(@src().file) orelse ".";
+    return std.fs.path.dirname(@src().file).?;
 }
 
 pub fn link(exe: *LibExeObjStep, system_lib: bool) void {
