@@ -6,11 +6,9 @@ const Vector2 = rl.Vector2;
 const Vector3 = rl.Vector3;
 const Vector4 = rl.Vector4;
 
-// Undefined, see "technical restrictions" in README.md
-const float3 = rl.float3;
-// pub const float3 = extern struct {
-//     v: [3]f32,
-// };
+pub const float3 = extern struct {
+    v: [3]f32,
+};
 
 pub const float16 = extern struct {
     v: [16]f32,
