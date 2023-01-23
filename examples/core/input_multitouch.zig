@@ -60,7 +60,7 @@ pub fn main() anyerror!void
                 {
                     // Draw circle and touch index number
                     rl.DrawCircleV(touchPosition, 34, rl.ORANGE);
-                    rl.DrawText(rl.FormatText("%d", i), @floatToInt(c_int, touchPosition.x) - 10, @floatToInt(c_int, touchPosition.y) - 70, 40, rl.BLACK);
+                    rl.DrawText(rl.TextFormat("%d", i), @floatToInt(c_int, touchPosition.x) - 10, @floatToInt(c_int, touchPosition.y) - 70, 40, rl.BLACK);
                 }
             }
 

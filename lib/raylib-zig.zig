@@ -167,7 +167,6 @@ pub const RenderTexture = extern struct {
     id: c_uint,
     texture: Texture,
     depth: Texture,
-    depthTexture: bool,
 
     pub fn Begin(self: RenderTexture2D) void {
         rl.BeginTextureMode(self);
@@ -188,7 +187,7 @@ pub const NPatchInfo = extern struct {
     layout: c_int,
 };
 
-pub const CharInfo = extern struct {
+pub const GlyphInfo = extern struct {
     value: c_int,
     offsetX: c_int,
     offsetY: c_int,
@@ -198,11 +197,11 @@ pub const CharInfo = extern struct {
 
 pub const Font = extern struct {
     baseSize: c_int,
-    charsCount: c_int,
-    charsPadding: c_int,
+    glyphCount: c_int,
+    glyphPadding: c_int,
     texture: Texture2D,
     recs: [*c]Rectangle,
-    chars: [*c]CharInfo,
+    glyphs: [*c]GlyphInfo,
 };
 
 pub const Camera3D = extern struct {
@@ -356,12 +355,12 @@ pub const AudioStream = extern struct {
 
 pub const Sound = extern struct {
     stream: AudioStream,
-    sampleCount: c_uint,
+    frameCount: c_uint,
 };
 
 pub const Music = extern struct {
     stream: AudioStream,
-    sampleCount: c_uint,
+    frameCount: c_uint,
     looping: bool,
     ctxType: c_int,
     ctxData: ?*anyopaque,
@@ -648,6 +647,13 @@ pub const ShaderUniformDataType = enum(c_int) {
     SHADER_UNIFORM_SAMPLER2D = 8,
 };
 
+pub const ShaderAttribute = enum(c_int) {
+    SHADER_ATTRIB_FLOAT = 0,
+    SHADER_ATTRIB_VEC2 = 1,
+    SHADER_ATTRIB_VEC3 = 2,
+    SHADER_ATTRIB_VEC4 = 3,
+};
+
 pub const PixelFormat = enum(c_int) {
     PIXELFORMAT_UNCOMPRESSED_GRAYSCALE = 1,
     PIXELFORMAT_UNCOMPRESSED_GRAY_ALPHA = 2,
@@ -710,7 +716,8 @@ pub const BlendMode = enum(c_int) {
     BLEND_ADD_COLORS = 3,
     BLEND_SUBTRACT_COLORS = 4,
     BLEND_ALPHA_PREMULTIPLY = 5,
-    BLEND_CUSTOM = 5,
+    BLEND_CUSTOM = 6,
+    BLEND_CUSTOM_SEPARATE = 7,
 };
 
 pub const Gestures = enum(c_int) {
@@ -752,22 +759,14 @@ pub const SaveFileDataCallback = ?fn ([*c]const u8, ?*anyopaque, c_uint) callcon
 pub const LoadFileTextCallback = ?fn ([*c]const u8) callconv(.C) [*c]u8;
 pub const SaveFileTextCallback = ?fn ([*c]const u8, [*c]u8) callconv(.C) bool;
 
+pub const RAYLIB_VERSION_MAJOR = @as(c_int, 4);
+pub const RAYLIB_VERSION_MINOR = @as(c_int, 5);
+pub const RAYLIB_VERSION_PATCH = @as(c_int, 0);
+pub const RAYLIB_VERSION = "4.5-dev";
+
 pub const MAX_TOUCH_POINTS = 10;
 pub const MAX_MATERIAL_MAPS = 12;
 pub const MAX_SHADER_LOCATIONS = 32;
-
-pub const PI = 3.141593;
-
-pub const SpriteFont = rl.Font;
-pub const SubText = rl.TextSubtext;
-pub const FormatText = rl.TextFormat;
-pub const LoadText = rl.LoadFileText;
-pub const GetExtension = rl.GetFileExtension;
-pub const GetImageData = rl.LoadImageColors;
-pub const FILTER_POINT = TextureFilter.TEXTURE_FILTER_POINT;
-pub const FILTER_BILINEAR = TextureFilter.TEXTURE_FILTER_BILINEAR;
-pub const MAP_DIFFUSE = MATERIAL_MAP_DIFFUSE;
-pub const PIXELFORMAT_UNCOMPRESSED_R8G8B8A8 = PixelFormat.PIXELFORMAT_UNCOMPRESSED_R8G8B8A8;
 
 pub const MATERIAL_MAP_DIFFUSE = MaterialMapIndex.MATERIAL_MAP_ALBEDO;
 pub const MATERIAL_MAP_SPECULAR = MaterialMapIndex.MATERIAL_MAP_METALNESS;

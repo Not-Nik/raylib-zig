@@ -144,5 +144,5 @@ def parse_header(header_name: str, output_file: str, prefix: str):
 
 
 if __name__ == "__main__":
-    parse_header("raylib.h", "raylib-wa.zig", "RLAPI ")
-    parse_header("raymath.h", "raylib-zig-math.zig", "RMAPI ")
+    parse_header("../raylib/src/raylib.h", "raylib-wa.zig", "RLAPI ")
+    parse_header("../raylib/src/raymath.h", "raylib-zig-math.zig", "RMAPI ")

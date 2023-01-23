@@ -39,7 +39,7 @@ pub fn main() anyerror!void
             rl.DrawRectangle(screenWidth/2 - 40, @floatToInt(c_int, boxPositionY), 80, 80, rl.MAROON);
 
             rl.DrawText("Use mouse wheel to move the cube up and down!", 10, 10, 20, rl.GRAY);
-            rl.DrawText(rl.FormatText("Box position Y: %03i", @floatToInt(c_int, boxPositionY)), 10, 40, 20, rl.LIGHTGRAY);
+            rl.DrawText(rl.TextFormat("Box position Y: %03i", @floatToInt(c_int, boxPositionY)), 10, 40, 20, rl.LIGHTGRAY);
 
         rl.EndDrawing();
         //----------------------------------------------------------------------------------
