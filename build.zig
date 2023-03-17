@@ -16,7 +16,7 @@ const Program = struct {
 };
 
 pub fn build(b: *Builder) void {
-    const mode = b.standardReleaseOptions();
+    const optimize = b.standardOptimizeOption(.{});
     const target = b.standardTargetOptions(.{});
 
     const examples = [_]Program{
@@ -66,14 +66,16 @@ pub fn build(b: *Builder) void {
     const system_lib = b.option(bool, "system-raylib", "link to preinstalled raylib libraries") orelse false;
 
     for (examples) |ex| {
-        const exe = b.addExecutable(ex.name, ex.path);
-
-        exe.setBuildMode(mode);
-        exe.setTarget(target);
+        const exe = b.addExecutable(.{
+            .name = ex.name,
+            .root_source_file = .{ .path = ex.path },
+            .target = target,
+            .optimize = optimize,
+        });
 
         raylib.link(exe, system_lib);
-        raylib.addAsPackage("raylib", exe);
-        raylib.math.addAsPackage("raylib-math", exe);
+        exe.addModule("raylib", raylib.module(b));
+        exe.addModule("raylib-math", raylib.mathModule(b));
 
         const run_cmd = exe.run();
         const run_step = b.step(ex.name, ex.desc);

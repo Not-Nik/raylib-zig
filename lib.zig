@@ -15,7 +15,7 @@ pub fn link(exe: *LibExeObjStep, system_lib: bool) void {
         exe.linkSystemLibrary("raylib");
         return;
     } else {
-        exe.linkLibrary(rl.addRaylib(exe.builder, exe.target));
+        exe.linkLibrary(rl.addRaylib(exe.builder, exe.target, exe.optimize));
     }
 
     const target_os = exe.target.toTarget().os.tag;
@@ -54,11 +54,22 @@ pub fn link(exe: *LibExeObjStep, system_lib: bool) void {
     }
 }
 
-pub fn addAsPackage(name: []const u8, to: *LibExeObjStep) void {
-    to.addPackagePath(name, srcdir ++ "/lib/raylib-zig.zig");
+var _module: ?*std.build.Module = null;
+
+pub fn module(b: *std.Build) *std.build.Module {
+    if (_module) |m| return m;
+    _module = b.createModule(.{
+        .source_file = .{ .path = srcdir ++ "/lib/raylib-zig.zig" },
+    });
+    return _module.?;
 }
-pub const math = struct {
-    pub fn addAsPackage(name: []const u8, to: *LibExeObjStep) void {
-        to.addPackagePath(name, srcdir ++ "/lib/raylib-zig-math.zig");
-    }
-};
+
+var _math_module: ?*std.build.Module = null;
+
+pub fn mathModule(b: *std.Build) *std.build.Module {
+    if (_math_module) |m| return m;
+    _math_module = b.createModule(.{
+        .source_file = .{ .path = srcdir ++ "/lib/raylib-zig-math.zig" },
+    });
+    return _math_module.?;
+}

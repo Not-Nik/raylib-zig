@@ -25,8 +25,7 @@ pub fn main() anyerror!void
 
     var spacing: i32 = 0;
 
-    for (buildings) |_, i|
-    {
+    for (buildings, 0..) |_, i| {
         buildings[i].width = @intToFloat(f32, rl.GetRandomValue(50, 200));
         buildings[i].height = @intToFloat(f32, rl.GetRandomValue(100, 800));
         buildings[i].y = screenHeight - 130 - buildings[i].height;
@@ -91,8 +90,7 @@ pub fn main() anyerror!void
 
                 rl.DrawRectangle(-6000, 320, 13000, 8000, rl.DARKGRAY);
 
-                for (buildings) |building, i|
-                {
+                for (buildings, 0..) |building, i| {
                     rl.DrawRectangleRec(building, buildColors[i]);
                 }
 
