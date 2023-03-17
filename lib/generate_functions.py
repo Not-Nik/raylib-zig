@@ -133,8 +133,11 @@ def parse_header(header_name: str, output_file: str, prefix: str):
         zig_arguments = ", ".join(zig_arguments)
         zig_heads.append("pub extern fn " + func_name + "(" + zig_arguments + ") " + return_type + ";")
 
-    zigheader = open(output_file, mode="w")
-    print("""const rl = @import("raylib-zig.zig");\n""", file=zigheader)
+    zigheader = open(output_file, mode="w", newline='\n')
+    if output_file == "raylib-zig-math.zig":
+        print("""const rl = @import("raylib");\n""", file=zigheader)
+    else:
+        print("""const rl = @import("raylib-zig.zig");\n""", file=zigheader)
 
     print("\n".join(sorted(f"const {t} = rl.{t};" for t in zig_types if ('*' not in t) and (t not in C_TO_ZIG.values()))), file=zigheader)
     print("", file=zigheader)
