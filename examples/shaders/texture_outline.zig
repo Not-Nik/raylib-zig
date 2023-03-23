@@ -1,3 +1,6 @@
+// A raylib port of https://github.com/raysan5/raylib/blob/master/examples/shaders/shaders_texture_outline.c
+
+
 const rl = @import("raylib");
 const std = @import("std");
 
