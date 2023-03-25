@@ -55,6 +55,11 @@ pub fn build(b: *Builder) void {
             .path = "examples/textures/sprite_anim.zig",
             .desc = "Animate a sprite",
         },
+        .{
+            .name = "texture_outline",
+            .path = "examples/shaders/texture_outline.zig",
+            .desc = "Uses a shader to create an outline around a sprite",
+        }
         // .{
         //     .name = "models_loading",
         //     .path = "examples/models/models_loading.zig",
