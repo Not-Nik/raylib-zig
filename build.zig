@@ -8,6 +8,7 @@
 const std = @import("std");
 const Builder = std.build.Builder;
 const raylib = @import("lib.zig");
+const raygui = @import("raygui/lib.zig");
 
 const Program = struct {
     name: []const u8,
@@ -59,7 +60,12 @@ pub fn build(b: *Builder) void {
             .name = "texture_outline",
             .path = "examples/shaders/texture_outline.zig",
             .desc = "Uses a shader to create an outline around a sprite",
-        }
+        },
+        .{
+            .name = "raygui_button",
+            .path = "examples/core/raygui_button.zig",
+            .desc = "A simple button in Raygui",
+        },
         // .{
         //     .name = "models_loading",
         //     .path = "examples/models/models_loading.zig",
@@ -84,6 +90,10 @@ pub fn build(b: *Builder) void {
         raylib.link(exe, system_lib);
         raylib.addAsPackage("raylib", exe);
         raylib.math.addAsPackage("raylib-math", exe);
+
+        // Add raygui
+        raygui.link(exe);
+        raygui.addAsPackage("raygui", exe);
 
         const run_cmd = exe.run();
         const run_step = b.step(ex.name, ex.desc);
