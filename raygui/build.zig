@@ -5,22 +5,22 @@ pub fn addRaygui(b: *std.build.Builder, target: std.zig.CrossTarget) *std.build.
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     const mode = b.standardReleaseOptions();
 
-    const raygui = b.addStaticLibrary("raygui", srcdir ++ "/raygui.h");
+    const raygui = b.addStaticLibrary("raygui", srcdir ++ "/my_header.h");
     raygui.setTarget(target);
     raygui.setBuildMode(mode);
     // Make raylib.h available for import to raygui.h
     raygui.addIncludePath("raylib/src");
     raygui.linkLibC();
 
-    // const raylib_flags = &[_][]const u8{
-    //     "-std=gnu99",
-    //     "-DPLATFORM_DESKTOP",
-    //     "-DGL_SILENCE_DEPRECATION=199309L",
-    //     "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/1891
-    // };
-    // raygui.addCSourceFiles(&.{
-    //     srcdir ++ "/raygui.c",
-    // }, raylib_flags);
+    const raylib_flags = &[_][]const u8{
+        "-std=gnu99",
+        "-DPLATFORM_DESKTOP",
+        "-DGL_SILENCE_DEPRECATION=199309L",
+        "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/1891
+    };
+    raygui.addCSourceFiles(&.{
+        srcdir ++ "/my_header.c",
+    }, raylib_flags);
 
     return raygui;
 }
