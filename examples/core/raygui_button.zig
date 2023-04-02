@@ -4,7 +4,8 @@ const rlm = @import("raylib-math");
 const rg = @import("raygui");
 
 pub fn main() anyerror!void {
-    std.debug.print("jtest: {}", .{rg.my_function()});
+    std.debug.print("jtest {}", .{rg.my_function()});
+    // rg.GuiEnable();
     // const screenWidth = 800;
     // const screenHeight = 800;
 
@@ -30,9 +31,9 @@ pub fn main() anyerror!void {
     //     //----------------------------------------------------------------------------------
     // }
 
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
+    // // De-Initialization
+    // // --------------------------------------------------------------------------------------
 
     // rl.CloseWindow(); // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
+    // // --------------------------------------------------------------------------------------
 }
