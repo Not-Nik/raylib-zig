@@ -14,6 +14,5 @@ pub fn link(exe: *LibExeObjStep) void {
 }
 
 pub fn addAsPackage(name: []const u8, to: *LibExeObjStep) void {
-    to.defineCMacroRaw("RAYGUI_IMPLEMENTATION");
     to.addPackagePath(name, "lib/raygui-zig.zig");
 }

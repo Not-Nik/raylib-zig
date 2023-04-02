@@ -5,7 +5,7 @@ pub fn addRaygui(b: *std.build.Builder, target: std.zig.CrossTarget) *std.build.
     // between Debug, ReleaseSafe, ReleaseFast, and ReleaseSmall.
     const mode = b.standardReleaseOptions();
 
-    const raygui = b.addStaticLibrary("raygui", srcdir ++ "/my_header.h");
+    const raygui = b.addStaticLibrary("raygui", srcdir ++ "/raygui.h");
     raygui.setTarget(target);
     raygui.setBuildMode(mode);
     // Make raylib.h available for import to raygui.h
@@ -19,8 +19,9 @@ pub fn addRaygui(b: *std.build.Builder, target: std.zig.CrossTarget) *std.build.
         "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/1891
     };
     raygui.addCSourceFiles(&.{
-        srcdir ++ "/my_header.c",
+        srcdir ++ "/raygui.c",
     }, raylib_flags);
+    raygui.defineCMacroRaw("RAYGUI_IMPLEMENTATION");
 
     return raygui;
 }
