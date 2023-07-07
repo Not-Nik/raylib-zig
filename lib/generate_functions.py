@@ -46,7 +46,7 @@ def fix_pointer(name: str, t: str):
 
 
 def fix_enums(arg_name, arg_type, func_name):
-    # Hacking specifc enums in here
+    # Hacking specific enums in here
     # Raylib doesn't use the enums but rather the resulting ints
     if arg_type == "int" or arg_type == "unsigned int":
         if arg_name == "key":
@@ -60,8 +60,6 @@ def fix_enums(arg_name, arg_type, func_name):
             arg_type = "CameraMode"
         elif arg_name == "gesture":
             arg_type = "Gestures"
-        elif arg_name == "flags" and func_name in ["SetWindowState", "ClearWindowState", "SetConfigFlags"]:
-            arg_type = "ConfigFlags"
     return arg_type
 
 
