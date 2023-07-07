@@ -1,9 +1,7 @@
 import re
 
 """
-Automatic utility for generating raylib function headers. Simply put
-raylib.h in the working directory of this script and execute.
-Tested with raylib version 3.7.0
+Automatic utility for generating raylib function headers.
 """
 
 C_TO_ZIG = {
@@ -67,7 +65,7 @@ def fix_enums(arg_name, arg_type, func_name):
     return arg_type
 
 
-def parse_header(header_name: str, output_file: str, prefix: str):
+def parse_header(header_name: str, output_file: str, prefix: str, *args: str):
     header = open(header_name, mode="r")
     zig_functions = []
     zig_heads = []
@@ -111,6 +109,9 @@ def parse_header(header_name: str, output_file: str, prefix: str):
         func_name = result.group(2)
         arguments = result.group(3)
 
+        if func_name == "SetTraceLogCallback":
+            continue
+
         return_type = c_to_zig_type(return_type)
         func_name, return_type = fix_pointer(func_name, return_type)
 
@@ -121,7 +122,8 @@ def parse_header(header_name: str, output_file: str, prefix: str):
             if arg == "...":
                 zig_arguments.append("...")
                 continue
-            arg_type = " ".join(arg.split(" ")[0:-1])  # everything but the last element (for stuff like "const Vector3")
+            # everything but the last element (for stuff like "const Vector3")
+            arg_type = " ".join(arg.split(" ")[0:-1])
             arg_name = arg.split(" ")[-1]  # last element should be the name
             arg_type = fix_enums(arg_name, arg_type, func_name)
 
@@ -133,16 +135,19 @@ def parse_header(header_name: str, output_file: str, prefix: str):
         zig_arguments = ", ".join(zig_arguments)
         zig_heads.append("pub extern fn " + func_name + "(" + zig_arguments + ") " + return_type + ";")
 
-    zigheader = open(output_file, mode="w")
-    print("""const rl = @import("raylib-zig.zig");\n""", file=zigheader)
+    prelude = str()
 
-    print("\n".join(sorted(f"const {t} = rl.{t};" for t in zig_types if ('*' not in t) and (t not in C_TO_ZIG.values()))), file=zigheader)
-    print("", file=zigheader)
-    print("\n".join(zig_heads), file=zigheader)
-    print("", file=zigheader)
-    print("\n".join(zig_functions), file=zigheader)
+    for imp in args:
+        prelude += open(imp, mode="r").read()
+
+    zig_header = open(output_file, mode="w")
+    print(prelude, file=zig_header)
+
+    print("\n".join(zig_heads), file=zig_header)
+    print("", file=zig_header)
+    print("\n".join(zig_functions), file=zig_header)
 
 
 if __name__ == "__main__":
-    parse_header("../raylib/src/raylib.h", "raylib-wa.zig", "RLAPI ")
-    parse_header("../raylib/src/raymath.h", "raylib-zig-math.zig", "RMAPI ")
+    parse_header("../raylib/src/raylib.h", "raylib-zig.zig", "RLAPI ", "raylib-zig-types.zig")
+    parse_header("../raylib/src/raymath.h", "raylib-zig-math.zig", "RMAPI ", "raylib-zig-math-prelude.zig")
