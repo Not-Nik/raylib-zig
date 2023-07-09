@@ -5,12 +5,20 @@ const rl = @This();
 pub const Vector2 = extern struct {
     x: f32,
     y: f32,
+
+    pub fn init(x: f32, y: f32) Vector2 {
+        return Vector2{ .x = x, .y = y };
+    }
 };
 
 pub const Vector3 = extern struct {
     x: f32,
     y: f32,
     z: f32,
+
+    pub fn init(x: f32, y: f32, z: f32) Vector3 {
+        return Vector3{ .x = x, .y = y, .z = z };
+    }
 };
 
 pub const Vector4 = extern struct {
@@ -18,6 +26,10 @@ pub const Vector4 = extern struct {
     y: f32,
     z: f32,
     w: f32,
+
+    pub fn init(x: f32, y: f32, z: f32, w: f32) Vector4 {
+        return Vector4{ .x = x, .y = y, .z = z, .w = w };
+    }
 };
 pub const Quaternion = Vector4;
 
@@ -45,35 +57,39 @@ pub const Color = extern struct {
     g: u8,
     b: u8,
     a: u8,
+
+    pub fn init(r: u8, g: u8, b: u8, a: u8) Color {
+        return Color{ .r = r, .g = g, .b = b, .a = a };
+    }
 };
 
-pub const LIGHTGRAY = Color{ .r = 200, .g = 200, .b = 200, .a = 255 };
-pub const GRAY = Color{ .r = 130, .g = 130, .b = 130, .a = 255 };
-pub const DARKGRAY = Color{ .r = 80, .g = 80, .b = 80, .a = 255 };
-pub const YELLOW = Color{ .r = 253, .g = 249, .b = 0, .a = 255 };
-pub const GOLD = Color{ .r = 255, .g = 203, .b = 0, .a = 255 };
-pub const ORANGE = Color{ .r = 255, .g = 161, .b = 0, .a = 255 };
-pub const PINK = Color{ .r = 255, .g = 109, .b = 194, .a = 255 };
-pub const RED = Color{ .r = 230, .g = 41, .b = 55, .a = 255 };
-pub const MAROON = Color{ .r = 190, .g = 33, .b = 55, .a = 255 };
-pub const GREEN = Color{ .r = 0, .g = 228, .b = 48, .a = 255 };
-pub const LIME = Color{ .r = 0, .g = 158, .b = 47, .a = 255 };
-pub const DARKGREEN = Color{ .r = 0, .g = 117, .b = 44, .a = 255 };
-pub const SKYBLUE = Color{ .r = 102, .g = 191, .b = 255, .a = 255 };
-pub const BLUE = Color{ .r = 0, .g = 121, .b = 241, .a = 255 };
-pub const DARKBLUE = Color{ .r = 0, .g = 82, .b = 172, .a = 255 };
-pub const PURPLE = Color{ .r = 200, .g = 122, .b = 255, .a = 255 };
-pub const VIOLET = Color{ .r = 135, .g = 60, .b = 190, .a = 255 };
-pub const DARKPURPLE = Color{ .r = 112, .g = 31, .b = 126, .a = 255 };
-pub const BEIGE = Color{ .r = 211, .g = 176, .b = 131, .a = 255 };
-pub const BROWN = Color{ .r = 127, .g = 106, .b = 79, .a = 255 };
-pub const DARKBROWN = Color{ .r = 76, .g = 63, .b = 47, .a = 255 };
+pub const LIGHTGRAY = Color.init(200, 200, 200, 255);
+pub const GRAY = Color.init(130, 130, 130, 255);
+pub const DARKGRAY = Color.init(80, 80, 80, 255);
+pub const YELLOW = Color.init(253, 249, 0, 255);
+pub const GOLD = Color.init(255, 203, 0, 255);
+pub const ORANGE = Color.init(255, 161, 0, 255);
+pub const PINK = Color.init(255, 161, 0, 255);
+pub const RED = Color.init(230, 41, 55, 255);
+pub const MAROON = Color.init(190, 33, 55, 255);
+pub const GREEN = Color.init(0, 228, 48, 255);
+pub const LIME = Color.init(0, 158, 47, 255);
+pub const DARKGREEN = Color.init(0, 117, 44, 255);
+pub const SKYBLUE = Color.init(102, 191, 255, 255);
+pub const BLUE = Color.init(0, 121, 241, 255);
+pub const DARKBLUE = Color.init(0, 82, 172, 255);
+pub const PURPLE = Color.init(200, 122, 255, 255);
+pub const VIOLET = Color.init(135, 60, 190, 255);
+pub const DARKPURPLE = Color.init(112, 31, 126, 255);
+pub const BEIGE = Color.init(211, 176, 131, 255);
+pub const BROWN = Color.init(127, 106, 79, 255);
+pub const DARKBROWN = Color.init(76, 63, 47, 255);
 
-pub const WHITE = Color{ .r = 255, .g = 255, .b = 255, .a = 255 };
-pub const BLACK = Color{ .r = 0, .g = 0, .b = 0, .a = 255 };
-pub const BLANK = Color{ .r = 0, .g = 0, .b = 0, .a = 0 };
-pub const MAGENTA = Color{ .r = 255, .g = 0, .b = 255, .a = 255 };
-pub const RAYWHITE = Color{ .r = 245, .g = 245, .b = 245, .a = 255 };
+pub const WHITE = Color.init(255, 255, 255, 255);
+pub const BLACK = Color.init(0, 0, 0, 255);
+pub const BLANK = Color.init(0, 0, 0, 0);
+pub const MAGENTA = Color.init(255, 0, 255, 255);
+pub const RAYWHITE = Color.init(245, 245, 245, 255);
 
 pub const Rectangle = extern struct {
     x: f32,
@@ -274,6 +290,14 @@ pub const Mesh = extern struct {
 pub const Shader = extern struct {
     id: c_uint,
     locs: [*c]c_int,
+
+    pub fn activate(self: Shader) void {
+        rl.BeginShaderMode(self);
+    }
+
+    pub fn deactivate(_: Shader) void {
+        rl.EndShaderMode();
+    }
 };
 
 pub const MaterialMap = extern struct {
@@ -309,6 +333,30 @@ pub const Model = extern struct {
     boneCount: c_int,
     bones: [*c]BoneInfo,
     bindPose: [*c]Transform,
+
+    pub fn init(fileName: [*c]const u8) Model {
+        return rl.LoadModel(fileName);
+    }
+
+    pub fn initFromMesh(mesh: Mesh) Model {
+        return rl.LoadModelFromMesh(mesh);
+    }
+
+    pub fn draw(self: Mesh, position: Vector3, scale: f32, tint: Color) void {
+        return rl.DrawMesh(self, position, scale, tint);
+    }
+
+    pub fn drawEx(self: Mesh, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
+        return rl.DrawMeshEx(self, position, rotationAxis, rotationAngle, scale, tint);
+    }
+
+    pub fn drawWires(self: Mesh, position: Vector3, scale: f32, tint: Color) void {
+        return rl.DrawMeshWires(self, position, scale, tint);
+    }
+
+    pub fn drawWiresEx(self: Mesh, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
+        return rl.DrawMeshWiresEx(self, position, rotationAxis, rotationAngle, scale, tint);
+    }
 };
 
 pub const ModelAnimation = extern struct {

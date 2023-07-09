@@ -10,11 +10,11 @@ pub fn main() anyerror!void {
 
     rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
 
-    var ballPosition = rl.Vector2{ .x = -100.0, .y = -100.0 };
+    var ballPosition = rl.Vector2.init(-100, -100);
     var ballColor = rl.BEIGE;
 
     var touchCounter: f32 = 0;
-    var touchPosition = rl.Vector2{ .x = 0.0, .y = 0.0 };
+    var touchPosition = rl.Vector2.init(0, 0);
 
     rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------

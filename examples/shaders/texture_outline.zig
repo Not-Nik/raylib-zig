@@ -20,7 +20,7 @@ pub fn main() anyerror!void {
 
     var outlineSize: f32 = 2.0;
     const outlineColor = [4]f32{ 1.0, 0.0, 0.0, 1.0 }; // Normalized RED color
-    const textureSize = rl.Vector2{ .x = @intToFloat(f32, texture.width), .y = @intToFloat(f32, texture.height) };
+    const textureSize = rl.Vector2.init(@intToFloat(f32, texture.width), @intToFloat(f32, texture.height));
 
     // Get shader locations
     const outlineSizeLoc = rl.GetShaderLocation(shdrOutline, "outlineSize");

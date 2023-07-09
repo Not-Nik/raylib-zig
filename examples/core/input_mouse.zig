@@ -10,7 +10,7 @@ pub fn main() anyerror!void {
 
     rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - mouse input");
 
-    var ballPosition = rl.Vector2{ .x = -100.0, .y = -100.0 };
+    var ballPosition = rl.Vector2.init(-100, -100);
     var ballColor = rl.DARKBLUE;
 
     rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second

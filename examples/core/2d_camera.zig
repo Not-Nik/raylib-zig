@@ -27,12 +27,12 @@ pub fn main() anyerror!void {
 
         spacing += @floatToInt(i32, buildings[i].width);
 
-        buildColors[i] = rl.Color{ .r = @intCast(u8, rl.GetRandomValue(200, 240)), .g = @intCast(u8, rl.GetRandomValue(200, 240)), .b = @intCast(u8, rl.GetRandomValue(200, 250)), .a = 255 };
+        buildColors[i] = rl.Color.init(@intCast(u8, rl.GetRandomValue(200, 240)), @intCast(u8, rl.GetRandomValue(200, 240)), @intCast(u8, rl.GetRandomValue(200, 250)), 255);
     }
 
     var camera = rl.Camera2D{
-        .target = rl.Vector2{ .x = player.x + 20, .y = player.y + 20 },
-        .offset = rl.Vector2{ .x = screenWidth / 2, .y = screenHeight / 2 },
+        .target = rl.Vector2.init(player.x + 20, player.y + 20),
+        .offset = rl.Vector2.init(screenWidth / 2, screenHeight / 2),
         .rotation = 0,
         .zoom = 1,
     };
@@ -53,7 +53,7 @@ pub fn main() anyerror!void {
         }
 
         // Camera target follows player
-        camera.target = rl.Vector2{ .x = player.x + 20, .y = player.y + 20 };
+        camera.target = rl.Vector2.init(player.x + 20, player.y + 20);
 
         // Camera rotation controls
         if (rl.IsKeyDown(rl.KeyboardKey.KEY_A)) {

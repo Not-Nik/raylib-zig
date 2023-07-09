@@ -14,9 +14,9 @@ pub fn main() anyerror!void {
     rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - 3d camera first person");
 
     var camera = rl.Camera3D{
-        .position = rl.Vector3{ .x = 4, .y = 2, .z = 4 },
-        .target = rl.Vector3{ .x = 0, .y = 1.8, .z = 0 },
-        .up = rl.Vector3{ .x = 0, .y = 1, .z = 0 },
+        .position = rl.Vector3.init(4, 2, 4),
+        .target = rl.Vector3.init(0, 1.8, 0),
+        .up = rl.Vector3.init(0, 1, 0),
         .fovy = 60,
         .projection = rl.CameraProjection.CAMERA_PERSPECTIVE,
     };
@@ -27,8 +27,8 @@ pub fn main() anyerror!void {
 
     for (heights) |_, i| {
         heights[i] = @intToFloat(f32, rl.GetRandomValue(1, 12));
-        positions[i] = rl.Vector3{ .x = @intToFloat(f32, rl.GetRandomValue(-15, 15)), .y = heights[i] / 2.0, .z = @intToFloat(f32, rl.GetRandomValue(-15, 15)) };
-        colors[i] = rl.Color{ .r = @intCast(u8, rl.GetRandomValue(20, 255)), .g = @intCast(u8, rl.GetRandomValue(10, 55)), .b = 30, .a = 255 };
+        positions[i] = rl.Vector3.init(@intToFloat(f32, rl.GetRandomValue(-15, 15)), heights[i] / 2.0, @intToFloat(f32, rl.GetRandomValue(-15, 15)));
+        colors[i] = rl.Color.init(@intCast(u8, rl.GetRandomValue(20, 255)), @intCast(u8, rl.GetRandomValue(10, 55)), 30, 255);
     }
 
     camera.setMode(rl.CameraMode.CAMERA_FIRST_PERSON);
@@ -52,10 +52,10 @@ pub fn main() anyerror!void {
         camera.begin();
 
         // Draw ground
-        rl.DrawPlane(rl.Vector3{ .x = 0.0, .y = 0.0, .z = 0.0 }, rl.Vector2{ .x = 32.0, .y = 32.0 }, rl.LIGHTGRAY);
-        rl.DrawCube(rl.Vector3{ .x = -16.0, .y = 2.5, .z = 0.0 }, 1.0, 5.0, 32.0, rl.BLUE); // Draw a blue wall
-        rl.DrawCube(rl.Vector3{ .x = 16.0, .y = 2.5, .z = 0.0 }, 1.0, 5.0, 32.0, rl.LIME); // Draw a green wall
-        rl.DrawCube(rl.Vector3{ .x = 0.0, .y = 2.5, .z = 16.0 }, 32.0, 5.0, 1.0, rl.GOLD); // Draw a yellow wall
+        rl.DrawPlane(rl.Vector3.init(0, 0, 0), rl.Vector2.init(32, 32), rl.LIGHTGRAY);
+        rl.DrawCube(rl.Vector3.init(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.BLUE); // Draw a blue wall
+        rl.DrawCube(rl.Vector3.init(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.LIME); // Draw a green wall
+        rl.DrawCube(rl.Vector3.init(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, rl.GOLD); // Draw a yellow wall
 
         // Draw some cubes around
         for (heights) |height, i| {

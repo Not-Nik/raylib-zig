@@ -18,7 +18,7 @@ pub fn main() anyerror!void {
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
     const scarfy: rl.Texture2D = rl.LoadTexture("resources/textures/scarfy.png"); // Texture loading
 
-    const position = rl.Vector2{ .x = 350.0, .y = 280.0 };
+    const position = rl.Vector2.init(350.0, 280.0);
     var frameRec = rl.Rectangle{ .x = 0.0, .y = 0.0, .width = @intToFloat(f32, @divFloor(scarfy.width, 6)), .height = @intToFloat(f32, scarfy.height) };
     var currentFrame: u8 = 0;
 
