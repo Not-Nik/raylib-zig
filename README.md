@@ -2,11 +2,11 @@
 
 # raylib-zig
 
-Manually tweaked, auto generated [raylib](https://github.com/raysan5/raylib) bindings for zig.
+Manually tweaked, auto-generated [raylib](https://github.com/raysan5/raylib) bindings for zig.
 
 Bindings tested on raylib version 4.5.0-dev and Zig 0.10.1
 
-Thanks to @jessrud, @mbcrocci, @franciscod, @AlxHnr, @Gertkeno, @Ivan-Velickovic, @alanoliveira, @rcorre and @sacredbirdman for their contributions to this binding.
+Thanks to all the [contributors](https://github.com/Not-Nik/raylib-zig/graphs/contributors) for their help with this binding.
 
 The binding currently only supports a subset of raylib. For more information read [here](#technical-restrictions).
 

@@ -1,9 +1,4 @@
-//
-// input_keys
-// Zig version: 
-// Author: Nikolas Wipper
-// Date: 2020-02-16
-//
+// raylib-zig (c) Nikolas Wipper 2023
 
 const rl = @import("raylib");
 
@@ -15,31 +10,39 @@ pub fn main() anyerror!void {
 
     rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - keyboard input");
 
-    var ballPosition = rl.Vector2 { .x = screenWidth/2, .y = screenHeight/2 };
+    var ballPosition = rl.Vector2{ .x = screenWidth / 2, .y = screenHeight / 2 };
 
-    rl.SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!rl.WindowShouldClose())   // Detect window close button or ESC key
-    {
+    while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
+
         // Update
         //----------------------------------------------------------------------------------
-        if (rl.IsKeyDown(rl.KeyboardKey.KEY_RIGHT)) { ballPosition.x += 2.0; }
-        if (rl.IsKeyDown(rl.KeyboardKey.KEY_LEFT)) { ballPosition.x -= 2.0; }
-        if (rl.IsKeyDown(rl.KeyboardKey.KEY_UP)) { ballPosition.y -= 2.0; }
-        if (rl.IsKeyDown(rl.KeyboardKey.KEY_DOWN)) { ballPosition.y += 2.0; }
+        if (rl.IsKeyDown(rl.KeyboardKey.KEY_RIGHT)) {
+            ballPosition.x += 2.0;
+        }
+        if (rl.IsKeyDown(rl.KeyboardKey.KEY_LEFT)) {
+            ballPosition.x -= 2.0;
+        }
+        if (rl.IsKeyDown(rl.KeyboardKey.KEY_UP)) {
+            ballPosition.y -= 2.0;
+        }
+        if (rl.IsKeyDown(rl.KeyboardKey.KEY_DOWN)) {
+            ballPosition.y += 2.0;
+        }
         //----------------------------------------------------------------------------------
 
         // Draw
         //----------------------------------------------------------------------------------
         rl.BeginDrawing();
 
-            rl.ClearBackground(rl.RAYWHITE);
+        rl.ClearBackground(rl.RAYWHITE);
 
-            rl.DrawText("move the ball with arrow keys", 10, 10, 20, rl.DARKGRAY);
+        rl.DrawText("move the ball with arrow keys", 10, 10, 20, rl.DARKGRAY);
 
-            rl.DrawCircleV(ballPosition, 50, rl.MAROON);
+        rl.DrawCircleV(ballPosition, 50, rl.MAROON);
 
         rl.EndDrawing();
         //----------------------------------------------------------------------------------
@@ -47,6 +50,6 @@ pub fn main() anyerror!void {
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    rl.CloseWindow();        // Close window and OpenGL context
+    rl.CloseWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 }

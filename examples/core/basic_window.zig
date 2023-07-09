@@ -1,9 +1,4 @@
-//
-// basic_window
-// Zig version: 0.6.0
-// Author: Nikolas Wipper
-// Date: 2020-02-15
-//
+// raylib-zig (c) Nikolas Wipper 2023
 
 const rl = @import("raylib");
 

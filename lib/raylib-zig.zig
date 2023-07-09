@@ -93,16 +93,16 @@ pub const Image = extern struct {
         return rl.LoadImage(fileName);
     }
 
-    pub fn initRaw(fileName: [*c]const u8, width: c_int, height: c_int, format: PixelFormat, headerSize: c_int) Image {
-        return rl.LoadImageRaw(fileName, width, height, format, headerSize);
+    pub fn initRaw(fileName: *const []u8, width: c_int, height: c_int, format: PixelFormat, headerSize: c_int) Image {
+        return rl.LoadImageRaw(@as([*c]const u8, fileName), width, height, format, headerSize);
     }
 
-    pub fn initText(text: [*c]const u8, fontSize: c_int, color: Color) Image {
-        return rl.ImageText(text, fontSize, color);
+    pub fn initText(text: *const []u8, fontSize: c_int, color: Color) Image {
+        return rl.ImageText(@as([*c]const u8, text), fontSize, color);
     }
 
-    pub fn initTextEx(font: Font, text: [*c]const u8, fontSize: f32, spacing: f32, tint: Color) Image {
-        return rl.ImageTextEx(font, text, fontSize, spacing, tint);
+    pub fn initTextEx(font: Font, text: *const []u8, fontSize: f32, spacing: f32, tint: Color) Image {
+        return rl.ImageTextEx(font, @as([*c]const u8, text), fontSize, spacing, tint);
     }
 
     pub fn copy(image: Image) Image {
@@ -113,35 +113,35 @@ pub const Image = extern struct {
         return rl.ImageFromImage(image, rec);
     }
 
-    pub fn GenColor(width: c_int, height: c_int, color: Color) Image {
+    pub fn genColor(width: c_int, height: c_int, color: Color) Image {
         return rl.GenImageColor(width, height, color);
     }
 
-    pub fn GenGradientV(width: c_int, height: c_int, top: Color, bottom: Color) Image {
+    pub fn genGradientV(width: c_int, height: c_int, top: Color, bottom: Color) Image {
         return rl.GenImageGradientV(width, height, top, bottom);
     }
 
-    pub fn GenGradientH(width: c_int, height: c_int, left: Color, right: Color) Image {
+    pub fn genGradientH(width: c_int, height: c_int, left: Color, right: Color) Image {
         return rl.GenImageGradientH(width, height, left, right);
     }
 
-    pub fn GenGradientRadial(width: c_int, height: c_int, density: f32, inner: Color, outer: Color) Image {
+    pub fn genGradientRadial(width: c_int, height: c_int, density: f32, inner: Color, outer: Color) Image {
         return rl.GenImageGradientRadial(width, height, density, inner, outer);
     }
 
-    pub fn GenChecked(width: c_int, height: c_int, checksX: c_int, checksY: c_int, col1: Color, col2: Color) Image {
+    pub fn genChecked(width: c_int, height: c_int, checksX: c_int, checksY: c_int, col1: Color, col2: Color) Image {
         return rl.GenImageChecked(width, height, checksX, checksY, col1, col2);
     }
 
-    pub fn GenWhiteNoise(width: c_int, height: c_int, factor: f32) Image {
+    pub fn genWhiteNoise(width: c_int, height: c_int, factor: f32) Image {
         return rl.GenImageWhiteNoise(width, height, factor);
     }
 
-    pub fn GenCellular(width: c_int, height: c_int, tileSize: c_int) Image {
+    pub fn genCellular(width: c_int, height: c_int, tileSize: c_int) Image {
         return rl.GenImageCellular(width, height, tileSize);
     }
 
-    pub fn UseAsWindowIcon(self: Image) void {
+    pub fn useAsWindowIcon(self: Image) void {
         rl.SetWindowIcon(self);
     }
 };
@@ -161,11 +161,11 @@ pub const RenderTexture = extern struct {
     texture: Texture,
     depth: Texture,
 
-    pub fn Begin(self: RenderTexture2D) void {
+    pub fn begin(self: RenderTexture2D) void {
         rl.BeginTextureMode(self);
     }
 
-    pub fn End(_: RenderTexture2D) void {
+    pub fn end(_: RenderTexture2D) void {
         rl.EndTextureMode();
     }
 };
@@ -204,23 +204,23 @@ pub const Camera3D = extern struct {
     fovy: f32,
     projection: CameraProjection,
 
-    pub fn Begin(self: Camera3D) void {
+    pub fn begin(self: Camera3D) void {
         rl.BeginMode3D(self);
     }
 
-    pub fn Update(self: *Camera3D) void {
-        rl.UpdateCamera(self);
+    pub fn update(self: *Camera3D) void {
+        rl.UpdateCamera(@as([*c]Camera3D, self));
     }
 
-    pub fn GetMatrix(self: Camera3D) Matrix {
+    pub fn getMatrix(self: Camera3D) Matrix {
         return rl.GetCameraMatrix(self);
     }
 
-    pub fn SetMode(self: Camera3D, mode: CameraMode) void {
+    pub fn setMode(self: Camera3D, mode: CameraMode) void {
         rl.SetCameraMode(self, mode);
     }
 
-    pub fn End(_: Camera3D) void {
+    pub fn end(_: Camera3D) void {
         rl.EndMode3D();
     }
 };
@@ -232,15 +232,15 @@ pub const Camera2D = extern struct {
     rotation: f32,
     zoom: f32,
 
-    pub fn Begin(self: Camera2D) void {
+    pub fn begin(self: Camera2D) void {
         rl.BeginMode2D(self);
     }
 
-    pub fn GetMatrix(self: Camera2D) Matrix {
+    pub fn getMatrix(self: Camera2D) Matrix {
         return rl.GetCameraMatrix2D(self);
     }
 
-    pub fn End(_: Camera2D) void {
+    pub fn end(_: Camera2D) void {
         rl.EndMode2D();
     }
 };
@@ -261,6 +261,14 @@ pub const Mesh = extern struct {
     boneWeights: [*c]f32,
     vaoId: c_uint,
     vboId: [*c]c_uint,
+
+    pub fn draw(self: Mesh, material: Material, transform: Matrix) void {
+        rl.DrawMesh(self, material, transform);
+    }
+
+    pub fn drawInstanced(self: Mesh, material: Material, transforms: []const Matrix) void {
+        rl.DrawMeshInstanced(self, material, @as([*c]const Matrix, transforms), transforms.len);
+    }
 };
 
 pub const Shader = extern struct {

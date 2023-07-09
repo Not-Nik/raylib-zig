@@ -51,6 +51,11 @@ pub fn build(b: *Builder) void {
             .desc = "Shows the functionality of a 2D camera",
         },
         .{
+            .name = "3d_camera_first_person",
+            .path = "examples/core/3d_camera_first_person.zig",
+            .desc = "Simple first person demo",
+        },
+        .{
             .name = "sprite_anim",
             .path = "examples/textures/sprite_anim.zig",
             .desc = "Animate a sprite",
