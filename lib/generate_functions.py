@@ -65,7 +65,6 @@ def fix_enums(arg_name, arg_type, func_name):
 
 def parse_header(header_name: str, output_file: str, prefix: str, *args: str):
     header = open(header_name, mode="r")
-    zig_functions = []
     zig_heads = []
     zig_types = set()
 
@@ -142,8 +141,6 @@ def parse_header(header_name: str, output_file: str, prefix: str, *args: str):
     print(prelude, file=zig_header)
 
     print("\n".join(zig_heads), file=zig_header)
-    print("", file=zig_header)
-    print("\n".join(zig_functions), file=zig_header)
 
 
 if __name__ == "__main__":
