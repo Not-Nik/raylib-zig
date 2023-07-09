@@ -28,7 +28,7 @@ pub fn main() anyerror!void {
 
     var model = LoadModel(resourceDir ++ "models/castle.obj"); // Load model
     var texture = LoadTexture(resourceDir ++ "models/castle_diffuse.png"); // Load model texture
-    model.materials[0].maps[@enumToInt(MAP_DIFFUSE)].texture = texture; // Set map diffuse texture
+    model.materials[0].maps[@intFromEnum(MAP_DIFFUSE)].texture = texture; // Set map diffuse texture
 
     var position = Vector3{ .x = 0.0, .y = 0.0, .z = 0.0 }; // Set model position
 
@@ -64,7 +64,7 @@ pub fn main() anyerror!void {
                 {
                     UnloadModel(model); // Unload previous model
                     model = LoadModel(droppedFiles[0]); // Load new model
-                    model.materials[0].maps[@enumToInt(MAP_DIFFUSE)].texture = texture; // Set current map diffuse texture
+                    model.materials[0].maps[@intFromEnum(MAP_DIFFUSE)].texture = texture; // Set current map diffuse texture
 
                     bounds = MeshBoundingBox(model.meshes[0]);
 
@@ -74,7 +74,7 @@ pub fn main() anyerror!void {
                     // Unload current model texture and load new one
                     UnloadTexture(texture);
                     texture = LoadTexture(droppedFiles[0]);
-                    model.materials[0].maps[@enumToInt(MAP_DIFFUSE)].texture = texture;
+                    model.materials[0].maps[@intFromEnum(MAP_DIFFUSE)].texture = texture;
                 }
             }
 

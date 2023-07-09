@@ -208,16 +208,12 @@ pub const Camera3D = extern struct {
         rl.BeginMode3D(self);
     }
 
-    pub fn update(self: *Camera3D) void {
-        rl.UpdateCamera(@as([*c]Camera3D, self));
+    pub fn update(self: *Camera3D, mode: CameraMode) void {
+        rl.UpdateCamera(@as([*c]Camera3D, self), mode);
     }
 
     pub fn getMatrix(self: Camera3D) Matrix {
         return rl.GetCameraMatrix(self);
-    }
-
-    pub fn setMode(self: Camera3D, mode: CameraMode) void {
-        rl.SetCameraMode(self, mode);
     }
 
     pub fn end(_: Camera3D) void {
@@ -793,12 +789,14 @@ pub extern fn MaximizeWindow() void;
 pub extern fn MinimizeWindow() void;
 pub extern fn RestoreWindow() void;
 pub extern fn SetWindowIcon(image: Image) void;
+pub extern fn SetWindowIcons(images: [*c]Image, count: c_int) void;
 pub extern fn SetWindowTitle(title: [*c]const u8) void;
 pub extern fn SetWindowPosition(x: c_int, y: c_int) void;
 pub extern fn SetWindowMonitor(monitor: c_int) void;
 pub extern fn SetWindowMinSize(width: c_int, height: c_int) void;
 pub extern fn SetWindowSize(width: c_int, height: c_int) void;
 pub extern fn SetWindowOpacity(opacity: f32) void;
+pub extern fn SetWindowFocused() void;
 pub extern fn GetWindowHandle() *anyopaque;
 pub extern fn GetScreenWidth() c_int;
 pub extern fn GetScreenHeight() c_int;
@@ -849,6 +847,7 @@ pub extern fn LoadVrStereoConfig(device: VrDeviceInfo) VrStereoConfig;
 pub extern fn UnloadVrStereoConfig(config: VrStereoConfig) void;
 pub extern fn LoadShader(vsFileName: [*c]const u8, fsFileName: [*c]const u8) Shader;
 pub extern fn LoadShaderFromMemory(vsCode: [*c]const u8, fsCode: [*c]const u8) Shader;
+pub extern fn IsShaderReady(shader: Shader) bool;
 pub extern fn GetShaderLocation(shader: Shader, uniformName: [*c]const u8) c_int;
 pub extern fn GetShaderLocationAttrib(shader: Shader, attribName: [*c]const u8) c_int;
 pub extern fn SetShaderValue(shader: Shader, locIndex: c_int, value: *const anyopaque, uniformType: c_int) void;
@@ -956,12 +955,8 @@ pub extern fn GetGestureDragVector() Vector2;
 pub extern fn GetGestureDragAngle() f32;
 pub extern fn GetGesturePinchVector() Vector2;
 pub extern fn GetGesturePinchAngle() f32;
-pub extern fn SetCameraMode(camera: Camera, mode: CameraMode) void;
-pub extern fn UpdateCamera(camera: [*c]Camera) void;
-pub extern fn SetCameraPanControl(keyPan: c_int) void;
-pub extern fn SetCameraAltControl(keyAlt: c_int) void;
-pub extern fn SetCameraSmoothZoomControl(keySmoothZoom: c_int) void;
-pub extern fn SetCameraMoveControls(keyFront: c_int, keyBack: c_int, keyRight: c_int, keyLeft: c_int, keyUp: c_int, keyDown: c_int) void;
+pub extern fn UpdateCamera(camera: [*c]Camera, mode: CameraMode) void;
+pub extern fn UpdateCameraPro(camera: [*c]Camera, movement: Vector3, rotation: Vector3, zoom: f32) void;
 pub extern fn SetShapesTexture(texture: Texture2D, source: Rectangle) void;
 pub extern fn DrawPixel(posX: c_int, posY: c_int, color: Color) void;
 pub extern fn DrawPixelV(position: Vector2, color: Color) void;
@@ -1016,13 +1011,15 @@ pub extern fn LoadImageAnim(fileName: [*c]const u8, frames: [*c]c_int) Image;
 pub extern fn LoadImageFromMemory(fileType: [*c]const u8, fileData: [*c]const u8, dataSize: c_int) Image;
 pub extern fn LoadImageFromTexture(texture: Texture2D) Image;
 pub extern fn LoadImageFromScreen() Image;
+pub extern fn IsImageReady(image: Image) bool;
 pub extern fn UnloadImage(image: Image) void;
 pub extern fn ExportImage(image: Image, fileName: [*c]const u8) bool;
+pub extern fn ExportImageToMemory(image: Image, fileType: [*c]const u8, fileSize: [*c]c_int) [*c]u8;
 pub extern fn ExportImageAsCode(image: Image, fileName: [*c]const u8) bool;
 pub extern fn GenImageColor(width: c_int, height: c_int, color: Color) Image;
-pub extern fn GenImageGradientV(width: c_int, height: c_int, top: Color, bottom: Color) Image;
-pub extern fn GenImageGradientH(width: c_int, height: c_int, left: Color, right: Color) Image;
+pub extern fn GenImageGradientLinear(width: c_int, height: c_int, direction: c_int, start: Color, end: Color) Image;
 pub extern fn GenImageGradientRadial(width: c_int, height: c_int, density: f32, inner: Color, outer: Color) Image;
+pub extern fn GenImageGradientSquare(width: c_int, height: c_int, density: f32, inner: Color, outer: Color) Image;
 pub extern fn GenImageChecked(width: c_int, height: c_int, checksX: c_int, checksY: c_int, col1: Color, col2: Color) Image;
 pub extern fn GenImageWhiteNoise(width: c_int, height: c_int, factor: f32) Image;
 pub extern fn GenImagePerlinNoise(width: c_int, height: c_int, offsetX: c_int, offsetY: c_int, scale: f32) Image;
@@ -1047,6 +1044,7 @@ pub extern fn ImageMipmaps(image: [*c]Image) void;
 pub extern fn ImageDither(image: [*c]Image, rBpp: c_int, gBpp: c_int, bBpp: c_int, aBpp: c_int) void;
 pub extern fn ImageFlipVertical(image: [*c]Image) void;
 pub extern fn ImageFlipHorizontal(image: [*c]Image) void;
+pub extern fn ImageRotate(image: [*c]Image, degrees: c_int) void;
 pub extern fn ImageRotateCW(image: [*c]Image) void;
 pub extern fn ImageRotateCCW(image: [*c]Image) void;
 pub extern fn ImageColorTint(image: [*c]Image, color: Color) void;
@@ -1081,7 +1079,9 @@ pub extern fn LoadTexture(fileName: [*c]const u8) Texture2D;
 pub extern fn LoadTextureFromImage(image: Image) Texture2D;
 pub extern fn LoadTextureCubemap(image: Image, layout: c_int) TextureCubemap;
 pub extern fn LoadRenderTexture(width: c_int, height: c_int) RenderTexture2D;
+pub extern fn IsTextureReady(texture: Texture2D) bool;
 pub extern fn UnloadTexture(texture: Texture2D) void;
+pub extern fn IsRenderTextureReady(target: RenderTexture2D) bool;
 pub extern fn UnloadRenderTexture(target: RenderTexture2D) void;
 pub extern fn UpdateTexture(texture: Texture2D, pixels: *const anyopaque) void;
 pub extern fn UpdateTextureRec(texture: Texture2D, rec: Rectangle, pixels: *const anyopaque) void;
@@ -1114,6 +1114,7 @@ pub extern fn LoadFont(fileName: [*c]const u8) Font;
 pub extern fn LoadFontEx(fileName: [*c]const u8, fontSize: c_int, fontChars: [*c]c_int, glyphCount: c_int) Font;
 pub extern fn LoadFontFromImage(image: Image, key: Color, firstChar: c_int) Font;
 pub extern fn LoadFontFromMemory(fileType: [*c]const u8, fileData: [*c]const u8, dataSize: c_int, fontSize: c_int, fontChars: [*c]c_int, glyphCount: c_int) Font;
+pub extern fn IsFontReady(font: Font) bool;
 pub extern fn LoadFontData(fileData: [*c]const u8, dataSize: c_int, fontSize: c_int, fontChars: [*c]c_int, glyphCount: c_int, type: c_int) [*c]GlyphInfo;
 pub extern fn GenImageFontAtlas(chars: [*c]const GlyphInfo, recs: [*c][*c]Rectangle, glyphCount: c_int, fontSize: c_int, padding: c_int, packMethod: c_int) Image;
 pub extern fn UnloadFontData(chars: [*c]GlyphInfo, glyphCount: c_int) void;
@@ -1125,6 +1126,7 @@ pub extern fn DrawTextEx(font: Font, text: [*c]const u8, position: Vector2, font
 pub extern fn DrawTextPro(font: Font, text: [*c]const u8, position: Vector2, origin: Vector2, rotation: f32, fontSize: f32, spacing: f32, tint: Color) void;
 pub extern fn DrawTextCodepoint(font: Font, codepoint: c_int, position: Vector2, fontSize: f32, tint: Color) void;
 pub extern fn DrawTextCodepoints(font: Font, codepoints: [*c]const c_int, count: c_int, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void;
+pub extern fn SetTextLineSpacing(spacing: c_int) void;
 pub extern fn MeasureText(text: [*c]const u8, fontSize: c_int) c_int;
 pub extern fn MeasureTextEx(font: Font, text: [*c]const u8, fontSize: f32, spacing: f32) Vector2;
 pub extern fn GetGlyphIndex(font: Font, codepoint: c_int) c_int;
@@ -1177,8 +1179,8 @@ pub extern fn DrawRay(ray: Ray, color: Color) void;
 pub extern fn DrawGrid(slices: c_int, spacing: f32) void;
 pub extern fn LoadModel(fileName: [*c]const u8) Model;
 pub extern fn LoadModelFromMesh(mesh: Mesh) Model;
+pub extern fn IsModelReady(model: Model) bool;
 pub extern fn UnloadModel(model: Model) void;
-pub extern fn UnloadModelKeepMeshes(model: Model) void;
 pub extern fn GetModelBoundingBox(model: Model) BoundingBox;
 pub extern fn DrawModel(model: Model, position: Vector3, scale: f32, tint: Color) void;
 pub extern fn DrawModelEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void;
@@ -1209,6 +1211,7 @@ pub extern fn GenMeshHeightmap(heightmap: Image, size: Vector3) Mesh;
 pub extern fn GenMeshCubicmap(cubicmap: Image, cubeSize: Vector3) Mesh;
 pub extern fn LoadMaterials(fileName: [*c]const u8, materialCount: [*c]c_int) [*c]Material;
 pub extern fn LoadMaterialDefault() Material;
+pub extern fn IsMaterialReady(material: Material) bool;
 pub extern fn UnloadMaterial(material: Material) void;
 pub extern fn SetMaterialTexture(material: [*c]Material, mapType: c_int, texture: Texture2D) void;
 pub extern fn SetModelMeshMaterial(model: [*c]Model, meshId: c_int, materialId: c_int) void;
@@ -1231,8 +1234,10 @@ pub extern fn IsAudioDeviceReady() bool;
 pub extern fn SetMasterVolume(volume: f32) void;
 pub extern fn LoadWave(fileName: [*c]const u8) Wave;
 pub extern fn LoadWaveFromMemory(fileType: [*c]const u8, fileData: [*c]const u8, dataSize: c_int) Wave;
+pub extern fn IsWaveReady(wave: Wave) bool;
 pub extern fn LoadSound(fileName: [*c]const u8) Sound;
 pub extern fn LoadSoundFromWave(wave: Wave) Sound;
+pub extern fn IsSoundReady(sound: Sound) bool;
 pub extern fn UpdateSound(sound: Sound, data: *const anyopaque, sampleCount: c_int) void;
 pub extern fn UnloadWave(wave: Wave) void;
 pub extern fn UnloadSound(sound: Sound) void;
@@ -1242,9 +1247,6 @@ pub extern fn PlaySound(sound: Sound) void;
 pub extern fn StopSound(sound: Sound) void;
 pub extern fn PauseSound(sound: Sound) void;
 pub extern fn ResumeSound(sound: Sound) void;
-pub extern fn PlaySoundMulti(sound: Sound) void;
-pub extern fn StopSoundMulti() void;
-pub extern fn GetSoundsPlaying() c_int;
 pub extern fn IsSoundPlaying(sound: Sound) bool;
 pub extern fn SetSoundVolume(sound: Sound, volume: f32) void;
 pub extern fn SetSoundPitch(sound: Sound, pitch: f32) void;
@@ -1256,6 +1258,7 @@ pub extern fn LoadWaveSamples(wave: Wave) [*c]f32;
 pub extern fn UnloadWaveSamples(samples: [*c]f32) void;
 pub extern fn LoadMusicStream(fileName: [*c]const u8) Music;
 pub extern fn LoadMusicStreamFromMemory(fileType: [*c]const u8, data: [*c]const u8, dataSize: c_int) Music;
+pub extern fn IsMusicReady(music: Music) bool;
 pub extern fn UnloadMusicStream(music: Music) void;
 pub extern fn PlayMusicStream(music: Music) void;
 pub extern fn IsMusicStreamPlaying(music: Music) bool;
@@ -1270,6 +1273,7 @@ pub extern fn SetMusicPan(music: Music, pan: f32) void;
 pub extern fn GetMusicTimeLength(music: Music) f32;
 pub extern fn GetMusicTimePlayed(music: Music) f32;
 pub extern fn LoadAudioStream(sampleRate: c_uint, sampleSize: c_uint, channels: c_uint) AudioStream;
+pub extern fn IsAudioStreamReady(stream: AudioStream) bool;
 pub extern fn UnloadAudioStream(stream: AudioStream) void;
 pub extern fn UpdateAudioStream(stream: AudioStream, data: *const anyopaque, frameCount: c_int) void;
 pub extern fn IsAudioStreamProcessed(stream: AudioStream) bool;
@@ -1285,5 +1289,5 @@ pub extern fn SetAudioStreamBufferSizeDefault(size: c_int) void;
 pub extern fn SetAudioStreamCallback(stream: AudioStream, callback: AudioCallback) void;
 pub extern fn AttachAudioStreamProcessor(stream: AudioStream, processor: AudioCallback) void;
 pub extern fn DetachAudioStreamProcessor(stream: AudioStream, processor: AudioCallback) void;
-
-
+pub extern fn AttachAudioMixedProcessor(processor: AudioCallback) void;
+pub extern fn DetachAudioMixedProcessor(processor: AudioCallback) void;

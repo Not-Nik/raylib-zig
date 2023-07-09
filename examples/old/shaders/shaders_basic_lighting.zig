@@ -44,9 +44,9 @@ pub fn main() !void {
     const texture = LoadTexture(resourceDir ++ "texel_checker.png");
 
     // Assign texture to default model material
-    modelA.materials[0].maps[@enumToInt(MAP_DIFFUSE)].texture = texture;
-    modelB.materials[0].maps[@enumToInt(MAP_DIFFUSE)].texture = texture;
-    modelC.materials[0].maps[@enumToInt(MAP_DIFFUSE)].texture = texture;
+    modelA.materials[0].maps[@intFromEnum(MAP_DIFFUSE)].texture = texture;
+    modelB.materials[0].maps[@intFromEnum(MAP_DIFFUSE)].texture = texture;
+    modelC.materials[0].maps[@intFromEnum(MAP_DIFFUSE)].texture = texture;
 
     var shader = LoadShader(
         resourceDir ++ "/shaders/glsl330/base_lighting.vs",
@@ -54,13 +54,13 @@ pub fn main() !void {
     );
 
     // Get some shader loactions
-    shader.locs[@enumToInt(ShaderLocationIndex.SHADER_LOC_MATRIX_MODEL)] = GetShaderLocation(shader, "matModel");
-    shader.locs[@enumToInt(ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW)] = GetShaderLocation(shader, "viewPos");
+    shader.locs[@intFromEnum(ShaderLocationIndex.SHADER_LOC_MATRIX_MODEL)] = GetShaderLocation(shader, "matModel");
+    shader.locs[@intFromEnum(ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW)] = GetShaderLocation(shader, "viewPos");
 
     // ambient light level
     const ambientLoc = GetShaderLocation(shader, "ambient");
     const ambientVals = [4]f32{ 0.2, 0.2, 0.2, 1.0 };
-    SetShaderValue(shader, ambientLoc, &ambientVals, @enumToInt(ShaderUniformDataType.SHADER_UNIFORM_VEC4));
+    SetShaderValue(shader, ambientLoc, &ambientVals, @intFromEnum(ShaderUniformDataType.SHADER_UNIFORM_VEC4));
 
     var angle: f32 = 6.282;
 
@@ -126,7 +126,7 @@ pub fn main() !void {
 
         // Update the light shader with the camera view position
         const cameraPos = [3]f32{ camera.position.x, camera.position.y, camera.position.z };
-        SetShaderValue(shader, shader.locs[@enumToInt(ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW)], &cameraPos, @enumToInt(ShaderUniformDataType.SHADER_UNIFORM_VEC3));
+        SetShaderValue(shader, shader.locs[@intFromEnum(ShaderLocationIndex.SHADER_LOC_VECTOR_VIEW)], &cameraPos, @intFromEnum(ShaderUniformDataType.SHADER_UNIFORM_VEC3));
         //----------------------------------------------------------------------------------
 
         // Draw

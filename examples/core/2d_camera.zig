@@ -19,15 +19,15 @@ pub fn main() anyerror!void {
 
     var spacing: i32 = 0;
 
-    for (buildings) |_, i| {
-        buildings[i].width = @intToFloat(f32, rl.GetRandomValue(50, 200));
-        buildings[i].height = @intToFloat(f32, rl.GetRandomValue(100, 800));
+    for (buildings, 0..) |_, i| {
+        buildings[i].width = @as(f32, @floatFromInt(rl.GetRandomValue(50, 200)));
+        buildings[i].height = @as(f32, @floatFromInt(rl.GetRandomValue(100, 800)));
         buildings[i].y = screenHeight - 130 - buildings[i].height;
-        buildings[i].x = @intToFloat(f32, -6000 + spacing);
+        buildings[i].x = @as(f32, @floatFromInt(-6000 + spacing));
 
-        spacing += @floatToInt(i32, buildings[i].width);
+        spacing += @as(i32, @intFromFloat(buildings[i].width));
 
-        buildColors[i] = rl.Color{ .r = @intCast(u8, rl.GetRandomValue(200, 240)), .g = @intCast(u8, rl.GetRandomValue(200, 240)), .b = @intCast(u8, rl.GetRandomValue(200, 250)), .a = 255 };
+        buildColors[i] = rl.Color{ .r = @as(u8, @intCast(rl.GetRandomValue(200, 240))), .g = @as(u8, @intCast(rl.GetRandomValue(200, 240))), .b = @as(u8, @intCast(rl.GetRandomValue(200, 250))), .a = 255 };
     }
 
     var camera = rl.Camera2D{
@@ -87,14 +87,14 @@ pub fn main() anyerror!void {
 
         rl.DrawRectangle(-6000, 320, 13000, 8000, rl.DARKGRAY);
 
-        for (buildings) |building, i| {
+        for (buildings, 0..) |building, i| {
             rl.DrawRectangleRec(building, buildColors[i]);
         }
 
         rl.DrawRectangleRec(player, rl.RED);
 
-        rl.DrawLine(@floatToInt(c_int, camera.target.x), -screenHeight * 10, @floatToInt(c_int, camera.target.x), screenHeight * 10, rl.GREEN);
-        rl.DrawLine(-screenWidth * 10, @floatToInt(c_int, camera.target.y), screenWidth * 10, @floatToInt(c_int, camera.target.y), rl.GREEN);
+        rl.DrawLine(@as(c_int, @intFromFloat(camera.target.x)), -screenHeight * 10, @as(c_int, @intFromFloat(camera.target.x)), screenHeight * 10, rl.GREEN);
+        rl.DrawLine(-screenWidth * 10, @as(c_int, @intFromFloat(camera.target.y)), screenWidth * 10, @as(c_int, @intFromFloat(camera.target.y)), rl.GREEN);
 
         camera.end();
 

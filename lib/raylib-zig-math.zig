@@ -1,6 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
-const rl = @import("raylib-zig.zig");
+const rl = @import("raylib.math");
 
 const Matrix = rl.Matrix;
 const Quaternion = rl.Quaternion;
@@ -34,6 +34,7 @@ pub extern fn Vector2DotProduct(v1: Vector2, v2: Vector2) f32;
 pub extern fn Vector2Distance(v1: Vector2, v2: Vector2) f32;
 pub extern fn Vector2DistanceSqr(v1: Vector2, v2: Vector2) f32;
 pub extern fn Vector2Angle(v1: Vector2, v2: Vector2) f32;
+pub extern fn Vector2LineAngle(start: Vector2, end: Vector2) f32;
 pub extern fn Vector2Scale(v: Vector2, scale: f32) Vector2;
 pub extern fn Vector2Multiply(v1: Vector2, v2: Vector2) Vector2;
 pub extern fn Vector2Negate(v: Vector2) Vector2;
@@ -127,5 +128,3 @@ pub extern fn QuaternionFromEuler(pitch: f32, yaw: f32, roll: f32) Quaternion;
 pub extern fn QuaternionToEuler(q: Quaternion) Vector3;
 pub extern fn QuaternionTransform(q: Quaternion, mat: Matrix) Quaternion;
 pub extern fn QuaternionEquals(p: Quaternion, q: Quaternion) c_int;
-
-

@@ -7,7 +7,52 @@
 
 const std = @import("std");
 const Builder = std.build.Builder;
-const raylib = @import("lib.zig");
+const rl = @import("raylib");
+
+var ran_git = false;
+const srcdir = getSrcDir();
+
+fn getSrcDir() []const u8 {
+    return std.fs.path.dirname(@src().file) orelse ".";
+}
+
+/// Links raylib against the given build step.
+pub fn linkDependencies(exe: *std.Build.CompileStep) void {
+    const target_os = exe.target.toTarget().os.tag;
+    switch (target_os) {
+        .windows => {
+            exe.linkSystemLibrary("winmm");
+            exe.linkSystemLibrary("gdi32");
+            exe.linkSystemLibrary("opengl32");
+        },
+        .macos => {
+            exe.linkFramework("OpenGL");
+            exe.linkFramework("Cocoa");
+            exe.linkFramework("IOKit");
+            exe.linkFramework("CoreAudio");
+            exe.linkFramework("CoreVideo");
+        },
+        .freebsd, .openbsd, .netbsd, .dragonfly => {
+            exe.linkSystemLibrary("GL");
+            exe.linkSystemLibrary("rt");
+            exe.linkSystemLibrary("dl");
+            exe.linkSystemLibrary("m");
+            exe.linkSystemLibrary("X11");
+            exe.linkSystemLibrary("Xrandr");
+            exe.linkSystemLibrary("Xinerama");
+            exe.linkSystemLibrary("Xi");
+            exe.linkSystemLibrary("Xxf86vm");
+            exe.linkSystemLibrary("Xcursor");
+        },
+        else => { // linux and possibly others
+            exe.linkSystemLibrary("GL");
+            exe.linkSystemLibrary("rt");
+            exe.linkSystemLibrary("dl");
+            exe.linkSystemLibrary("m");
+            exe.linkSystemLibrary("X11");
+        },
+    }
+}
 
 const Program = struct {
     name: []const u8,
@@ -15,9 +60,28 @@ const Program = struct {
     desc: []const u8,
 };
 
-pub fn build(b: *Builder) void {
-    const mode = b.standardReleaseOptions();
+pub fn build(b: *std.Build) void {
+    const optimize = b.standardOptimizeOption(.{});
     const target = b.standardTargetOptions(.{});
+
+    const raylib_dep = b.dependency("raylib", .{
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const raylib_lib = raylib_dep.artifact("raylib");
+    b.installArtifact(raylib_lib);
+
+    const raylib_core_mod = b.addModule("raylib.core", .{
+        .source_file = .{ .path = "lib/raylib-zig.zig" },
+    });
+
+    const raylib_math_mod = b.addModule("raylib.math", .{
+        .source_file = .{ .path = "lib/raylib-zig-math.zig" },
+        .dependencies = &.{
+            .{ .name = "raylib.core", .module = raylib_core_mod },
+        },
+    });
 
     const examples = [_]Program{
         .{
@@ -64,7 +128,7 @@ pub fn build(b: *Builder) void {
             .name = "texture_outline",
             .path = "examples/shaders/texture_outline.zig",
             .desc = "Uses a shader to create an outline around a sprite",
-        }
+        },
         // .{
         //     .name = "models_loading",
         //     .path = "examples/models/models_loading.zig",
@@ -81,16 +145,23 @@ pub fn build(b: *Builder) void {
     const system_lib = b.option(bool, "system-raylib", "link to preinstalled raylib libraries") orelse false;
 
     for (examples) |ex| {
-        const exe = b.addExecutable(ex.name, ex.path);
+        const exe = b.addExecutable(.{
+            .name = ex.name,
+            .root_source_file = .{ .path = ex.path },
 
-        exe.setBuildMode(mode);
-        exe.setTarget(target);
+            .optimize = optimize,
+            .target = target,
+        });
 
-        raylib.link(exe, system_lib);
-        raylib.addAsPackage("raylib", exe);
-        raylib.math.addAsPackage("raylib-math", exe);
+        linkDependencies(exe);
+        if (!system_lib) {
+            exe.linkLibrary(raylib_lib);
+        }
 
-        const run_cmd = exe.run();
+        exe.addModule("raylib", raylib_core_mod);
+        exe.addModule("raylib-math", raylib_math_mod);
+
+        const run_cmd = b.addRunArtifact(exe);
         const run_step = b.step(ex.name, ex.desc);
         run_step.dependOn(&run_cmd.step);
         examples_step.dependOn(&exe.step);

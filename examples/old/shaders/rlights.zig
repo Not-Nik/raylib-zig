@@ -104,23 +104,23 @@ pub fn CreateLight(typ: LightType, position: Vector3, target: Vector3, color: Co
 // NOTE: Light shader locations should be available
 pub fn UpdateLightValues(shader: Shader, light: Light) void {
     // Send to shader light enabled state and type
-    SetShaderValue(shader, light.enabledLoc, &light.enabled, @enumToInt(ShaderUniformDataType.SHADER_UNIFORM_INT));
-    SetShaderValue(shader, light.typeLoc, &light.type, @enumToInt(ShaderUniformDataType.SHADER_UNIFORM_INT));
+    SetShaderValue(shader, light.enabledLoc, &light.enabled, @intFromEnum(ShaderUniformDataType.SHADER_UNIFORM_INT));
+    SetShaderValue(shader, light.typeLoc, &light.type, @intFromEnum(ShaderUniformDataType.SHADER_UNIFORM_INT));
 
     // Send to shader light position values
     const position = [3]f32{ light.position.x, light.position.y, light.position.z };
-    SetShaderValue(shader, light.posLoc, &position, @enumToInt(ShaderUniformDataType.SHADER_UNIFORM_VEC3));
+    SetShaderValue(shader, light.posLoc, &position, @intFromEnum(ShaderUniformDataType.SHADER_UNIFORM_VEC3));
 
     // Send to shader light target position values
     const target = [3]f32{ light.target.x, light.target.y, light.target.z };
-    SetShaderValue(shader, light.targetLoc, &target, @enumToInt(ShaderUniformDataType.SHADER_UNIFORM_VEC3));
+    SetShaderValue(shader, light.targetLoc, &target, @intFromEnum(ShaderUniformDataType.SHADER_UNIFORM_VEC3));
 
     // Send to shader light color values
     const color = [4]f32{
-        @intToFloat(f32, light.color.r) / 255.0,
-        @intToFloat(f32, light.color.g) / 255.0,
-        @intToFloat(f32, light.color.b) / 255.0,
-        @intToFloat(f32, light.color.a) / 255.0,
+        @as(f32, @floatFromInt(light.color.r)) / 255.0,
+        @as(f32, @floatFromInt(light.color.g)) / 255.0,
+        @as(f32, @floatFromInt(light.color.b)) / 255.0,
+        @as(f32, @floatFromInt(light.color.a)) / 255.0,
     };
-    SetShaderValue(shader, light.colorLoc, &color, @enumToInt(ShaderUniformDataType.SHADER_UNIFORM_VEC4));
+    SetShaderValue(shader, light.colorLoc, &color, @intFromEnum(ShaderUniformDataType.SHADER_UNIFORM_VEC4));
 }

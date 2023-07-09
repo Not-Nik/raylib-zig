@@ -208,16 +208,12 @@ pub const Camera3D = extern struct {
         rl.BeginMode3D(self);
     }
 
-    pub fn update(self: *Camera3D) void {
-        rl.UpdateCamera(@as([*c]Camera3D, self));
+    pub fn update(self: *Camera3D, mode: CameraMode) void {
+        rl.UpdateCamera(@as([*c]Camera3D, self), mode);
     }
 
     pub fn getMatrix(self: Camera3D) Matrix {
         return rl.GetCameraMatrix(self);
-    }
-
-    pub fn setMode(self: Camera3D, mode: CameraMode) void {
-        rl.SetCameraMode(self, mode);
     }
 
     pub fn end(_: Camera3D) void {

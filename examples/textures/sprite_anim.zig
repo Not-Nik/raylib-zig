@@ -19,7 +19,7 @@ pub fn main() anyerror!void {
     const scarfy: rl.Texture2D = rl.LoadTexture("resources/textures/scarfy.png"); // Texture loading
 
     const position = rl.Vector2{ .x = 350.0, .y = 280.0 };
-    var frameRec = rl.Rectangle{ .x = 0.0, .y = 0.0, .width = @intToFloat(f32, @divFloor(scarfy.width, 6)), .height = @intToFloat(f32, scarfy.height) };
+    var frameRec = rl.Rectangle{ .x = 0.0, .y = 0.0, .width = @as(f32, @floatFromInt(@divFloor(scarfy.width, 6))), .height = @as(f32, @floatFromInt(scarfy.height)) };
     var currentFrame: u8 = 0;
 
     var framesCounter: u8 = 0;
@@ -40,7 +40,7 @@ pub fn main() anyerror!void {
 
             if (currentFrame > 5) currentFrame = 0;
 
-            frameRec.x = @intToFloat(f32, currentFrame) * @intToFloat(f32, @divFloor(scarfy.width, 6));
+            frameRec.x = @as(f32, @floatFromInt(currentFrame)) * @as(f32, @floatFromInt(@divFloor(scarfy.width, 6)));
         }
 
         // Control frames speed
@@ -66,17 +66,17 @@ pub fn main() anyerror!void {
 
         rl.DrawTexture(scarfy, 15, 40, rl.WHITE);
         rl.DrawRectangleLines(15, 40, scarfy.width, scarfy.height, rl.LIME);
-        rl.DrawRectangleLines(15 + @floatToInt(i32, frameRec.x), 40 + @floatToInt(i32, frameRec.y), @floatToInt(i32, frameRec.width), @floatToInt(i32, frameRec.height), rl.RED);
+        rl.DrawRectangleLines(15 + @as(i32, @intFromFloat(frameRec.x)), 40 + @as(i32, @intFromFloat(frameRec.y)), @as(i32, @intFromFloat(frameRec.width)), @as(i32, @intFromFloat(frameRec.height)), rl.RED);
 
         rl.DrawText("FRAME SPEED: ", 165, 210, 10, rl.DARKGRAY);
         rl.DrawText(rl.TextFormat("%02i FPS", framesSpeed), 575, 210, 10, rl.DARKGRAY);
         rl.DrawText("PRESS RIGHT/LEFT KEYS to CHANGE SPEED!", 290, 240, 10, rl.DARKGRAY);
 
-        for ([_]u32{0} ** MAX_FRAME_SPEED) |_, i| {
+        for ([_]u32{0} ** MAX_FRAME_SPEED, 0..) |_, i| {
             if (i < framesSpeed) {
-                rl.DrawRectangle(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.RED);
+                rl.DrawRectangle(250 + 21 * @as(c_int, @intCast(i)), 205, 20, 20, rl.RED);
             }
-            rl.DrawRectangleLines(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.MAROON);
+            rl.DrawRectangleLines(250 + 21 * @as(c_int, @intCast(i)), 205, 20, 20, rl.MAROON);
         }
 
         rl.DrawTextureRec(scarfy, frameRec, position, rl.WHITE); // Draw part of the texture

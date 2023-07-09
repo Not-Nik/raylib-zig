@@ -25,13 +25,11 @@ pub fn main() anyerror!void {
     var positions: [MAX_COLUMNS]rl.Vector3 = undefined;
     var colors: [MAX_COLUMNS]rl.Color = undefined;
 
-    for (heights) |_, i| {
-        heights[i] = @intToFloat(f32, rl.GetRandomValue(1, 12));
-        positions[i] = rl.Vector3{ .x = @intToFloat(f32, rl.GetRandomValue(-15, 15)), .y = heights[i] / 2.0, .z = @intToFloat(f32, rl.GetRandomValue(-15, 15)) };
-        colors[i] = rl.Color{ .r = @intCast(u8, rl.GetRandomValue(20, 255)), .g = @intCast(u8, rl.GetRandomValue(10, 55)), .b = 30, .a = 255 };
+    for (heights, 0..) |_, i| {
+        heights[i] = @as(f32, @floatFromInt(rl.GetRandomValue(1, 12)));
+        positions[i] = rl.Vector3{ .x = @as(f32, @floatFromInt(rl.GetRandomValue(-15, 15))), .y = heights[i] / 2.0, .z = @as(f32, @floatFromInt(rl.GetRandomValue(-15, 15))) };
+        colors[i] = rl.Color{ .r = @as(u8, @intCast(rl.GetRandomValue(20, 255))), .g = @as(u8, @intCast(rl.GetRandomValue(10, 55))), .b = 30, .a = 255 };
     }
-
-    camera.setMode(rl.CameraMode.CAMERA_FIRST_PERSON);
 
     rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -40,7 +38,7 @@ pub fn main() anyerror!void {
     while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
         // Update
         //----------------------------------------------------------------------------------
-        camera.update();
+        camera.update(rl.CameraMode.CAMERA_FIRST_PERSON);
         //----------------------------------------------------------------------------------
 
         // Draw
@@ -58,7 +56,7 @@ pub fn main() anyerror!void {
         rl.DrawCube(rl.Vector3{ .x = 0.0, .y = 2.5, .z = 16.0 }, 32.0, 5.0, 1.0, rl.GOLD); // Draw a yellow wall
 
         // Draw some cubes around
-        for (heights) |height, i| {
+        for (heights, 0..) |height, i| {
             rl.DrawCube(positions[i], 2.0, height, 2.0, colors[i]);
             rl.DrawCubeWires(positions[i], 2.0, height, 2.0, rl.MAROON);
         }

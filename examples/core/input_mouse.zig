@@ -21,8 +21,8 @@ pub fn main() anyerror!void {
         // Update
         //----------------------------------------------------------------------------------
         ballPosition = rl.GetMousePosition();
-        ballPosition.x = @intToFloat(f32, rl.GetMouseX());
-        ballPosition.y = @intToFloat(f32, rl.GetMouseY());
+        ballPosition.x = @as(f32, @floatFromInt(rl.GetMouseX()));
+        ballPosition.y = @as(f32, @floatFromInt(rl.GetMouseY()));
 
         if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_LEFT)) {
             ballColor = rl.MAROON;
@@ -39,7 +39,7 @@ pub fn main() anyerror!void {
 
         rl.ClearBackground(rl.RAYWHITE);
 
-        rl.DrawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, ballColor);
+        rl.DrawCircle(@as(c_int, @intFromFloat(ballPosition.x)), @as(c_int, @intFromFloat(ballPosition.y)), 50, ballColor);
         //DrawCircleV(ballPosition, 40, ballColor);
 
         rl.DrawText("move ball with mouse and click mouse button to change color", 10, 10, 20, rl.DARKGRAY);
