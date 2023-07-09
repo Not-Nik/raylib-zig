@@ -24,9 +24,9 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.BeginDrawing();
 
-        rl.ClearBackground(rl.WHITE);
+        rl.ClearBackground(rl.Color.WHITE);
 
-        rl.DrawText("Congrats! You created your first window!", 190, 200, 20, rl.LIGHTGRAY);
+        rl.DrawText("Congrats! You created your first window!", 190, 200, 20, rl.Color.LIGHTGRAY);
 
         rl.EndDrawing();
         //----------------------------------------------------------------------------------

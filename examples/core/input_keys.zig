@@ -38,11 +38,11 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.BeginDrawing();
 
-        rl.ClearBackground(rl.RAYWHITE);
+        rl.ClearBackground(rl.Color.RAYWHITE);
 
-        rl.DrawText("move the ball with arrow keys", 10, 10, 20, rl.DARKGRAY);
+        rl.DrawText("move the ball with arrow keys", 10, 10, 20, rl.Color.DARKGRAY);
 
-        rl.DrawCircleV(ballPosition, 50, rl.MAROON);
+        rl.DrawCircleV(ballPosition, 50, rl.Color.MAROON);
 
         rl.EndDrawing();
         //----------------------------------------------------------------------------------

@@ -47,30 +47,30 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.BeginDrawing();
 
-        rl.ClearBackground(rl.RAYWHITE);
+        rl.ClearBackground(rl.Color.RAYWHITE);
 
         camera.begin();
 
         // Draw ground
-        rl.DrawPlane(rl.Vector3.init(0, 0, 0), rl.Vector2.init(32, 32), rl.LIGHTGRAY);
-        rl.DrawCube(rl.Vector3.init(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.BLUE); // Draw a blue wall
-        rl.DrawCube(rl.Vector3.init(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.LIME); // Draw a green wall
-        rl.DrawCube(rl.Vector3.init(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, rl.GOLD); // Draw a yellow wall
+        rl.DrawPlane(rl.Vector3.init(0, 0, 0), rl.Vector2.init(32, 32), rl.Color.LIGHTGRAY);
+        rl.DrawCube(rl.Vector3.init(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.BLUE); // Draw a blue wall
+        rl.DrawCube(rl.Vector3.init(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.LIME); // Draw a green wall
+        rl.DrawCube(rl.Vector3.init(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, rl.Color.GOLD); // Draw a yellow wall
 
         // Draw some cubes around
         for (heights) |height, i| {
             rl.DrawCube(positions[i], 2.0, height, 2.0, colors[i]);
-            rl.DrawCubeWires(positions[i], 2.0, height, 2.0, rl.MAROON);
+            rl.DrawCubeWires(positions[i], 2.0, height, 2.0, rl.Color.MAROON);
         }
 
         camera.end();
 
-        rl.DrawRectangle(10, 10, 220, 70, rl.Fade(rl.SKYBLUE, 0.5));
-        rl.DrawRectangleLines(10, 10, 220, 70, rl.BLUE);
+        rl.DrawRectangle(10, 10, 220, 70, rl.Fade(rl.Color.SKYBLUE, 0.5));
+        rl.DrawRectangleLines(10, 10, 220, 70, rl.Color.BLUE);
 
-        rl.DrawText("First person camera default controls:", 20, 20, 10, rl.BLACK);
-        rl.DrawText("- Move with keys: W, A, S, D", 40, 40, 10, rl.DARKGRAY);
-        rl.DrawText("- Mouse move to look around", 40, 60, 10, rl.DARKGRAY);
+        rl.DrawText("First person camera default controls:", 20, 20, 10, rl.Color.BLACK);
+        rl.DrawText("- Move with keys: W, A, S, D", 40, 40, 10, rl.Color.DARKGRAY);
+        rl.DrawText("- Mouse move to look around", 40, 60, 10, rl.Color.DARKGRAY);
 
         rl.EndDrawing();
         //----------------------------------------------------------------------------------

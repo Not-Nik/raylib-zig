@@ -81,38 +81,38 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.BeginDrawing();
 
-        rl.ClearBackground(rl.RAYWHITE);
+        rl.ClearBackground(rl.Color.RAYWHITE);
 
         camera.begin();
 
-        rl.DrawRectangle(-6000, 320, 13000, 8000, rl.DARKGRAY);
+        rl.DrawRectangle(-6000, 320, 13000, 8000, rl.Color.DARKGRAY);
 
         for (buildings) |building, i| {
             rl.DrawRectangleRec(building, buildColors[i]);
         }
 
-        rl.DrawRectangleRec(player, rl.RED);
+        rl.DrawRectangleRec(player, rl.Color.RED);
 
-        rl.DrawLine(@floatToInt(c_int, camera.target.x), -screenHeight * 10, @floatToInt(c_int, camera.target.x), screenHeight * 10, rl.GREEN);
-        rl.DrawLine(-screenWidth * 10, @floatToInt(c_int, camera.target.y), screenWidth * 10, @floatToInt(c_int, camera.target.y), rl.GREEN);
+        rl.DrawLine(@floatToInt(c_int, camera.target.x), -screenHeight * 10, @floatToInt(c_int, camera.target.x), screenHeight * 10, rl.Color.GREEN);
+        rl.DrawLine(-screenWidth * 10, @floatToInt(c_int, camera.target.y), screenWidth * 10, @floatToInt(c_int, camera.target.y), rl.Color.GREEN);
 
         camera.end();
 
-        rl.DrawText("SCREEN AREA", 640, 10, 20, rl.RED);
+        rl.DrawText("SCREEN AREA", 640, 10, 20, rl.Color.RED);
 
-        rl.DrawRectangle(0, 0, screenWidth, 5, rl.RED);
-        rl.DrawRectangle(0, 5, 5, screenHeight - 10, rl.RED);
-        rl.DrawRectangle(screenWidth - 5, 5, 5, screenHeight - 10, rl.RED);
-        rl.DrawRectangle(0, screenHeight - 5, screenWidth, 5, rl.RED);
+        rl.DrawRectangle(0, 0, screenWidth, 5, rl.Color.RED);
+        rl.DrawRectangle(0, 5, 5, screenHeight - 10, rl.Color.RED);
+        rl.DrawRectangle(screenWidth - 5, 5, 5, screenHeight - 10, rl.Color.RED);
+        rl.DrawRectangle(0, screenHeight - 5, screenWidth, 5, rl.Color.RED);
 
-        rl.DrawRectangle(10, 10, 250, 113, rl.Fade(rl.SKYBLUE, 0.5));
-        rl.DrawRectangleLines(10, 10, 250, 113, rl.BLUE);
+        rl.DrawRectangle(10, 10, 250, 113, rl.Fade(rl.Color.SKYBLUE, 0.5));
+        rl.DrawRectangleLines(10, 10, 250, 113, rl.Color.BLUE);
 
-        rl.DrawText("Free 2d camera controls:", 20, 20, 10, rl.BLACK);
-        rl.DrawText("- Right/Left to move Offset", 40, 40, 10, rl.DARKGRAY);
-        rl.DrawText("- Mouse Wheel to Zoom in-out", 40, 60, 10, rl.DARKGRAY);
-        rl.DrawText("- A / S to Rotate", 40, 80, 10, rl.DARKGRAY);
-        rl.DrawText("- R to reset Zoom and Rotation", 40, 100, 10, rl.DARKGRAY);
+        rl.DrawText("Free 2d camera controls:", 20, 20, 10, rl.Color.BLACK);
+        rl.DrawText("- Right/Left to move Offset", 40, 40, 10, rl.Color.DARKGRAY);
+        rl.DrawText("- Mouse Wheel to Zoom in-out", 40, 60, 10, rl.Color.DARKGRAY);
+        rl.DrawText("- A / S to Rotate", 40, 80, 10, rl.Color.DARKGRAY);
+        rl.DrawText("- R to reset Zoom and Rotation", 40, 100, 10, rl.Color.DARKGRAY);
 
         rl.EndDrawing();
         //----------------------------------------------------------------------------------

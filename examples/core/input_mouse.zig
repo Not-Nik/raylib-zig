@@ -11,7 +11,7 @@ pub fn main() anyerror!void {
     rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - mouse input");
 
     var ballPosition = rl.Vector2.init(-100, -100);
-    var ballColor = rl.DARKBLUE;
+    var ballColor = rl.Color.DARKBLUE;
 
     rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -25,11 +25,11 @@ pub fn main() anyerror!void {
         ballPosition.y = @intToFloat(f32, rl.GetMouseY());
 
         if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_LEFT)) {
-            ballColor = rl.MAROON;
+            ballColor = rl.Color.MAROON;
         } else if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_MIDDLE)) {
-            ballColor = rl.LIME;
+            ballColor = rl.Color.LIME;
         } else if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_RIGHT)) {
-            ballColor = rl.DARKBLUE;
+            ballColor = rl.Color.DARKBLUE;
         }
         //----------------------------------------------------------------------------------
 
@@ -37,12 +37,12 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.BeginDrawing();
 
-        rl.ClearBackground(rl.RAYWHITE);
+        rl.ClearBackground(rl.Color.RAYWHITE);
 
         rl.DrawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, ballColor);
         //DrawCircleV(ballPosition, 40, ballColor);
 
-        rl.DrawText("move ball with mouse and click mouse button to change color", 10, 10, 20, rl.DARKGRAY);
+        rl.DrawText("move ball with mouse and click mouse button to change color", 10, 10, 20, rl.Color.DARKGRAY);
 
         rl.EndDrawing();
         //----------------------------------------------------------------------------------

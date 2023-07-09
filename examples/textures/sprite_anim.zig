@@ -62,26 +62,26 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.BeginDrawing();
 
-        rl.ClearBackground(rl.RAYWHITE);
+        rl.ClearBackground(rl.Color.RAYWHITE);
 
-        rl.DrawTexture(scarfy, 15, 40, rl.WHITE);
-        rl.DrawRectangleLines(15, 40, scarfy.width, scarfy.height, rl.LIME);
-        rl.DrawRectangleLines(15 + @floatToInt(i32, frameRec.x), 40 + @floatToInt(i32, frameRec.y), @floatToInt(i32, frameRec.width), @floatToInt(i32, frameRec.height), rl.RED);
+        rl.DrawTexture(scarfy, 15, 40, rl.Color.WHITE);
+        rl.DrawRectangleLines(15, 40, scarfy.width, scarfy.height, rl.Color.LIME);
+        rl.DrawRectangleLines(15 + @floatToInt(i32, frameRec.x), 40 + @floatToInt(i32, frameRec.y), @floatToInt(i32, frameRec.width), @floatToInt(i32, frameRec.height), rl.Color.RED);
 
-        rl.DrawText("FRAME SPEED: ", 165, 210, 10, rl.DARKGRAY);
-        rl.DrawText(rl.TextFormat("%02i FPS", framesSpeed), 575, 210, 10, rl.DARKGRAY);
-        rl.DrawText("PRESS RIGHT/LEFT KEYS to CHANGE SPEED!", 290, 240, 10, rl.DARKGRAY);
+        rl.DrawText("FRAME SPEED: ", 165, 210, 10, rl.Color.DARKGRAY);
+        rl.DrawText(rl.TextFormat("%02i FPS", framesSpeed), 575, 210, 10, rl.Color.DARKGRAY);
+        rl.DrawText("PRESS RIGHT/LEFT KEYS to CHANGE SPEED!", 290, 240, 10, rl.Color.DARKGRAY);
 
         for ([_]u32{0} ** MAX_FRAME_SPEED) |_, i| {
             if (i < framesSpeed) {
-                rl.DrawRectangle(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.RED);
+                rl.DrawRectangle(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.RED);
             }
-            rl.DrawRectangleLines(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.MAROON);
+            rl.DrawRectangleLines(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.MAROON);
         }
 
-        rl.DrawTextureRec(scarfy, frameRec, position, rl.WHITE); // Draw part of the texture
+        rl.DrawTextureRec(scarfy, frameRec, position, rl.Color.WHITE); // Draw part of the texture
 
-        rl.DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, rl.GRAY);
+        rl.DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, rl.Color.GRAY);
 
         rl.EndDrawing();
         //----------------------------------------------------------------------------------

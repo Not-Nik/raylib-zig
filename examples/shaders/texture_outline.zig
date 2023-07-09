@@ -49,17 +49,17 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.BeginDrawing();
 
-        rl.ClearBackground(rl.RAYWHITE);
+        rl.ClearBackground(rl.Color.RAYWHITE);
 
         rl.BeginShaderMode(shdrOutline);
 
-        rl.DrawTexture(texture, @divFloor(rl.GetScreenWidth(), 2) - @divFloor(texture.width, 2), -30, rl.WHITE);
+        rl.DrawTexture(texture, @divFloor(rl.GetScreenWidth(), 2) - @divFloor(texture.width, 2), -30, rl.Color.WHITE);
 
         rl.EndShaderMode();
 
-        rl.DrawText("Shader-based\ntexture\noutline", 10, 10, 20, rl.GRAY);
+        rl.DrawText("Shader-based\ntexture\noutline", 10, 10, 20, rl.Color.GRAY);
 
-        rl.DrawText(rl.TextFormat("Outline size: %i px", @floatToInt(i32, outlineSize)), 10, 120, 20, rl.MAROON);
+        rl.DrawText(rl.TextFormat("Outline size: %i px", @floatToInt(i32, outlineSize)), 10, 120, 20, rl.Color.MAROON);
 
         rl.DrawFPS(710, 10);
 

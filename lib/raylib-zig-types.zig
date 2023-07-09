@@ -58,38 +58,38 @@ pub const Color = extern struct {
     b: u8,
     a: u8,
 
+    pub const LIGHTGRAY = Color.init(200, 200, 200, 255);
+    pub const GRAY = Color.init(130, 130, 130, 255);
+    pub const DARKGRAY = Color.init(80, 80, 80, 255);
+    pub const YELLOW = Color.init(253, 249, 0, 255);
+    pub const GOLD = Color.init(255, 203, 0, 255);
+    pub const ORANGE = Color.init(255, 161, 0, 255);
+    pub const PINK = Color.init(255, 161, 0, 255);
+    pub const RED = Color.init(230, 41, 55, 255);
+    pub const MAROON = Color.init(190, 33, 55, 255);
+    pub const GREEN = Color.init(0, 228, 48, 255);
+    pub const LIME = Color.init(0, 158, 47, 255);
+    pub const DARKGREEN = Color.init(0, 117, 44, 255);
+    pub const SKYBLUE = Color.init(102, 191, 255, 255);
+    pub const BLUE = Color.init(0, 121, 241, 255);
+    pub const DARKBLUE = Color.init(0, 82, 172, 255);
+    pub const PURPLE = Color.init(200, 122, 255, 255);
+    pub const VIOLET = Color.init(135, 60, 190, 255);
+    pub const DARKPURPLE = Color.init(112, 31, 126, 255);
+    pub const BEIGE = Color.init(211, 176, 131, 255);
+    pub const BROWN = Color.init(127, 106, 79, 255);
+    pub const DARKBROWN = Color.init(76, 63, 47, 255);
+
+    pub const WHITE = Color.init(255, 255, 255, 255);
+    pub const BLACK = Color.init(0, 0, 0, 255);
+    pub const BLANK = Color.init(0, 0, 0, 0);
+    pub const MAGENTA = Color.init(255, 0, 255, 255);
+    pub const RAYWHITE = Color.init(245, 245, 245, 255);
+
     pub fn init(r: u8, g: u8, b: u8, a: u8) Color {
         return Color{ .r = r, .g = g, .b = b, .a = a };
     }
 };
-
-pub const LIGHTGRAY = Color.init(200, 200, 200, 255);
-pub const GRAY = Color.init(130, 130, 130, 255);
-pub const DARKGRAY = Color.init(80, 80, 80, 255);
-pub const YELLOW = Color.init(253, 249, 0, 255);
-pub const GOLD = Color.init(255, 203, 0, 255);
-pub const ORANGE = Color.init(255, 161, 0, 255);
-pub const PINK = Color.init(255, 161, 0, 255);
-pub const RED = Color.init(230, 41, 55, 255);
-pub const MAROON = Color.init(190, 33, 55, 255);
-pub const GREEN = Color.init(0, 228, 48, 255);
-pub const LIME = Color.init(0, 158, 47, 255);
-pub const DARKGREEN = Color.init(0, 117, 44, 255);
-pub const SKYBLUE = Color.init(102, 191, 255, 255);
-pub const BLUE = Color.init(0, 121, 241, 255);
-pub const DARKBLUE = Color.init(0, 82, 172, 255);
-pub const PURPLE = Color.init(200, 122, 255, 255);
-pub const VIOLET = Color.init(135, 60, 190, 255);
-pub const DARKPURPLE = Color.init(112, 31, 126, 255);
-pub const BEIGE = Color.init(211, 176, 131, 255);
-pub const BROWN = Color.init(127, 106, 79, 255);
-pub const DARKBROWN = Color.init(76, 63, 47, 255);
-
-pub const WHITE = Color.init(255, 255, 255, 255);
-pub const BLACK = Color.init(0, 0, 0, 255);
-pub const BLANK = Color.init(0, 0, 0, 0);
-pub const MAGENTA = Color.init(255, 0, 255, 255);
-pub const RAYWHITE = Color.init(245, 245, 245, 255);
 
 pub const Rectangle = extern struct {
     x: f32,
