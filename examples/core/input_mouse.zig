@@ -11,7 +11,7 @@ pub fn main() anyerror!void {
     rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - mouse input");
 
     var ballPosition = rl.Vector2.init(-100, -100);
-    var ballColor = rl.Color.DARKBLUE;
+    var ballColor = rl.Color.dark_blue;
 
     rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -24,12 +24,12 @@ pub fn main() anyerror!void {
         ballPosition.x = @intToFloat(f32, rl.getMouseX());
         ballPosition.y = @intToFloat(f32, rl.getMouseY());
 
-        if (rl.isMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_LEFT)) {
-            ballColor = rl.Color.MAROON;
-        } else if (rl.isMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_MIDDLE)) {
-            ballColor = rl.Color.LIME;
-        } else if (rl.isMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_RIGHT)) {
-            ballColor = rl.Color.DARKBLUE;
+        if (rl.isMouseButtonPressed(rl.MouseButton.mouse_button_left)) {
+            ballColor = rl.Color.maroon;
+        } else if (rl.isMouseButtonPressed(rl.MouseButton.mouse_button_middle)) {
+            ballColor = rl.Color.lime;
+        } else if (rl.isMouseButtonPressed(rl.MouseButton.mouse_button_right)) {
+            ballColor = rl.Color.dark_blue;
         }
         //----------------------------------------------------------------------------------
 
@@ -37,12 +37,12 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
 
-        rl.clearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.ray_white);
 
         rl.drawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, ballColor);
         //DrawCircleV(ballPosition, 40, ballColor);
 
-        rl.drawText("move ball with mouse and click mouse button to change color", 10, 10, 20, rl.Color.DARKGRAY);
+        rl.drawText("move ball with mouse and click mouse button to change color", 10, 10, 20, rl.Color.dark_gray);
 
         rl.endDrawing();
         //----------------------------------------------------------------------------------

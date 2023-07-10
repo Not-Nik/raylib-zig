@@ -17,7 +17,7 @@ pub fn main() anyerror!void {
         .target = rl.Vector3.init(0, 1.8, 0),
         .up = rl.Vector3.init(0, 1, 0),
         .fovy = 60,
-        .projection = rl.CameraProjection.CAMERA_PERSPECTIVE,
+        .projection = rl.CameraProjection.camera_perspective,
     };
 
     var heights: [MAX_COLUMNS]f32 = undefined;
@@ -30,7 +30,7 @@ pub fn main() anyerror!void {
         colors[i] = rl.Color.init(@intCast(u8, rl.getRandomValue(20, 255)), @intCast(u8, rl.getRandomValue(10, 55)), 30, 255);
     }
 
-    camera.setMode(rl.CameraMode.CAMERA_FIRST_PERSON);
+    camera.setMode(rl.CameraMode.camera_first_person);
 
     rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -46,30 +46,30 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
 
-        rl.clearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.ray_white);
 
         camera.begin();
 
         // Draw ground
-        rl.drawPlane(rl.Vector3.init(0, 0, 0), rl.Vector2.init(32, 32), rl.Color.LIGHTGRAY);
-        rl.drawCube(rl.Vector3.init(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.BLUE); // Draw a blue wall
-        rl.drawCube(rl.Vector3.init(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.LIME); // Draw a green wall
-        rl.drawCube(rl.Vector3.init(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, rl.Color.GOLD); // Draw a yellow wall
+        rl.drawPlane(rl.Vector3.init(0, 0, 0), rl.Vector2.init(32, 32), rl.Color.light_gray);
+        rl.drawCube(rl.Vector3.init(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.blue); // Draw a blue wall
+        rl.drawCube(rl.Vector3.init(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.lime); // Draw a green wall
+        rl.drawCube(rl.Vector3.init(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, rl.Color.gold); // Draw a yellow wall
 
         // Draw some cubes around
         for (heights) |height, i| {
             rl.drawCube(positions[i], 2.0, height, 2.0, colors[i]);
-            rl.drawCubeWires(positions[i], 2.0, height, 2.0, rl.Color.MAROON);
+            rl.drawCubeWires(positions[i], 2.0, height, 2.0, rl.Color.maroon);
         }
 
         camera.end();
 
-        rl.drawRectangle(10, 10, 220, 70, rl.fade(rl.Color.SKYBLUE, 0.5));
-        rl.drawRectangleLines(10, 10, 220, 70, rl.Color.BLUE);
+        rl.drawRectangle(10, 10, 220, 70, rl.fade(rl.Color.sky_blue, 0.5));
+        rl.drawRectangleLines(10, 10, 220, 70, rl.Color.blue);
 
-        rl.drawText("First person camera default controls:", 20, 20, 10, rl.Color.BLACK);
-        rl.drawText("- Move with keys: W, A, S, D", 40, 40, 10, rl.Color.DARKGRAY);
-        rl.drawText("- Mouse move to look around", 40, 60, 10, rl.Color.DARKGRAY);
+        rl.drawText("First person camera default controls:", 20, 20, 10, rl.Color.black);
+        rl.drawText("- Move with keys: W, A, S, D", 40, 40, 10, rl.Color.dark_gray);
+        rl.drawText("- Mouse move to look around", 40, 60, 10, rl.Color.dark_gray);
 
         rl.endDrawing();
         //----------------------------------------------------------------------------------

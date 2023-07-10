@@ -28,9 +28,9 @@ pub fn main() anyerror!void {
     const textureSizeLoc = rl.getShaderLocation(shdrOutline, "textureSize");
 
     // Set shader values (they can be changed later)
-    rl.setShaderValue(shdrOutline, outlineSizeLoc, &outlineSize, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_FLOAT));
-    rl.setShaderValue(shdrOutline, outlineColorLoc, &outlineColor, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_VEC4));
-    rl.setShaderValue(shdrOutline, textureSizeLoc, &textureSize, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_VEC2));
+    rl.setShaderValue(shdrOutline, outlineSizeLoc, &outlineSize, @enumToInt(rl.ShaderUniformDataType.shader_uniform_float));
+    rl.setShaderValue(shdrOutline, outlineColorLoc, &outlineColor, @enumToInt(rl.ShaderUniformDataType.shader_uniform_vec4));
+    rl.setShaderValue(shdrOutline, textureSizeLoc, &textureSize, @enumToInt(rl.ShaderUniformDataType.shader_uniform_vec2));
 
     rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -42,24 +42,24 @@ pub fn main() anyerror!void {
         outlineSize += rl.getMouseWheelMove();
         if (outlineSize < 1.0) outlineSize = 1.0;
 
-        rl.setShaderValue(shdrOutline, outlineSizeLoc, &outlineSize, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_FLOAT));
+        rl.setShaderValue(shdrOutline, outlineSizeLoc, &outlineSize, @enumToInt(rl.ShaderUniformDataType.shader_uniform_float));
         //----------------------------------------------------------------------------------
 
         // Draw
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
 
-        rl.clearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.ray_white);
 
         rl.beginShaderMode(shdrOutline);
 
-        rl.drawTexture(texture, @divFloor(rl.getScreenWidth(), 2) - @divFloor(texture.width, 2), -30, rl.Color.WHITE);
+        rl.drawTexture(texture, @divFloor(rl.getScreenWidth(), 2) - @divFloor(texture.width, 2), -30, rl.Color.white);
 
         rl.endShaderMode();
 
-        rl.drawText("Shader-based\ntexture\noutline", 10, 10, 20, rl.Color.GRAY);
+        rl.drawText("Shader-based\ntexture\noutline", 10, 10, 20, rl.Color.gray);
 
-        //rl.drawText(rl.textFormat("Outline size: %i px", @floatToInt(i32, outlineSize)), 10, 120, 20, rl.Color.MAROON);
+        //rl.drawText(rl.textFormat("Outline size: %i px", @floatToInt(i32, outlineSize)), 10, 120, 20, rl.Color.maroon);
 
         rl.drawFPS(710, 10);
 

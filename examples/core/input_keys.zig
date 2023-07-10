@@ -20,16 +20,16 @@ pub fn main() anyerror!void {
 
         // Update
         //----------------------------------------------------------------------------------
-        if (rl.isKeyDown(rl.KeyboardKey.KEY_RIGHT)) {
+        if (rl.isKeyDown(rl.KeyboardKey.key_right)) {
             ballPosition.x += 2.0;
         }
-        if (rl.isKeyDown(rl.KeyboardKey.KEY_LEFT)) {
+        if (rl.isKeyDown(rl.KeyboardKey.key_left)) {
             ballPosition.x -= 2.0;
         }
-        if (rl.isKeyDown(rl.KeyboardKey.KEY_UP)) {
+        if (rl.isKeyDown(rl.KeyboardKey.key_up)) {
             ballPosition.y -= 2.0;
         }
-        if (rl.isKeyDown(rl.KeyboardKey.KEY_DOWN)) {
+        if (rl.isKeyDown(rl.KeyboardKey.key_down)) {
             ballPosition.y += 2.0;
         }
         //----------------------------------------------------------------------------------
@@ -38,11 +38,11 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
 
-        rl.clearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.ray_white);
 
-        rl.drawText("move the ball with arrow keys", 10, 10, 20, rl.Color.DARKGRAY);
+        rl.drawText("move the ball with arrow keys", 10, 10, 20, rl.Color.dark_gray);
 
-        rl.drawCircleV(ballPosition, 50, rl.Color.MAROON);
+        rl.drawCircleV(ballPosition, 50, rl.Color.maroon);
 
         rl.endDrawing();
         //----------------------------------------------------------------------------------

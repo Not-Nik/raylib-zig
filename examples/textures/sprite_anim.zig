@@ -44,9 +44,9 @@ pub fn main() anyerror!void {
         }
 
         // Control frames speed
-        if (rl.isKeyPressed(rl.KeyboardKey.KEY_RIGHT)) {
+        if (rl.isKeyPressed(rl.KeyboardKey.key_right)) {
             framesSpeed += 1;
-        } else if (rl.isKeyPressed(rl.KeyboardKey.KEY_LEFT)) {
+        } else if (rl.isKeyPressed(rl.KeyboardKey.key_left)) {
             framesSpeed -= 1;
         }
 
@@ -62,26 +62,26 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
 
-        rl.clearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.ray_white);
 
-        rl.drawTexture(scarfy, 15, 40, rl.Color.WHITE);
-        rl.drawRectangleLines(15, 40, scarfy.width, scarfy.height, rl.Color.LIME);
-        rl.drawRectangleLines(15 + @floatToInt(i32, frameRec.x), 40 + @floatToInt(i32, frameRec.y), @floatToInt(i32, frameRec.width), @floatToInt(i32, frameRec.height), rl.Color.RED);
+        rl.drawTexture(scarfy, 15, 40, rl.Color.white);
+        rl.drawRectangleLines(15, 40, scarfy.width, scarfy.height, rl.Color.lime);
+        rl.drawRectangleLines(15 + @floatToInt(i32, frameRec.x), 40 + @floatToInt(i32, frameRec.y), @floatToInt(i32, frameRec.width), @floatToInt(i32, frameRec.height), rl.Color.red);
 
-        rl.drawText("FRAME SPEED: ", 165, 210, 10, rl.Color.DARKGRAY);
+        rl.drawText("FRAME SPEED: ", 165, 210, 10, rl.Color.dark_gray);
         //rl.drawText(rl.textFormat("%02i FPS", .{framesSpeed}), 575, 210, 10, rl.Color.DARKGRAY);
-        rl.drawText("PRESS RIGHT/LEFT KEYS to CHANGE SPEED!", 290, 240, 10, rl.Color.DARKGRAY);
+        rl.drawText("PRESS RIGHT/LEFT KEYS to CHANGE SPEED!", 290, 240, 10, rl.Color.dark_gray);
 
         for ([_]u32{0} ** MAX_FRAME_SPEED) |_, i| {
             if (i < framesSpeed) {
-                rl.drawRectangle(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.RED);
+                rl.drawRectangle(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.red);
             }
-            rl.drawRectangleLines(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.MAROON);
+            rl.drawRectangleLines(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.maroon);
         }
 
-        rl.drawTextureRec(scarfy, frameRec, position, rl.Color.WHITE); // Draw part of the texture
+        rl.drawTextureRec(scarfy, frameRec, position, rl.Color.white); // Draw part of the texture
 
-        rl.drawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, rl.Color.GRAY);
+        rl.drawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, rl.Color.gray);
 
         rl.endDrawing();
         //----------------------------------------------------------------------------------

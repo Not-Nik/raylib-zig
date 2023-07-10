@@ -46,9 +46,9 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
 
         // Player movement
-        if (rl.isKeyDown(rl.KeyboardKey.KEY_RIGHT)) {
+        if (rl.isKeyDown(rl.KeyboardKey.key_right)) {
             player.x += 2;
-        } else if (rl.isKeyDown(rl.KeyboardKey.KEY_LEFT)) {
+        } else if (rl.isKeyDown(rl.KeyboardKey.key_left)) {
             player.x -= 2;
         }
 
@@ -56,9 +56,9 @@ pub fn main() anyerror!void {
         camera.target = rl.Vector2.init(player.x + 20, player.y + 20);
 
         // Camera rotation controls
-        if (rl.isKeyDown(rl.KeyboardKey.KEY_A)) {
+        if (rl.isKeyDown(rl.KeyboardKey.key_a)) {
             camera.rotation -= 1;
-        } else if (rl.isKeyDown(rl.KeyboardKey.KEY_S)) {
+        } else if (rl.isKeyDown(rl.KeyboardKey.key_s)) {
             camera.rotation += 1;
         }
 
@@ -71,7 +71,7 @@ pub fn main() anyerror!void {
         camera.zoom = rlm.clamp(camera.zoom, 0.1, 3.0);
 
         // Camera reset (zoom and rotation)
-        if (rl.isKeyPressed(rl.KeyboardKey.KEY_R)) {
+        if (rl.isKeyPressed(rl.KeyboardKey.key_r)) {
             camera.zoom = 1.0;
             camera.rotation = 0.0;
         }
@@ -81,38 +81,38 @@ pub fn main() anyerror!void {
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
 
-        rl.clearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.ray_white);
 
         camera.begin();
 
-        rl.drawRectangle(-6000, 320, 13000, 8000, rl.Color.DARKGRAY);
+        rl.drawRectangle(-6000, 320, 13000, 8000, rl.Color.dark_gray);
 
         for (buildings) |building, i| {
             rl.drawRectangleRec(building, buildColors[i]);
         }
 
-        rl.drawRectangleRec(player, rl.Color.RED);
+        rl.drawRectangleRec(player, rl.Color.red);
 
-        rl.drawLine(@floatToInt(c_int, camera.target.x), -screenHeight * 10, @floatToInt(c_int, camera.target.x), screenHeight * 10, rl.Color.GREEN);
-        rl.drawLine(-screenWidth * 10, @floatToInt(c_int, camera.target.y), screenWidth * 10, @floatToInt(c_int, camera.target.y), rl.Color.GREEN);
+        rl.drawLine(@floatToInt(c_int, camera.target.x), -screenHeight * 10, @floatToInt(c_int, camera.target.x), screenHeight * 10, rl.Color.green);
+        rl.drawLine(-screenWidth * 10, @floatToInt(c_int, camera.target.y), screenWidth * 10, @floatToInt(c_int, camera.target.y), rl.Color.green);
 
         camera.end();
 
-        rl.drawText("SCREEN AREA", 640, 10, 20, rl.Color.RED);
+        rl.drawText("SCREEN AREA", 640, 10, 20, rl.Color.red);
 
-        rl.drawRectangle(0, 0, screenWidth, 5, rl.Color.RED);
-        rl.drawRectangle(0, 5, 5, screenHeight - 10, rl.Color.RED);
-        rl.drawRectangle(screenWidth - 5, 5, 5, screenHeight - 10, rl.Color.RED);
-        rl.drawRectangle(0, screenHeight - 5, screenWidth, 5, rl.Color.RED);
+        rl.drawRectangle(0, 0, screenWidth, 5, rl.Color.red);
+        rl.drawRectangle(0, 5, 5, screenHeight - 10, rl.Color.red);
+        rl.drawRectangle(screenWidth - 5, 5, 5, screenHeight - 10, rl.Color.red);
+        rl.drawRectangle(0, screenHeight - 5, screenWidth, 5, rl.Color.red);
 
-        rl.drawRectangle(10, 10, 250, 113, rl.fade(rl.Color.SKYBLUE, 0.5));
-        rl.drawRectangleLines(10, 10, 250, 113, rl.Color.BLUE);
+        rl.drawRectangle(10, 10, 250, 113, rl.fade(rl.Color.sky_blue, 0.5));
+        rl.drawRectangleLines(10, 10, 250, 113, rl.Color.blue);
 
-        rl.drawText("Free 2d camera controls:", 20, 20, 10, rl.Color.BLACK);
-        rl.drawText("- Right/Left to move Offset", 40, 40, 10, rl.Color.DARKGRAY);
-        rl.drawText("- Mouse Wheel to Zoom in-out", 40, 60, 10, rl.Color.DARKGRAY);
-        rl.drawText("- A / S to Rotate", 40, 80, 10, rl.Color.DARKGRAY);
-        rl.drawText("- R to reset Zoom and Rotation", 40, 100, 10, rl.Color.DARKGRAY);
+        rl.drawText("Free 2d camera controls:", 20, 20, 10, rl.Color.black);
+        rl.drawText("- Right/Left to move Offset", 40, 40, 10, rl.Color.dark_gray);
+        rl.drawText("- Mouse Wheel to Zoom in-out", 40, 60, 10, rl.Color.dark_gray);
+        rl.drawText("- A / S to Rotate", 40, 80, 10, rl.Color.dark_gray);
+        rl.drawText("- R to reset Zoom and Rotation", 40, 100, 10, rl.Color.dark_gray);
 
         rl.endDrawing();
         //----------------------------------------------------------------------------------
