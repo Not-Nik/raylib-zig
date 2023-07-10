@@ -12,11 +12,11 @@ pub fn main() anyerror!void {
     const screenWidth = 800;
     const screenHeight = 450;
 
-    rl.InitAudioDevice(); // Initialize audio device
-    rl.InitWindow(screenWidth, screenHeight, "raylib [texture] example - sprite anim");
+    rl.initAudioDevice(); // Initialize audio device
+    rl.initWindow(screenWidth, screenHeight, "raylib [texture] example - sprite anim");
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
-    const scarfy: rl.Texture2D = rl.LoadTexture("resources/textures/scarfy.png"); // Texture loading
+    const scarfy: rl.Texture2D = rl.loadTexture("resources/textures/scarfy.png"); // Texture loading
 
     const position = rl.Vector2.init(350.0, 280.0);
     var frameRec = rl.Rectangle{ .x = 0.0, .y = 0.0, .width = @intToFloat(f32, @divFloor(scarfy.width, 6)), .height = @intToFloat(f32, scarfy.height) };
@@ -25,11 +25,11 @@ pub fn main() anyerror!void {
     var framesCounter: u8 = 0;
     var framesSpeed: u8 = 8; // Number of spritesheet frames shown by second
 
-    rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+    rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
+    while (!rl.windowShouldClose()) { // Detect window close button or ESC key
         // Update
         //----------------------------------------------------------------------------------
         framesCounter += 1;
@@ -44,9 +44,9 @@ pub fn main() anyerror!void {
         }
 
         // Control frames speed
-        if (rl.IsKeyPressed(rl.KeyboardKey.KEY_RIGHT)) {
+        if (rl.isKeyPressed(rl.KeyboardKey.KEY_RIGHT)) {
             framesSpeed += 1;
-        } else if (rl.IsKeyPressed(rl.KeyboardKey.KEY_LEFT)) {
+        } else if (rl.isKeyPressed(rl.KeyboardKey.KEY_LEFT)) {
             framesSpeed -= 1;
         }
 
@@ -60,37 +60,37 @@ pub fn main() anyerror!void {
 
         // Draw
         //----------------------------------------------------------------------------------
-        rl.BeginDrawing();
+        rl.beginDrawing();
 
-        rl.ClearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.RAYWHITE);
 
-        rl.DrawTexture(scarfy, 15, 40, rl.Color.WHITE);
-        rl.DrawRectangleLines(15, 40, scarfy.width, scarfy.height, rl.Color.LIME);
-        rl.DrawRectangleLines(15 + @floatToInt(i32, frameRec.x), 40 + @floatToInt(i32, frameRec.y), @floatToInt(i32, frameRec.width), @floatToInt(i32, frameRec.height), rl.Color.RED);
+        rl.drawTexture(scarfy, 15, 40, rl.Color.WHITE);
+        rl.drawRectangleLines(15, 40, scarfy.width, scarfy.height, rl.Color.LIME);
+        rl.drawRectangleLines(15 + @floatToInt(i32, frameRec.x), 40 + @floatToInt(i32, frameRec.y), @floatToInt(i32, frameRec.width), @floatToInt(i32, frameRec.height), rl.Color.RED);
 
-        rl.DrawText("FRAME SPEED: ", 165, 210, 10, rl.Color.DARKGRAY);
-        rl.DrawText(rl.TextFormat("%02i FPS", framesSpeed), 575, 210, 10, rl.Color.DARKGRAY);
-        rl.DrawText("PRESS RIGHT/LEFT KEYS to CHANGE SPEED!", 290, 240, 10, rl.Color.DARKGRAY);
+        rl.drawText("FRAME SPEED: ", 165, 210, 10, rl.Color.DARKGRAY);
+        //rl.drawText(rl.textFormat("%02i FPS", .{framesSpeed}), 575, 210, 10, rl.Color.DARKGRAY);
+        rl.drawText("PRESS RIGHT/LEFT KEYS to CHANGE SPEED!", 290, 240, 10, rl.Color.DARKGRAY);
 
         for ([_]u32{0} ** MAX_FRAME_SPEED) |_, i| {
             if (i < framesSpeed) {
-                rl.DrawRectangle(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.RED);
+                rl.drawRectangle(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.RED);
             }
-            rl.DrawRectangleLines(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.MAROON);
+            rl.drawRectangleLines(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.MAROON);
         }
 
-        rl.DrawTextureRec(scarfy, frameRec, position, rl.Color.WHITE); // Draw part of the texture
+        rl.drawTextureRec(scarfy, frameRec, position, rl.Color.WHITE); // Draw part of the texture
 
-        rl.DrawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, rl.Color.GRAY);
+        rl.drawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, rl.Color.GRAY);
 
-        rl.EndDrawing();
+        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    rl.UnloadTexture(scarfy); // Texture unloading
+    rl.unloadTexture(scarfy); // Texture unloading
 
-    rl.CloseWindow(); // Close window and OpenGL context
+    rl.closeWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 }

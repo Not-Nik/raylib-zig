@@ -8,13 +8,13 @@ pub fn main() anyerror!void {
     const screenWidth = 800;
     const screenHeight = 450;
 
-    rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
+    rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
 
-    rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+    rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
+    while (!rl.windowShouldClose()) { // Detect window close button or ESC key
         // Update
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
@@ -22,18 +22,18 @@ pub fn main() anyerror!void {
 
         // Draw
         //----------------------------------------------------------------------------------
-        rl.BeginDrawing();
+        rl.beginDrawing();
 
-        rl.ClearBackground(rl.Color.WHITE);
+        rl.clearBackground(rl.Color.WHITE);
 
-        rl.DrawText("Congrats! You created your first window!", 190, 200, 20, rl.Color.LIGHTGRAY);
+        rl.drawText("Congrats! You created your first window!", 190, 200, 20, rl.Color.LIGHTGRAY);
 
-        rl.EndDrawing();
+        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    rl.CloseWindow(); // Close window and OpenGL context
+    rl.closeWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 }

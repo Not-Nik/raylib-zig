@@ -12,67 +12,67 @@ pub fn main() anyerror!void {
     const screenWidth = 800;
     const screenHeight = 450;
 
-    rl.InitWindow(screenWidth, screenHeight, "raylib [shaders] example - Apply an outline to a texture");
+    rl.initWindow(screenWidth, screenHeight, "raylib [shaders] example - Apply an outline to a texture");
 
-    const texture: rl.Texture2D = rl.LoadTexture("resources/textures/fudesumi.png");
+    const texture: rl.Texture2D = rl.loadTexture("resources/textures/fudesumi.png");
 
-    const shdrOutline: rl.Shader = rl.LoadShader(0, rl.TextFormat("resources/shaders/glsl330/outline.fs", @intCast(c_int, 330)));
+    const shdrOutline: rl.Shader = rl.loadShader(null, "resources/shaders/glsl330/outline.fs");
 
     var outlineSize: f32 = 2.0;
     const outlineColor = [4]f32{ 1.0, 0.0, 0.0, 1.0 }; // Normalized RED color
     const textureSize = rl.Vector2.init(@intToFloat(f32, texture.width), @intToFloat(f32, texture.height));
 
     // Get shader locations
-    const outlineSizeLoc = rl.GetShaderLocation(shdrOutline, "outlineSize");
-    const outlineColorLoc = rl.GetShaderLocation(shdrOutline, "outlineColor");
-    const textureSizeLoc = rl.GetShaderLocation(shdrOutline, "textureSize");
+    const outlineSizeLoc = rl.getShaderLocation(shdrOutline, "outlineSize");
+    const outlineColorLoc = rl.getShaderLocation(shdrOutline, "outlineColor");
+    const textureSizeLoc = rl.getShaderLocation(shdrOutline, "textureSize");
 
     // Set shader values (they can be changed later)
-    rl.SetShaderValue(shdrOutline, outlineSizeLoc, &outlineSize, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_FLOAT));
-    rl.SetShaderValue(shdrOutline, outlineColorLoc, &outlineColor, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_VEC4));
-    rl.SetShaderValue(shdrOutline, textureSizeLoc, &textureSize, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_VEC2));
+    rl.setShaderValue(shdrOutline, outlineSizeLoc, &outlineSize, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_FLOAT));
+    rl.setShaderValue(shdrOutline, outlineColorLoc, &outlineColor, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_VEC4));
+    rl.setShaderValue(shdrOutline, textureSizeLoc, &textureSize, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_VEC2));
 
-    rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+    rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
+    while (!rl.windowShouldClose()) { // Detect window close button or ESC key
         // Update
         //----------------------------------------------------------------------------------
-        outlineSize += rl.GetMouseWheelMove();
+        outlineSize += rl.getMouseWheelMove();
         if (outlineSize < 1.0) outlineSize = 1.0;
 
-        rl.SetShaderValue(shdrOutline, outlineSizeLoc, &outlineSize, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_FLOAT));
+        rl.setShaderValue(shdrOutline, outlineSizeLoc, &outlineSize, @enumToInt(rl.ShaderUniformDataType.SHADER_UNIFORM_FLOAT));
         //----------------------------------------------------------------------------------
 
         // Draw
         //----------------------------------------------------------------------------------
-        rl.BeginDrawing();
+        rl.beginDrawing();
 
-        rl.ClearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.RAYWHITE);
 
-        rl.BeginShaderMode(shdrOutline);
+        rl.beginShaderMode(shdrOutline);
 
-        rl.DrawTexture(texture, @divFloor(rl.GetScreenWidth(), 2) - @divFloor(texture.width, 2), -30, rl.Color.WHITE);
+        rl.drawTexture(texture, @divFloor(rl.getScreenWidth(), 2) - @divFloor(texture.width, 2), -30, rl.Color.WHITE);
 
-        rl.EndShaderMode();
+        rl.endShaderMode();
 
-        rl.DrawText("Shader-based\ntexture\noutline", 10, 10, 20, rl.Color.GRAY);
+        rl.drawText("Shader-based\ntexture\noutline", 10, 10, 20, rl.Color.GRAY);
 
-        rl.DrawText(rl.TextFormat("Outline size: %i px", @floatToInt(i32, outlineSize)), 10, 120, 20, rl.Color.MAROON);
+        //rl.drawText(rl.textFormat("Outline size: %i px", @floatToInt(i32, outlineSize)), 10, 120, 20, rl.Color.MAROON);
 
-        rl.DrawFPS(710, 10);
+        rl.drawFPS(710, 10);
 
-        rl.EndDrawing();
+        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    rl.UnloadTexture(texture);
-    rl.UnloadShader(shdrOutline);
+    rl.unloadTexture(texture);
+    rl.unloadShader(shdrOutline);
 
-    rl.CloseWindow(); // Close window and OpenGL context
+    rl.closeWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 
 }

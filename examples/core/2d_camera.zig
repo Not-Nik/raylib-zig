@@ -11,7 +11,7 @@ pub fn main() anyerror!void {
     const screenWidth = 800;
     const screenHeight = 450;
 
-    rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - 2d camera");
+    rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - 2d camera");
 
     var player = rl.Rectangle{ .x = 400, .y = 280, .width = 40, .height = 40 };
     var buildings: [MAX_BUILDINGS]rl.Rectangle = undefined;
@@ -20,14 +20,14 @@ pub fn main() anyerror!void {
     var spacing: i32 = 0;
 
     for (buildings) |_, i| {
-        buildings[i].width = @intToFloat(f32, rl.GetRandomValue(50, 200));
-        buildings[i].height = @intToFloat(f32, rl.GetRandomValue(100, 800));
+        buildings[i].width = @intToFloat(f32, rl.getRandomValue(50, 200));
+        buildings[i].height = @intToFloat(f32, rl.getRandomValue(100, 800));
         buildings[i].y = screenHeight - 130 - buildings[i].height;
         buildings[i].x = @intToFloat(f32, -6000 + spacing);
 
         spacing += @floatToInt(i32, buildings[i].width);
 
-        buildColors[i] = rl.Color.init(@intCast(u8, rl.GetRandomValue(200, 240)), @intCast(u8, rl.GetRandomValue(200, 240)), @intCast(u8, rl.GetRandomValue(200, 250)), 255);
+        buildColors[i] = rl.Color.init(@intCast(u8, rl.getRandomValue(200, 240)), @intCast(u8, rl.getRandomValue(200, 240)), @intCast(u8, rl.getRandomValue(200, 250)), 255);
     }
 
     var camera = rl.Camera2D{
@@ -37,18 +37,18 @@ pub fn main() anyerror!void {
         .zoom = 1,
     };
 
-    rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+    rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
+    while (!rl.windowShouldClose()) { // Detect window close button or ESC key
         // Update
         //----------------------------------------------------------------------------------
 
         // Player movement
-        if (rl.IsKeyDown(rl.KeyboardKey.KEY_RIGHT)) {
+        if (rl.isKeyDown(rl.KeyboardKey.KEY_RIGHT)) {
             player.x += 2;
-        } else if (rl.IsKeyDown(rl.KeyboardKey.KEY_LEFT)) {
+        } else if (rl.isKeyDown(rl.KeyboardKey.KEY_LEFT)) {
             player.x -= 2;
         }
 
@@ -56,22 +56,22 @@ pub fn main() anyerror!void {
         camera.target = rl.Vector2.init(player.x + 20, player.y + 20);
 
         // Camera rotation controls
-        if (rl.IsKeyDown(rl.KeyboardKey.KEY_A)) {
+        if (rl.isKeyDown(rl.KeyboardKey.KEY_A)) {
             camera.rotation -= 1;
-        } else if (rl.IsKeyDown(rl.KeyboardKey.KEY_S)) {
+        } else if (rl.isKeyDown(rl.KeyboardKey.KEY_S)) {
             camera.rotation += 1;
         }
 
         // Limit camera rotation to 80 degrees (-40 to 40)
-        camera.rotation = rlm.Clamp(camera.rotation, -40, 40);
+        camera.rotation = rlm.clamp(camera.rotation, -40, 40);
 
         // Camera zoom controls
-        camera.zoom += rl.GetMouseWheelMove() * 0.05;
+        camera.zoom += rl.getMouseWheelMove() * 0.05;
 
-        camera.zoom = rlm.Clamp(camera.zoom, 0.1, 3.0);
+        camera.zoom = rlm.clamp(camera.zoom, 0.1, 3.0);
 
         // Camera reset (zoom and rotation)
-        if (rl.IsKeyPressed(rl.KeyboardKey.KEY_R)) {
+        if (rl.isKeyPressed(rl.KeyboardKey.KEY_R)) {
             camera.zoom = 1.0;
             camera.rotation = 0.0;
         }
@@ -79,47 +79,47 @@ pub fn main() anyerror!void {
 
         // Draw
         //----------------------------------------------------------------------------------
-        rl.BeginDrawing();
+        rl.beginDrawing();
 
-        rl.ClearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.RAYWHITE);
 
         camera.begin();
 
-        rl.DrawRectangle(-6000, 320, 13000, 8000, rl.Color.DARKGRAY);
+        rl.drawRectangle(-6000, 320, 13000, 8000, rl.Color.DARKGRAY);
 
         for (buildings) |building, i| {
-            rl.DrawRectangleRec(building, buildColors[i]);
+            rl.drawRectangleRec(building, buildColors[i]);
         }
 
-        rl.DrawRectangleRec(player, rl.Color.RED);
+        rl.drawRectangleRec(player, rl.Color.RED);
 
-        rl.DrawLine(@floatToInt(c_int, camera.target.x), -screenHeight * 10, @floatToInt(c_int, camera.target.x), screenHeight * 10, rl.Color.GREEN);
-        rl.DrawLine(-screenWidth * 10, @floatToInt(c_int, camera.target.y), screenWidth * 10, @floatToInt(c_int, camera.target.y), rl.Color.GREEN);
+        rl.drawLine(@floatToInt(c_int, camera.target.x), -screenHeight * 10, @floatToInt(c_int, camera.target.x), screenHeight * 10, rl.Color.GREEN);
+        rl.drawLine(-screenWidth * 10, @floatToInt(c_int, camera.target.y), screenWidth * 10, @floatToInt(c_int, camera.target.y), rl.Color.GREEN);
 
         camera.end();
 
-        rl.DrawText("SCREEN AREA", 640, 10, 20, rl.Color.RED);
+        rl.drawText("SCREEN AREA", 640, 10, 20, rl.Color.RED);
 
-        rl.DrawRectangle(0, 0, screenWidth, 5, rl.Color.RED);
-        rl.DrawRectangle(0, 5, 5, screenHeight - 10, rl.Color.RED);
-        rl.DrawRectangle(screenWidth - 5, 5, 5, screenHeight - 10, rl.Color.RED);
-        rl.DrawRectangle(0, screenHeight - 5, screenWidth, 5, rl.Color.RED);
+        rl.drawRectangle(0, 0, screenWidth, 5, rl.Color.RED);
+        rl.drawRectangle(0, 5, 5, screenHeight - 10, rl.Color.RED);
+        rl.drawRectangle(screenWidth - 5, 5, 5, screenHeight - 10, rl.Color.RED);
+        rl.drawRectangle(0, screenHeight - 5, screenWidth, 5, rl.Color.RED);
 
-        rl.DrawRectangle(10, 10, 250, 113, rl.Fade(rl.Color.SKYBLUE, 0.5));
-        rl.DrawRectangleLines(10, 10, 250, 113, rl.Color.BLUE);
+        rl.drawRectangle(10, 10, 250, 113, rl.fade(rl.Color.SKYBLUE, 0.5));
+        rl.drawRectangleLines(10, 10, 250, 113, rl.Color.BLUE);
 
-        rl.DrawText("Free 2d camera controls:", 20, 20, 10, rl.Color.BLACK);
-        rl.DrawText("- Right/Left to move Offset", 40, 40, 10, rl.Color.DARKGRAY);
-        rl.DrawText("- Mouse Wheel to Zoom in-out", 40, 60, 10, rl.Color.DARKGRAY);
-        rl.DrawText("- A / S to Rotate", 40, 80, 10, rl.Color.DARKGRAY);
-        rl.DrawText("- R to reset Zoom and Rotation", 40, 100, 10, rl.Color.DARKGRAY);
+        rl.drawText("Free 2d camera controls:", 20, 20, 10, rl.Color.BLACK);
+        rl.drawText("- Right/Left to move Offset", 40, 40, 10, rl.Color.DARKGRAY);
+        rl.drawText("- Mouse Wheel to Zoom in-out", 40, 60, 10, rl.Color.DARKGRAY);
+        rl.drawText("- A / S to Rotate", 40, 80, 10, rl.Color.DARKGRAY);
+        rl.drawText("- R to reset Zoom and Rotation", 40, 100, 10, rl.Color.DARKGRAY);
 
-        rl.EndDrawing();
+        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    rl.CloseWindow(); // Close window and OpenGL context
+    rl.closeWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 }

@@ -106,59 +106,59 @@ pub const Image = extern struct {
     format: PixelFormat,
 
     pub fn init(fileName: [*c]const u8) Image {
-        return rl.LoadImage(fileName);
+        return rl.loadImage(fileName);
     }
 
     pub fn initRaw(fileName: *const []u8, width: c_int, height: c_int, format: PixelFormat, headerSize: c_int) Image {
-        return rl.LoadImageRaw(@as([*c]const u8, fileName), width, height, format, headerSize);
+        return rl.loadImageRaw(fileName, width, height, format, headerSize);
     }
 
     pub fn initText(text: *const []u8, fontSize: c_int, color: Color) Image {
-        return rl.ImageText(@as([*c]const u8, text), fontSize, color);
+        return rl.imageText(text, fontSize, color);
     }
 
     pub fn initTextEx(font: Font, text: *const []u8, fontSize: f32, spacing: f32, tint: Color) Image {
-        return rl.ImageTextEx(font, @as([*c]const u8, text), fontSize, spacing, tint);
+        return rl.imageTextEx(font, text, fontSize, spacing, tint);
     }
 
     pub fn copy(image: Image) Image {
-        return rl.ImageCopy(image);
+        return rl.imageCopy(image);
     }
 
     pub fn copyRec(image: Image, rec: Rectangle) Image {
-        return rl.ImageFromImage(image, rec);
+        return rl.imageFromImage(image, rec);
     }
 
     pub fn genColor(width: c_int, height: c_int, color: Color) Image {
-        return rl.GenImageColor(width, height, color);
+        return rl.genImageColor(width, height, color);
     }
 
     pub fn genGradientV(width: c_int, height: c_int, top: Color, bottom: Color) Image {
-        return rl.GenImageGradientV(width, height, top, bottom);
+        return rl.genImageGradientV(width, height, top, bottom);
     }
 
     pub fn genGradientH(width: c_int, height: c_int, left: Color, right: Color) Image {
-        return rl.GenImageGradientH(width, height, left, right);
+        return rl.genImageGradientH(width, height, left, right);
     }
 
     pub fn genGradientRadial(width: c_int, height: c_int, density: f32, inner: Color, outer: Color) Image {
-        return rl.GenImageGradientRadial(width, height, density, inner, outer);
+        return rl.genImageGradientRadial(width, height, density, inner, outer);
     }
 
     pub fn genChecked(width: c_int, height: c_int, checksX: c_int, checksY: c_int, col1: Color, col2: Color) Image {
-        return rl.GenImageChecked(width, height, checksX, checksY, col1, col2);
+        return rl.genImageChecked(width, height, checksX, checksY, col1, col2);
     }
 
     pub fn genWhiteNoise(width: c_int, height: c_int, factor: f32) Image {
-        return rl.GenImageWhiteNoise(width, height, factor);
+        return rl.genImageWhiteNoise(width, height, factor);
     }
 
     pub fn genCellular(width: c_int, height: c_int, tileSize: c_int) Image {
-        return rl.GenImageCellular(width, height, tileSize);
+        return rl.genImageCellular(width, height, tileSize);
     }
 
     pub fn useAsWindowIcon(self: Image) void {
-        rl.SetWindowIcon(self);
+        rl.setWindowIcon(self);
     }
 };
 
@@ -178,11 +178,11 @@ pub const RenderTexture = extern struct {
     depth: Texture,
 
     pub fn begin(self: RenderTexture2D) void {
-        rl.BeginTextureMode(self);
+        rl.beginTextureMode(self);
     }
 
     pub fn end(_: RenderTexture2D) void {
-        rl.EndTextureMode();
+        rl.endTextureMode();
     }
 };
 pub const RenderTexture2D = RenderTexture;
@@ -221,23 +221,23 @@ pub const Camera3D = extern struct {
     projection: CameraProjection,
 
     pub fn begin(self: Camera3D) void {
-        rl.BeginMode3D(self);
+        rl.beginMode3D(self);
     }
 
     pub fn update(self: *Camera3D) void {
-        rl.UpdateCamera(@as([*c]Camera3D, self));
+        rl.updateCamera(self);
     }
 
     pub fn getMatrix(self: Camera3D) Matrix {
-        return rl.GetCameraMatrix(self);
+        return rl.getCameraMatrix(self);
     }
 
     pub fn setMode(self: Camera3D, mode: CameraMode) void {
-        rl.SetCameraMode(self, mode);
+        rl.setCameraMode(self, mode);
     }
 
     pub fn end(_: Camera3D) void {
-        rl.EndMode3D();
+        rl.endMode3D();
     }
 };
 pub const Camera = Camera3D;
@@ -249,15 +249,15 @@ pub const Camera2D = extern struct {
     zoom: f32,
 
     pub fn begin(self: Camera2D) void {
-        rl.BeginMode2D(self);
+        rl.beginMode2D(self);
     }
 
     pub fn getMatrix(self: Camera2D) Matrix {
-        return rl.GetCameraMatrix2D(self);
+        return rl.getCameraMatrix2D(self);
     }
 
     pub fn end(_: Camera2D) void {
-        rl.EndMode2D();
+        rl.endMode2D();
     }
 };
 
@@ -279,11 +279,11 @@ pub const Mesh = extern struct {
     vboId: [*c]c_uint,
 
     pub fn draw(self: Mesh, material: Material, transform: Matrix) void {
-        rl.DrawMesh(self, material, transform);
+        rl.drawMesh(self, material, transform);
     }
 
     pub fn drawInstanced(self: Mesh, material: Material, transforms: []const Matrix) void {
-        rl.DrawMeshInstanced(self, material, @as([*c]const Matrix, transforms), transforms.len);
+        rl.drawMeshInstanced(self, material, transforms, transforms.len);
     }
 };
 
@@ -292,11 +292,11 @@ pub const Shader = extern struct {
     locs: [*c]c_int,
 
     pub fn activate(self: Shader) void {
-        rl.BeginShaderMode(self);
+        rl.beginShaderMode(self);
     }
 
     pub fn deactivate(_: Shader) void {
-        rl.EndShaderMode();
+        rl.endShaderMode();
     }
 };
 
@@ -335,27 +335,27 @@ pub const Model = extern struct {
     bindPose: [*c]Transform,
 
     pub fn init(fileName: [*c]const u8) Model {
-        return rl.LoadModel(fileName);
+        return rl.loadModel(fileName);
     }
 
     pub fn initFromMesh(mesh: Mesh) Model {
-        return rl.LoadModelFromMesh(mesh);
+        return rl.loadModelFromMesh(mesh);
     }
 
     pub fn draw(self: Mesh, position: Vector3, scale: f32, tint: Color) void {
-        return rl.DrawMesh(self, position, scale, tint);
+        return rl.drawMesh(self, position, scale, tint);
     }
 
     pub fn drawEx(self: Mesh, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
-        return rl.DrawMeshEx(self, position, rotationAxis, rotationAngle, scale, tint);
+        return rl.drawMeshEx(self, position, rotationAxis, rotationAngle, scale, tint);
     }
 
     pub fn drawWires(self: Mesh, position: Vector3, scale: f32, tint: Color) void {
-        return rl.DrawMeshWires(self, position, scale, tint);
+        return rl.drawMeshWires(self, position, scale, tint);
     }
 
     pub fn drawWiresEx(self: Mesh, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
-        return rl.DrawMeshWiresEx(self, position, rotationAxis, rotationAngle, scale, tint);
+        return rl.drawMeshWiresEx(self, position, rotationAxis, rotationAngle, scale, tint);
     }
 };
 
@@ -809,9 +809,9 @@ pub const LoadFileTextCallback = ?fn ([*c]const u8) callconv(.C) [*c]u8;
 pub const SaveFileTextCallback = ?fn ([*c]const u8, [*c]u8) callconv(.C) bool;
 pub const AudioCallback = ?*const fn (?*anyopaque, c_uint) callconv(.C) void;
 
-pub const RAYLIB_VERSION_MAJOR = @as(c_int, 4);
-pub const RAYLIB_VERSION_MINOR = @as(c_int, 5);
-pub const RAYLIB_VERSION_PATCH = @as(c_int, 0);
+pub const RAYLIB_VERSION_MAJOR = @as(i32, 4);
+pub const RAYLIB_VERSION_MINOR = @as(i32, 5);
+pub const RAYLIB_VERSION_PATCH = @as(i32, 0);
 pub const RAYLIB_VERSION = "4.5-dev";
 
 pub const MAX_TOUCH_POINTS = 10;
@@ -823,513 +823,2060 @@ pub const MATERIAL_MAP_SPECULAR = MaterialMapIndex.MATERIAL_MAP_METALNESS;
 pub const SHADER_LOC_MAP_DIFFUSE = ShaderLocationIndex.SHADER_LOC_MAP_ALBEDO;
 pub const SHADER_LOC_MAP_SPECULAR = ShaderLocationIndex.SHADER_LOC_MAP_METALNESS;
 
-pub extern fn InitWindow(width: c_int, height: c_int, title: [*c]const u8) void;
-pub extern fn WindowShouldClose() bool;
-pub extern fn CloseWindow() void;
-pub extern fn IsWindowReady() bool;
-pub extern fn IsWindowFullscreen() bool;
-pub extern fn IsWindowHidden() bool;
-pub extern fn IsWindowMinimized() bool;
-pub extern fn IsWindowMaximized() bool;
-pub extern fn IsWindowFocused() bool;
-pub extern fn IsWindowResized() bool;
-pub extern fn IsWindowState(flag: c_uint) bool;
-pub extern fn SetWindowState(flags: c_uint) void;
-pub extern fn ClearWindowState(flags: c_uint) void;
-pub extern fn ToggleFullscreen() void;
-pub extern fn MaximizeWindow() void;
-pub extern fn MinimizeWindow() void;
-pub extern fn RestoreWindow() void;
-pub extern fn SetWindowIcon(image: Image) void;
-pub extern fn SetWindowTitle(title: [*c]const u8) void;
-pub extern fn SetWindowPosition(x: c_int, y: c_int) void;
-pub extern fn SetWindowMonitor(monitor: c_int) void;
-pub extern fn SetWindowMinSize(width: c_int, height: c_int) void;
-pub extern fn SetWindowSize(width: c_int, height: c_int) void;
-pub extern fn SetWindowOpacity(opacity: f32) void;
-pub extern fn GetWindowHandle() *anyopaque;
-pub extern fn GetScreenWidth() c_int;
-pub extern fn GetScreenHeight() c_int;
-pub extern fn GetRenderWidth() c_int;
-pub extern fn GetRenderHeight() c_int;
-pub extern fn GetMonitorCount() c_int;
-pub extern fn GetCurrentMonitor() c_int;
-pub extern fn GetMonitorPosition(monitor: c_int) Vector2;
-pub extern fn GetMonitorWidth(monitor: c_int) c_int;
-pub extern fn GetMonitorHeight(monitor: c_int) c_int;
-pub extern fn GetMonitorPhysicalWidth(monitor: c_int) c_int;
-pub extern fn GetMonitorPhysicalHeight(monitor: c_int) c_int;
-pub extern fn GetMonitorRefreshRate(monitor: c_int) c_int;
-pub extern fn GetWindowPosition() Vector2;
-pub extern fn GetWindowScaleDPI() Vector2;
-pub extern fn GetMonitorName(monitor: c_int) [*c]const u8;
-pub extern fn SetClipboardText(text: [*c]const u8) void;
-pub extern fn GetClipboardText() [*c]const u8;
-pub extern fn EnableEventWaiting() void;
-pub extern fn DisableEventWaiting() void;
-pub extern fn SwapScreenBuffer() void;
-pub extern fn PollInputEvents() void;
-pub extern fn WaitTime(seconds: f64) void;
-pub extern fn ShowCursor() void;
-pub extern fn HideCursor() void;
-pub extern fn IsCursorHidden() bool;
-pub extern fn EnableCursor() void;
-pub extern fn DisableCursor() void;
-pub extern fn IsCursorOnScreen() bool;
-pub extern fn ClearBackground(color: Color) void;
-pub extern fn BeginDrawing() void;
-pub extern fn EndDrawing() void;
-pub extern fn BeginMode2D(camera: Camera2D) void;
-pub extern fn EndMode2D() void;
-pub extern fn BeginMode3D(camera: Camera3D) void;
-pub extern fn EndMode3D() void;
-pub extern fn BeginTextureMode(target: RenderTexture2D) void;
-pub extern fn EndTextureMode() void;
-pub extern fn BeginShaderMode(shader: Shader) void;
-pub extern fn EndShaderMode() void;
-pub extern fn BeginBlendMode(mode: c_int) void;
-pub extern fn EndBlendMode() void;
-pub extern fn BeginScissorMode(x: c_int, y: c_int, width: c_int, height: c_int) void;
-pub extern fn EndScissorMode() void;
-pub extern fn BeginVrStereoMode(config: VrStereoConfig) void;
-pub extern fn EndVrStereoMode() void;
-pub extern fn LoadVrStereoConfig(device: VrDeviceInfo) VrStereoConfig;
-pub extern fn UnloadVrStereoConfig(config: VrStereoConfig) void;
-pub extern fn LoadShader(vsFileName: [*c]const u8, fsFileName: [*c]const u8) Shader;
-pub extern fn LoadShaderFromMemory(vsCode: [*c]const u8, fsCode: [*c]const u8) Shader;
-pub extern fn GetShaderLocation(shader: Shader, uniformName: [*c]const u8) c_int;
-pub extern fn GetShaderLocationAttrib(shader: Shader, attribName: [*c]const u8) c_int;
-pub extern fn SetShaderValue(shader: Shader, locIndex: c_int, value: *const anyopaque, uniformType: c_int) void;
-pub extern fn SetShaderValueV(shader: Shader, locIndex: c_int, value: *const anyopaque, uniformType: c_int, count: c_int) void;
-pub extern fn SetShaderValueMatrix(shader: Shader, locIndex: c_int, mat: Matrix) void;
-pub extern fn SetShaderValueTexture(shader: Shader, locIndex: c_int, texture: Texture2D) void;
-pub extern fn UnloadShader(shader: Shader) void;
-pub extern fn GetMouseRay(mousePosition: Vector2, camera: Camera) Ray;
-pub extern fn GetCameraMatrix(camera: Camera) Matrix;
-pub extern fn GetCameraMatrix2D(camera: Camera2D) Matrix;
-pub extern fn GetWorldToScreen(position: Vector3, camera: Camera) Vector2;
-pub extern fn GetScreenToWorld2D(position: Vector2, camera: Camera2D) Vector2;
-pub extern fn GetWorldToScreenEx(position: Vector3, camera: Camera, width: c_int, height: c_int) Vector2;
-pub extern fn GetWorldToScreen2D(position: Vector2, camera: Camera2D) Vector2;
-pub extern fn SetTargetFPS(fps: c_int) void;
-pub extern fn GetFPS() c_int;
-pub extern fn GetFrameTime() f32;
-pub extern fn GetTime() f64;
-pub extern fn GetRandomValue(min: c_int, max: c_int) c_int;
-pub extern fn SetRandomSeed(seed: c_uint) void;
-pub extern fn TakeScreenshot(fileName: [*c]const u8) void;
-pub extern fn SetConfigFlags(flags: c_uint) void;
-pub extern fn TraceLog(logLevel: c_int, text: [*c]const u8, ...) void;
-pub extern fn SetTraceLogLevel(logLevel: c_int) void;
-pub extern fn MemAlloc(size: c_uint) *anyopaque;
-pub extern fn MemRealloc(ptr: *anyopaque, size: c_uint) *anyopaque;
-pub extern fn MemFree(ptr: *anyopaque) void;
-pub extern fn OpenURL(url: [*c]const u8) void;
-pub extern fn SetLoadFileDataCallback(callback: LoadFileDataCallback) void;
-pub extern fn SetSaveFileDataCallback(callback: SaveFileDataCallback) void;
-pub extern fn SetLoadFileTextCallback(callback: LoadFileTextCallback) void;
-pub extern fn SetSaveFileTextCallback(callback: SaveFileTextCallback) void;
-pub extern fn LoadFileData(fileName: [*c]const u8, bytesRead: [*c]c_uint) [*c]u8;
-pub extern fn UnloadFileData(data: [*c]u8) void;
-pub extern fn SaveFileData(fileName: [*c]const u8, data: *anyopaque, bytesToWrite: c_uint) bool;
-pub extern fn ExportDataAsCode(data: [*c]const u8, size: c_uint, fileName: [*c]const u8) bool;
-pub extern fn LoadFileText(fileName: [*c]const u8) [*c]u8;
-pub extern fn UnloadFileText(text: [*c]u8) void;
-pub extern fn SaveFileText(fileName: [*c]const u8, text: [*c]u8) bool;
-pub extern fn FileExists(fileName: [*c]const u8) bool;
-pub extern fn DirectoryExists(dirPath: [*c]const u8) bool;
-pub extern fn IsFileExtension(fileName: [*c]const u8, ext: [*c]const u8) bool;
-pub extern fn GetFileLength(fileName: [*c]const u8) c_int;
-pub extern fn GetFileExtension(fileName: [*c]const u8) [*c]const u8;
-pub extern fn GetFileName(filePath: [*c]const u8) [*c]const u8;
-pub extern fn GetFileNameWithoutExt(filePath: [*c]const u8) [*c]const u8;
-pub extern fn GetDirectoryPath(filePath: [*c]const u8) [*c]const u8;
-pub extern fn GetPrevDirectoryPath(dirPath: [*c]const u8) [*c]const u8;
-pub extern fn GetWorkingDirectory() [*c]const u8;
-pub extern fn GetApplicationDirectory() [*c]const u8;
-pub extern fn ChangeDirectory(dir: [*c]const u8) bool;
-pub extern fn IsPathFile(path: [*c]const u8) bool;
-pub extern fn LoadDirectoryFiles(dirPath: [*c]const u8) FilePathList;
-pub extern fn LoadDirectoryFilesEx(basePath: [*c]const u8, filter: [*c]const u8, scanSubdirs: bool) FilePathList;
-pub extern fn UnloadDirectoryFiles(files: FilePathList) void;
-pub extern fn IsFileDropped() bool;
-pub extern fn LoadDroppedFiles() FilePathList;
-pub extern fn UnloadDroppedFiles(files: FilePathList) void;
-pub extern fn GetFileModTime(fileName: [*c]const u8) c_long;
-pub extern fn CompressData(data: [*c]const u8, dataSize: c_int, compDataSize: [*c]c_int) [*c]u8;
-pub extern fn DecompressData(compData: [*c]const u8, compDataSize: c_int, dataSize: [*c]c_int) [*c]u8;
-pub extern fn EncodeDataBase64(data: [*c]const u8, dataSize: c_int, outputSize: [*c]c_int) [*c]u8;
-pub extern fn DecodeDataBase64(data: [*c]const u8, outputSize: [*c]c_int) [*c]u8;
-pub extern fn IsKeyPressed(key: KeyboardKey) bool;
-pub extern fn IsKeyDown(key: KeyboardKey) bool;
-pub extern fn IsKeyReleased(key: KeyboardKey) bool;
-pub extern fn IsKeyUp(key: KeyboardKey) bool;
-pub extern fn SetExitKey(key: KeyboardKey) void;
-pub extern fn GetKeyPressed() c_int;
-pub extern fn GetCharPressed() c_int;
-pub extern fn IsGamepadAvailable(gamepad: c_int) bool;
-pub extern fn GetGamepadName(gamepad: c_int) [*c]const u8;
-pub extern fn IsGamepadButtonPressed(gamepad: c_int, button: GamepadButton) bool;
-pub extern fn IsGamepadButtonDown(gamepad: c_int, button: GamepadButton) bool;
-pub extern fn IsGamepadButtonReleased(gamepad: c_int, button: GamepadButton) bool;
-pub extern fn IsGamepadButtonUp(gamepad: c_int, button: GamepadButton) bool;
-pub extern fn GetGamepadButtonPressed() c_int;
-pub extern fn GetGamepadAxisCount(gamepad: c_int) c_int;
-pub extern fn GetGamepadAxisMovement(gamepad: c_int, axis: c_int) f32;
-pub extern fn SetGamepadMappings(mappings: [*c]const u8) c_int;
-pub extern fn IsMouseButtonPressed(button: MouseButton) bool;
-pub extern fn IsMouseButtonDown(button: MouseButton) bool;
-pub extern fn IsMouseButtonReleased(button: MouseButton) bool;
-pub extern fn IsMouseButtonUp(button: MouseButton) bool;
-pub extern fn GetMouseX() c_int;
-pub extern fn GetMouseY() c_int;
-pub extern fn GetMousePosition() Vector2;
-pub extern fn GetMouseDelta() Vector2;
-pub extern fn SetMousePosition(x: c_int, y: c_int) void;
-pub extern fn SetMouseOffset(offsetX: c_int, offsetY: c_int) void;
-pub extern fn SetMouseScale(scaleX: f32, scaleY: f32) void;
-pub extern fn GetMouseWheelMove() f32;
-pub extern fn GetMouseWheelMoveV() Vector2;
-pub extern fn SetMouseCursor(cursor: c_int) void;
-pub extern fn GetTouchX() c_int;
-pub extern fn GetTouchY() c_int;
-pub extern fn GetTouchPosition(index: c_int) Vector2;
-pub extern fn GetTouchPointId(index: c_int) c_int;
-pub extern fn GetTouchPointCount() c_int;
-pub extern fn SetGesturesEnabled(flags: c_uint) void;
-pub extern fn IsGestureDetected(gesture: Gestures) bool;
-pub extern fn GetGestureDetected() c_int;
-pub extern fn GetGestureHoldDuration() f32;
-pub extern fn GetGestureDragVector() Vector2;
-pub extern fn GetGestureDragAngle() f32;
-pub extern fn GetGesturePinchVector() Vector2;
-pub extern fn GetGesturePinchAngle() f32;
-pub extern fn SetCameraMode(camera: Camera, mode: CameraMode) void;
-pub extern fn UpdateCamera(camera: [*c]Camera) void;
-pub extern fn SetCameraPanControl(keyPan: c_int) void;
-pub extern fn SetCameraAltControl(keyAlt: c_int) void;
-pub extern fn SetCameraSmoothZoomControl(keySmoothZoom: c_int) void;
-pub extern fn SetCameraMoveControls(keyFront: c_int, keyBack: c_int, keyRight: c_int, keyLeft: c_int, keyUp: c_int, keyDown: c_int) void;
-pub extern fn SetShapesTexture(texture: Texture2D, source: Rectangle) void;
-pub extern fn DrawPixel(posX: c_int, posY: c_int, color: Color) void;
-pub extern fn DrawPixelV(position: Vector2, color: Color) void;
-pub extern fn DrawLine(startPosX: c_int, startPosY: c_int, endPosX: c_int, endPosY: c_int, color: Color) void;
-pub extern fn DrawLineV(startPos: Vector2, endPos: Vector2, color: Color) void;
-pub extern fn DrawLineEx(startPos: Vector2, endPos: Vector2, thick: f32, color: Color) void;
-pub extern fn DrawLineBezier(startPos: Vector2, endPos: Vector2, thick: f32, color: Color) void;
-pub extern fn DrawLineBezierQuad(startPos: Vector2, endPos: Vector2, controlPos: Vector2, thick: f32, color: Color) void;
-pub extern fn DrawLineBezierCubic(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: f32, color: Color) void;
-pub extern fn DrawLineStrip(points: [*c]Vector2, pointCount: c_int, color: Color) void;
-pub extern fn DrawCircle(centerX: c_int, centerY: c_int, radius: f32, color: Color) void;
-pub extern fn DrawCircleSector(center: Vector2, radius: f32, startAngle: f32, endAngle: f32, segments: c_int, color: Color) void;
-pub extern fn DrawCircleSectorLines(center: Vector2, radius: f32, startAngle: f32, endAngle: f32, segments: c_int, color: Color) void;
-pub extern fn DrawCircleGradient(centerX: c_int, centerY: c_int, radius: f32, color1: Color, color2: Color) void;
-pub extern fn DrawCircleV(center: Vector2, radius: f32, color: Color) void;
-pub extern fn DrawCircleLines(centerX: c_int, centerY: c_int, radius: f32, color: Color) void;
-pub extern fn DrawEllipse(centerX: c_int, centerY: c_int, radiusH: f32, radiusV: f32, color: Color) void;
-pub extern fn DrawEllipseLines(centerX: c_int, centerY: c_int, radiusH: f32, radiusV: f32, color: Color) void;
-pub extern fn DrawRing(center: Vector2, innerRadius: f32, outerRadius: f32, startAngle: f32, endAngle: f32, segments: c_int, color: Color) void;
-pub extern fn DrawRingLines(center: Vector2, innerRadius: f32, outerRadius: f32, startAngle: f32, endAngle: f32, segments: c_int, color: Color) void;
-pub extern fn DrawRectangle(posX: c_int, posY: c_int, width: c_int, height: c_int, color: Color) void;
-pub extern fn DrawRectangleV(position: Vector2, size: Vector2, color: Color) void;
-pub extern fn DrawRectangleRec(rec: Rectangle, color: Color) void;
-pub extern fn DrawRectanglePro(rec: Rectangle, origin: Vector2, rotation: f32, color: Color) void;
-pub extern fn DrawRectangleGradientV(posX: c_int, posY: c_int, width: c_int, height: c_int, color1: Color, color2: Color) void;
-pub extern fn DrawRectangleGradientH(posX: c_int, posY: c_int, width: c_int, height: c_int, color1: Color, color2: Color) void;
-pub extern fn DrawRectangleGradientEx(rec: Rectangle, col1: Color, col2: Color, col3: Color, col4: Color) void;
-pub extern fn DrawRectangleLines(posX: c_int, posY: c_int, width: c_int, height: c_int, color: Color) void;
-pub extern fn DrawRectangleLinesEx(rec: Rectangle, lineThick: f32, color: Color) void;
-pub extern fn DrawRectangleRounded(rec: Rectangle, roundness: f32, segments: c_int, color: Color) void;
-pub extern fn DrawRectangleRoundedLines(rec: Rectangle, roundness: f32, segments: c_int, lineThick: f32, color: Color) void;
-pub extern fn DrawTriangle(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) void;
-pub extern fn DrawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) void;
-pub extern fn DrawTriangleFan(points: [*c]Vector2, pointCount: c_int, color: Color) void;
-pub extern fn DrawTriangleStrip(points: [*c]Vector2, pointCount: c_int, color: Color) void;
-pub extern fn DrawPoly(center: Vector2, sides: c_int, radius: f32, rotation: f32, color: Color) void;
-pub extern fn DrawPolyLines(center: Vector2, sides: c_int, radius: f32, rotation: f32, color: Color) void;
-pub extern fn DrawPolyLinesEx(center: Vector2, sides: c_int, radius: f32, rotation: f32, lineThick: f32, color: Color) void;
-pub extern fn CheckCollisionRecs(rec1: Rectangle, rec2: Rectangle) bool;
-pub extern fn CheckCollisionCircles(center1: Vector2, radius1: f32, center2: Vector2, radius2: f32) bool;
-pub extern fn CheckCollisionCircleRec(center: Vector2, radius: f32, rec: Rectangle) bool;
-pub extern fn CheckCollisionPointRec(point: Vector2, rec: Rectangle) bool;
-pub extern fn CheckCollisionPointCircle(point: Vector2, center: Vector2, radius: f32) bool;
-pub extern fn CheckCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2) bool;
-pub extern fn CheckCollisionPointPoly(point: Vector2, points: [*c]Vector2, pointCount: c_int) bool;
-pub extern fn CheckCollisionLines(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: [*c]Vector2) bool;
-pub extern fn CheckCollisionPointLine(point: Vector2, p1: Vector2, p2: Vector2, threshold: c_int) bool;
-pub extern fn GetCollisionRec(rec1: Rectangle, rec2: Rectangle) Rectangle;
-pub extern fn LoadImage(fileName: [*c]const u8) Image;
-pub extern fn LoadImageRaw(fileName: [*c]const u8, width: c_int, height: c_int, format: c_int, headerSize: c_int) Image;
-pub extern fn LoadImageAnim(fileName: [*c]const u8, frames: [*c]c_int) Image;
-pub extern fn LoadImageFromMemory(fileType: [*c]const u8, fileData: [*c]const u8, dataSize: c_int) Image;
-pub extern fn LoadImageFromTexture(texture: Texture2D) Image;
-pub extern fn LoadImageFromScreen() Image;
-pub extern fn UnloadImage(image: Image) void;
-pub extern fn ExportImage(image: Image, fileName: [*c]const u8) bool;
-pub extern fn ExportImageAsCode(image: Image, fileName: [*c]const u8) bool;
-pub extern fn GenImageColor(width: c_int, height: c_int, color: Color) Image;
-pub extern fn GenImageGradientV(width: c_int, height: c_int, top: Color, bottom: Color) Image;
-pub extern fn GenImageGradientH(width: c_int, height: c_int, left: Color, right: Color) Image;
-pub extern fn GenImageGradientRadial(width: c_int, height: c_int, density: f32, inner: Color, outer: Color) Image;
-pub extern fn GenImageChecked(width: c_int, height: c_int, checksX: c_int, checksY: c_int, col1: Color, col2: Color) Image;
-pub extern fn GenImageWhiteNoise(width: c_int, height: c_int, factor: f32) Image;
-pub extern fn GenImagePerlinNoise(width: c_int, height: c_int, offsetX: c_int, offsetY: c_int, scale: f32) Image;
-pub extern fn GenImageCellular(width: c_int, height: c_int, tileSize: c_int) Image;
-pub extern fn GenImageText(width: c_int, height: c_int, text: [*c]const u8) Image;
-pub extern fn ImageCopy(image: Image) Image;
-pub extern fn ImageFromImage(image: Image, rec: Rectangle) Image;
-pub extern fn ImageText(text: [*c]const u8, fontSize: c_int, color: Color) Image;
-pub extern fn ImageTextEx(font: Font, text: [*c]const u8, fontSize: f32, spacing: f32, tint: Color) Image;
-pub extern fn ImageFormat(image: [*c]Image, newFormat: c_int) void;
-pub extern fn ImageToPOT(image: [*c]Image, fill: Color) void;
-pub extern fn ImageCrop(image: [*c]Image, crop: Rectangle) void;
-pub extern fn ImageAlphaCrop(image: [*c]Image, threshold: f32) void;
-pub extern fn ImageAlphaClear(image: [*c]Image, color: Color, threshold: f32) void;
-pub extern fn ImageAlphaMask(image: [*c]Image, alphaMask: Image) void;
-pub extern fn ImageAlphaPremultiply(image: [*c]Image) void;
-pub extern fn ImageBlurGaussian(image: [*c]Image, blurSize: c_int) void;
-pub extern fn ImageResize(image: [*c]Image, newWidth: c_int, newHeight: c_int) void;
-pub extern fn ImageResizeNN(image: [*c]Image, newWidth: c_int, newHeight: c_int) void;
-pub extern fn ImageResizeCanvas(image: [*c]Image, newWidth: c_int, newHeight: c_int, offsetX: c_int, offsetY: c_int, fill: Color) void;
-pub extern fn ImageMipmaps(image: [*c]Image) void;
-pub extern fn ImageDither(image: [*c]Image, rBpp: c_int, gBpp: c_int, bBpp: c_int, aBpp: c_int) void;
-pub extern fn ImageFlipVertical(image: [*c]Image) void;
-pub extern fn ImageFlipHorizontal(image: [*c]Image) void;
-pub extern fn ImageRotateCW(image: [*c]Image) void;
-pub extern fn ImageRotateCCW(image: [*c]Image) void;
-pub extern fn ImageColorTint(image: [*c]Image, color: Color) void;
-pub extern fn ImageColorInvert(image: [*c]Image) void;
-pub extern fn ImageColorGrayscale(image: [*c]Image) void;
-pub extern fn ImageColorContrast(image: [*c]Image, contrast: f32) void;
-pub extern fn ImageColorBrightness(image: [*c]Image, brightness: c_int) void;
-pub extern fn ImageColorReplace(image: [*c]Image, color: Color, replace: Color) void;
-pub extern fn LoadImageColors(image: Image) [*c]Color;
-pub extern fn LoadImagePalette(image: Image, maxPaletteSize: c_int, colorCount: [*c]c_int) [*c]Color;
-pub extern fn UnloadImageColors(colors: [*c]Color) void;
-pub extern fn UnloadImagePalette(colors: [*c]Color) void;
-pub extern fn GetImageAlphaBorder(image: Image, threshold: f32) Rectangle;
-pub extern fn GetImageColor(image: Image, x: c_int, y: c_int) Color;
-pub extern fn ImageClearBackground(dst: [*c]Image, color: Color) void;
-pub extern fn ImageDrawPixel(dst: [*c]Image, posX: c_int, posY: c_int, color: Color) void;
-pub extern fn ImageDrawPixelV(dst: [*c]Image, position: Vector2, color: Color) void;
-pub extern fn ImageDrawLine(dst: [*c]Image, startPosX: c_int, startPosY: c_int, endPosX: c_int, endPosY: c_int, color: Color) void;
-pub extern fn ImageDrawLineV(dst: [*c]Image, start: Vector2, end: Vector2, color: Color) void;
-pub extern fn ImageDrawCircle(dst: [*c]Image, centerX: c_int, centerY: c_int, radius: c_int, color: Color) void;
-pub extern fn ImageDrawCircleV(dst: [*c]Image, center: Vector2, radius: c_int, color: Color) void;
-pub extern fn ImageDrawCircleLines(dst: [*c]Image, centerX: c_int, centerY: c_int, radius: c_int, color: Color) void;
-pub extern fn ImageDrawCircleLinesV(dst: [*c]Image, center: Vector2, radius: c_int, color: Color) void;
-pub extern fn ImageDrawRectangle(dst: [*c]Image, posX: c_int, posY: c_int, width: c_int, height: c_int, color: Color) void;
-pub extern fn ImageDrawRectangleV(dst: [*c]Image, position: Vector2, size: Vector2, color: Color) void;
-pub extern fn ImageDrawRectangleRec(dst: [*c]Image, rec: Rectangle, color: Color) void;
-pub extern fn ImageDrawRectangleLines(dst: [*c]Image, rec: Rectangle, thick: c_int, color: Color) void;
-pub extern fn ImageDraw(dst: [*c]Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) void;
-pub extern fn ImageDrawText(dst: [*c]Image, text: [*c]const u8, posX: c_int, posY: c_int, fontSize: c_int, color: Color) void;
-pub extern fn ImageDrawTextEx(dst: [*c]Image, font: Font, text: [*c]const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void;
-pub extern fn LoadTexture(fileName: [*c]const u8) Texture2D;
-pub extern fn LoadTextureFromImage(image: Image) Texture2D;
-pub extern fn LoadTextureCubemap(image: Image, layout: c_int) TextureCubemap;
-pub extern fn LoadRenderTexture(width: c_int, height: c_int) RenderTexture2D;
-pub extern fn UnloadTexture(texture: Texture2D) void;
-pub extern fn UnloadRenderTexture(target: RenderTexture2D) void;
-pub extern fn UpdateTexture(texture: Texture2D, pixels: *const anyopaque) void;
-pub extern fn UpdateTextureRec(texture: Texture2D, rec: Rectangle, pixels: *const anyopaque) void;
-pub extern fn GenTextureMipmaps(texture: [*c]Texture2D) void;
-pub extern fn SetTextureFilter(texture: Texture2D, filter: c_int) void;
-pub extern fn SetTextureWrap(texture: Texture2D, wrap: c_int) void;
-pub extern fn DrawTexture(texture: Texture2D, posX: c_int, posY: c_int, tint: Color) void;
-pub extern fn DrawTextureV(texture: Texture2D, position: Vector2, tint: Color) void;
-pub extern fn DrawTextureEx(texture: Texture2D, position: Vector2, rotation: f32, scale: f32, tint: Color) void;
-pub extern fn DrawTextureRec(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color) void;
-pub extern fn DrawTexturePro(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void;
-pub extern fn DrawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void;
-pub extern fn Fade(color: Color, alpha: f32) Color;
-pub extern fn ColorToInt(color: Color) c_int;
-pub extern fn ColorNormalize(color: Color) Vector4;
-pub extern fn ColorFromNormalized(normalized: Vector4) Color;
-pub extern fn ColorToHSV(color: Color) Vector3;
-pub extern fn ColorFromHSV(hue: f32, saturation: f32, value: f32) Color;
-pub extern fn ColorTint(color: Color, tint: Color) Color;
-pub extern fn ColorBrightness(color: Color, factor: f32) Color;
-pub extern fn ColorContrast(color: Color, contrast: f32) Color;
-pub extern fn ColorAlpha(color: Color, alpha: f32) Color;
-pub extern fn ColorAlphaBlend(dst: Color, src: Color, tint: Color) Color;
-pub extern fn GetColor(hexValue: c_uint) Color;
-pub extern fn GetPixelColor(srcPtr: *anyopaque, format: c_int) Color;
-pub extern fn SetPixelColor(dstPtr: *anyopaque, color: Color, format: c_int) void;
-pub extern fn GetPixelDataSize(width: c_int, height: c_int, format: c_int) c_int;
-pub extern fn GetFontDefault() Font;
-pub extern fn LoadFont(fileName: [*c]const u8) Font;
-pub extern fn LoadFontEx(fileName: [*c]const u8, fontSize: c_int, fontChars: [*c]c_int, glyphCount: c_int) Font;
-pub extern fn LoadFontFromImage(image: Image, key: Color, firstChar: c_int) Font;
-pub extern fn LoadFontFromMemory(fileType: [*c]const u8, fileData: [*c]const u8, dataSize: c_int, fontSize: c_int, fontChars: [*c]c_int, glyphCount: c_int) Font;
-pub extern fn LoadFontData(fileData: [*c]const u8, dataSize: c_int, fontSize: c_int, fontChars: [*c]c_int, glyphCount: c_int, type: c_int) [*c]GlyphInfo;
-pub extern fn GenImageFontAtlas(chars: [*c]const GlyphInfo, recs: [*c][*c]Rectangle, glyphCount: c_int, fontSize: c_int, padding: c_int, packMethod: c_int) Image;
-pub extern fn UnloadFontData(chars: [*c]GlyphInfo, glyphCount: c_int) void;
-pub extern fn UnloadFont(font: Font) void;
-pub extern fn ExportFontAsCode(font: Font, fileName: [*c]const u8) bool;
-pub extern fn DrawFPS(posX: c_int, posY: c_int) void;
-pub extern fn DrawText(text: [*c]const u8, posX: c_int, posY: c_int, fontSize: c_int, color: Color) void;
-pub extern fn DrawTextEx(font: Font, text: [*c]const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void;
-pub extern fn DrawTextPro(font: Font, text: [*c]const u8, position: Vector2, origin: Vector2, rotation: f32, fontSize: f32, spacing: f32, tint: Color) void;
-pub extern fn DrawTextCodepoint(font: Font, codepoint: c_int, position: Vector2, fontSize: f32, tint: Color) void;
-pub extern fn DrawTextCodepoints(font: Font, codepoints: [*c]const c_int, count: c_int, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void;
-pub extern fn MeasureText(text: [*c]const u8, fontSize: c_int) c_int;
-pub extern fn MeasureTextEx(font: Font, text: [*c]const u8, fontSize: f32, spacing: f32) Vector2;
-pub extern fn GetGlyphIndex(font: Font, codepoint: c_int) c_int;
-pub extern fn GetGlyphInfo(font: Font, codepoint: c_int) GlyphInfo;
-pub extern fn GetGlyphAtlasRec(font: Font, codepoint: c_int) Rectangle;
-pub extern fn LoadUTF8(codepoints: [*c]const c_int, length: c_int) [*c]u8;
-pub extern fn UnloadUTF8(text: [*c]u8) void;
-pub extern fn LoadCodepoints(text: [*c]const u8, count: [*c]c_int) [*c]c_int;
-pub extern fn UnloadCodepoints(codepoints: [*c]c_int) void;
-pub extern fn GetCodepointCount(text: [*c]const u8) c_int;
-pub extern fn GetCodepoint(text: [*c]const u8, codepointSize: [*c]c_int) c_int;
-pub extern fn GetCodepointNext(text: [*c]const u8, codepointSize: [*c]c_int) c_int;
-pub extern fn GetCodepointPrevious(text: [*c]const u8, codepointSize: [*c]c_int) c_int;
-pub extern fn CodepointToUTF8(codepoint: c_int, utf8Size: [*c]c_int) [*c]const u8;
-pub extern fn TextCopy(dst: [*c]u8, src: [*c]const u8) c_int;
-pub extern fn TextIsEqual(text1: [*c]const u8, text2: [*c]const u8) bool;
-pub extern fn TextLength(text: [*c]const u8) c_uint;
-pub extern fn TextFormat(text: [*c]const u8, ...) [*c]const u8;
-pub extern fn TextSubtext(text: [*c]const u8, position: c_int, length: c_int) [*c]const u8;
-pub extern fn TextReplace(text: [*c]u8, replace: [*c]const u8, by: [*c]const u8) [*c]u8;
-pub extern fn TextInsert(text: [*c]const u8, insert: [*c]const u8, position: c_int) [*c]u8;
-pub extern fn TextJoin(textList: [*c][*c]const u8, count: c_int, delimiter: [*c]const u8) [*c]const u8;
-pub extern fn TextSplit(text: [*c]const u8, delimiter: u8, count: [*c]c_int) [*c][*c]const u8;
-pub extern fn TextAppend(text: [*c]u8, append: [*c]const u8, position: [*c]c_int) void;
-pub extern fn TextFindIndex(text: [*c]const u8, find: [*c]const u8) c_int;
-pub extern fn TextToUpper(text: [*c]const u8) [*c]const u8;
-pub extern fn TextToLower(text: [*c]const u8) [*c]const u8;
-pub extern fn TextToPascal(text: [*c]const u8) [*c]const u8;
-pub extern fn TextToInteger(text: [*c]const u8) c_int;
-pub extern fn DrawLine3D(startPos: Vector3, endPos: Vector3, color: Color) void;
-pub extern fn DrawPoint3D(position: Vector3, color: Color) void;
-pub extern fn DrawCircle3D(center: Vector3, radius: f32, rotationAxis: Vector3, rotationAngle: f32, color: Color) void;
-pub extern fn DrawTriangle3D(v1: Vector3, v2: Vector3, v3: Vector3, color: Color) void;
-pub extern fn DrawTriangleStrip3D(points: [*c]Vector3, pointCount: c_int, color: Color) void;
-pub extern fn DrawCube(position: Vector3, width: f32, height: f32, length: f32, color: Color) void;
-pub extern fn DrawCubeV(position: Vector3, size: Vector3, color: Color) void;
-pub extern fn DrawCubeWires(position: Vector3, width: f32, height: f32, length: f32, color: Color) void;
-pub extern fn DrawCubeWiresV(position: Vector3, size: Vector3, color: Color) void;
-pub extern fn DrawSphere(centerPos: Vector3, radius: f32, color: Color) void;
-pub extern fn DrawSphereEx(centerPos: Vector3, radius: f32, rings: c_int, slices: c_int, color: Color) void;
-pub extern fn DrawSphereWires(centerPos: Vector3, radius: f32, rings: c_int, slices: c_int, color: Color) void;
-pub extern fn DrawCylinder(position: Vector3, radiusTop: f32, radiusBottom: f32, height: f32, slices: c_int, color: Color) void;
-pub extern fn DrawCylinderEx(startPos: Vector3, endPos: Vector3, startRadius: f32, endRadius: f32, sides: c_int, color: Color) void;
-pub extern fn DrawCylinderWires(position: Vector3, radiusTop: f32, radiusBottom: f32, height: f32, slices: c_int, color: Color) void;
-pub extern fn DrawCylinderWiresEx(startPos: Vector3, endPos: Vector3, startRadius: f32, endRadius: f32, sides: c_int, color: Color) void;
-pub extern fn DrawCapsule(startPos: Vector3, endPos: Vector3, radius: f32, slices: c_int, rings: c_int, color: Color) void;
-pub extern fn DrawCapsuleWires(startPos: Vector3, endPos: Vector3, radius: f32, slices: c_int, rings: c_int, color: Color) void;
-pub extern fn DrawPlane(centerPos: Vector3, size: Vector2, color: Color) void;
-pub extern fn DrawRay(ray: Ray, color: Color) void;
-pub extern fn DrawGrid(slices: c_int, spacing: f32) void;
-pub extern fn LoadModel(fileName: [*c]const u8) Model;
-pub extern fn LoadModelFromMesh(mesh: Mesh) Model;
-pub extern fn UnloadModel(model: Model) void;
-pub extern fn UnloadModelKeepMeshes(model: Model) void;
-pub extern fn GetModelBoundingBox(model: Model) BoundingBox;
-pub extern fn DrawModel(model: Model, position: Vector3, scale: f32, tint: Color) void;
-pub extern fn DrawModelEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void;
-pub extern fn DrawModelWires(model: Model, position: Vector3, scale: f32, tint: Color) void;
-pub extern fn DrawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void;
-pub extern fn DrawBoundingBox(box: BoundingBox, color: Color) void;
-pub extern fn DrawBillboard(camera: Camera, texture: Texture2D, position: Vector3, size: f32, tint: Color) void;
-pub extern fn DrawBillboardRec(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color) void;
-pub extern fn DrawBillboardPro(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: f32, tint: Color) void;
-pub extern fn UploadMesh(mesh: [*c]Mesh, dynamic: bool) void;
-pub extern fn UpdateMeshBuffer(mesh: Mesh, index: c_int, data: *const anyopaque, dataSize: c_int, offset: c_int) void;
-pub extern fn UnloadMesh(mesh: Mesh) void;
-pub extern fn DrawMesh(mesh: Mesh, material: Material, transform: Matrix) void;
-pub extern fn DrawMeshInstanced(mesh: Mesh, material: Material, transforms: [*c]const Matrix, instances: c_int) void;
-pub extern fn ExportMesh(mesh: Mesh, fileName: [*c]const u8) bool;
-pub extern fn GetMeshBoundingBox(mesh: Mesh) BoundingBox;
-pub extern fn GenMeshTangents(mesh: [*c]Mesh) void;
-pub extern fn GenMeshPoly(sides: c_int, radius: f32) Mesh;
-pub extern fn GenMeshPlane(width: f32, length: f32, resX: c_int, resZ: c_int) Mesh;
-pub extern fn GenMeshCube(width: f32, height: f32, length: f32) Mesh;
-pub extern fn GenMeshSphere(radius: f32, rings: c_int, slices: c_int) Mesh;
-pub extern fn GenMeshHemiSphere(radius: f32, rings: c_int, slices: c_int) Mesh;
-pub extern fn GenMeshCylinder(radius: f32, height: f32, slices: c_int) Mesh;
-pub extern fn GenMeshCone(radius: f32, height: f32, slices: c_int) Mesh;
-pub extern fn GenMeshTorus(radius: f32, size: f32, radSeg: c_int, sides: c_int) Mesh;
-pub extern fn GenMeshKnot(radius: f32, size: f32, radSeg: c_int, sides: c_int) Mesh;
-pub extern fn GenMeshHeightmap(heightmap: Image, size: Vector3) Mesh;
-pub extern fn GenMeshCubicmap(cubicmap: Image, cubeSize: Vector3) Mesh;
-pub extern fn LoadMaterials(fileName: [*c]const u8, materialCount: [*c]c_int) [*c]Material;
-pub extern fn LoadMaterialDefault() Material;
-pub extern fn UnloadMaterial(material: Material) void;
-pub extern fn SetMaterialTexture(material: [*c]Material, mapType: c_int, texture: Texture2D) void;
-pub extern fn SetModelMeshMaterial(model: [*c]Model, meshId: c_int, materialId: c_int) void;
-pub extern fn LoadModelAnimations(fileName: [*c]const u8, animCount: [*c]c_uint) [*c]ModelAnimation;
-pub extern fn UpdateModelAnimation(model: Model, anim: ModelAnimation, frame: c_int) void;
-pub extern fn UnloadModelAnimation(anim: ModelAnimation) void;
-pub extern fn UnloadModelAnimations(animations: [*c]ModelAnimation, count: c_uint) void;
-pub extern fn IsModelAnimationValid(model: Model, anim: ModelAnimation) bool;
-pub extern fn CheckCollisionSpheres(center1: Vector3, radius1: f32, center2: Vector3, radius2: f32) bool;
-pub extern fn CheckCollisionBoxes(box1: BoundingBox, box2: BoundingBox) bool;
-pub extern fn CheckCollisionBoxSphere(box: BoundingBox, center: Vector3, radius: f32) bool;
-pub extern fn GetRayCollisionSphere(ray: Ray, center: Vector3, radius: f32) RayCollision;
-pub extern fn GetRayCollisionBox(ray: Ray, box: BoundingBox) RayCollision;
-pub extern fn GetRayCollisionMesh(ray: Ray, mesh: Mesh, transform: Matrix) RayCollision;
-pub extern fn GetRayCollisionTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3) RayCollision;
-pub extern fn GetRayCollisionQuad(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3) RayCollision;
-pub extern fn InitAudioDevice() void;
-pub extern fn CloseAudioDevice() void;
-pub extern fn IsAudioDeviceReady() bool;
-pub extern fn SetMasterVolume(volume: f32) void;
-pub extern fn LoadWave(fileName: [*c]const u8) Wave;
-pub extern fn LoadWaveFromMemory(fileType: [*c]const u8, fileData: [*c]const u8, dataSize: c_int) Wave;
-pub extern fn LoadSound(fileName: [*c]const u8) Sound;
-pub extern fn LoadSoundFromWave(wave: Wave) Sound;
-pub extern fn UpdateSound(sound: Sound, data: *const anyopaque, sampleCount: c_int) void;
-pub extern fn UnloadWave(wave: Wave) void;
-pub extern fn UnloadSound(sound: Sound) void;
-pub extern fn ExportWave(wave: Wave, fileName: [*c]const u8) bool;
-pub extern fn ExportWaveAsCode(wave: Wave, fileName: [*c]const u8) bool;
-pub extern fn PlaySound(sound: Sound) void;
-pub extern fn StopSound(sound: Sound) void;
-pub extern fn PauseSound(sound: Sound) void;
-pub extern fn ResumeSound(sound: Sound) void;
-pub extern fn PlaySoundMulti(sound: Sound) void;
-pub extern fn StopSoundMulti() void;
-pub extern fn GetSoundsPlaying() c_int;
-pub extern fn IsSoundPlaying(sound: Sound) bool;
-pub extern fn SetSoundVolume(sound: Sound, volume: f32) void;
-pub extern fn SetSoundPitch(sound: Sound, pitch: f32) void;
-pub extern fn SetSoundPan(sound: Sound, pan: f32) void;
-pub extern fn WaveCopy(wave: Wave) Wave;
-pub extern fn WaveCrop(wave: [*c]Wave, initSample: c_int, finalSample: c_int) void;
-pub extern fn WaveFormat(wave: [*c]Wave, sampleRate: c_int, sampleSize: c_int, channels: c_int) void;
-pub extern fn LoadWaveSamples(wave: Wave) [*c]f32;
-pub extern fn UnloadWaveSamples(samples: [*c]f32) void;
-pub extern fn LoadMusicStream(fileName: [*c]const u8) Music;
-pub extern fn LoadMusicStreamFromMemory(fileType: [*c]const u8, data: [*c]const u8, dataSize: c_int) Music;
-pub extern fn UnloadMusicStream(music: Music) void;
-pub extern fn PlayMusicStream(music: Music) void;
-pub extern fn IsMusicStreamPlaying(music: Music) bool;
-pub extern fn UpdateMusicStream(music: Music) void;
-pub extern fn StopMusicStream(music: Music) void;
-pub extern fn PauseMusicStream(music: Music) void;
-pub extern fn ResumeMusicStream(music: Music) void;
-pub extern fn SeekMusicStream(music: Music, position: f32) void;
-pub extern fn SetMusicVolume(music: Music, volume: f32) void;
-pub extern fn SetMusicPitch(music: Music, pitch: f32) void;
-pub extern fn SetMusicPan(music: Music, pan: f32) void;
-pub extern fn GetMusicTimeLength(music: Music) f32;
-pub extern fn GetMusicTimePlayed(music: Music) f32;
-pub extern fn LoadAudioStream(sampleRate: c_uint, sampleSize: c_uint, channels: c_uint) AudioStream;
-pub extern fn UnloadAudioStream(stream: AudioStream) void;
-pub extern fn UpdateAudioStream(stream: AudioStream, data: *const anyopaque, frameCount: c_int) void;
-pub extern fn IsAudioStreamProcessed(stream: AudioStream) bool;
-pub extern fn PlayAudioStream(stream: AudioStream) void;
-pub extern fn PauseAudioStream(stream: AudioStream) void;
-pub extern fn ResumeAudioStream(stream: AudioStream) void;
-pub extern fn IsAudioStreamPlaying(stream: AudioStream) bool;
-pub extern fn StopAudioStream(stream: AudioStream) void;
-pub extern fn SetAudioStreamVolume(stream: AudioStream, volume: f32) void;
-pub extern fn SetAudioStreamPitch(stream: AudioStream, pitch: f32) void;
-pub extern fn SetAudioStreamPan(stream: AudioStream, pan: f32) void;
-pub extern fn SetAudioStreamBufferSizeDefault(size: c_int) void;
-pub extern fn SetAudioStreamCallback(stream: AudioStream, callback: AudioCallback) void;
-pub extern fn AttachAudioStreamProcessor(stream: AudioStream, processor: AudioCallback) void;
-pub extern fn DetachAudioStreamProcessor(stream: AudioStream, processor: AudioCallback) void;
+const cdef = @import("raylib-zig-ext.zig");
+
+pub fn textFormat(text: []const u8, args: anytype) [*c]const u8 {
+    return @call(.{}, cdef.TextFormat, .{@ptrCast([*c]const u8, text)} ++ args);
+}
+
+pub fn loadShader(vsFileName: ?[]const u8, fsFileName: ?[]const u8) Shader {
+    var vsFileNameFinal = @as([*c]const u8, 0);
+    var fsFileNameFinal = @as([*c]const u8, 0);
+    if (vsFileName) |vsFileNameSure| {
+        vsFileNameFinal = @ptrCast([*c]const u8, vsFileNameSure);
+    }
+    if (fsFileName) |fsFileNameSure| {
+        fsFileNameFinal = @ptrCast([*c]const u8, fsFileNameSure);
+    }
+    return cdef.LoadShader(vsFileNameFinal, fsFileNameFinal);
+}
+
+pub fn loadShaderFromMemory(vsCode: ?[]const u8, fsCode: ?[]const u8) Shader {
+    var vsCodeFinal = @as([*c]const u8, 0);
+    var fsCodeFinal = @as([*c]const u8, 0);
+    if (vsCode) |vsCodeSure| {
+        vsCodeFinal = @ptrCast([*c]const u8, vsCodeSure);
+    }
+    if (fsCode) |fsCodeSure| {
+        fsCodeFinal = @ptrCast([*c]const u8, fsCodeSure);
+    }
+    return cdef.LoadShaderFromMemory(vsCodeFinal, fsCodeFinal);
+}
+
+pub fn initWindow(width: i32, height: i32, title: []const u8) void {
+    cdef.InitWindow(@as(c_int, width), @as(c_int, height), @ptrCast([*c]const u8, title));
+}
+
+pub fn windowShouldClose() bool {
+    return cdef.WindowShouldClose();
+}
+
+pub fn closeWindow() void {
+    cdef.CloseWindow();
+}
+
+pub fn isWindowReady() bool {
+    return cdef.IsWindowReady();
+}
+
+pub fn isWindowFullscreen() bool {
+    return cdef.IsWindowFullscreen();
+}
+
+pub fn isWindowHidden() bool {
+    return cdef.IsWindowHidden();
+}
+
+pub fn isWindowMinimized() bool {
+    return cdef.IsWindowMinimized();
+}
+
+pub fn isWindowMaximized() bool {
+    return cdef.IsWindowMaximized();
+}
+
+pub fn isWindowFocused() bool {
+    return cdef.IsWindowFocused();
+}
+
+pub fn isWindowResized() bool {
+    return cdef.IsWindowResized();
+}
+
+pub fn isWindowState(flag: u32) bool {
+    return cdef.IsWindowState(@as(c_uint, flag));
+}
+
+pub fn setWindowState(flags: u32) void {
+    cdef.SetWindowState(@as(c_uint, flags));
+}
+
+pub fn clearWindowState(flags: u32) void {
+    cdef.ClearWindowState(@as(c_uint, flags));
+}
+
+pub fn toggleFullscreen() void {
+    cdef.ToggleFullscreen();
+}
+
+pub fn maximizeWindow() void {
+    cdef.MaximizeWindow();
+}
+
+pub fn minimizeWindow() void {
+    cdef.MinimizeWindow();
+}
+
+pub fn restoreWindow() void {
+    cdef.RestoreWindow();
+}
+
+pub fn setWindowIcon(image: Image) void {
+    cdef.SetWindowIcon(image);
+}
+
+pub fn setWindowTitle(title: []const u8) void {
+    cdef.SetWindowTitle(@ptrCast([*c]const u8, title));
+}
+
+pub fn setWindowPosition(x: i32, y: i32) void {
+    cdef.SetWindowPosition(@as(c_int, x), @as(c_int, y));
+}
+
+pub fn setWindowMonitor(monitor: i32) void {
+    cdef.SetWindowMonitor(@as(c_int, monitor));
+}
+
+pub fn setWindowMinSize(width: i32, height: i32) void {
+    cdef.SetWindowMinSize(@as(c_int, width), @as(c_int, height));
+}
+
+pub fn setWindowSize(width: i32, height: i32) void {
+    cdef.SetWindowSize(@as(c_int, width), @as(c_int, height));
+}
+
+pub fn setWindowOpacity(opacity: f32) void {
+    cdef.SetWindowOpacity(opacity);
+}
+
+pub fn getWindowHandle() *anyopaque {
+    return cdef.GetWindowHandle();
+}
+
+pub fn getScreenWidth() c_int {
+    return cdef.GetScreenWidth();
+}
+
+pub fn getScreenHeight() c_int {
+    return cdef.GetScreenHeight();
+}
+
+pub fn getRenderWidth() c_int {
+    return cdef.GetRenderWidth();
+}
+
+pub fn getRenderHeight() c_int {
+    return cdef.GetRenderHeight();
+}
+
+pub fn getMonitorCount() c_int {
+    return cdef.GetMonitorCount();
+}
+
+pub fn getCurrentMonitor() c_int {
+    return cdef.GetCurrentMonitor();
+}
+
+pub fn getMonitorPosition(monitor: i32) Vector2 {
+    return cdef.GetMonitorPosition(@as(c_int, monitor));
+}
+
+pub fn getMonitorWidth(monitor: i32) c_int {
+    return cdef.GetMonitorWidth(@as(c_int, monitor));
+}
+
+pub fn getMonitorHeight(monitor: i32) c_int {
+    return cdef.GetMonitorHeight(@as(c_int, monitor));
+}
+
+pub fn getMonitorPhysicalWidth(monitor: i32) c_int {
+    return cdef.GetMonitorPhysicalWidth(@as(c_int, monitor));
+}
+
+pub fn getMonitorPhysicalHeight(monitor: i32) c_int {
+    return cdef.GetMonitorPhysicalHeight(@as(c_int, monitor));
+}
+
+pub fn getMonitorRefreshRate(monitor: i32) c_int {
+    return cdef.GetMonitorRefreshRate(@as(c_int, monitor));
+}
+
+pub fn getWindowPosition() Vector2 {
+    return cdef.GetWindowPosition();
+}
+
+pub fn getWindowScaleDPI() Vector2 {
+    return cdef.GetWindowScaleDPI();
+}
+
+pub fn getMonitorName(monitor: i32) [*c]const u8 {
+    return cdef.GetMonitorName(@as(c_int, monitor));
+}
+
+pub fn setClipboardText(text: []const u8) void {
+    cdef.SetClipboardText(@ptrCast([*c]const u8, text));
+}
+
+pub fn getClipboardText() [*c]const u8 {
+    return cdef.GetClipboardText();
+}
+
+pub fn enableEventWaiting() void {
+    cdef.EnableEventWaiting();
+}
+
+pub fn disableEventWaiting() void {
+    cdef.DisableEventWaiting();
+}
+
+pub fn swapScreenBuffer() void {
+    cdef.SwapScreenBuffer();
+}
+
+pub fn pollInputEvents() void {
+    cdef.PollInputEvents();
+}
+
+pub fn waitTime(seconds: f64) void {
+    cdef.WaitTime(seconds);
+}
+
+pub fn showCursor() void {
+    cdef.ShowCursor();
+}
+
+pub fn hideCursor() void {
+    cdef.HideCursor();
+}
+
+pub fn isCursorHidden() bool {
+    return cdef.IsCursorHidden();
+}
+
+pub fn enableCursor() void {
+    cdef.EnableCursor();
+}
+
+pub fn disableCursor() void {
+    cdef.DisableCursor();
+}
+
+pub fn isCursorOnScreen() bool {
+    return cdef.IsCursorOnScreen();
+}
+
+pub fn clearBackground(color: Color) void {
+    cdef.ClearBackground(color);
+}
+
+pub fn beginDrawing() void {
+    cdef.BeginDrawing();
+}
+
+pub fn endDrawing() void {
+    cdef.EndDrawing();
+}
+
+pub fn beginMode2D(camera: Camera2D) void {
+    cdef.BeginMode2D(camera);
+}
+
+pub fn endMode2D() void {
+    cdef.EndMode2D();
+}
+
+pub fn beginMode3D(camera: Camera3D) void {
+    cdef.BeginMode3D(camera);
+}
+
+pub fn endMode3D() void {
+    cdef.EndMode3D();
+}
+
+pub fn beginTextureMode(target: RenderTexture2D) void {
+    cdef.BeginTextureMode(target);
+}
+
+pub fn endTextureMode() void {
+    cdef.EndTextureMode();
+}
+
+pub fn beginShaderMode(shader: Shader) void {
+    cdef.BeginShaderMode(shader);
+}
+
+pub fn endShaderMode() void {
+    cdef.EndShaderMode();
+}
+
+pub fn beginBlendMode(mode: i32) void {
+    cdef.BeginBlendMode(@as(c_int, mode));
+}
+
+pub fn endBlendMode() void {
+    cdef.EndBlendMode();
+}
+
+pub fn beginScissorMode(x: i32, y: i32, width: i32, height: i32) void {
+    cdef.BeginScissorMode(@as(c_int, x), @as(c_int, y), @as(c_int, width), @as(c_int, height));
+}
+
+pub fn endScissorMode() void {
+    cdef.EndScissorMode();
+}
+
+pub fn beginVrStereoMode(config: VrStereoConfig) void {
+    cdef.BeginVrStereoMode(config);
+}
+
+pub fn endVrStereoMode() void {
+    cdef.EndVrStereoMode();
+}
+
+pub fn loadVrStereoConfig(device: VrDeviceInfo) VrStereoConfig {
+    return cdef.LoadVrStereoConfig(device);
+}
+
+pub fn unloadVrStereoConfig(config: VrStereoConfig) void {
+    cdef.UnloadVrStereoConfig(config);
+}
+
+pub fn getShaderLocation(shader: Shader, uniformName: []const u8) c_int {
+    return cdef.GetShaderLocation(shader, @ptrCast([*c]const u8, uniformName));
+}
+
+pub fn getShaderLocationAttrib(shader: Shader, attribName: []const u8) c_int {
+    return cdef.GetShaderLocationAttrib(shader, @ptrCast([*c]const u8, attribName));
+}
+
+pub fn setShaderValue(shader: Shader, locIndex: i32, value: *const anyopaque, uniformType: i32) void {
+    cdef.SetShaderValue(shader, @as(c_int, locIndex), value, @as(c_int, uniformType));
+}
+
+pub fn setShaderValueV(shader: Shader, locIndex: i32, value: *const anyopaque, uniformType: i32, count: i32) void {
+    cdef.SetShaderValueV(shader, @as(c_int, locIndex), value, @as(c_int, uniformType), @as(c_int, count));
+}
+
+pub fn setShaderValueMatrix(shader: Shader, locIndex: i32, mat: Matrix) void {
+    cdef.SetShaderValueMatrix(shader, @as(c_int, locIndex), mat);
+}
+
+pub fn setShaderValueTexture(shader: Shader, locIndex: i32, texture: Texture2D) void {
+    cdef.SetShaderValueTexture(shader, @as(c_int, locIndex), texture);
+}
+
+pub fn unloadShader(shader: Shader) void {
+    cdef.UnloadShader(shader);
+}
+
+pub fn getMouseRay(mousePosition: Vector2, camera: Camera) Ray {
+    return cdef.GetMouseRay(mousePosition, camera);
+}
+
+pub fn getCameraMatrix(camera: Camera) Matrix {
+    return cdef.GetCameraMatrix(camera);
+}
+
+pub fn getCameraMatrix2D(camera: Camera2D) Matrix {
+    return cdef.GetCameraMatrix2D(camera);
+}
+
+pub fn getWorldToScreen(position: Vector3, camera: Camera) Vector2 {
+    return cdef.GetWorldToScreen(position, camera);
+}
+
+pub fn getScreenToWorld2D(position: Vector2, camera: Camera2D) Vector2 {
+    return cdef.GetScreenToWorld2D(position, camera);
+}
+
+pub fn getWorldToScreenEx(position: Vector3, camera: Camera, width: i32, height: i32) Vector2 {
+    return cdef.GetWorldToScreenEx(position, camera, @as(c_int, width), @as(c_int, height));
+}
+
+pub fn getWorldToScreen2D(position: Vector2, camera: Camera2D) Vector2 {
+    return cdef.GetWorldToScreen2D(position, camera);
+}
+
+pub fn setTargetFPS(fps: i32) void {
+    cdef.SetTargetFPS(@as(c_int, fps));
+}
+
+pub fn getFPS() c_int {
+    return cdef.GetFPS();
+}
+
+pub fn getFrameTime() f32 {
+    return cdef.GetFrameTime();
+}
+
+pub fn getTime() f64 {
+    return cdef.GetTime();
+}
+
+pub fn getRandomValue(min: i32, max: i32) c_int {
+    return cdef.GetRandomValue(@as(c_int, min), @as(c_int, max));
+}
+
+pub fn setRandomSeed(seed: u32) void {
+    cdef.SetRandomSeed(@as(c_uint, seed));
+}
+
+pub fn takeScreenshot(fileName: []const u8) void {
+    cdef.TakeScreenshot(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn setConfigFlags(flags: u32) void {
+    cdef.SetConfigFlags(@as(c_uint, flags));
+}
+
+pub fn traceLog(logLevel: i32, text: []const u8) void {
+    cdef.TraceLog(@as(c_int, logLevel), @ptrCast([*c]const u8, text));
+}
+
+pub fn setTraceLogLevel(logLevel: i32) void {
+    cdef.SetTraceLogLevel(@as(c_int, logLevel));
+}
+
+pub fn memAlloc(size: u32) *anyopaque {
+    return cdef.MemAlloc(@as(c_uint, size));
+}
+
+pub fn memRealloc(ptr: *anyopaque, size: u32) *anyopaque {
+    return cdef.MemRealloc(ptr, @as(c_uint, size));
+}
+
+pub fn memFree(ptr: *anyopaque) void {
+    cdef.MemFree(ptr);
+}
+
+pub fn openURL(url: []const u8) void {
+    cdef.OpenURL(@ptrCast([*c]const u8, url));
+}
+
+pub fn setLoadFileDataCallback(callback: LoadFileDataCallback) void {
+    cdef.SetLoadFileDataCallback(callback);
+}
+
+pub fn setSaveFileDataCallback(callback: SaveFileDataCallback) void {
+    cdef.SetSaveFileDataCallback(callback);
+}
+
+pub fn setLoadFileTextCallback(callback: LoadFileTextCallback) void {
+    cdef.SetLoadFileTextCallback(callback);
+}
+
+pub fn setSaveFileTextCallback(callback: SaveFileTextCallback) void {
+    cdef.SetSaveFileTextCallback(callback);
+}
+
+pub fn loadFileData(fileName: []const u8, bytesRead: *u32) [*c]u8 {
+    return cdef.LoadFileData(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_uint, bytesRead));
+}
+
+pub fn unloadFileData(data: []u8) void {
+    cdef.UnloadFileData(@ptrCast([*c]u8, data));
+}
+
+pub fn saveFileData(fileName: []const u8, data: *anyopaque, bytesToWrite: u32) bool {
+    return cdef.SaveFileData(@ptrCast([*c]const u8, fileName), data, @as(c_uint, bytesToWrite));
+}
+
+pub fn exportDataAsCode(data: []const u8, size: u32, fileName: []const u8) bool {
+    return cdef.ExportDataAsCode(@ptrCast([*c]const u8, data), @as(c_uint, size), @ptrCast([*c]const u8, fileName));
+}
+
+pub fn loadFileText(fileName: []const u8) [*c]u8 {
+    return cdef.LoadFileText(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn unloadFileText(text: []u8) void {
+    cdef.UnloadFileText(@ptrCast([*c]u8, text));
+}
+
+pub fn saveFileText(fileName: []const u8, text: []u8) bool {
+    return cdef.SaveFileText(@ptrCast([*c]const u8, fileName), @ptrCast([*c]u8, text));
+}
+
+pub fn fileExists(fileName: []const u8) bool {
+    return cdef.FileExists(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn directoryExists(dirPath: []const u8) bool {
+    return cdef.DirectoryExists(@ptrCast([*c]const u8, dirPath));
+}
+
+pub fn isFileExtension(fileName: []const u8, ext: []const u8) bool {
+    return cdef.IsFileExtension(@ptrCast([*c]const u8, fileName), @ptrCast([*c]const u8, ext));
+}
+
+pub fn getFileLength(fileName: []const u8) c_int {
+    return cdef.GetFileLength(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn getFileExtension(fileName: []const u8) [*c]const u8 {
+    return cdef.GetFileExtension(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn getFileName(filePath: []const u8) [*c]const u8 {
+    return cdef.GetFileName(@ptrCast([*c]const u8, filePath));
+}
+
+pub fn getFileNameWithoutExt(filePath: []const u8) [*c]const u8 {
+    return cdef.GetFileNameWithoutExt(@ptrCast([*c]const u8, filePath));
+}
+
+pub fn getDirectoryPath(filePath: []const u8) [*c]const u8 {
+    return cdef.GetDirectoryPath(@ptrCast([*c]const u8, filePath));
+}
+
+pub fn getPrevDirectoryPath(dirPath: []const u8) [*c]const u8 {
+    return cdef.GetPrevDirectoryPath(@ptrCast([*c]const u8, dirPath));
+}
+
+pub fn getWorkingDirectory() [*c]const u8 {
+    return cdef.GetWorkingDirectory();
+}
+
+pub fn getApplicationDirectory() [*c]const u8 {
+    return cdef.GetApplicationDirectory();
+}
+
+pub fn changeDirectory(dir: []const u8) bool {
+    return cdef.ChangeDirectory(@ptrCast([*c]const u8, dir));
+}
+
+pub fn isPathFile(path: []const u8) bool {
+    return cdef.IsPathFile(@ptrCast([*c]const u8, path));
+}
+
+pub fn loadDirectoryFiles(dirPath: []const u8) FilePathList {
+    return cdef.LoadDirectoryFiles(@ptrCast([*c]const u8, dirPath));
+}
+
+pub fn loadDirectoryFilesEx(basePath: []const u8, filter: []const u8, scanSubdirs: bool) FilePathList {
+    return cdef.LoadDirectoryFilesEx(@ptrCast([*c]const u8, basePath), @ptrCast([*c]const u8, filter), scanSubdirs);
+}
+
+pub fn unloadDirectoryFiles(files: FilePathList) void {
+    cdef.UnloadDirectoryFiles(files);
+}
+
+pub fn isFileDropped() bool {
+    return cdef.IsFileDropped();
+}
+
+pub fn loadDroppedFiles() FilePathList {
+    return cdef.LoadDroppedFiles();
+}
+
+pub fn unloadDroppedFiles(files: FilePathList) void {
+    cdef.UnloadDroppedFiles(files);
+}
+
+pub fn getFileModTime(fileName: []const u8) c_long {
+    return cdef.GetFileModTime(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn compressData(data: []const u8, dataSize: i32, compDataSize: *i32) [*c]u8 {
+    return cdef.CompressData(@ptrCast([*c]const u8, data), @as(c_int, dataSize), @ptrCast([*c]c_int, compDataSize));
+}
+
+pub fn decompressData(compData: []const u8, compDataSize: i32, dataSize: *i32) [*c]u8 {
+    return cdef.DecompressData(@ptrCast([*c]const u8, compData), @as(c_int, compDataSize), @ptrCast([*c]c_int, dataSize));
+}
+
+pub fn encodeDataBase64(data: []const u8, dataSize: i32, outputSize: *i32) [*c]u8 {
+    return cdef.EncodeDataBase64(@ptrCast([*c]const u8, data), @as(c_int, dataSize), @ptrCast([*c]c_int, outputSize));
+}
+
+pub fn decodeDataBase64(data: []const u8, outputSize: *i32) [*c]u8 {
+    return cdef.DecodeDataBase64(@ptrCast([*c]const u8, data), @ptrCast([*c]c_int, outputSize));
+}
+
+pub fn isKeyPressed(key: KeyboardKey) bool {
+    return cdef.IsKeyPressed(key);
+}
+
+pub fn isKeyDown(key: KeyboardKey) bool {
+    return cdef.IsKeyDown(key);
+}
+
+pub fn isKeyReleased(key: KeyboardKey) bool {
+    return cdef.IsKeyReleased(key);
+}
+
+pub fn isKeyUp(key: KeyboardKey) bool {
+    return cdef.IsKeyUp(key);
+}
+
+pub fn setExitKey(key: KeyboardKey) void {
+    cdef.SetExitKey(key);
+}
+
+pub fn getKeyPressed() c_int {
+    return cdef.GetKeyPressed();
+}
+
+pub fn getCharPressed() c_int {
+    return cdef.GetCharPressed();
+}
+
+pub fn isGamepadAvailable(gamepad: i32) bool {
+    return cdef.IsGamepadAvailable(@as(c_int, gamepad));
+}
+
+pub fn getGamepadName(gamepad: i32) [*c]const u8 {
+    return cdef.GetGamepadName(@as(c_int, gamepad));
+}
+
+pub fn isGamepadButtonPressed(gamepad: i32, button: GamepadButton) bool {
+    return cdef.IsGamepadButtonPressed(@as(c_int, gamepad), button);
+}
+
+pub fn isGamepadButtonDown(gamepad: i32, button: GamepadButton) bool {
+    return cdef.IsGamepadButtonDown(@as(c_int, gamepad), button);
+}
+
+pub fn isGamepadButtonReleased(gamepad: i32, button: GamepadButton) bool {
+    return cdef.IsGamepadButtonReleased(@as(c_int, gamepad), button);
+}
+
+pub fn isGamepadButtonUp(gamepad: i32, button: GamepadButton) bool {
+    return cdef.IsGamepadButtonUp(@as(c_int, gamepad), button);
+}
+
+pub fn getGamepadButtonPressed() c_int {
+    return cdef.GetGamepadButtonPressed();
+}
+
+pub fn getGamepadAxisCount(gamepad: i32) c_int {
+    return cdef.GetGamepadAxisCount(@as(c_int, gamepad));
+}
+
+pub fn getGamepadAxisMovement(gamepad: i32, axis: i32) f32 {
+    return cdef.GetGamepadAxisMovement(@as(c_int, gamepad), @as(c_int, axis));
+}
+
+pub fn setGamepadMappings(mappings: []const u8) c_int {
+    return cdef.SetGamepadMappings(@ptrCast([*c]const u8, mappings));
+}
+
+pub fn isMouseButtonPressed(button: MouseButton) bool {
+    return cdef.IsMouseButtonPressed(button);
+}
+
+pub fn isMouseButtonDown(button: MouseButton) bool {
+    return cdef.IsMouseButtonDown(button);
+}
+
+pub fn isMouseButtonReleased(button: MouseButton) bool {
+    return cdef.IsMouseButtonReleased(button);
+}
+
+pub fn isMouseButtonUp(button: MouseButton) bool {
+    return cdef.IsMouseButtonUp(button);
+}
+
+pub fn getMouseX() c_int {
+    return cdef.GetMouseX();
+}
+
+pub fn getMouseY() c_int {
+    return cdef.GetMouseY();
+}
+
+pub fn getMousePosition() Vector2 {
+    return cdef.GetMousePosition();
+}
+
+pub fn getMouseDelta() Vector2 {
+    return cdef.GetMouseDelta();
+}
+
+pub fn setMousePosition(x: i32, y: i32) void {
+    cdef.SetMousePosition(@as(c_int, x), @as(c_int, y));
+}
+
+pub fn setMouseOffset(offsetX: i32, offsetY: i32) void {
+    cdef.SetMouseOffset(@as(c_int, offsetX), @as(c_int, offsetY));
+}
+
+pub fn setMouseScale(scaleX: f32, scaleY: f32) void {
+    cdef.SetMouseScale(scaleX, scaleY);
+}
+
+pub fn getMouseWheelMove() f32 {
+    return cdef.GetMouseWheelMove();
+}
+
+pub fn getMouseWheelMoveV() Vector2 {
+    return cdef.GetMouseWheelMoveV();
+}
+
+pub fn setMouseCursor(cursor: i32) void {
+    cdef.SetMouseCursor(@as(c_int, cursor));
+}
+
+pub fn getTouchX() c_int {
+    return cdef.GetTouchX();
+}
+
+pub fn getTouchY() c_int {
+    return cdef.GetTouchY();
+}
+
+pub fn getTouchPosition(index: i32) Vector2 {
+    return cdef.GetTouchPosition(@as(c_int, index));
+}
+
+pub fn getTouchPointId(index: i32) c_int {
+    return cdef.GetTouchPointId(@as(c_int, index));
+}
+
+pub fn getTouchPointCount() c_int {
+    return cdef.GetTouchPointCount();
+}
+
+pub fn setGesturesEnabled(flags: u32) void {
+    cdef.SetGesturesEnabled(@as(c_uint, flags));
+}
+
+pub fn isGestureDetected(gesture: Gestures) bool {
+    return cdef.IsGestureDetected(gesture);
+}
+
+pub fn getGestureDetected() c_int {
+    return cdef.GetGestureDetected();
+}
+
+pub fn getGestureHoldDuration() f32 {
+    return cdef.GetGestureHoldDuration();
+}
+
+pub fn getGestureDragVector() Vector2 {
+    return cdef.GetGestureDragVector();
+}
+
+pub fn getGestureDragAngle() f32 {
+    return cdef.GetGestureDragAngle();
+}
+
+pub fn getGesturePinchVector() Vector2 {
+    return cdef.GetGesturePinchVector();
+}
+
+pub fn getGesturePinchAngle() f32 {
+    return cdef.GetGesturePinchAngle();
+}
+
+pub fn setCameraMode(camera: Camera, mode: CameraMode) void {
+    cdef.SetCameraMode(camera, mode);
+}
+
+pub fn updateCamera(camera: *Camera) void {
+    cdef.UpdateCamera(@ptrCast([*c]Camera, camera));
+}
+
+pub fn setCameraPanControl(keyPan: i32) void {
+    cdef.SetCameraPanControl(@as(c_int, keyPan));
+}
+
+pub fn setCameraAltControl(keyAlt: i32) void {
+    cdef.SetCameraAltControl(@as(c_int, keyAlt));
+}
+
+pub fn setCameraSmoothZoomControl(keySmoothZoom: i32) void {
+    cdef.SetCameraSmoothZoomControl(@as(c_int, keySmoothZoom));
+}
+
+pub fn setCameraMoveControls(keyFront: i32, keyBack: i32, keyRight: i32, keyLeft: i32, keyUp: i32, keyDown: i32) void {
+    cdef.SetCameraMoveControls(@as(c_int, keyFront), @as(c_int, keyBack), @as(c_int, keyRight), @as(c_int, keyLeft), @as(c_int, keyUp), @as(c_int, keyDown));
+}
+
+pub fn setShapesTexture(texture: Texture2D, source: Rectangle) void {
+    cdef.SetShapesTexture(texture, source);
+}
+
+pub fn drawPixel(posX: i32, posY: i32, color: Color) void {
+    cdef.DrawPixel(@as(c_int, posX), @as(c_int, posY), color);
+}
+
+pub fn drawPixelV(position: Vector2, color: Color) void {
+    cdef.DrawPixelV(position, color);
+}
+
+pub fn drawLine(startPosX: i32, startPosY: i32, endPosX: i32, endPosY: i32, color: Color) void {
+    cdef.DrawLine(@as(c_int, startPosX), @as(c_int, startPosY), @as(c_int, endPosX), @as(c_int, endPosY), color);
+}
+
+pub fn drawLineV(startPos: Vector2, endPos: Vector2, color: Color) void {
+    cdef.DrawLineV(startPos, endPos, color);
+}
+
+pub fn drawLineEx(startPos: Vector2, endPos: Vector2, thick: f32, color: Color) void {
+    cdef.DrawLineEx(startPos, endPos, thick, color);
+}
+
+pub fn drawLineBezier(startPos: Vector2, endPos: Vector2, thick: f32, color: Color) void {
+    cdef.DrawLineBezier(startPos, endPos, thick, color);
+}
+
+pub fn drawLineBezierQuad(startPos: Vector2, endPos: Vector2, controlPos: Vector2, thick: f32, color: Color) void {
+    cdef.DrawLineBezierQuad(startPos, endPos, controlPos, thick, color);
+}
+
+pub fn drawLineBezierCubic(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: f32, color: Color) void {
+    cdef.DrawLineBezierCubic(startPos, endPos, startControlPos, endControlPos, thick, color);
+}
+
+pub fn drawLineStrip(points: []Vector2, pointCount: i32, color: Color) void {
+    cdef.DrawLineStrip(@ptrCast([*c]Vector2, points), @as(c_int, pointCount), color);
+}
+
+pub fn drawCircle(centerX: i32, centerY: i32, radius: f32, color: Color) void {
+    cdef.DrawCircle(@as(c_int, centerX), @as(c_int, centerY), radius, color);
+}
+
+pub fn drawCircleSector(center: Vector2, radius: f32, startAngle: f32, endAngle: f32, segments: i32, color: Color) void {
+    cdef.DrawCircleSector(center, radius, startAngle, endAngle, @as(c_int, segments), color);
+}
+
+pub fn drawCircleSectorLines(center: Vector2, radius: f32, startAngle: f32, endAngle: f32, segments: i32, color: Color) void {
+    cdef.DrawCircleSectorLines(center, radius, startAngle, endAngle, @as(c_int, segments), color);
+}
+
+pub fn drawCircleGradient(centerX: i32, centerY: i32, radius: f32, color1: Color, color2: Color) void {
+    cdef.DrawCircleGradient(@as(c_int, centerX), @as(c_int, centerY), radius, color1, color2);
+}
+
+pub fn drawCircleV(center: Vector2, radius: f32, color: Color) void {
+    cdef.DrawCircleV(center, radius, color);
+}
+
+pub fn drawCircleLines(centerX: i32, centerY: i32, radius: f32, color: Color) void {
+    cdef.DrawCircleLines(@as(c_int, centerX), @as(c_int, centerY), radius, color);
+}
+
+pub fn drawEllipse(centerX: i32, centerY: i32, radiusH: f32, radiusV: f32, color: Color) void {
+    cdef.DrawEllipse(@as(c_int, centerX), @as(c_int, centerY), radiusH, radiusV, color);
+}
+
+pub fn drawEllipseLines(centerX: i32, centerY: i32, radiusH: f32, radiusV: f32, color: Color) void {
+    cdef.DrawEllipseLines(@as(c_int, centerX), @as(c_int, centerY), radiusH, radiusV, color);
+}
+
+pub fn drawRing(center: Vector2, innerRadius: f32, outerRadius: f32, startAngle: f32, endAngle: f32, segments: i32, color: Color) void {
+    cdef.DrawRing(center, innerRadius, outerRadius, startAngle, endAngle, @as(c_int, segments), color);
+}
+
+pub fn drawRingLines(center: Vector2, innerRadius: f32, outerRadius: f32, startAngle: f32, endAngle: f32, segments: i32, color: Color) void {
+    cdef.DrawRingLines(center, innerRadius, outerRadius, startAngle, endAngle, @as(c_int, segments), color);
+}
+
+pub fn drawRectangle(posX: i32, posY: i32, width: i32, height: i32, color: Color) void {
+    cdef.DrawRectangle(@as(c_int, posX), @as(c_int, posY), @as(c_int, width), @as(c_int, height), color);
+}
+
+pub fn drawRectangleV(position: Vector2, size: Vector2, color: Color) void {
+    cdef.DrawRectangleV(position, size, color);
+}
+
+pub fn drawRectangleRec(rec: Rectangle, color: Color) void {
+    cdef.DrawRectangleRec(rec, color);
+}
+
+pub fn drawRectanglePro(rec: Rectangle, origin: Vector2, rotation: f32, color: Color) void {
+    cdef.DrawRectanglePro(rec, origin, rotation, color);
+}
+
+pub fn drawRectangleGradientV(posX: i32, posY: i32, width: i32, height: i32, color1: Color, color2: Color) void {
+    cdef.DrawRectangleGradientV(@as(c_int, posX), @as(c_int, posY), @as(c_int, width), @as(c_int, height), color1, color2);
+}
+
+pub fn drawRectangleGradientH(posX: i32, posY: i32, width: i32, height: i32, color1: Color, color2: Color) void {
+    cdef.DrawRectangleGradientH(@as(c_int, posX), @as(c_int, posY), @as(c_int, width), @as(c_int, height), color1, color2);
+}
+
+pub fn drawRectangleGradientEx(rec: Rectangle, col1: Color, col2: Color, col3: Color, col4: Color) void {
+    cdef.DrawRectangleGradientEx(rec, col1, col2, col3, col4);
+}
+
+pub fn drawRectangleLines(posX: i32, posY: i32, width: i32, height: i32, color: Color) void {
+    cdef.DrawRectangleLines(@as(c_int, posX), @as(c_int, posY), @as(c_int, width), @as(c_int, height), color);
+}
+
+pub fn drawRectangleLinesEx(rec: Rectangle, lineThick: f32, color: Color) void {
+    cdef.DrawRectangleLinesEx(rec, lineThick, color);
+}
+
+pub fn drawRectangleRounded(rec: Rectangle, roundness: f32, segments: i32, color: Color) void {
+    cdef.DrawRectangleRounded(rec, roundness, @as(c_int, segments), color);
+}
+
+pub fn drawRectangleRoundedLines(rec: Rectangle, roundness: f32, segments: i32, lineThick: f32, color: Color) void {
+    cdef.DrawRectangleRoundedLines(rec, roundness, @as(c_int, segments), lineThick, color);
+}
+
+pub fn drawTriangle(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) void {
+    cdef.DrawTriangle(v1, v2, v3, color);
+}
+
+pub fn drawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) void {
+    cdef.DrawTriangleLines(v1, v2, v3, color);
+}
+
+pub fn drawTriangleFan(points: []Vector2, pointCount: i32, color: Color) void {
+    cdef.DrawTriangleFan(@ptrCast([*c]Vector2, points), @as(c_int, pointCount), color);
+}
+
+pub fn drawTriangleStrip(points: []Vector2, pointCount: i32, color: Color) void {
+    cdef.DrawTriangleStrip(@ptrCast([*c]Vector2, points), @as(c_int, pointCount), color);
+}
+
+pub fn drawPoly(center: Vector2, sides: i32, radius: f32, rotation: f32, color: Color) void {
+    cdef.DrawPoly(center, @as(c_int, sides), radius, rotation, color);
+}
+
+pub fn drawPolyLines(center: Vector2, sides: i32, radius: f32, rotation: f32, color: Color) void {
+    cdef.DrawPolyLines(center, @as(c_int, sides), radius, rotation, color);
+}
+
+pub fn drawPolyLinesEx(center: Vector2, sides: i32, radius: f32, rotation: f32, lineThick: f32, color: Color) void {
+    cdef.DrawPolyLinesEx(center, @as(c_int, sides), radius, rotation, lineThick, color);
+}
+
+pub fn checkCollisionRecs(rec1: Rectangle, rec2: Rectangle) bool {
+    return cdef.CheckCollisionRecs(rec1, rec2);
+}
+
+pub fn checkCollisionCircles(center1: Vector2, radius1: f32, center2: Vector2, radius2: f32) bool {
+    return cdef.CheckCollisionCircles(center1, radius1, center2, radius2);
+}
+
+pub fn checkCollisionCircleRec(center: Vector2, radius: f32, rec: Rectangle) bool {
+    return cdef.CheckCollisionCircleRec(center, radius, rec);
+}
+
+pub fn checkCollisionPointRec(point: Vector2, rec: Rectangle) bool {
+    return cdef.CheckCollisionPointRec(point, rec);
+}
+
+pub fn checkCollisionPointCircle(point: Vector2, center: Vector2, radius: f32) bool {
+    return cdef.CheckCollisionPointCircle(point, center, radius);
+}
+
+pub fn checkCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2) bool {
+    return cdef.CheckCollisionPointTriangle(point, p1, p2, p3);
+}
+
+pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2, pointCount: i32) bool {
+    return cdef.CheckCollisionPointPoly(point, @ptrCast([*c]Vector2, points), @as(c_int, pointCount));
+}
+
+pub fn checkCollisionLines(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: *Vector2) bool {
+    return cdef.CheckCollisionLines(startPos1, endPos1, startPos2, endPos2, @ptrCast([*c]Vector2, collisionPoint));
+}
+
+pub fn checkCollisionPointLine(point: Vector2, p1: Vector2, p2: Vector2, threshold: i32) bool {
+    return cdef.CheckCollisionPointLine(point, p1, p2, @as(c_int, threshold));
+}
+
+pub fn getCollisionRec(rec1: Rectangle, rec2: Rectangle) Rectangle {
+    return cdef.GetCollisionRec(rec1, rec2);
+}
+
+pub fn loadImage(fileName: []const u8) Image {
+    return cdef.LoadImage(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn loadImageRaw(fileName: []const u8, width: i32, height: i32, format: i32, headerSize: i32) Image {
+    return cdef.LoadImageRaw(@ptrCast([*c]const u8, fileName), @as(c_int, width), @as(c_int, height), @as(c_int, format), @as(c_int, headerSize));
+}
+
+pub fn loadImageAnim(fileName: []const u8, frames: []i32) Image {
+    return cdef.LoadImageAnim(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_int, frames));
+}
+
+pub fn loadImageFromMemory(fileType: []const u8, fileData: []const u8, dataSize: i32) Image {
+    return cdef.LoadImageFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @as(c_int, dataSize));
+}
+
+pub fn loadImageFromTexture(texture: Texture2D) Image {
+    return cdef.LoadImageFromTexture(texture);
+}
+
+pub fn loadImageFromScreen() Image {
+    return cdef.LoadImageFromScreen();
+}
+
+pub fn unloadImage(image: Image) void {
+    cdef.UnloadImage(image);
+}
+
+pub fn exportImage(image: Image, fileName: []const u8) bool {
+    return cdef.ExportImage(image, @ptrCast([*c]const u8, fileName));
+}
+
+pub fn exportImageAsCode(image: Image, fileName: []const u8) bool {
+    return cdef.ExportImageAsCode(image, @ptrCast([*c]const u8, fileName));
+}
+
+pub fn genImageColor(width: i32, height: i32, color: Color) Image {
+    return cdef.GenImageColor(@as(c_int, width), @as(c_int, height), color);
+}
+
+pub fn genImageGradientV(width: i32, height: i32, top: Color, bottom: Color) Image {
+    return cdef.GenImageGradientV(@as(c_int, width), @as(c_int, height), top, bottom);
+}
+
+pub fn genImageGradientH(width: i32, height: i32, left: Color, right: Color) Image {
+    return cdef.GenImageGradientH(@as(c_int, width), @as(c_int, height), left, right);
+}
+
+pub fn genImageGradientRadial(width: i32, height: i32, density: f32, inner: Color, outer: Color) Image {
+    return cdef.GenImageGradientRadial(@as(c_int, width), @as(c_int, height), density, inner, outer);
+}
+
+pub fn genImageChecked(width: i32, height: i32, checksX: i32, checksY: i32, col1: Color, col2: Color) Image {
+    return cdef.GenImageChecked(@as(c_int, width), @as(c_int, height), @as(c_int, checksX), @as(c_int, checksY), col1, col2);
+}
+
+pub fn genImageWhiteNoise(width: i32, height: i32, factor: f32) Image {
+    return cdef.GenImageWhiteNoise(@as(c_int, width), @as(c_int, height), factor);
+}
+
+pub fn genImagePerlinNoise(width: i32, height: i32, offsetX: i32, offsetY: i32, scale: f32) Image {
+    return cdef.GenImagePerlinNoise(@as(c_int, width), @as(c_int, height), @as(c_int, offsetX), @as(c_int, offsetY), scale);
+}
+
+pub fn genImageCellular(width: i32, height: i32, tileSize: i32) Image {
+    return cdef.GenImageCellular(@as(c_int, width), @as(c_int, height), @as(c_int, tileSize));
+}
+
+pub fn genImageText(width: i32, height: i32, text: []const u8) Image {
+    return cdef.GenImageText(@as(c_int, width), @as(c_int, height), @ptrCast([*c]const u8, text));
+}
+
+pub fn imageCopy(image: Image) Image {
+    return cdef.ImageCopy(image);
+}
+
+pub fn imageFromImage(image: Image, rec: Rectangle) Image {
+    return cdef.ImageFromImage(image, rec);
+}
+
+pub fn imageText(text: []const u8, fontSize: i32, color: Color) Image {
+    return cdef.ImageText(@ptrCast([*c]const u8, text), @as(c_int, fontSize), color);
+}
+
+pub fn imageTextEx(font: Font, text: []const u8, fontSize: f32, spacing: f32, tint: Color) Image {
+    return cdef.ImageTextEx(font, @ptrCast([*c]const u8, text), fontSize, spacing, tint);
+}
+
+pub fn imageFormat(image: *Image, newFormat: i32) void {
+    cdef.ImageFormat(@ptrCast([*c]Image, image), @as(c_int, newFormat));
+}
+
+pub fn imageToPOT(image: *Image, fill: Color) void {
+    cdef.ImageToPOT(@ptrCast([*c]Image, image), fill);
+}
+
+pub fn imageCrop(image: *Image, crop: Rectangle) void {
+    cdef.ImageCrop(@ptrCast([*c]Image, image), crop);
+}
+
+pub fn imageAlphaCrop(image: *Image, threshold: f32) void {
+    cdef.ImageAlphaCrop(@ptrCast([*c]Image, image), threshold);
+}
+
+pub fn imageAlphaClear(image: *Image, color: Color, threshold: f32) void {
+    cdef.ImageAlphaClear(@ptrCast([*c]Image, image), color, threshold);
+}
+
+pub fn imageAlphaMask(image: *Image, alphaMask: Image) void {
+    cdef.ImageAlphaMask(@ptrCast([*c]Image, image), alphaMask);
+}
+
+pub fn imageAlphaPremultiply(image: *Image) void {
+    cdef.ImageAlphaPremultiply(@ptrCast([*c]Image, image));
+}
+
+pub fn imageBlurGaussian(image: *Image, blurSize: i32) void {
+    cdef.ImageBlurGaussian(@ptrCast([*c]Image, image), @as(c_int, blurSize));
+}
+
+pub fn imageResize(image: *Image, newWidth: i32, newHeight: i32) void {
+    cdef.ImageResize(@ptrCast([*c]Image, image), @as(c_int, newWidth), @as(c_int, newHeight));
+}
+
+pub fn imageResizeNN(image: *Image, newWidth: i32, newHeight: i32) void {
+    cdef.ImageResizeNN(@ptrCast([*c]Image, image), @as(c_int, newWidth), @as(c_int, newHeight));
+}
+
+pub fn imageResizeCanvas(image: *Image, newWidth: i32, newHeight: i32, offsetX: i32, offsetY: i32, fill: Color) void {
+    cdef.ImageResizeCanvas(@ptrCast([*c]Image, image), @as(c_int, newWidth), @as(c_int, newHeight), @as(c_int, offsetX), @as(c_int, offsetY), fill);
+}
+
+pub fn imageMipmaps(image: *Image) void {
+    cdef.ImageMipmaps(@ptrCast([*c]Image, image));
+}
+
+pub fn imageDither(image: *Image, rBpp: i32, gBpp: i32, bBpp: i32, aBpp: i32) void {
+    cdef.ImageDither(@ptrCast([*c]Image, image), @as(c_int, rBpp), @as(c_int, gBpp), @as(c_int, bBpp), @as(c_int, aBpp));
+}
+
+pub fn imageFlipVertical(image: *Image) void {
+    cdef.ImageFlipVertical(@ptrCast([*c]Image, image));
+}
+
+pub fn imageFlipHorizontal(image: *Image) void {
+    cdef.ImageFlipHorizontal(@ptrCast([*c]Image, image));
+}
+
+pub fn imageRotateCW(image: *Image) void {
+    cdef.ImageRotateCW(@ptrCast([*c]Image, image));
+}
+
+pub fn imageRotateCCW(image: *Image) void {
+    cdef.ImageRotateCCW(@ptrCast([*c]Image, image));
+}
+
+pub fn imageColorTint(image: *Image, color: Color) void {
+    cdef.ImageColorTint(@ptrCast([*c]Image, image), color);
+}
+
+pub fn imageColorInvert(image: *Image) void {
+    cdef.ImageColorInvert(@ptrCast([*c]Image, image));
+}
+
+pub fn imageColorGrayscale(image: *Image) void {
+    cdef.ImageColorGrayscale(@ptrCast([*c]Image, image));
+}
+
+pub fn imageColorContrast(image: *Image, contrast: f32) void {
+    cdef.ImageColorContrast(@ptrCast([*c]Image, image), contrast);
+}
+
+pub fn imageColorBrightness(image: *Image, brightness: i32) void {
+    cdef.ImageColorBrightness(@ptrCast([*c]Image, image), @as(c_int, brightness));
+}
+
+pub fn imageColorReplace(image: *Image, color: Color, replace: Color) void {
+    cdef.ImageColorReplace(@ptrCast([*c]Image, image), color, replace);
+}
+
+pub fn loadImageColors(image: Image) [*c]Color {
+    return cdef.LoadImageColors(image);
+}
+
+pub fn loadImagePalette(image: Image, maxPaletteSize: i32, colorCount: *i32) [*c]Color {
+    return cdef.LoadImagePalette(image, @as(c_int, maxPaletteSize), @ptrCast([*c]c_int, colorCount));
+}
+
+pub fn unloadImageColors(colors: []Color) void {
+    cdef.UnloadImageColors(@ptrCast([*c]Color, colors));
+}
+
+pub fn unloadImagePalette(colors: []Color) void {
+    cdef.UnloadImagePalette(@ptrCast([*c]Color, colors));
+}
+
+pub fn getImageAlphaBorder(image: Image, threshold: f32) Rectangle {
+    return cdef.GetImageAlphaBorder(image, threshold);
+}
+
+pub fn getImageColor(image: Image, x: i32, y: i32) Color {
+    return cdef.GetImageColor(image, @as(c_int, x), @as(c_int, y));
+}
+
+pub fn imageClearBackground(dst: *Image, color: Color) void {
+    cdef.ImageClearBackground(@ptrCast([*c]Image, dst), color);
+}
+
+pub fn imageDrawPixel(dst: *Image, posX: i32, posY: i32, color: Color) void {
+    cdef.ImageDrawPixel(@ptrCast([*c]Image, dst), @as(c_int, posX), @as(c_int, posY), color);
+}
+
+pub fn imageDrawPixelV(dst: *Image, position: Vector2, color: Color) void {
+    cdef.ImageDrawPixelV(@ptrCast([*c]Image, dst), position, color);
+}
+
+pub fn imageDrawLine(dst: *Image, startPosX: i32, startPosY: i32, endPosX: i32, endPosY: i32, color: Color) void {
+    cdef.ImageDrawLine(@ptrCast([*c]Image, dst), @as(c_int, startPosX), @as(c_int, startPosY), @as(c_int, endPosX), @as(c_int, endPosY), color);
+}
+
+pub fn imageDrawLineV(dst: *Image, start: Vector2, end: Vector2, color: Color) void {
+    cdef.ImageDrawLineV(@ptrCast([*c]Image, dst), start, end, color);
+}
+
+pub fn imageDrawCircle(dst: *Image, centerX: i32, centerY: i32, radius: i32, color: Color) void {
+    cdef.ImageDrawCircle(@ptrCast([*c]Image, dst), @as(c_int, centerX), @as(c_int, centerY), @as(c_int, radius), color);
+}
+
+pub fn imageDrawCircleV(dst: *Image, center: Vector2, radius: i32, color: Color) void {
+    cdef.ImageDrawCircleV(@ptrCast([*c]Image, dst), center, @as(c_int, radius), color);
+}
+
+pub fn imageDrawCircleLines(dst: *Image, centerX: i32, centerY: i32, radius: i32, color: Color) void {
+    cdef.ImageDrawCircleLines(@ptrCast([*c]Image, dst), @as(c_int, centerX), @as(c_int, centerY), @as(c_int, radius), color);
+}
+
+pub fn imageDrawCircleLinesV(dst: *Image, center: Vector2, radius: i32, color: Color) void {
+    cdef.ImageDrawCircleLinesV(@ptrCast([*c]Image, dst), center, @as(c_int, radius), color);
+}
+
+pub fn imageDrawRectangle(dst: *Image, posX: i32, posY: i32, width: i32, height: i32, color: Color) void {
+    cdef.ImageDrawRectangle(@ptrCast([*c]Image, dst), @as(c_int, posX), @as(c_int, posY), @as(c_int, width), @as(c_int, height), color);
+}
+
+pub fn imageDrawRectangleV(dst: *Image, position: Vector2, size: Vector2, color: Color) void {
+    cdef.ImageDrawRectangleV(@ptrCast([*c]Image, dst), position, size, color);
+}
+
+pub fn imageDrawRectangleRec(dst: *Image, rec: Rectangle, color: Color) void {
+    cdef.ImageDrawRectangleRec(@ptrCast([*c]Image, dst), rec, color);
+}
+
+pub fn imageDrawRectangleLines(dst: *Image, rec: Rectangle, thick: i32, color: Color) void {
+    cdef.ImageDrawRectangleLines(@ptrCast([*c]Image, dst), rec, @as(c_int, thick), color);
+}
+
+pub fn imageDraw(dst: *Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, tint: Color) void {
+    cdef.ImageDraw(@ptrCast([*c]Image, dst), src, srcRec, dstRec, tint);
+}
+
+pub fn imageDrawText(dst: *Image, text: []const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
+    cdef.ImageDrawText(@ptrCast([*c]Image, dst), @ptrCast([*c]const u8, text), @as(c_int, posX), @as(c_int, posY), @as(c_int, fontSize), color);
+}
+
+pub fn imageDrawTextEx(dst: *Image, font: Font, text: []const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
+    cdef.ImageDrawTextEx(@ptrCast([*c]Image, dst), font, @ptrCast([*c]const u8, text), position, fontSize, spacing, tint);
+}
+
+pub fn loadTexture(fileName: []const u8) Texture2D {
+    return cdef.LoadTexture(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn loadTextureFromImage(image: Image) Texture2D {
+    return cdef.LoadTextureFromImage(image);
+}
+
+pub fn loadTextureCubemap(image: Image, layout: i32) TextureCubemap {
+    return cdef.LoadTextureCubemap(image, @as(c_int, layout));
+}
+
+pub fn loadRenderTexture(width: i32, height: i32) RenderTexture2D {
+    return cdef.LoadRenderTexture(@as(c_int, width), @as(c_int, height));
+}
+
+pub fn unloadTexture(texture: Texture2D) void {
+    cdef.UnloadTexture(texture);
+}
+
+pub fn unloadRenderTexture(target: RenderTexture2D) void {
+    cdef.UnloadRenderTexture(target);
+}
+
+pub fn updateTexture(texture: Texture2D, pixels: *const anyopaque) void {
+    cdef.UpdateTexture(texture, pixels);
+}
+
+pub fn updateTextureRec(texture: Texture2D, rec: Rectangle, pixels: *const anyopaque) void {
+    cdef.UpdateTextureRec(texture, rec, pixels);
+}
+
+pub fn genTextureMipmaps(texture: *Texture2D) void {
+    cdef.GenTextureMipmaps(@ptrCast([*c]Texture2D, texture));
+}
+
+pub fn setTextureFilter(texture: Texture2D, filter: i32) void {
+    cdef.SetTextureFilter(texture, @as(c_int, filter));
+}
+
+pub fn setTextureWrap(texture: Texture2D, wrap: i32) void {
+    cdef.SetTextureWrap(texture, @as(c_int, wrap));
+}
+
+pub fn drawTexture(texture: Texture2D, posX: i32, posY: i32, tint: Color) void {
+    cdef.DrawTexture(texture, @as(c_int, posX), @as(c_int, posY), tint);
+}
+
+pub fn drawTextureV(texture: Texture2D, position: Vector2, tint: Color) void {
+    cdef.DrawTextureV(texture, position, tint);
+}
+
+pub fn drawTextureEx(texture: Texture2D, position: Vector2, rotation: f32, scale: f32, tint: Color) void {
+    cdef.DrawTextureEx(texture, position, rotation, scale, tint);
+}
+
+pub fn drawTextureRec(texture: Texture2D, source: Rectangle, position: Vector2, tint: Color) void {
+    cdef.DrawTextureRec(texture, source, position, tint);
+}
+
+pub fn drawTexturePro(texture: Texture2D, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
+    cdef.DrawTexturePro(texture, source, dest, origin, rotation, tint);
+}
+
+pub fn drawTextureNPatch(texture: Texture2D, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
+    cdef.DrawTextureNPatch(texture, nPatchInfo, dest, origin, rotation, tint);
+}
+
+pub fn fade(color: Color, alpha: f32) Color {
+    return cdef.Fade(color, alpha);
+}
+
+pub fn colorToInt(color: Color) c_int {
+    return cdef.ColorToInt(color);
+}
+
+pub fn colorNormalize(color: Color) Vector4 {
+    return cdef.ColorNormalize(color);
+}
+
+pub fn colorFromNormalized(normalized: Vector4) Color {
+    return cdef.ColorFromNormalized(normalized);
+}
+
+pub fn colorToHSV(color: Color) Vector3 {
+    return cdef.ColorToHSV(color);
+}
+
+pub fn colorFromHSV(hue: f32, saturation: f32, value: f32) Color {
+    return cdef.ColorFromHSV(hue, saturation, value);
+}
+
+pub fn colorTint(color: Color, tint: Color) Color {
+    return cdef.ColorTint(color, tint);
+}
+
+pub fn colorBrightness(color: Color, factor: f32) Color {
+    return cdef.ColorBrightness(color, factor);
+}
+
+pub fn colorContrast(color: Color, contrast: f32) Color {
+    return cdef.ColorContrast(color, contrast);
+}
+
+pub fn colorAlpha(color: Color, alpha: f32) Color {
+    return cdef.ColorAlpha(color, alpha);
+}
+
+pub fn colorAlphaBlend(dst: Color, src: Color, tint: Color) Color {
+    return cdef.ColorAlphaBlend(dst, src, tint);
+}
+
+pub fn getColor(hexValue: u32) Color {
+    return cdef.GetColor(@as(c_uint, hexValue));
+}
+
+pub fn getPixelColor(srcPtr: *anyopaque, format: i32) Color {
+    return cdef.GetPixelColor(srcPtr, @as(c_int, format));
+}
+
+pub fn setPixelColor(dstPtr: *anyopaque, color: Color, format: i32) void {
+    cdef.SetPixelColor(dstPtr, color, @as(c_int, format));
+}
+
+pub fn getPixelDataSize(width: i32, height: i32, format: i32) c_int {
+    return cdef.GetPixelDataSize(@as(c_int, width), @as(c_int, height), @as(c_int, format));
+}
+
+pub fn getFontDefault() Font {
+    return cdef.GetFontDefault();
+}
+
+pub fn loadFont(fileName: []const u8) Font {
+    return cdef.LoadFont(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn loadFontEx(fileName: []const u8, fontSize: i32, fontChars: []i32, glyphCount: i32) Font {
+    return cdef.LoadFontEx(@ptrCast([*c]const u8, fileName), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, glyphCount));
+}
+
+pub fn loadFontFromImage(image: Image, key: Color, firstChar: i32) Font {
+    return cdef.LoadFontFromImage(image, key, @as(c_int, firstChar));
+}
+
+pub fn loadFontFromMemory(fileType: []const u8, fileData: []const u8, dataSize: i32, fontSize: i32, fontChars: []i32, glyphCount: i32) Font {
+    return cdef.LoadFontFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @as(c_int, dataSize), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, glyphCount));
+}
+
+pub fn loadFontData(fileData: []const u8, dataSize: i32, fontSize: i32, fontChars: []i32, glyphCount: i32, ty: i32) [*c]GlyphInfo {
+    return cdef.LoadFontData(@ptrCast([*c]const u8, fileData), @as(c_int, dataSize), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, glyphCount), @as(c_int, ty));
+}
+
+pub fn genImageFontAtlas(chars: []const GlyphInfo, recs: [][]Rectangle, glyphCount: i32, fontSize: i32, padding: i32, packMethod: i32) Image {
+    return cdef.GenImageFontAtlas(@ptrCast([*c]const GlyphInfo, chars), @ptrCast([*c][*c]Rectangle, recs), @as(c_int, glyphCount), @as(c_int, fontSize), @as(c_int, padding), @as(c_int, packMethod));
+}
+
+pub fn unloadFontData(chars: []GlyphInfo, glyphCount: i32) void {
+    cdef.UnloadFontData(@ptrCast([*c]GlyphInfo, chars), @as(c_int, glyphCount));
+}
+
+pub fn unloadFont(font: Font) void {
+    cdef.UnloadFont(font);
+}
+
+pub fn exportFontAsCode(font: Font, fileName: []const u8) bool {
+    return cdef.ExportFontAsCode(font, @ptrCast([*c]const u8, fileName));
+}
+
+pub fn drawFPS(posX: i32, posY: i32) void {
+    cdef.DrawFPS(@as(c_int, posX), @as(c_int, posY));
+}
+
+pub fn drawText(text: []const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
+    cdef.DrawText(@ptrCast([*c]const u8, text), @as(c_int, posX), @as(c_int, posY), @as(c_int, fontSize), color);
+}
+
+pub fn drawTextEx(font: Font, text: []const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
+    cdef.DrawTextEx(font, @ptrCast([*c]const u8, text), position, fontSize, spacing, tint);
+}
+
+pub fn drawTextPro(font: Font, text: []const u8, position: Vector2, origin: Vector2, rotation: f32, fontSize: f32, spacing: f32, tint: Color) void {
+    cdef.DrawTextPro(font, @ptrCast([*c]const u8, text), position, origin, rotation, fontSize, spacing, tint);
+}
+
+pub fn drawTextCodepoint(font: Font, codepoint: i32, position: Vector2, fontSize: f32, tint: Color) void {
+    cdef.DrawTextCodepoint(font, @as(c_int, codepoint), position, fontSize, tint);
+}
+
+pub fn drawTextCodepoints(font: Font, codepoints: []const c_int, count: i32, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
+    cdef.DrawTextCodepoints(font, @ptrCast([*c]const c_int, codepoints), @as(c_int, count), position, fontSize, spacing, tint);
+}
+
+pub fn measureText(text: []const u8, fontSize: i32) c_int {
+    return cdef.MeasureText(@ptrCast([*c]const u8, text), @as(c_int, fontSize));
+}
+
+pub fn measureTextEx(font: Font, text: []const u8, fontSize: f32, spacing: f32) Vector2 {
+    return cdef.MeasureTextEx(font, @ptrCast([*c]const u8, text), fontSize, spacing);
+}
+
+pub fn getGlyphIndex(font: Font, codepoint: i32) c_int {
+    return cdef.GetGlyphIndex(font, @as(c_int, codepoint));
+}
+
+pub fn getGlyphInfo(font: Font, codepoint: i32) GlyphInfo {
+    return cdef.GetGlyphInfo(font, @as(c_int, codepoint));
+}
+
+pub fn getGlyphAtlasRec(font: Font, codepoint: i32) Rectangle {
+    return cdef.GetGlyphAtlasRec(font, @as(c_int, codepoint));
+}
+
+pub fn loadUTF8(codepoints: []const c_int, length: i32) [*c]u8 {
+    return cdef.LoadUTF8(@ptrCast([*c]const c_int, codepoints), @as(c_int, length));
+}
+
+pub fn unloadUTF8(text: []u8) void {
+    cdef.UnloadUTF8(@ptrCast([*c]u8, text));
+}
+
+pub fn loadCodepoints(text: []const u8, count: *i32) [*c]c_int {
+    return cdef.LoadCodepoints(@ptrCast([*c]const u8, text), @ptrCast([*c]c_int, count));
+}
+
+pub fn unloadCodepoints(codepoints: []i32) void {
+    cdef.UnloadCodepoints(@ptrCast([*c]c_int, codepoints));
+}
+
+pub fn getCodepointCount(text: []const u8) c_int {
+    return cdef.GetCodepointCount(@ptrCast([*c]const u8, text));
+}
+
+pub fn getCodepoint(text: []const u8, codepointSize: *i32) c_int {
+    return cdef.GetCodepoint(@ptrCast([*c]const u8, text), @ptrCast([*c]c_int, codepointSize));
+}
+
+pub fn getCodepointNext(text: []const u8, codepointSize: *i32) c_int {
+    return cdef.GetCodepointNext(@ptrCast([*c]const u8, text), @ptrCast([*c]c_int, codepointSize));
+}
+
+pub fn getCodepointPrevious(text: []const u8, codepointSize: *i32) c_int {
+    return cdef.GetCodepointPrevious(@ptrCast([*c]const u8, text), @ptrCast([*c]c_int, codepointSize));
+}
+
+pub fn codepointToUTF8(codepoint: i32, utf8Size: *i32) [*c]const u8 {
+    return cdef.CodepointToUTF8(@as(c_int, codepoint), @ptrCast([*c]c_int, utf8Size));
+}
+
+pub fn textCopy(dst: *u8, src: []const u8) c_int {
+    return cdef.TextCopy(@ptrCast([*c]u8, dst), @ptrCast([*c]const u8, src));
+}
+
+pub fn textIsEqual(text1: []const u8, text2: []const u8) bool {
+    return cdef.TextIsEqual(@ptrCast([*c]const u8, text1), @ptrCast([*c]const u8, text2));
+}
+
+pub fn textLength(text: []const u8) c_uint {
+    return cdef.TextLength(@ptrCast([*c]const u8, text));
+}
+
+pub fn textSubtext(text: []const u8, position: i32, length: i32) [*c]const u8 {
+    return cdef.TextSubtext(@ptrCast([*c]const u8, text), @as(c_int, position), @as(c_int, length));
+}
+
+pub fn textReplace(text: []u8, replace: []const u8, by: []const u8) [*c]u8 {
+    return cdef.TextReplace(@ptrCast([*c]u8, text), @ptrCast([*c]const u8, replace), @ptrCast([*c]const u8, by));
+}
+
+pub fn textInsert(text: []const u8, insert: []const u8, position: i32) [*c]u8 {
+    return cdef.TextInsert(@ptrCast([*c]const u8, text), @ptrCast([*c]const u8, insert), @as(c_int, position));
+}
+
+pub fn textJoin(textList: [][]const u8, count: i32, delimiter: []const u8) [*c]const u8 {
+    return cdef.TextJoin(@ptrCast([*c][*c]const u8, textList), @as(c_int, count), @ptrCast([*c]const u8, delimiter));
+}
+
+pub fn textSplit(text: []const u8, delimiter: u8, count: *i32) [*c][*c]const u8 {
+    return cdef.TextSplit(@ptrCast([*c]const u8, text), delimiter, @ptrCast([*c]c_int, count));
+}
+
+pub fn textAppend(text: []u8, append: []const u8, position: *i32) void {
+    cdef.TextAppend(@ptrCast([*c]u8, text), @ptrCast([*c]const u8, append), @ptrCast([*c]c_int, position));
+}
+
+pub fn textFindIndex(text: []const u8, find: []const u8) c_int {
+    return cdef.TextFindIndex(@ptrCast([*c]const u8, text), @ptrCast([*c]const u8, find));
+}
+
+pub fn textToUpper(text: []const u8) [*c]const u8 {
+    return cdef.TextToUpper(@ptrCast([*c]const u8, text));
+}
+
+pub fn textToLower(text: []const u8) [*c]const u8 {
+    return cdef.TextToLower(@ptrCast([*c]const u8, text));
+}
+
+pub fn textToPascal(text: []const u8) [*c]const u8 {
+    return cdef.TextToPascal(@ptrCast([*c]const u8, text));
+}
+
+pub fn textToInteger(text: []const u8) c_int {
+    return cdef.TextToInteger(@ptrCast([*c]const u8, text));
+}
+
+pub fn drawLine3D(startPos: Vector3, endPos: Vector3, color: Color) void {
+    cdef.DrawLine3D(startPos, endPos, color);
+}
+
+pub fn drawPoint3D(position: Vector3, color: Color) void {
+    cdef.DrawPoint3D(position, color);
+}
+
+pub fn drawCircle3D(center: Vector3, radius: f32, rotationAxis: Vector3, rotationAngle: f32, color: Color) void {
+    cdef.DrawCircle3D(center, radius, rotationAxis, rotationAngle, color);
+}
+
+pub fn drawTriangle3D(v1: Vector3, v2: Vector3, v3: Vector3, color: Color) void {
+    cdef.DrawTriangle3D(v1, v2, v3, color);
+}
+
+pub fn drawTriangleStrip3D(points: []Vector3, pointCount: i32, color: Color) void {
+    cdef.DrawTriangleStrip3D(@ptrCast([*c]Vector3, points), @as(c_int, pointCount), color);
+}
+
+pub fn drawCube(position: Vector3, width: f32, height: f32, length: f32, color: Color) void {
+    cdef.DrawCube(position, width, height, length, color);
+}
+
+pub fn drawCubeV(position: Vector3, size: Vector3, color: Color) void {
+    cdef.DrawCubeV(position, size, color);
+}
+
+pub fn drawCubeWires(position: Vector3, width: f32, height: f32, length: f32, color: Color) void {
+    cdef.DrawCubeWires(position, width, height, length, color);
+}
+
+pub fn drawCubeWiresV(position: Vector3, size: Vector3, color: Color) void {
+    cdef.DrawCubeWiresV(position, size, color);
+}
+
+pub fn drawSphere(centerPos: Vector3, radius: f32, color: Color) void {
+    cdef.DrawSphere(centerPos, radius, color);
+}
+
+pub fn drawSphereEx(centerPos: Vector3, radius: f32, rings: i32, slices: i32, color: Color) void {
+    cdef.DrawSphereEx(centerPos, radius, @as(c_int, rings), @as(c_int, slices), color);
+}
+
+pub fn drawSphereWires(centerPos: Vector3, radius: f32, rings: i32, slices: i32, color: Color) void {
+    cdef.DrawSphereWires(centerPos, radius, @as(c_int, rings), @as(c_int, slices), color);
+}
+
+pub fn drawCylinder(position: Vector3, radiusTop: f32, radiusBottom: f32, height: f32, slices: i32, color: Color) void {
+    cdef.DrawCylinder(position, radiusTop, radiusBottom, height, @as(c_int, slices), color);
+}
+
+pub fn drawCylinderEx(startPos: Vector3, endPos: Vector3, startRadius: f32, endRadius: f32, sides: i32, color: Color) void {
+    cdef.DrawCylinderEx(startPos, endPos, startRadius, endRadius, @as(c_int, sides), color);
+}
+
+pub fn drawCylinderWires(position: Vector3, radiusTop: f32, radiusBottom: f32, height: f32, slices: i32, color: Color) void {
+    cdef.DrawCylinderWires(position, radiusTop, radiusBottom, height, @as(c_int, slices), color);
+}
+
+pub fn drawCylinderWiresEx(startPos: Vector3, endPos: Vector3, startRadius: f32, endRadius: f32, sides: i32, color: Color) void {
+    cdef.DrawCylinderWiresEx(startPos, endPos, startRadius, endRadius, @as(c_int, sides), color);
+}
+
+pub fn drawCapsule(startPos: Vector3, endPos: Vector3, radius: f32, slices: i32, rings: i32, color: Color) void {
+    cdef.DrawCapsule(startPos, endPos, radius, @as(c_int, slices), @as(c_int, rings), color);
+}
+
+pub fn drawCapsuleWires(startPos: Vector3, endPos: Vector3, radius: f32, slices: i32, rings: i32, color: Color) void {
+    cdef.DrawCapsuleWires(startPos, endPos, radius, @as(c_int, slices), @as(c_int, rings), color);
+}
+
+pub fn drawPlane(centerPos: Vector3, size: Vector2, color: Color) void {
+    cdef.DrawPlane(centerPos, size, color);
+}
+
+pub fn drawRay(ray: Ray, color: Color) void {
+    cdef.DrawRay(ray, color);
+}
+
+pub fn drawGrid(slices: i32, spacing: f32) void {
+    cdef.DrawGrid(@as(c_int, slices), spacing);
+}
+
+pub fn loadModel(fileName: []const u8) Model {
+    return cdef.LoadModel(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn loadModelFromMesh(mesh: Mesh) Model {
+    return cdef.LoadModelFromMesh(mesh);
+}
+
+pub fn unloadModel(model: Model) void {
+    cdef.UnloadModel(model);
+}
+
+pub fn unloadModelKeepMeshes(model: Model) void {
+    cdef.UnloadModelKeepMeshes(model);
+}
+
+pub fn getModelBoundingBox(model: Model) BoundingBox {
+    return cdef.GetModelBoundingBox(model);
+}
+
+pub fn drawModel(model: Model, position: Vector3, scale: f32, tint: Color) void {
+    cdef.DrawModel(model, position, scale, tint);
+}
+
+pub fn drawModelEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
+    cdef.DrawModelEx(model, position, rotationAxis, rotationAngle, scale, tint);
+}
+
+pub fn drawModelWires(model: Model, position: Vector3, scale: f32, tint: Color) void {
+    cdef.DrawModelWires(model, position, scale, tint);
+}
+
+pub fn drawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
+    cdef.DrawModelWiresEx(model, position, rotationAxis, rotationAngle, scale, tint);
+}
+
+pub fn drawBoundingBox(box: BoundingBox, color: Color) void {
+    cdef.DrawBoundingBox(box, color);
+}
+
+pub fn drawBillboard(camera: Camera, texture: Texture2D, position: Vector3, size: f32, tint: Color) void {
+    cdef.DrawBillboard(camera, texture, position, size, tint);
+}
+
+pub fn drawBillboardRec(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, size: Vector2, tint: Color) void {
+    cdef.DrawBillboardRec(camera, texture, source, position, size, tint);
+}
+
+pub fn drawBillboardPro(camera: Camera, texture: Texture2D, source: Rectangle, position: Vector3, up: Vector3, size: Vector2, origin: Vector2, rotation: f32, tint: Color) void {
+    cdef.DrawBillboardPro(camera, texture, source, position, up, size, origin, rotation, tint);
+}
+
+pub fn uploadMesh(mesh: *Mesh, dynamic: bool) void {
+    cdef.UploadMesh(@ptrCast([*c]Mesh, mesh), dynamic);
+}
+
+pub fn updateMeshBuffer(mesh: Mesh, index: i32, data: *const anyopaque, dataSize: i32, offset: i32) void {
+    cdef.UpdateMeshBuffer(mesh, @as(c_int, index), data, @as(c_int, dataSize), @as(c_int, offset));
+}
+
+pub fn unloadMesh(mesh: Mesh) void {
+    cdef.UnloadMesh(mesh);
+}
+
+pub fn drawMesh(mesh: Mesh, material: Material, transform: Matrix) void {
+    cdef.DrawMesh(mesh, material, transform);
+}
+
+pub fn drawMeshInstanced(mesh: Mesh, material: Material, transforms: []const Matrix, instances: i32) void {
+    cdef.DrawMeshInstanced(mesh, material, @ptrCast([*c]const Matrix, transforms), @as(c_int, instances));
+}
+
+pub fn exportMesh(mesh: Mesh, fileName: []const u8) bool {
+    return cdef.ExportMesh(mesh, @ptrCast([*c]const u8, fileName));
+}
+
+pub fn getMeshBoundingBox(mesh: Mesh) BoundingBox {
+    return cdef.GetMeshBoundingBox(mesh);
+}
+
+pub fn genMeshTangents(mesh: *Mesh) void {
+    cdef.GenMeshTangents(@ptrCast([*c]Mesh, mesh));
+}
+
+pub fn genMeshPoly(sides: i32, radius: f32) Mesh {
+    return cdef.GenMeshPoly(@as(c_int, sides), radius);
+}
+
+pub fn genMeshPlane(width: f32, length: f32, resX: i32, resZ: i32) Mesh {
+    return cdef.GenMeshPlane(width, length, @as(c_int, resX), @as(c_int, resZ));
+}
+
+pub fn genMeshCube(width: f32, height: f32, length: f32) Mesh {
+    return cdef.GenMeshCube(width, height, length);
+}
+
+pub fn genMeshSphere(radius: f32, rings: i32, slices: i32) Mesh {
+    return cdef.GenMeshSphere(radius, @as(c_int, rings), @as(c_int, slices));
+}
+
+pub fn genMeshHemiSphere(radius: f32, rings: i32, slices: i32) Mesh {
+    return cdef.GenMeshHemiSphere(radius, @as(c_int, rings), @as(c_int, slices));
+}
+
+pub fn genMeshCylinder(radius: f32, height: f32, slices: i32) Mesh {
+    return cdef.GenMeshCylinder(radius, height, @as(c_int, slices));
+}
+
+pub fn genMeshCone(radius: f32, height: f32, slices: i32) Mesh {
+    return cdef.GenMeshCone(radius, height, @as(c_int, slices));
+}
+
+pub fn genMeshTorus(radius: f32, size: f32, radSeg: i32, sides: i32) Mesh {
+    return cdef.GenMeshTorus(radius, size, @as(c_int, radSeg), @as(c_int, sides));
+}
+
+pub fn genMeshKnot(radius: f32, size: f32, radSeg: i32, sides: i32) Mesh {
+    return cdef.GenMeshKnot(radius, size, @as(c_int, radSeg), @as(c_int, sides));
+}
+
+pub fn genMeshHeightmap(heightmap: Image, size: Vector3) Mesh {
+    return cdef.GenMeshHeightmap(heightmap, size);
+}
+
+pub fn genMeshCubicmap(cubicmap: Image, cubeSize: Vector3) Mesh {
+    return cdef.GenMeshCubicmap(cubicmap, cubeSize);
+}
+
+pub fn loadMaterials(fileName: []const u8, materialCount: *i32) [*c]Material {
+    return cdef.LoadMaterials(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_int, materialCount));
+}
+
+pub fn loadMaterialDefault() Material {
+    return cdef.LoadMaterialDefault();
+}
+
+pub fn unloadMaterial(material: Material) void {
+    cdef.UnloadMaterial(material);
+}
+
+pub fn setMaterialTexture(material: *Material, mapType: i32, texture: Texture2D) void {
+    cdef.SetMaterialTexture(@ptrCast([*c]Material, material), @as(c_int, mapType), texture);
+}
+
+pub fn setModelMeshMaterial(model: *Model, meshId: i32, materialId: i32) void {
+    cdef.SetModelMeshMaterial(@ptrCast([*c]Model, model), @as(c_int, meshId), @as(c_int, materialId));
+}
+
+pub fn loadModelAnimations(fileName: []const u8, animCount: *u32) [*c]ModelAnimation {
+    return cdef.LoadModelAnimations(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_uint, animCount));
+}
+
+pub fn updateModelAnimation(model: Model, anim: ModelAnimation, frame: i32) void {
+    cdef.UpdateModelAnimation(model, anim, @as(c_int, frame));
+}
+
+pub fn unloadModelAnimation(anim: ModelAnimation) void {
+    cdef.UnloadModelAnimation(anim);
+}
+
+pub fn unloadModelAnimations(animations: []ModelAnimation, count: u32) void {
+    cdef.UnloadModelAnimations(@ptrCast([*c]ModelAnimation, animations), @as(c_uint, count));
+}
+
+pub fn isModelAnimationValid(model: Model, anim: ModelAnimation) bool {
+    return cdef.IsModelAnimationValid(model, anim);
+}
+
+pub fn checkCollisionSpheres(center1: Vector3, radius1: f32, center2: Vector3, radius2: f32) bool {
+    return cdef.CheckCollisionSpheres(center1, radius1, center2, radius2);
+}
+
+pub fn checkCollisionBoxes(box1: BoundingBox, box2: BoundingBox) bool {
+    return cdef.CheckCollisionBoxes(box1, box2);
+}
+
+pub fn checkCollisionBoxSphere(box: BoundingBox, center: Vector3, radius: f32) bool {
+    return cdef.CheckCollisionBoxSphere(box, center, radius);
+}
+
+pub fn getRayCollisionSphere(ray: Ray, center: Vector3, radius: f32) RayCollision {
+    return cdef.GetRayCollisionSphere(ray, center, radius);
+}
+
+pub fn getRayCollisionBox(ray: Ray, box: BoundingBox) RayCollision {
+    return cdef.GetRayCollisionBox(ray, box);
+}
+
+pub fn getRayCollisionMesh(ray: Ray, mesh: Mesh, transform: Matrix) RayCollision {
+    return cdef.GetRayCollisionMesh(ray, mesh, transform);
+}
+
+pub fn getRayCollisionTriangle(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3) RayCollision {
+    return cdef.GetRayCollisionTriangle(ray, p1, p2, p3);
+}
+
+pub fn getRayCollisionQuad(ray: Ray, p1: Vector3, p2: Vector3, p3: Vector3, p4: Vector3) RayCollision {
+    return cdef.GetRayCollisionQuad(ray, p1, p2, p3, p4);
+}
+
+pub fn initAudioDevice() void {
+    cdef.InitAudioDevice();
+}
+
+pub fn closeAudioDevice() void {
+    cdef.CloseAudioDevice();
+}
+
+pub fn isAudioDeviceReady() bool {
+    return cdef.IsAudioDeviceReady();
+}
+
+pub fn setMasterVolume(volume: f32) void {
+    cdef.SetMasterVolume(volume);
+}
+
+pub fn loadWave(fileName: []const u8) Wave {
+    return cdef.LoadWave(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn loadWaveFromMemory(fileType: []const u8, fileData: []const u8, dataSize: i32) Wave {
+    return cdef.LoadWaveFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @as(c_int, dataSize));
+}
+
+pub fn loadSound(fileName: []const u8) Sound {
+    return cdef.LoadSound(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn loadSoundFromWave(wave: Wave) Sound {
+    return cdef.LoadSoundFromWave(wave);
+}
+
+pub fn updateSound(sound: Sound, data: *const anyopaque, sampleCount: i32) void {
+    cdef.UpdateSound(sound, data, @as(c_int, sampleCount));
+}
+
+pub fn unloadWave(wave: Wave) void {
+    cdef.UnloadWave(wave);
+}
+
+pub fn unloadSound(sound: Sound) void {
+    cdef.UnloadSound(sound);
+}
+
+pub fn exportWave(wave: Wave, fileName: []const u8) bool {
+    return cdef.ExportWave(wave, @ptrCast([*c]const u8, fileName));
+}
+
+pub fn exportWaveAsCode(wave: Wave, fileName: []const u8) bool {
+    return cdef.ExportWaveAsCode(wave, @ptrCast([*c]const u8, fileName));
+}
+
+pub fn playSound(sound: Sound) void {
+    cdef.PlaySound(sound);
+}
+
+pub fn stopSound(sound: Sound) void {
+    cdef.StopSound(sound);
+}
+
+pub fn pauseSound(sound: Sound) void {
+    cdef.PauseSound(sound);
+}
+
+pub fn resumeSound(sound: Sound) void {
+    cdef.ResumeSound(sound);
+}
+
+pub fn playSoundMulti(sound: Sound) void {
+    cdef.PlaySoundMulti(sound);
+}
+
+pub fn stopSoundMulti() void {
+    cdef.StopSoundMulti();
+}
+
+pub fn getSoundsPlaying() c_int {
+    return cdef.GetSoundsPlaying();
+}
+
+pub fn isSoundPlaying(sound: Sound) bool {
+    return cdef.IsSoundPlaying(sound);
+}
+
+pub fn setSoundVolume(sound: Sound, volume: f32) void {
+    cdef.SetSoundVolume(sound, volume);
+}
+
+pub fn setSoundPitch(sound: Sound, pitch: f32) void {
+    cdef.SetSoundPitch(sound, pitch);
+}
+
+pub fn setSoundPan(sound: Sound, pan: f32) void {
+    cdef.SetSoundPan(sound, pan);
+}
+
+pub fn waveCopy(wave: Wave) Wave {
+    return cdef.WaveCopy(wave);
+}
+
+pub fn waveCrop(wave: *Wave, initSample: i32, finalSample: i32) void {
+    cdef.WaveCrop(@ptrCast([*c]Wave, wave), @as(c_int, initSample), @as(c_int, finalSample));
+}
+
+pub fn waveFormat(wave: *Wave, sampleRate: i32, sampleSize: i32, channels: i32) void {
+    cdef.WaveFormat(@ptrCast([*c]Wave, wave), @as(c_int, sampleRate), @as(c_int, sampleSize), @as(c_int, channels));
+}
+
+pub fn loadWaveSamples(wave: Wave) [*c]f32 {
+    return cdef.LoadWaveSamples(wave);
+}
+
+pub fn unloadWaveSamples(samples: []f32) void {
+    cdef.UnloadWaveSamples(@ptrCast([*c]f32, samples));
+}
+
+pub fn loadMusicStream(fileName: []const u8) Music {
+    return cdef.LoadMusicStream(@ptrCast([*c]const u8, fileName));
+}
+
+pub fn loadMusicStreamFromMemory(fileType: []const u8, data: []const u8, dataSize: i32) Music {
+    return cdef.LoadMusicStreamFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, data), @as(c_int, dataSize));
+}
+
+pub fn unloadMusicStream(music: Music) void {
+    cdef.UnloadMusicStream(music);
+}
+
+pub fn playMusicStream(music: Music) void {
+    cdef.PlayMusicStream(music);
+}
+
+pub fn isMusicStreamPlaying(music: Music) bool {
+    return cdef.IsMusicStreamPlaying(music);
+}
+
+pub fn updateMusicStream(music: Music) void {
+    cdef.UpdateMusicStream(music);
+}
+
+pub fn stopMusicStream(music: Music) void {
+    cdef.StopMusicStream(music);
+}
+
+pub fn pauseMusicStream(music: Music) void {
+    cdef.PauseMusicStream(music);
+}
+
+pub fn resumeMusicStream(music: Music) void {
+    cdef.ResumeMusicStream(music);
+}
+
+pub fn seekMusicStream(music: Music, position: f32) void {
+    cdef.SeekMusicStream(music, position);
+}
+
+pub fn setMusicVolume(music: Music, volume: f32) void {
+    cdef.SetMusicVolume(music, volume);
+}
+
+pub fn setMusicPitch(music: Music, pitch: f32) void {
+    cdef.SetMusicPitch(music, pitch);
+}
+
+pub fn setMusicPan(music: Music, pan: f32) void {
+    cdef.SetMusicPan(music, pan);
+}
+
+pub fn getMusicTimeLength(music: Music) f32 {
+    return cdef.GetMusicTimeLength(music);
+}
+
+pub fn getMusicTimePlayed(music: Music) f32 {
+    return cdef.GetMusicTimePlayed(music);
+}
+
+pub fn loadAudioStream(sampleRate: u32, sampleSize: u32, channels: u32) AudioStream {
+    return cdef.LoadAudioStream(@as(c_uint, sampleRate), @as(c_uint, sampleSize), @as(c_uint, channels));
+}
+
+pub fn unloadAudioStream(stream: AudioStream) void {
+    cdef.UnloadAudioStream(stream);
+}
+
+pub fn updateAudioStream(stream: AudioStream, data: *const anyopaque, frameCount: i32) void {
+    cdef.UpdateAudioStream(stream, data, @as(c_int, frameCount));
+}
+
+pub fn isAudioStreamProcessed(stream: AudioStream) bool {
+    return cdef.IsAudioStreamProcessed(stream);
+}
+
+pub fn playAudioStream(stream: AudioStream) void {
+    cdef.PlayAudioStream(stream);
+}
+
+pub fn pauseAudioStream(stream: AudioStream) void {
+    cdef.PauseAudioStream(stream);
+}
+
+pub fn resumeAudioStream(stream: AudioStream) void {
+    cdef.ResumeAudioStream(stream);
+}
+
+pub fn isAudioStreamPlaying(stream: AudioStream) bool {
+    return cdef.IsAudioStreamPlaying(stream);
+}
+
+pub fn stopAudioStream(stream: AudioStream) void {
+    cdef.StopAudioStream(stream);
+}
+
+pub fn setAudioStreamVolume(stream: AudioStream, volume: f32) void {
+    cdef.SetAudioStreamVolume(stream, volume);
+}
+
+pub fn setAudioStreamPitch(stream: AudioStream, pitch: f32) void {
+    cdef.SetAudioStreamPitch(stream, pitch);
+}
+
+pub fn setAudioStreamPan(stream: AudioStream, pan: f32) void {
+    cdef.SetAudioStreamPan(stream, pan);
+}
+
+pub fn setAudioStreamBufferSizeDefault(size: i32) void {
+    cdef.SetAudioStreamBufferSizeDefault(@as(c_int, size));
+}
+
+pub fn setAudioStreamCallback(stream: AudioStream, callback: AudioCallback) void {
+    cdef.SetAudioStreamCallback(stream, callback);
+}
+
+pub fn attachAudioStreamProcessor(stream: AudioStream, processor: AudioCallback) void {
+    cdef.AttachAudioStreamProcessor(stream, processor);
+}
+
+pub fn detachAudioStreamProcessor(stream: AudioStream, processor: AudioCallback) void {
+    cdef.DetachAudioStreamProcessor(stream, processor);
+}

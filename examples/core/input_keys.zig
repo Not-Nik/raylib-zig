@@ -8,48 +8,48 @@ pub fn main() anyerror!void {
     const screenWidth = 800;
     const screenHeight = 450;
 
-    rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - keyboard input");
+    rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - keyboard input");
 
     var ballPosition = rl.Vector2.init(screenWidth / 2, screenHeight / 2);
 
-    rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+    rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
+    while (!rl.windowShouldClose()) { // Detect window close button or ESC key
 
         // Update
         //----------------------------------------------------------------------------------
-        if (rl.IsKeyDown(rl.KeyboardKey.KEY_RIGHT)) {
+        if (rl.isKeyDown(rl.KeyboardKey.KEY_RIGHT)) {
             ballPosition.x += 2.0;
         }
-        if (rl.IsKeyDown(rl.KeyboardKey.KEY_LEFT)) {
+        if (rl.isKeyDown(rl.KeyboardKey.KEY_LEFT)) {
             ballPosition.x -= 2.0;
         }
-        if (rl.IsKeyDown(rl.KeyboardKey.KEY_UP)) {
+        if (rl.isKeyDown(rl.KeyboardKey.KEY_UP)) {
             ballPosition.y -= 2.0;
         }
-        if (rl.IsKeyDown(rl.KeyboardKey.KEY_DOWN)) {
+        if (rl.isKeyDown(rl.KeyboardKey.KEY_DOWN)) {
             ballPosition.y += 2.0;
         }
         //----------------------------------------------------------------------------------
 
         // Draw
         //----------------------------------------------------------------------------------
-        rl.BeginDrawing();
+        rl.beginDrawing();
 
-        rl.ClearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.RAYWHITE);
 
-        rl.DrawText("move the ball with arrow keys", 10, 10, 20, rl.Color.DARKGRAY);
+        rl.drawText("move the ball with arrow keys", 10, 10, 20, rl.Color.DARKGRAY);
 
-        rl.DrawCircleV(ballPosition, 50, rl.Color.MAROON);
+        rl.drawCircleV(ballPosition, 50, rl.Color.MAROON);
 
-        rl.EndDrawing();
+        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    rl.CloseWindow(); // Close window and OpenGL context
+    rl.closeWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 }

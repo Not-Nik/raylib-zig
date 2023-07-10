@@ -8,48 +8,48 @@ pub fn main() anyerror!void {
     const screenWidth = 800;
     const screenHeight = 450;
 
-    rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - mouse input");
+    rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - mouse input");
 
     var ballPosition = rl.Vector2.init(-100, -100);
     var ballColor = rl.Color.DARKBLUE;
 
-    rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+    rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
+    while (!rl.windowShouldClose()) { // Detect window close button or ESC key
         // Update
         //----------------------------------------------------------------------------------
-        ballPosition = rl.GetMousePosition();
-        ballPosition.x = @intToFloat(f32, rl.GetMouseX());
-        ballPosition.y = @intToFloat(f32, rl.GetMouseY());
+        ballPosition = rl.getMousePosition();
+        ballPosition.x = @intToFloat(f32, rl.getMouseX());
+        ballPosition.y = @intToFloat(f32, rl.getMouseY());
 
-        if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_LEFT)) {
+        if (rl.isMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_LEFT)) {
             ballColor = rl.Color.MAROON;
-        } else if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_MIDDLE)) {
+        } else if (rl.isMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_MIDDLE)) {
             ballColor = rl.Color.LIME;
-        } else if (rl.IsMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_RIGHT)) {
+        } else if (rl.isMouseButtonPressed(rl.MouseButton.MOUSE_BUTTON_RIGHT)) {
             ballColor = rl.Color.DARKBLUE;
         }
         //----------------------------------------------------------------------------------
 
         // Draw
         //----------------------------------------------------------------------------------
-        rl.BeginDrawing();
+        rl.beginDrawing();
 
-        rl.ClearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.RAYWHITE);
 
-        rl.DrawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, ballColor);
+        rl.drawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, ballColor);
         //DrawCircleV(ballPosition, 40, ballColor);
 
-        rl.DrawText("move ball with mouse and click mouse button to change color", 10, 10, 20, rl.Color.DARKGRAY);
+        rl.drawText("move ball with mouse and click mouse button to change color", 10, 10, 20, rl.Color.DARKGRAY);
 
-        rl.EndDrawing();
+        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    rl.CloseWindow(); // Close window and OpenGL context
+    rl.closeWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 }

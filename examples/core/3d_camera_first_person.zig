@@ -1,7 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
 const rl = @import("raylib");
-const rlm = @import("raylib-math");
 
 const MAX_COLUMNS = 20;
 
@@ -11,7 +10,7 @@ pub fn main() anyerror!void {
     const screenWidth = 800;
     const screenHeight = 450;
 
-    rl.InitWindow(screenWidth, screenHeight, "raylib-zig [core] example - 3d camera first person");
+    rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - 3d camera first person");
 
     var camera = rl.Camera3D{
         .position = rl.Vector3.init(4, 2, 4),
@@ -26,18 +25,18 @@ pub fn main() anyerror!void {
     var colors: [MAX_COLUMNS]rl.Color = undefined;
 
     for (heights) |_, i| {
-        heights[i] = @intToFloat(f32, rl.GetRandomValue(1, 12));
-        positions[i] = rl.Vector3.init(@intToFloat(f32, rl.GetRandomValue(-15, 15)), heights[i] / 2.0, @intToFloat(f32, rl.GetRandomValue(-15, 15)));
-        colors[i] = rl.Color.init(@intCast(u8, rl.GetRandomValue(20, 255)), @intCast(u8, rl.GetRandomValue(10, 55)), 30, 255);
+        heights[i] = @intToFloat(f32, rl.getRandomValue(1, 12));
+        positions[i] = rl.Vector3.init(@intToFloat(f32, rl.getRandomValue(-15, 15)), heights[i] / 2.0, @intToFloat(f32, rl.getRandomValue(-15, 15)));
+        colors[i] = rl.Color.init(@intCast(u8, rl.getRandomValue(20, 255)), @intCast(u8, rl.getRandomValue(10, 55)), 30, 255);
     }
 
     camera.setMode(rl.CameraMode.CAMERA_FIRST_PERSON);
 
-    rl.SetTargetFPS(60); // Set our game to run at 60 frames-per-second
+    rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
 
     // Main game loop
-    while (!rl.WindowShouldClose()) { // Detect window close button or ESC key
+    while (!rl.windowShouldClose()) { // Detect window close button or ESC key
         // Update
         //----------------------------------------------------------------------------------
         camera.update();
@@ -45,39 +44,39 @@ pub fn main() anyerror!void {
 
         // Draw
         //----------------------------------------------------------------------------------
-        rl.BeginDrawing();
+        rl.beginDrawing();
 
-        rl.ClearBackground(rl.Color.RAYWHITE);
+        rl.clearBackground(rl.Color.RAYWHITE);
 
         camera.begin();
 
         // Draw ground
-        rl.DrawPlane(rl.Vector3.init(0, 0, 0), rl.Vector2.init(32, 32), rl.Color.LIGHTGRAY);
-        rl.DrawCube(rl.Vector3.init(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.BLUE); // Draw a blue wall
-        rl.DrawCube(rl.Vector3.init(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.LIME); // Draw a green wall
-        rl.DrawCube(rl.Vector3.init(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, rl.Color.GOLD); // Draw a yellow wall
+        rl.drawPlane(rl.Vector3.init(0, 0, 0), rl.Vector2.init(32, 32), rl.Color.LIGHTGRAY);
+        rl.drawCube(rl.Vector3.init(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.BLUE); // Draw a blue wall
+        rl.drawCube(rl.Vector3.init(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.LIME); // Draw a green wall
+        rl.drawCube(rl.Vector3.init(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, rl.Color.GOLD); // Draw a yellow wall
 
         // Draw some cubes around
         for (heights) |height, i| {
-            rl.DrawCube(positions[i], 2.0, height, 2.0, colors[i]);
-            rl.DrawCubeWires(positions[i], 2.0, height, 2.0, rl.Color.MAROON);
+            rl.drawCube(positions[i], 2.0, height, 2.0, colors[i]);
+            rl.drawCubeWires(positions[i], 2.0, height, 2.0, rl.Color.MAROON);
         }
 
         camera.end();
 
-        rl.DrawRectangle(10, 10, 220, 70, rl.Fade(rl.Color.SKYBLUE, 0.5));
-        rl.DrawRectangleLines(10, 10, 220, 70, rl.Color.BLUE);
+        rl.drawRectangle(10, 10, 220, 70, rl.fade(rl.Color.SKYBLUE, 0.5));
+        rl.drawRectangleLines(10, 10, 220, 70, rl.Color.BLUE);
 
-        rl.DrawText("First person camera default controls:", 20, 20, 10, rl.Color.BLACK);
-        rl.DrawText("- Move with keys: W, A, S, D", 40, 40, 10, rl.Color.DARKGRAY);
-        rl.DrawText("- Mouse move to look around", 40, 60, 10, rl.Color.DARKGRAY);
+        rl.drawText("First person camera default controls:", 20, 20, 10, rl.Color.BLACK);
+        rl.drawText("- Move with keys: W, A, S, D", 40, 40, 10, rl.Color.DARKGRAY);
+        rl.drawText("- Mouse move to look around", 40, 60, 10, rl.Color.DARKGRAY);
 
-        rl.EndDrawing();
+        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    rl.CloseWindow(); // Close window and OpenGL context
+    rl.closeWindow(); // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
 }

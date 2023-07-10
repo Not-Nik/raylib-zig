@@ -15,6 +15,12 @@ C_TO_ZIG = {
     "unsigned int": "c_uint",
 }
 
+ZIGGIFY = {
+    "c_int": "i32",
+    "c_long": "i64",
+    "c_uint": "u32"
+}
+
 
 # Some c types have a different sizes on different systems
 # and zig knows that so we tell it to get the system specific size for us
@@ -27,6 +33,51 @@ def c_to_zig_type(c: str) -> str:
         return const + z
 
     return const + c
+
+
+def ziggify_type(name: str, t: str) -> str:
+    NO_STRINGS = ["data", "fileData", "compData"]
+
+    single = ["value", "ptr", "bytesRead", "compDataSize", "dataSize", "outputSize", "camera", "collisionPoint", "image", "colorCount", "dst", "texture", "srcPtr", "dstPtr", "count", "codepointSize", "utf8Size", "position", "mesh", "materialCount", "material", "model", "animCount", "wave", "v1", "v2", "outAxis", "outAngle"]
+    multi = ["data", "compData", "points", "frames", "fileData", "colors", "pixels", "fontChars", "chars", "recs", "codepoints", "textList", "transforms", "animations", "samples"]
+
+    if t.startswith("[*c]") and name not in single and name not in multi:
+        if (t == "[*c]const u8" or t == "[*c]u8") and name not in NO_STRINGS: # strings are multis
+            pass
+        else:
+            raise ValueError(f"{t} {name} not classified")
+    
+    pre = ""
+    while t.startswith("[*c]"):
+        t = t[4:]
+        if name in single:
+            pre += "*"
+        else:
+            pre += "[]"
+    
+    if t in ZIGGIFY:
+        t = ZIGGIFY[t]
+
+    return pre + t
+
+
+def add_namespace_to_type(t: str) -> str:
+    pre = ""
+    while t.startswith("[*c]"):
+        t = t[4:]
+        pre += "[*c]"
+    
+    if t.startswith("const "):
+        t = t[6:]
+        pre += "const "
+
+    if t[0].isupper():
+        t = "rl." + t
+    
+    if t in ["float3", "float16"]:
+        t = "rlm." + t
+
+    return pre + t
 
 
 def fix_pointer(name: str, t: str):
@@ -63,9 +114,14 @@ def fix_enums(arg_name, arg_type, func_name):
     return arg_type
 
 
-def parse_header(header_name: str, output_file: str, prefix: str, *args: str):
+def convert_name_case(name):
+    return name[:1].lower() + name[1:] if name else ''
+
+
+def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str, *args: str):
     header = open(header_name, mode="r")
-    zig_heads = []
+    ext_heads = []
+    zig_funcs = []
     zig_types = set()
 
     leftover = ""
@@ -112,37 +168,65 @@ def parse_header(header_name: str, output_file: str, prefix: str, *args: str):
         return_type = c_to_zig_type(return_type)
         func_name, return_type = fix_pointer(func_name, return_type)
 
+        zig_c_arguments = []
         zig_arguments = []
+        zig_call_args = []
         for arg in arguments.split(", "):
             if arg == "void":
                 break
             if arg == "...":
-                zig_arguments.append("...")
+                zig_c_arguments.append("...")
                 continue
             # everything but the last element (for stuff like "const Vector3")
             arg_type = " ".join(arg.split(" ")[0:-1])
             arg_name = arg.split(" ")[-1]  # last element should be the name
             arg_type = fix_enums(arg_name, arg_type, func_name)
 
+            if arg_name == "type": arg_name = "ty"
+
             arg_type = c_to_zig_type(arg_type)
             arg_name, arg_type = fix_pointer(arg_name, arg_type)
+            zig_type = ziggify_type(arg_name, arg_type)
 
-            zig_types.add(arg_type.replace("const ", ""))
-            zig_arguments.append(arg_name + ": " + arg_type)  # put everything together
+            is_rl_type = arg_type[0].isupper()
+
+            zig_types.add(arg_type)
+            zig_c_arguments.append(arg_name + ": " + add_namespace_to_type(arg_type))  # put everything together
+            zig_arguments.append(arg_name + ": " + zig_type)
+            if arg_type == zig_type:
+                zig_call_args.append(arg_name)
+            else:
+                if arg_type.startswith("[*c]"):
+                    zig_call_args.append(f"@ptrCast({arg_type}, {arg_name})")
+                else:
+                    zig_call_args.append(f"@as({arg_type}, {arg_name})")
+        zig_c_arguments = ", ".join(zig_c_arguments)
+
+        ext_ret = add_namespace_to_type(return_type)
+        ext_heads.append(f"pub extern \"c\" fn {func_name}({zig_c_arguments}) {ext_ret};")
+
+        zig_name = convert_name_case(func_name)
+
+        # Todo: ziggify return type
         zig_arguments = ", ".join(zig_arguments)
-        zig_heads.append("pub extern fn " + func_name + "(" + zig_arguments + ") " + return_type + ";")
+        zig_call_args = ", ".join(zig_call_args)
 
-    prelude = str()
+        if func_name in ["TextFormat", "LoadShader", "LoadShaderFromMemory"]:
+            continue
+        zig_funcs.append(f"pub fn {zig_name}({zig_arguments}) {return_type}" + " {\n    " + ("return " if return_type != "void" else "") + f"cdef.{func_name}({zig_call_args});" + "\n}")
 
-    for imp in args:
-        prelude += open(imp, mode="r").read()
+    prelude = open(args[0], mode="r").read()
+    ext_prelude = open(args[1], mode="r").read()
+
+    ext_header = open(ext_file, mode="w")
+    print(ext_prelude, file=ext_header)
+    print("\n".join(ext_heads), file=ext_header)
 
     zig_header = open(output_file, mode="w")
     print(prelude, file=zig_header)
-
-    print("\n".join(zig_heads), file=zig_header)
+    print("\n\n".join(zig_funcs), file=zig_header)
 
 
 if __name__ == "__main__":
-    parse_header("../raylib/src/raylib.h", "raylib-zig.zig", "RLAPI ", "raylib-zig-types.zig")
-    parse_header("../raylib/src/raymath.h", "raylib-zig-math.zig", "RMAPI ", "raylib-zig-math-prelude.zig")
+    parse_header("../raylib/src/raylib.h", "raylib-zig.zig", "raylib-zig-ext.zig", "RLAPI ", "preludes/raylib-zig-prelude.zig", "preludes/raylib-zig-ext-prelude.zig")
+    parse_header("../raylib/src/raymath.h", "raylib-zig-math.zig", "raylib-zig-math-ext.zig", "RMAPI ", "preludes/raylib-zig-math-prelude.zig", "preludes/raylib-zig-math-ext-prelude.zig")

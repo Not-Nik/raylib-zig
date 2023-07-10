@@ -106,59 +106,59 @@ pub const Image = extern struct {
     format: PixelFormat,
 
     pub fn init(fileName: [*c]const u8) Image {
-        return rl.LoadImage(fileName);
+        return rl.loadImage(fileName);
     }
 
     pub fn initRaw(fileName: *const []u8, width: c_int, height: c_int, format: PixelFormat, headerSize: c_int) Image {
-        return rl.LoadImageRaw(@as([*c]const u8, fileName), width, height, format, headerSize);
+        return rl.loadImageRaw(fileName, width, height, format, headerSize);
     }
 
     pub fn initText(text: *const []u8, fontSize: c_int, color: Color) Image {
-        return rl.ImageText(@as([*c]const u8, text), fontSize, color);
+        return rl.imageText(text, fontSize, color);
     }
 
     pub fn initTextEx(font: Font, text: *const []u8, fontSize: f32, spacing: f32, tint: Color) Image {
-        return rl.ImageTextEx(font, @as([*c]const u8, text), fontSize, spacing, tint);
+        return rl.imageTextEx(font, text, fontSize, spacing, tint);
     }
 
     pub fn copy(image: Image) Image {
-        return rl.ImageCopy(image);
+        return rl.imageCopy(image);
     }
 
     pub fn copyRec(image: Image, rec: Rectangle) Image {
-        return rl.ImageFromImage(image, rec);
+        return rl.imageFromImage(image, rec);
     }
 
     pub fn genColor(width: c_int, height: c_int, color: Color) Image {
-        return rl.GenImageColor(width, height, color);
+        return rl.genImageColor(width, height, color);
     }
 
     pub fn genGradientV(width: c_int, height: c_int, top: Color, bottom: Color) Image {
-        return rl.GenImageGradientV(width, height, top, bottom);
+        return rl.genImageGradientV(width, height, top, bottom);
     }
 
     pub fn genGradientH(width: c_int, height: c_int, left: Color, right: Color) Image {
-        return rl.GenImageGradientH(width, height, left, right);
+        return rl.genImageGradientH(width, height, left, right);
     }
 
     pub fn genGradientRadial(width: c_int, height: c_int, density: f32, inner: Color, outer: Color) Image {
-        return rl.GenImageGradientRadial(width, height, density, inner, outer);
+        return rl.genImageGradientRadial(width, height, density, inner, outer);
     }
 
     pub fn genChecked(width: c_int, height: c_int, checksX: c_int, checksY: c_int, col1: Color, col2: Color) Image {
-        return rl.GenImageChecked(width, height, checksX, checksY, col1, col2);
+        return rl.genImageChecked(width, height, checksX, checksY, col1, col2);
     }
 
     pub fn genWhiteNoise(width: c_int, height: c_int, factor: f32) Image {
-        return rl.GenImageWhiteNoise(width, height, factor);
+        return rl.genImageWhiteNoise(width, height, factor);
     }
 
     pub fn genCellular(width: c_int, height: c_int, tileSize: c_int) Image {
-        return rl.GenImageCellular(width, height, tileSize);
+        return rl.genImageCellular(width, height, tileSize);
     }
 
     pub fn useAsWindowIcon(self: Image) void {
-        rl.SetWindowIcon(self);
+        rl.setWindowIcon(self);
     }
 };
 
@@ -178,11 +178,11 @@ pub const RenderTexture = extern struct {
     depth: Texture,
 
     pub fn begin(self: RenderTexture2D) void {
-        rl.BeginTextureMode(self);
+        rl.beginTextureMode(self);
     }
 
     pub fn end(_: RenderTexture2D) void {
-        rl.EndTextureMode();
+        rl.endTextureMode();
     }
 };
 pub const RenderTexture2D = RenderTexture;
@@ -221,23 +221,23 @@ pub const Camera3D = extern struct {
     projection: CameraProjection,
 
     pub fn begin(self: Camera3D) void {
-        rl.BeginMode3D(self);
+        rl.beginMode3D(self);
     }
 
     pub fn update(self: *Camera3D) void {
-        rl.UpdateCamera(@as([*c]Camera3D, self));
+        rl.updateCamera(self);
     }
 
     pub fn getMatrix(self: Camera3D) Matrix {
-        return rl.GetCameraMatrix(self);
+        return rl.getCameraMatrix(self);
     }
 
     pub fn setMode(self: Camera3D, mode: CameraMode) void {
-        rl.SetCameraMode(self, mode);
+        rl.setCameraMode(self, mode);
     }
 
     pub fn end(_: Camera3D) void {
-        rl.EndMode3D();
+        rl.endMode3D();
     }
 };
 pub const Camera = Camera3D;
@@ -249,15 +249,15 @@ pub const Camera2D = extern struct {
     zoom: f32,
 
     pub fn begin(self: Camera2D) void {
-        rl.BeginMode2D(self);
+        rl.beginMode2D(self);
     }
 
     pub fn getMatrix(self: Camera2D) Matrix {
-        return rl.GetCameraMatrix2D(self);
+        return rl.getCameraMatrix2D(self);
     }
 
     pub fn end(_: Camera2D) void {
-        rl.EndMode2D();
+        rl.endMode2D();
     }
 };
 
@@ -279,11 +279,11 @@ pub const Mesh = extern struct {
     vboId: [*c]c_uint,
 
     pub fn draw(self: Mesh, material: Material, transform: Matrix) void {
-        rl.DrawMesh(self, material, transform);
+        rl.drawMesh(self, material, transform);
     }
 
     pub fn drawInstanced(self: Mesh, material: Material, transforms: []const Matrix) void {
-        rl.DrawMeshInstanced(self, material, @as([*c]const Matrix, transforms), transforms.len);
+        rl.drawMeshInstanced(self, material, transforms, transforms.len);
     }
 };
 
@@ -292,11 +292,11 @@ pub const Shader = extern struct {
     locs: [*c]c_int,
 
     pub fn activate(self: Shader) void {
-        rl.BeginShaderMode(self);
+        rl.beginShaderMode(self);
     }
 
     pub fn deactivate(_: Shader) void {
-        rl.EndShaderMode();
+        rl.endShaderMode();
     }
 };
 
@@ -335,27 +335,27 @@ pub const Model = extern struct {
     bindPose: [*c]Transform,
 
     pub fn init(fileName: [*c]const u8) Model {
-        return rl.LoadModel(fileName);
+        return rl.loadModel(fileName);
     }
 
     pub fn initFromMesh(mesh: Mesh) Model {
-        return rl.LoadModelFromMesh(mesh);
+        return rl.loadModelFromMesh(mesh);
     }
 
     pub fn draw(self: Mesh, position: Vector3, scale: f32, tint: Color) void {
-        return rl.DrawMesh(self, position, scale, tint);
+        return rl.drawMesh(self, position, scale, tint);
     }
 
     pub fn drawEx(self: Mesh, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
-        return rl.DrawMeshEx(self, position, rotationAxis, rotationAngle, scale, tint);
+        return rl.drawMeshEx(self, position, rotationAxis, rotationAngle, scale, tint);
     }
 
     pub fn drawWires(self: Mesh, position: Vector3, scale: f32, tint: Color) void {
-        return rl.DrawMeshWires(self, position, scale, tint);
+        return rl.drawMeshWires(self, position, scale, tint);
     }
 
     pub fn drawWiresEx(self: Mesh, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
-        return rl.DrawMeshWiresEx(self, position, rotationAxis, rotationAngle, scale, tint);
+        return rl.drawMeshWiresEx(self, position, rotationAxis, rotationAngle, scale, tint);
     }
 };
 
@@ -809,9 +809,9 @@ pub const LoadFileTextCallback = ?fn ([*c]const u8) callconv(.C) [*c]u8;
 pub const SaveFileTextCallback = ?fn ([*c]const u8, [*c]u8) callconv(.C) bool;
 pub const AudioCallback = ?*const fn (?*anyopaque, c_uint) callconv(.C) void;
 
-pub const RAYLIB_VERSION_MAJOR = @as(c_int, 4);
-pub const RAYLIB_VERSION_MINOR = @as(c_int, 5);
-pub const RAYLIB_VERSION_PATCH = @as(c_int, 0);
+pub const RAYLIB_VERSION_MAJOR = @as(i32, 4);
+pub const RAYLIB_VERSION_MINOR = @as(i32, 5);
+pub const RAYLIB_VERSION_PATCH = @as(i32, 0);
 pub const RAYLIB_VERSION = "4.5-dev";
 
 pub const MAX_TOUCH_POINTS = 10;
@@ -822,3 +822,33 @@ pub const MATERIAL_MAP_DIFFUSE = MaterialMapIndex.MATERIAL_MAP_ALBEDO;
 pub const MATERIAL_MAP_SPECULAR = MaterialMapIndex.MATERIAL_MAP_METALNESS;
 pub const SHADER_LOC_MAP_DIFFUSE = ShaderLocationIndex.SHADER_LOC_MAP_ALBEDO;
 pub const SHADER_LOC_MAP_SPECULAR = ShaderLocationIndex.SHADER_LOC_MAP_METALNESS;
+
+const cdef = @import("raylib-zig-ext.zig");
+
+pub fn textFormat(text: []const u8, args: anytype) [*c]const u8 {
+    return @call(.{}, cdef.TextFormat, .{@ptrCast([*c]const u8, text)} ++ args);
+}
+
+pub fn loadShader(vsFileName: ?[]const u8, fsFileName: ?[]const u8) Shader {
+    var vsFileNameFinal = @as([*c]const u8, 0);
+    var fsFileNameFinal = @as([*c]const u8, 0);
+    if (vsFileName) |vsFileNameSure| {
+        vsFileNameFinal = @ptrCast([*c]const u8, vsFileNameSure);
+    }
+    if (fsFileName) |fsFileNameSure| {
+        fsFileNameFinal = @ptrCast([*c]const u8, fsFileNameSure);
+    }
+    return cdef.LoadShader(vsFileNameFinal, fsFileNameFinal);
+}
+
+pub fn loadShaderFromMemory(vsCode: ?[]const u8, fsCode: ?[]const u8) Shader {
+    var vsCodeFinal = @as([*c]const u8, 0);
+    var fsCodeFinal = @as([*c]const u8, 0);
+    if (vsCode) |vsCodeSure| {
+        vsCodeFinal = @ptrCast([*c]const u8, vsCodeSure);
+    }
+    if (fsCode) |fsCodeSure| {
+        fsCodeFinal = @ptrCast([*c]const u8, fsCodeSure);
+    }
+    return cdef.LoadShaderFromMemory(vsCodeFinal, fsCodeFinal);
+}
