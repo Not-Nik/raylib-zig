@@ -461,6 +461,7 @@ pub const ConfigFlags = enum(c_int) {
     flag_window_highdpi = 8192,
     flag_window_mouse_passthrough = 16384,
     flag_interlaced_hint = 65536,
+    _,
 };
 
 pub const TraceLogLevel = enum(c_int) {

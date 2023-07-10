@@ -461,6 +461,7 @@ pub const ConfigFlags = enum(c_int) {
     flag_window_highdpi = 8192,
     flag_window_mouse_passthrough = 16384,
     flag_interlaced_hint = 65536,
+    _,
 };
 
 pub const TraceLogLevel = enum(c_int) {
@@ -897,12 +898,12 @@ pub fn isWindowState(flag: u32) bool {
     return cdef.IsWindowState(@as(c_uint, flag));
 }
 
-pub fn setWindowState(flags: u32) void {
-    cdef.SetWindowState(@as(c_uint, flags));
+pub fn setWindowState(flags: ConfigFlags) void {
+    cdef.SetWindowState(flags);
 }
 
-pub fn clearWindowState(flags: u32) void {
-    cdef.ClearWindowState(@as(c_uint, flags));
+pub fn clearWindowState(flags: ConfigFlags) void {
+    cdef.ClearWindowState(flags);
 }
 
 pub fn toggleFullscreen() void {
@@ -1225,8 +1226,8 @@ pub fn takeScreenshot(fileName: []const u8) void {
     cdef.TakeScreenshot(@ptrCast([*c]const u8, fileName));
 }
 
-pub fn setConfigFlags(flags: u32) void {
-    cdef.SetConfigFlags(@as(c_uint, flags));
+pub fn setConfigFlags(flags: ConfigFlags) void {
+    cdef.SetConfigFlags(flags);
 }
 
 pub fn traceLog(logLevel: i32, text: []const u8) void {

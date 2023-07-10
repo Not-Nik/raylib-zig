@@ -111,6 +111,8 @@ def fix_enums(arg_name, arg_type, func_name):
             arg_type = "CameraMode"
         elif arg_name == "gesture":
             arg_type = "Gestures"
+        elif arg_name == "flags" and func_name in ["SetWindowState", "ClearWindowState", "SetConfigFlags"]:
+            arg_type = "ConfigFlags"
     return arg_type
 
 
