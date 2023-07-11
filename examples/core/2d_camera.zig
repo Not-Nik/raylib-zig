@@ -93,8 +93,8 @@ pub fn main() anyerror!void {
 
         rl.drawRectangleRec(player, rl.Color.red);
 
-        rl.drawLine(@floatToInt(c_int, camera.target.x), -screenHeight * 10, @floatToInt(c_int, camera.target.x), screenHeight * 10, rl.Color.green);
-        rl.drawLine(-screenWidth * 10, @floatToInt(c_int, camera.target.y), screenWidth * 10, @floatToInt(c_int, camera.target.y), rl.Color.green);
+        rl.drawLine(@floatToInt(i32, camera.target.x), -screenHeight * 10, @floatToInt(i32, camera.target.x), screenHeight * 10, rl.Color.green);
+        rl.drawLine(-screenWidth * 10, @floatToInt(i32, camera.target.y), screenWidth * 10, @floatToInt(i32, camera.target.y), rl.Color.green);
 
         camera.end();
 

@@ -19,7 +19,7 @@ pub fn main() anyerror!void {
     const scarfy: rl.Texture = rl.Texture.init("resources/textures/scarfy.png"); // Texture loading
 
     const position = rl.Vector2.init(350.0, 280.0);
-    var frameRec = rl.Rectangle{ .x = 0.0, .y = 0.0, .width = @intToFloat(f32, @divFloor(scarfy.width, 6)), .height = @intToFloat(f32, scarfy.height) };
+    var frameRec = rl.Rectangle.init(0, 0, @intToFloat(f32, @divFloor(scarfy.width, 6)), @intToFloat(f32, scarfy.height));
     var currentFrame: u8 = 0;
 
     var framesCounter: u8 = 0;
@@ -74,9 +74,9 @@ pub fn main() anyerror!void {
 
         for ([_]u32{0} ** MAX_FRAME_SPEED) |_, i| {
             if (i < framesSpeed) {
-                rl.drawRectangle(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.red);
+                rl.drawRectangle(250 + 21 * @intCast(i32, i), 205, 20, 20, rl.Color.red);
             }
-            rl.drawRectangleLines(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.maroon);
+            rl.drawRectangleLines(250 + 21 * @intCast(i32, i), 205, 20, 20, rl.Color.maroon);
         }
 
         scarfy.drawRec(frameRec, position, rl.Color.white); // Draw part of the texture

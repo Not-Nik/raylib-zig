@@ -39,7 +39,7 @@ pub fn main() anyerror!void {
 
         rl.clearBackground(rl.Color.ray_white);
 
-        rl.drawCircle(@floatToInt(c_int, ballPosition.x), @floatToInt(c_int, ballPosition.y), 50, ballColor);
+        rl.drawCircle(@floatToInt(i32, ballPosition.x), @floatToInt(i32, ballPosition.y), 50, ballColor);
         //DrawCircleV(ballPosition, 40, ballColor);
 
         rl.drawText("move ball with mouse and click mouse button to change color", 10, 10, 20, rl.Color.dark_gray);
