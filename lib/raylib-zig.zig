@@ -158,11 +158,11 @@ pub const Image = extern struct {
         return rl.loadImage(fileName);
     }
 
-    pub fn initRaw(fileName: *const []u8, width: c_int, height: c_int, format: PixelFormat, headerSize: c_int) Image {
+    pub fn initRaw(fileName: *const []u8, width: i32, height: i32, format: PixelFormat, headerSize: i32) Image {
         return rl.loadImageRaw(fileName, width, height, format, headerSize);
     }
 
-    pub fn initText(text: *const []u8, fontSize: c_int, color: Color) Image {
+    pub fn initText(text: *const []u8, fontSize: i32, color: Color) Image {
         return rl.imageText(text, fontSize, color);
     }
 
@@ -178,31 +178,31 @@ pub const Image = extern struct {
         return rl.imageFromImage(image, rec);
     }
 
-    pub fn genColor(width: c_int, height: c_int, color: Color) Image {
+    pub fn genColor(width: i32, height: i32, color: Color) Image {
         return rl.genImageColor(width, height, color);
     }
 
-    pub fn genGradientV(width: c_int, height: c_int, top: Color, bottom: Color) Image {
+    pub fn genGradientV(width: i32, height: i32, top: Color, bottom: Color) Image {
         return rl.genImageGradientV(width, height, top, bottom);
     }
 
-    pub fn genGradientH(width: c_int, height: c_int, left: Color, right: Color) Image {
+    pub fn genGradientH(width: i32, height: i32, left: Color, right: Color) Image {
         return rl.genImageGradientH(width, height, left, right);
     }
 
-    pub fn genGradientRadial(width: c_int, height: c_int, density: f32, inner: Color, outer: Color) Image {
+    pub fn genGradientRadial(width: i32, height: i32, density: f32, inner: Color, outer: Color) Image {
         return rl.genImageGradientRadial(width, height, density, inner, outer);
     }
 
-    pub fn genChecked(width: c_int, height: c_int, checksX: c_int, checksY: c_int, col1: Color, col2: Color) Image {
+    pub fn genChecked(width: i32, height: i32, checksX: i32, checksY: i32, col1: Color, col2: Color) Image {
         return rl.genImageChecked(width, height, checksX, checksY, col1, col2);
     }
 
-    pub fn genWhiteNoise(width: c_int, height: c_int, factor: f32) Image {
+    pub fn genWhiteNoise(width: i32, height: i32, factor: f32) Image {
         return rl.genImageWhiteNoise(width, height, factor);
     }
 
-    pub fn genCellular(width: c_int, height: c_int, tileSize: c_int) Image {
+    pub fn genCellular(width: i32, height: i32, tileSize: i32) Image {
         return rl.genImageCellular(width, height, tileSize);
     }
 
