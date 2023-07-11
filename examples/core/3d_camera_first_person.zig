@@ -64,7 +64,7 @@ pub fn main() anyerror!void {
 
         camera.end();
 
-        rl.drawRectangle(10, 10, 220, 70, rl.fade(rl.Color.sky_blue, 0.5));
+        rl.drawRectangle(10, 10, 220, 70, rl.Color.sky_blue.fade(0.5));
         rl.drawRectangleLines(10, 10, 220, 70, rl.Color.blue);
 
         rl.drawText("First person camera default controls:", 20, 20, 10, rl.Color.black);

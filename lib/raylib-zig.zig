@@ -89,6 +89,50 @@ pub const Color = extern struct {
     pub fn init(r: u8, g: u8, b: u8, a: u8) Color {
         return Color{ .r = r, .g = g, .b = b, .a = a };
     }
+
+    pub fn fromNormalized(normalized: Vector4) Color {
+        return rl.colorFromNormalized(normalized);
+    }
+
+    pub fn fromHSV(hue: f32, saturation: f32, value: f32) Color {
+        return rl.colorFromHSV(hue, saturation, value);
+    }
+
+    pub fn fromInt(hexValue: u32) Color {
+        return rl.getColor(hexValue);
+    }
+
+    pub fn fade(self: Color, a: f32) Color {
+        return rl.fade(self, a);
+    }
+
+    pub fn tint(self: Color, t: Color) Color {
+        return rl.colorTint(self, t);
+    }
+
+    pub fn normalize(self: Color) Vector4 {
+        return rl.colorNormalize(self);
+    }
+
+    pub fn brightness(self: Color, factor: f32) Color {
+        return rl.colorBrightness(self, factor);
+    }
+
+    pub fn constrast(self: Color, c: f32) Color {
+        return rl.colorConstrast(self, c);
+    }
+
+    pub fn alpha(self: Color, a: f32) Color {
+        return rl.colorAlpha(self, a);
+    }
+
+    pub fn toInt(self: Color) Color {
+        return rl.colorToInt(self);
+    }
+
+    pub fn toHSV(self: Color) Vector3 {
+        return rl.colorToHSV(self);
+    }
 };
 
 pub const Rectangle = extern struct {

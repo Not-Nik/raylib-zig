@@ -105,7 +105,7 @@ pub fn main() anyerror!void {
         rl.drawRectangle(screenWidth - 5, 5, 5, screenHeight - 10, rl.Color.red);
         rl.drawRectangle(0, screenHeight - 5, screenWidth, 5, rl.Color.red);
 
-        rl.drawRectangle(10, 10, 250, 113, rl.fade(rl.Color.sky_blue, 0.5));
+        rl.drawRectangle(10, 10, 250, 113, rl.Color.sky_blue.fade(0.5));
         rl.drawRectangleLines(10, 10, 250, 113, rl.Color.blue);
 
         rl.drawText("Free 2d camera controls:", 20, 20, 10, rl.Color.black);

@@ -14,7 +14,7 @@ pub fn main() anyerror!void {
 
     rl.initWindow(screenWidth, screenHeight, "raylib [shaders] example - Apply an outline to a texture");
 
-    const texture: rl.Texture2D = rl.loadTexture("resources/textures/fudesumi.png");
+    const texture: rl.Texture = rl.Texture.init("resources/textures/fudesumi.png");
 
     const shdrOutline: rl.Shader = rl.loadShader(null, "resources/shaders/glsl330/outline.fs");
 

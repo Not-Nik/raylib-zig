@@ -16,7 +16,7 @@ pub fn main() anyerror!void {
     rl.initWindow(screenWidth, screenHeight, "raylib [texture] example - sprite anim");
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
-    const scarfy: rl.Texture2D = rl.loadTexture("resources/textures/scarfy.png"); // Texture loading
+    const scarfy: rl.Texture = rl.Texture.init("resources/textures/scarfy.png"); // Texture loading
 
     const position = rl.Vector2.init(350.0, 280.0);
     var frameRec = rl.Rectangle{ .x = 0.0, .y = 0.0, .width = @intToFloat(f32, @divFloor(scarfy.width, 6)), .height = @intToFloat(f32, scarfy.height) };
