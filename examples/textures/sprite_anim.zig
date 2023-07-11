@@ -69,7 +69,7 @@ pub fn main() anyerror!void {
         rl.drawRectangleLines(15 + @floatToInt(i32, frameRec.x), 40 + @floatToInt(i32, frameRec.y), @floatToInt(i32, frameRec.width), @floatToInt(i32, frameRec.height), rl.Color.red);
 
         rl.drawText("FRAME SPEED: ", 165, 210, 10, rl.Color.dark_gray);
-        //rl.drawText(rl.textFormat("%02i FPS", .{framesSpeed}), 575, 210, 10, rl.Color.DARKGRAY);
+        rl.drawText(rl.textFormat("%02i FPS", .{framesSpeed}), 575, 210, 10, rl.Color.DARKGRAY);
         rl.drawText("PRESS RIGHT/LEFT KEYS to CHANGE SPEED!", 290, 240, 10, rl.Color.dark_gray);
 
         for ([_]u32{0} ** MAX_FRAME_SPEED) |_, i| {

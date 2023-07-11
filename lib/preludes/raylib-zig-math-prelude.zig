@@ -2,6 +2,7 @@
 
 const rl = @import("raylib-zig.zig");
 const cdef = @import("raylib-zig-math-ext.zig");
+const std = @import("std");
 
 const Matrix = rl.Matrix;
 const Quaternion = rl.Quaternion;

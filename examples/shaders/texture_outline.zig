@@ -59,7 +59,7 @@ pub fn main() anyerror!void {
 
         rl.drawText("Shader-based\ntexture\noutline", 10, 10, 20, rl.Color.gray);
 
-        //rl.drawText(rl.textFormat("Outline size: %i px", @floatToInt(i32, outlineSize)), 10, 120, 20, rl.Color.maroon);
+        rl.drawText(rl.textFormat("Outline size: %i px", @floatToInt(i32, outlineSize)), 10, 120, 20, rl.Color.maroon);
 
         rl.drawFPS(710, 10);
 

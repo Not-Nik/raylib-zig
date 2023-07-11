@@ -2,6 +2,7 @@
 
 const rl = @import("raylib-zig.zig");
 const cdef = @import("raylib-zig-math-ext.zig");
+const std = @import("std");
 
 const Matrix = rl.Matrix;
 const Quaternion = rl.Quaternion;
@@ -37,8 +38,8 @@ pub fn wrap(value: f32, min: f32, max: f32) f32 {
     return cdef.Wrap(value, min, max);
 }
 
-pub fn floatEquals(x: f32, y: f32) c_int {
-    return cdef.FloatEquals(x, y);
+pub fn floatEquals(x: f32, y: f32) i32 {
+    return @as(i32, cdef.FloatEquals(x, y));
 }
 
 pub fn vector2Zero() Vector2 {
@@ -141,8 +142,8 @@ pub fn vector2ClampValue(v: Vector2, min: f32, max: f32) Vector2 {
     return cdef.Vector2ClampValue(v, min, max);
 }
 
-pub fn vector2Equals(p: Vector2, q: Vector2) c_int {
-    return cdef.Vector2Equals(p, q);
+pub fn vector2Equals(p: Vector2, q: Vector2) i32 {
+    return @as(i32, cdef.Vector2Equals(p, q));
 }
 
 pub fn vector3Zero() Vector3 {
@@ -277,8 +278,8 @@ pub fn vector3ClampValue(v: Vector3, min: f32, max: f32) Vector3 {
     return cdef.Vector3ClampValue(v, min, max);
 }
 
-pub fn vector3Equals(p: Vector3, q: Vector3) c_int {
-    return cdef.Vector3Equals(p, q);
+pub fn vector3Equals(p: Vector3, q: Vector3) i32 {
+    return @as(i32, cdef.Vector3Equals(p, q));
 }
 
 pub fn vector3Refract(v: Vector3, n: Vector3, r: f32) Vector3 {
@@ -457,6 +458,6 @@ pub fn quaternionTransform(q: Quaternion, mat: Matrix) Quaternion {
     return cdef.QuaternionTransform(q, mat);
 }
 
-pub fn quaternionEquals(p: Quaternion, q: Quaternion) c_int {
-    return cdef.QuaternionEquals(p, q);
+pub fn quaternionEquals(p: Quaternion, q: Quaternion) i32 {
+    return @as(i32, cdef.QuaternionEquals(p, q));
 }

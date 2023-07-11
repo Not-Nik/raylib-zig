@@ -1,6 +1,7 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
 const rl = @This();
+const std = @import("std");
 
 pub const Vector2 = extern struct {
     x: f32,
@@ -153,7 +154,7 @@ pub const Image = extern struct {
     mipmaps: c_int,
     format: PixelFormat,
 
-    pub fn init(fileName: [*c]const u8) Image {
+    pub fn init(fileName: []const u8) Image {
         return rl.loadImage(fileName);
     }
 
@@ -217,7 +218,7 @@ pub const Texture = extern struct {
     mipmaps: c_int,
     format: c_int,
 
-    pub fn init(fileName: [*c]const u8) Texture {
+    pub fn init(fileName: []const u8) Texture {
         return rl.loadTexture(fileName);
     }
 
@@ -914,8 +915,8 @@ pub const SHADER_LOC_MAP_SPECULAR = ShaderLocationIndex.SHADER_LOC_MAP_METALNESS
 
 const cdef = @import("raylib-zig-ext.zig");
 
-pub fn textFormat(text: []const u8, args: anytype) [*c]const u8 {
-    return @call(.{}, cdef.TextFormat, .{@ptrCast([*c]const u8, text)} ++ args);
+pub fn textFormat(text: []const u8, args: anytype) []const u8 {
+    return std.mem.span(@call(.{}, cdef.TextFormat, .{@ptrCast([*c]const u8, text)} ++ args));
 }
 
 pub fn loadShader(vsFileName: ?[]const u8, fsFileName: ?[]const u8) Shader {
@@ -940,4 +941,68 @@ pub fn loadShaderFromMemory(vsCode: ?[]const u8, fsCode: ?[]const u8) Shader {
         fsCodeFinal = @ptrCast([*c]const u8, fsCodeSure);
     }
     return cdef.LoadShaderFromMemory(vsCodeFinal, fsCodeFinal);
+}
+
+pub fn loadImageColors(image: Image) []Color {
+    var res: []Color = undefined;
+    res.ptr = @ptrCast([*]Color, cdef.LoadImageColors(image));
+    res.len = @intCast(usize, image.width * image.height);
+    return res;
+}
+
+pub fn loadImagePalette(image: Image, maxPaletteSize: i32) []Color {
+    var colorCount = 0;
+    var res: []Color = undefined;
+    res.ptr = @ptrCast([*]Color, cdef.LoadImagePalette(image, @as(c_int, maxPaletteSize), @ptrCast([*c]c_int, &colorCount)));
+    res.len = @intCast(usize, colorCount);
+    return res;
+}
+
+pub fn loadFontData(fileData: []const u8, dataSize: i32, fontSize: i32, fontChars: []i32, glyphCount: i32, ty: i32) []GlyphInfo {
+    var res: []GlyphInfo = undefined;
+    res.ptr = @ptrCast([*]GlyphInfo, cdef.LoadFontData(@ptrCast([*c]const u8, fileData), @as(c_int, dataSize), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, glyphCount), @as(c_int, ty)));
+    res.len = @intCast(usize, glyphCount);
+    return res;
+}
+
+pub fn loadCodepoints(text: []const u8) []i32 {
+    if (@sizeOf(c_int) != @sizeOf(i32)) {
+        @compileError("Can't cast pointer to c_int array to i32 because they don't have the same size");
+    }
+    var count = 0;
+    var res: []i32 = undefined;
+    res.ptr = @ptrCast([*]i32, cdef.LoadCodepoints(@ptrCast([*c]const u8, text), @ptrCast([*c]c_int, &count)));
+    res.len = @intCast(usize, count);
+    return res;
+}
+
+pub fn textSplit(text: []const u8, delimiter: u8) [][*]const u8 {
+    var count = 0;
+    var res: [][*]const u8 = undefined;
+    res.ptr = @ptrCast([*][*]const u8, cdef.TextSplit(@ptrCast([*c]const u8, text), delimiter, @ptrCast([*c]c_int, &count)));
+    res.len = @intCast(usize, count);
+    return res;
+}
+
+pub fn loadMaterials(fileName: []const u8) []Material {
+    var materialCount = 0;
+    var res: []Material = undefined;
+    res.ptr = @ptrCast([*]Material, cdef.LoadMaterials(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_int, &materialCount)));
+    res.len = @intCast(usize, materialCount);
+    return res;
+}
+
+pub fn loadModelAnimations(fileName: []const u8) []ModelAnimation {
+    var animCount = 0;
+    var res: []ModelAnimation = undefined;
+    res.ptr = @ptrCast([*]ModelAnimation, cdef.LoadModelAnimations(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_uint, &animCount)));
+    res.len = @intCast(usize, animCount);
+    return res;
+}
+
+pub fn loadWaveSamples(wave: Wave) []f32 {
+    var res: []f32 = undefined;
+    res.ptr = @ptrCast([*]f32, cdef.LoadWaveSamples(wave));
+    res.len = @intCast(usize, wave.frameCount * wave.channels);
+    return res;
 }

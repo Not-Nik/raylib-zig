@@ -39,7 +39,7 @@ def ziggify_type(name: str, t: str) -> str:
     NO_STRINGS = ["data", "fileData", "compData"]
 
     single = ["value", "ptr", "bytesRead", "compDataSize", "dataSize", "outputSize", "camera", "collisionPoint", "image", "colorCount", "dst", "texture", "srcPtr", "dstPtr", "count", "codepointSize", "utf8Size", "position", "mesh", "materialCount", "material", "model", "animCount", "wave", "v1", "v2", "outAxis", "outAngle"]
-    multi = ["data", "compData", "points", "frames", "fileData", "colors", "pixels", "fontChars", "chars", "recs", "codepoints", "textList", "transforms", "animations", "samples"]
+    multi = ["data", "compData", "points", "frames", "fileData", "colors", "pixels", "fontChars", "chars", "recs", "codepoints", "textList", "transforms", "animations", "samples", "LoadImageColors", "LoadImagePalette", "LoadFontData", "LoadCodepoints", "TextSplit", "LoadMaterials", "LoadModelAnimations", "LoadWaveSamples"]
 
     if t.startswith("[*c]") and name not in single and name not in multi:
         if (t == "[*c]const u8" or t == "[*c]u8") and name not in NO_STRINGS: # strings are multis
@@ -78,6 +78,22 @@ def add_namespace_to_type(t: str) -> str:
         t = "rlm." + t
 
     return pre + t
+
+
+def make_return_cast(source_type: str, dest_type: str, inner: str) -> str:
+    if source_type == dest_type:
+        return inner
+    if source_type in ["[*c]const u8", "[*c]u8"]:
+        return f"std.mem.span({inner})"
+    
+    if source_type in ZIGGIFY:
+        return f"@as({dest_type}, {inner})"
+
+    # These all have to be done manually because their sizes depend on the function arguments
+    if source_type in ["[*c]Color", "[*c]GlyphInfo", "[*c]c_int", "[*c][*c]const u8", "[*c]Material", "[*c]ModelAnimation", "[*c]f32"]:
+        return None
+    else:
+        raise ValueError(f"Don't know what to do {source_type} {dest_type} {inner}")
 
 
 def fix_pointer(name: str, t: str):
@@ -215,7 +231,16 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
 
         if func_name in ["TextFormat", "LoadShader", "LoadShaderFromMemory"]:
             continue
-        zig_funcs.append(f"pub fn {zig_name}({zig_arguments}) {return_type}" + " {\n    " + ("return " if return_type != "void" else "") + f"cdef.{func_name}({zig_call_args});" + "\n}")
+        
+        zig_return = ziggify_type(func_name, return_type)
+        return_cast = make_return_cast(return_type, zig_return, f"cdef.{func_name}({zig_call_args})")
+
+        if return_cast:
+            zig_funcs.append(f"pub fn {zig_name}({zig_arguments}) {zig_return}" +
+                            " {\n    " +
+                            ("return " if zig_return != "void" else "") +
+                            return_cast + ";"
+                            "\n}")
 
     prelude = open(args[0], mode="r").read()
     ext_prelude = open(args[1], mode="r").read()
