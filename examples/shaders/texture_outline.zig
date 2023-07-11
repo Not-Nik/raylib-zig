@@ -53,7 +53,7 @@ pub fn main() anyerror!void {
 
         rl.beginShaderMode(shdrOutline);
 
-        rl.drawTexture(texture, @divFloor(rl.getScreenWidth(), 2) - @divFloor(texture.width, 2), -30, rl.Color.white);
+        texture.draw(@divFloor(rl.getScreenWidth(), 2) - @divFloor(texture.width, 2), -30, rl.Color.white);
 
         rl.endShaderMode();
 

@@ -79,7 +79,7 @@ pub fn main() anyerror!void {
             rl.drawRectangleLines(250 + 21 * @intCast(c_int, i), 205, 20, 20, rl.Color.maroon);
         }
 
-        rl.drawTextureRec(scarfy, frameRec, position, rl.Color.white); // Draw part of the texture
+        scarfy.drawRec(frameRec, position, rl.Color.white); // Draw part of the texture
 
         rl.drawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, rl.Color.gray);
 

@@ -96,6 +96,10 @@ pub const Rectangle = extern struct {
     y: f32,
     width: f32,
     height: f32,
+
+    pub fn init(x: f32, y: f32, width: f32, height: f32) Rectangle {
+        return Rectangle{ .x = x, .y = y, .width = width, .height = height };
+    }
 };
 
 pub const Image = extern struct {
@@ -168,6 +172,42 @@ pub const Texture = extern struct {
     height: c_int,
     mipmaps: c_int,
     format: c_int,
+
+    pub fn init(fileName: [*c]const u8) Texture {
+        return rl.loadTexture(fileName);
+    }
+
+    pub fn fromImage(image: Image) Texture {
+        return rl.loadTextureFromImage(image);
+    }
+
+    pub fn fromCubemap(image: Image, layout: i32) Texture {
+        return rl.loadTextureCubemap(image, layout);
+    }
+
+    pub fn draw(self: Texture, posX: i32, posY: i32, tint: Color) void {
+        rl.drawTexture(self, posX, posY, tint);
+    }
+
+    pub fn drawV(self: Texture, position: Vector2, tint: Color) void {
+        rl.drawTextureV(self, position, tint);
+    }
+
+    pub fn drawEx(self: Texture, position: Vector2, rotation: f32, scale: f32, tint: Color) void {
+        rl.drawTextureEx(self, position, rotation, scale, tint);
+    }
+
+    pub fn drawRec(self: Texture, source: Rectangle, position: Vector2, tint: Color) void {
+        rl.drawTextureRec(self, source, position, tint);
+    }
+
+    pub fn drawPro(self: Texture, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
+        rl.drawTexturePro(self, source, dest, origin, rotation, tint);
+    }
+
+    pub fn drawNPatch(self: Texture, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
+        rl.drawTextureNPatch(self, nPatchInfo, dest, origin, rotation, tint);
+    }
 };
 pub const Texture2D = Texture;
 pub const TextureCubemap = Texture;
@@ -176,6 +216,10 @@ pub const RenderTexture = extern struct {
     id: c_uint,
     texture: Texture,
     depth: Texture,
+
+    pub fn init(width: i32, height: i32) RenderTexture {
+        return rl.loadRenderTexture(width, height);
+    }
 
     pub fn begin(self: RenderTexture2D) void {
         rl.beginTextureMode(self);
