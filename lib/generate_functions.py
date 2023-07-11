@@ -126,9 +126,11 @@ def fix_enums(arg_name, arg_type, func_name):
         elif arg_name == "mode" and func_name == "SetCameraMode":
             arg_type = "CameraMode"
         elif arg_name == "gesture":
-            arg_type = "Gestures"
+            arg_type = "Gesture"
         elif arg_name == "flags" and func_name in ["SetWindowState", "ClearWindowState", "SetConfigFlags"]:
             arg_type = "ConfigFlags"
+        elif arg_name == "logLevel":
+            arg_type = "TraceLogLevel"
     return arg_type
 
 
@@ -185,6 +187,13 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
 
         return_type = c_to_zig_type(return_type)
         func_name, return_type = fix_pointer(func_name, return_type)
+
+        if func_name == "GetKeyPressed":
+            return_type = "KeyboardKey"
+        elif func_name == "GetGamepadButtonPressed":
+            return_type = "GamepadButton"
+        elif func_name == "GetGestureDetected":
+            return_type = "Gesture"
 
         zig_c_arguments = []
         zig_arguments = []

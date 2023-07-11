@@ -859,7 +859,7 @@ pub const BlendMode = enum(c_int) {
     blend_custom_separate = 7,
 };
 
-pub const Gestures = enum(c_int) {
+pub const Gesture = enum(c_int) {
     gesture_none = 0,
     gesture_tap = 1,
     gesture_doubletap = 2,

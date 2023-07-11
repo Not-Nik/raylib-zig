@@ -859,7 +859,7 @@ pub const BlendMode = enum(c_int) {
     blend_custom_separate = 7,
 };
 
-pub const Gestures = enum(c_int) {
+pub const Gesture = enum(c_int) {
     gesture_none = 0,
     gesture_tap = 1,
     gesture_doubletap = 2,
@@ -1383,12 +1383,12 @@ pub fn setConfigFlags(flags: ConfigFlags) void {
     cdef.SetConfigFlags(flags);
 }
 
-pub fn traceLog(logLevel: i32, text: []const u8) void {
-    cdef.TraceLog(@as(c_int, logLevel), @ptrCast([*c]const u8, text));
+pub fn traceLog(logLevel: TraceLogLevel, text: []const u8) void {
+    cdef.TraceLog(logLevel, @ptrCast([*c]const u8, text));
 }
 
-pub fn setTraceLogLevel(logLevel: i32) void {
-    cdef.SetTraceLogLevel(@as(c_int, logLevel));
+pub fn setTraceLogLevel(logLevel: TraceLogLevel) void {
+    cdef.SetTraceLogLevel(logLevel);
 }
 
 pub fn memAlloc(size: u32) *anyopaque {
@@ -1567,8 +1567,8 @@ pub fn setExitKey(key: KeyboardKey) void {
     cdef.SetExitKey(key);
 }
 
-pub fn getKeyPressed() i32 {
-    return @as(i32, cdef.GetKeyPressed());
+pub fn getKeyPressed() KeyboardKey {
+    return cdef.GetKeyPressed();
 }
 
 pub fn getCharPressed() i32 {
@@ -1599,8 +1599,8 @@ pub fn isGamepadButtonUp(gamepad: i32, button: GamepadButton) bool {
     return cdef.IsGamepadButtonUp(@as(c_int, gamepad), button);
 }
 
-pub fn getGamepadButtonPressed() i32 {
-    return @as(i32, cdef.GetGamepadButtonPressed());
+pub fn getGamepadButtonPressed() GamepadButton {
+    return cdef.GetGamepadButtonPressed();
 }
 
 pub fn getGamepadAxisCount(gamepad: i32) i32 {
@@ -1695,12 +1695,12 @@ pub fn setGesturesEnabled(flags: u32) void {
     cdef.SetGesturesEnabled(@as(c_uint, flags));
 }
 
-pub fn isGestureDetected(gesture: Gestures) bool {
+pub fn isGestureDetected(gesture: Gesture) bool {
     return cdef.IsGestureDetected(gesture);
 }
 
-pub fn getGestureDetected() i32 {
-    return @as(i32, cdef.GetGestureDetected());
+pub fn getGestureDetected() Gesture {
+    return cdef.GetGestureDetected();
 }
 
 pub fn getGestureHoldDuration() f32 {
