@@ -2191,11 +2191,11 @@ pub fn imageDraw(dst: *Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, 
     cdef.ImageDraw(@ptrCast([*c]Image, dst), src, srcRec, dstRec, tint);
 }
 
-pub fn imageDrawText(dst: *Image, text: []const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
+pub fn imageDrawText(dst: *Image, text: [:0]const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
     cdef.ImageDrawText(@ptrCast([*c]Image, dst), @ptrCast([*c]const u8, text), @as(c_int, posX), @as(c_int, posY), @as(c_int, fontSize), color);
 }
 
-pub fn imageDrawTextEx(dst: *Image, font: Font, text: []const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
+pub fn imageDrawTextEx(dst: *Image, font: Font, text: [:0]const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
     cdef.ImageDrawTextEx(@ptrCast([*c]Image, dst), font, @ptrCast([*c]const u8, text), position, fontSize, spacing, tint);
 }
 
