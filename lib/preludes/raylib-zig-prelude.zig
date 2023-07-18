@@ -915,10 +915,6 @@ pub const SHADER_LOC_MAP_SPECULAR = ShaderLocationIndex.SHADER_LOC_MAP_METALNESS
 
 const cdef = @import("raylib-zig-ext.zig");
 
-pub fn textFormat(text: []const u8, args: anytype) []const u8 {
-    return std.mem.span(@call(.{}, cdef.TextFormat, .{@ptrCast([*c]const u8, text)} ++ args));
-}
-
 pub fn loadShader(vsFileName: ?[]const u8, fsFileName: ?[]const u8) Shader {
     var vsFileNameFinal = @as([*c]const u8, 0);
     var fsFileNameFinal = @as([*c]const u8, 0);
@@ -943,6 +939,26 @@ pub fn loadShaderFromMemory(vsCode: ?[]const u8, fsCode: ?[]const u8) Shader {
     return cdef.LoadShaderFromMemory(vsCodeFinal, fsCodeFinal);
 }
 
+pub fn loadFileData(fileName: []const u8) []u8 {
+    var bytesRead = 0;
+    var res: []u8 = undefined;
+    res.ptr = @ptrCast([*]u8, cdef.LoadFileData(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_uint, &bytesRead)));
+    res.len = @intCast(usize, bytesRead);
+    return res;
+}
+
+pub fn saveFileData(fileName: []const u8, data: []anyopaque) bool {
+    return cdef.SaveFileData(@ptrCast([*c]const u8, fileName), @ptrCast(*anyopaque, data.ptr), @intCast(c_uint, data.len));
+}
+
+pub fn exportDataAsCode(data: []const u8, fileName: []const u8) bool {
+    return cdef.ExportDataAsCode(@ptrCast([*c]const u8, data), @as(c_uint, data.len), @ptrCast([*c]const u8, fileName));
+}
+
+pub fn loadImageFromMemory(fileType: []const u8, fileData: []const u8) Image {
+    return cdef.LoadImageFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @intCast(c_int, fileData.len));
+}
+
 pub fn loadImageColors(image: Image) []Color {
     var res: []Color = undefined;
     res.ptr = @ptrCast([*]Color, cdef.LoadImageColors(image));
@@ -963,12 +979,12 @@ pub fn loadFontFromMemory(fileType: []const u8, fileData: ?[]const u8, fontSize:
     if (fileData) |fileDataSure| {
         fileDataFinal = @ptrCast([*c]const u8, fileDataSure);
     }
-    return cdef.LoadFontFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileDataFinal), @as(c_int, fileData.len), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, fontChars.len));
+    return cdef.LoadFontFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileDataFinal), @intCast(c_int, fileData.len), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @intCast(c_int, fontChars.len));
 }
 
 pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) []GlyphInfo {
     var res: []GlyphInfo = undefined;
-    res.ptr = @ptrCast([*]GlyphInfo, cdef.LoadFontData(@ptrCast([*c]const u8, fileData), @as(c_int, fileData.len), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, fontChars.len), @as(c_int, ty)));
+    res.ptr = @ptrCast([*]GlyphInfo, cdef.LoadFontData(@ptrCast([*c]const u8, fileData), @intCast(c_int, fileData.len), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @intCast(c_int, fontChars.len), @as(c_int, ty)));
     res.len = @intCast(usize, fontChars.len);
     return res;
 }
@@ -982,6 +998,10 @@ pub fn loadCodepoints(text: []const u8) []i32 {
     res.ptr = @ptrCast([*]i32, cdef.LoadCodepoints(@ptrCast([*c]const u8, text), @ptrCast([*c]c_int, &count)));
     res.len = @intCast(usize, count);
     return res;
+}
+
+pub fn textFormat(text: []const u8, args: anytype) []const u8 {
+    return std.mem.span(@call(.{}, cdef.TextFormat, .{@ptrCast([*c]const u8, text)} ++ args));
 }
 
 pub fn textSplit(text: []const u8, delimiter: u8) [][*]const u8 {
@@ -1008,9 +1028,17 @@ pub fn loadModelAnimations(fileName: []const u8) []ModelAnimation {
     return res;
 }
 
+pub fn loadWaveFromMemory(fileType: []const u8, fileData: []const u8) Wave {
+    return cdef.LoadWaveFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @as(c_int, fileData.len));
+}
+
 pub fn loadWaveSamples(wave: Wave) []f32 {
     var res: []f32 = undefined;
     res.ptr = @ptrCast([*]f32, cdef.LoadWaveSamples(wave));
     res.len = @intCast(usize, wave.frameCount * wave.channels);
     return res;
+}
+
+pub fn loadMusicStreamFromMemory(fileType: []const u8, data: []const u8) Music {
+    return cdef.LoadMusicStreamFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, data), @as(c_int, data.len));
 }
