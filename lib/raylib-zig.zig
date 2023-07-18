@@ -958,10 +958,18 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) []Color {
     return res;
 }
 
-pub fn loadFontData(fileData: []const u8, dataSize: i32, fontSize: i32, fontChars: []i32, glyphCount: i32, ty: i32) []GlyphInfo {
+pub fn loadFontFromMemory(fileType: []const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
+    var fileDataFinal = @as([*c]const u8, 0);
+    if (fileData) |fileDataSure| {
+        fileDataFinal = @ptrCast([*c]const u8, fileDataSure);
+    }
+    return cdef.LoadFontFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileDataFinal), @as(c_int, fileData.len), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, fontChars.len));
+}
+
+pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) []GlyphInfo {
     var res: []GlyphInfo = undefined;
-    res.ptr = @ptrCast([*]GlyphInfo, cdef.LoadFontData(@ptrCast([*c]const u8, fileData), @as(c_int, dataSize), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, glyphCount), @as(c_int, ty)));
-    res.len = @intCast(usize, glyphCount);
+    res.ptr = @ptrCast([*]GlyphInfo, cdef.LoadFontData(@ptrCast([*c]const u8, fileData), @as(c_int, fileData.len), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, fontChars.len), @as(c_int, ty)));
+    res.len = @intCast(usize, fontChars.len);
     return res;
 }
 
@@ -2341,10 +2349,6 @@ pub fn loadFontEx(fileName: []const u8, fontSize: i32, fontChars: []i32, glyphCo
 
 pub fn loadFontFromImage(image: Image, key: Color, firstChar: i32) Font {
     return cdef.LoadFontFromImage(image, key, @as(c_int, firstChar));
-}
-
-pub fn loadFontFromMemory(fileType: []const u8, fileData: []const u8, dataSize: i32, fontSize: i32, fontChars: []i32, glyphCount: i32) Font {
-    return cdef.LoadFontFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @as(c_int, dataSize), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, glyphCount));
 }
 
 pub fn genImageFontAtlas(chars: []const GlyphInfo, recs: [][]Rectangle, glyphCount: i32, fontSize: i32, padding: i32, packMethod: i32) Image {
