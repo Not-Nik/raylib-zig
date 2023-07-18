@@ -238,7 +238,7 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
         zig_arguments = ", ".join(zig_arguments)
         zig_call_args = ", ".join(zig_call_args)
 
-        if func_name in ["TextFormat", "LoadShader", "LoadShaderFromMemory"]:
+        if func_name in ["TextFormat", "LoadShader", "LoadShaderFromMemory", "LoadFontFromMemory"]:
             continue
         
         zig_return = ziggify_type(func_name, return_type)
