@@ -915,7 +915,7 @@ pub const SHADER_LOC_MAP_SPECULAR = ShaderLocationIndex.SHADER_LOC_MAP_METALNESS
 
 const cdef = @import("raylib-zig-ext.zig");
 
-pub fn loadShader(vsFileName: ?[]const u8, fsFileName: ?[]const u8) Shader {
+pub fn loadShader(vsFileName: ?[:0]const u8, fsFileName: ?[:0]const u8) Shader {
     var vsFileNameFinal = @as([*c]const u8, 0);
     var fsFileNameFinal = @as([*c]const u8, 0);
     if (vsFileName) |vsFileNameSure| {
@@ -927,7 +927,7 @@ pub fn loadShader(vsFileName: ?[]const u8, fsFileName: ?[]const u8) Shader {
     return cdef.LoadShader(vsFileNameFinal, fsFileNameFinal);
 }
 
-pub fn loadShaderFromMemory(vsCode: ?[]const u8, fsCode: ?[]const u8) Shader {
+pub fn loadShaderFromMemory(vsCode: ?[:0]const u8, fsCode: ?[:0]const u8) Shader {
     var vsCodeFinal = @as([*c]const u8, 0);
     var fsCodeFinal = @as([*c]const u8, 0);
     if (vsCode) |vsCodeSure| {
@@ -939,7 +939,7 @@ pub fn loadShaderFromMemory(vsCode: ?[]const u8, fsCode: ?[]const u8) Shader {
     return cdef.LoadShaderFromMemory(vsCodeFinal, fsCodeFinal);
 }
 
-pub fn loadFileData(fileName: []const u8) []u8 {
+pub fn loadFileData(fileName: [:0]const u8) []u8 {
     var bytesRead = 0;
     var res: []u8 = undefined;
     res.ptr = @ptrCast([*]u8, cdef.LoadFileData(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_uint, &bytesRead)));
@@ -947,7 +947,7 @@ pub fn loadFileData(fileName: []const u8) []u8 {
     return res;
 }
 
-pub fn saveFileData(fileName: []const u8, data: []anyopaque) bool {
+pub fn saveFileData(fileName: [:0]const u8, data: []anyopaque) bool {
     return cdef.SaveFileData(@ptrCast([*c]const u8, fileName), @ptrCast(*anyopaque, data.ptr), @intCast(c_uint, data.len));
 }
 
@@ -955,7 +955,7 @@ pub fn exportDataAsCode(data: []const u8, fileName: []const u8) bool {
     return cdef.ExportDataAsCode(@ptrCast([*c]const u8, data), @as(c_uint, data.len), @ptrCast([*c]const u8, fileName));
 }
 
-pub fn loadImageFromMemory(fileType: []const u8, fileData: []const u8) Image {
+pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: []const u8) Image {
     return cdef.LoadImageFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @intCast(c_int, fileData.len));
 }
 
@@ -974,7 +974,7 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) []Color {
     return res;
 }
 
-pub fn loadFontFromMemory(fileType: []const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
+pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
     var fileDataFinal = @as([*c]const u8, 0);
     if (fileData) |fileDataSure| {
         fileDataFinal = @ptrCast([*c]const u8, fileDataSure);
@@ -989,7 +989,7 @@ pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i
     return res;
 }
 
-pub fn loadCodepoints(text: []const u8) []i32 {
+pub fn loadCodepoints(text: [:0]const u8) []i32 {
     if (@sizeOf(c_int) != @sizeOf(i32)) {
         @compileError("Can't cast pointer to c_int array to i32 because they don't have the same size");
     }
@@ -1000,11 +1000,11 @@ pub fn loadCodepoints(text: []const u8) []i32 {
     return res;
 }
 
-pub fn textFormat(text: []const u8, args: anytype) []const u8 {
+pub fn textFormat(text: [:0]const u8, args: anytype) [:0]const u8 {
     return std.mem.span(@call(.{}, cdef.TextFormat, .{@ptrCast([*c]const u8, text)} ++ args));
 }
 
-pub fn textSplit(text: []const u8, delimiter: u8) [][*]const u8 {
+pub fn textSplit(text: [:0]const u8, delimiter: u8) [][:0]const u8 {
     var count = 0;
     var res: [][*]const u8 = undefined;
     res.ptr = @ptrCast([*][*]const u8, cdef.TextSplit(@ptrCast([*c]const u8, text), delimiter, @ptrCast([*c]c_int, &count)));
@@ -1012,7 +1012,7 @@ pub fn textSplit(text: []const u8, delimiter: u8) [][*]const u8 {
     return res;
 }
 
-pub fn loadMaterials(fileName: []const u8) []Material {
+pub fn loadMaterials(fileName: [:0]const u8) []Material {
     var materialCount = 0;
     var res: []Material = undefined;
     res.ptr = @ptrCast([*]Material, cdef.LoadMaterials(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_int, &materialCount)));
@@ -1020,7 +1020,7 @@ pub fn loadMaterials(fileName: []const u8) []Material {
     return res;
 }
 
-pub fn loadModelAnimations(fileName: []const u8) []ModelAnimation {
+pub fn loadModelAnimations(fileName: [:0]const u8) []ModelAnimation {
     var animCount = 0;
     var res: []ModelAnimation = undefined;
     res.ptr = @ptrCast([*]ModelAnimation, cdef.LoadModelAnimations(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_uint, &animCount)));
@@ -1028,7 +1028,7 @@ pub fn loadModelAnimations(fileName: []const u8) []ModelAnimation {
     return res;
 }
 
-pub fn loadWaveFromMemory(fileType: []const u8, fileData: []const u8) Wave {
+pub fn loadWaveFromMemory(fileType: [:0]const u8, fileData: []const u8) Wave {
     return cdef.LoadWaveFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @as(c_int, fileData.len));
 }
 
@@ -1039,11 +1039,11 @@ pub fn loadWaveSamples(wave: Wave) []f32 {
     return res;
 }
 
-pub fn loadMusicStreamFromMemory(fileType: []const u8, data: []const u8) Music {
+pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music {
     return cdef.LoadMusicStreamFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, data), @as(c_int, data.len));
 }
 
-pub fn initWindow(width: i32, height: i32, title: []const u8) void {
+pub fn initWindow(width: i32, height: i32, title: [:0]const u8) void {
     cdef.InitWindow(@as(c_int, width), @as(c_int, height), @ptrCast([*c]const u8, title));
 }
 
@@ -1115,7 +1115,7 @@ pub fn setWindowIcon(image: Image) void {
     cdef.SetWindowIcon(image);
 }
 
-pub fn setWindowTitle(title: []const u8) void {
+pub fn setWindowTitle(title: [:0]const u8) void {
     cdef.SetWindowTitle(@ptrCast([*c]const u8, title));
 }
 
@@ -1199,15 +1199,15 @@ pub fn getWindowScaleDPI() Vector2 {
     return cdef.GetWindowScaleDPI();
 }
 
-pub fn getMonitorName(monitor: i32) []const u8 {
+pub fn getMonitorName(monitor: i32) [:0]const u8 {
     return std.mem.span(cdef.GetMonitorName(@as(c_int, monitor)));
 }
 
-pub fn setClipboardText(text: []const u8) void {
+pub fn setClipboardText(text: [:0]const u8) void {
     cdef.SetClipboardText(@ptrCast([*c]const u8, text));
 }
 
-pub fn getClipboardText() []const u8 {
+pub fn getClipboardText() [:0]const u8 {
     return std.mem.span(cdef.GetClipboardText());
 }
 
@@ -1331,11 +1331,11 @@ pub fn unloadVrStereoConfig(config: VrStereoConfig) void {
     cdef.UnloadVrStereoConfig(config);
 }
 
-pub fn getShaderLocation(shader: Shader, uniformName: []const u8) i32 {
+pub fn getShaderLocation(shader: Shader, uniformName: [:0]const u8) i32 {
     return @as(i32, cdef.GetShaderLocation(shader, @ptrCast([*c]const u8, uniformName)));
 }
 
-pub fn getShaderLocationAttrib(shader: Shader, attribName: []const u8) i32 {
+pub fn getShaderLocationAttrib(shader: Shader, attribName: [:0]const u8) i32 {
     return @as(i32, cdef.GetShaderLocationAttrib(shader, @ptrCast([*c]const u8, attribName)));
 }
 
@@ -1411,7 +1411,7 @@ pub fn setRandomSeed(seed: u32) void {
     cdef.SetRandomSeed(@as(c_uint, seed));
 }
 
-pub fn takeScreenshot(fileName: []const u8) void {
+pub fn takeScreenshot(fileName: [:0]const u8) void {
     cdef.TakeScreenshot(@ptrCast([*c]const u8, fileName));
 }
 
@@ -1419,7 +1419,7 @@ pub fn setConfigFlags(flags: ConfigFlags) void {
     cdef.SetConfigFlags(flags);
 }
 
-pub fn traceLog(logLevel: TraceLogLevel, text: []const u8) void {
+pub fn traceLog(logLevel: TraceLogLevel, text: [:0]const u8) void {
     cdef.TraceLog(logLevel, @ptrCast([*c]const u8, text));
 }
 
@@ -1439,7 +1439,7 @@ pub fn memFree(ptr: *anyopaque) void {
     cdef.MemFree(ptr);
 }
 
-pub fn openURL(url: []const u8) void {
+pub fn openURL(url: [:0]const u8) void {
     cdef.OpenURL(@ptrCast([*c]const u8, url));
 }
 
@@ -1463,75 +1463,75 @@ pub fn unloadFileData(data: []u8) void {
     cdef.UnloadFileData(@ptrCast([*c]u8, data));
 }
 
-pub fn loadFileText(fileName: []const u8) []u8 {
+pub fn loadFileText(fileName: [:0]const u8) [:0]u8 {
     return std.mem.span(cdef.LoadFileText(@ptrCast([*c]const u8, fileName)));
 }
 
-pub fn unloadFileText(text: []u8) void {
+pub fn unloadFileText(text: [:0]u8) void {
     cdef.UnloadFileText(@ptrCast([*c]u8, text));
 }
 
-pub fn saveFileText(fileName: []const u8, text: []u8) bool {
+pub fn saveFileText(fileName: [:0]const u8, text: [:0]u8) bool {
     return cdef.SaveFileText(@ptrCast([*c]const u8, fileName), @ptrCast([*c]u8, text));
 }
 
-pub fn fileExists(fileName: []const u8) bool {
+pub fn fileExists(fileName: [:0]const u8) bool {
     return cdef.FileExists(@ptrCast([*c]const u8, fileName));
 }
 
-pub fn directoryExists(dirPath: []const u8) bool {
+pub fn directoryExists(dirPath: [:0]const u8) bool {
     return cdef.DirectoryExists(@ptrCast([*c]const u8, dirPath));
 }
 
-pub fn isFileExtension(fileName: []const u8, ext: []const u8) bool {
+pub fn isFileExtension(fileName: [:0]const u8, ext: [:0]const u8) bool {
     return cdef.IsFileExtension(@ptrCast([*c]const u8, fileName), @ptrCast([*c]const u8, ext));
 }
 
-pub fn getFileLength(fileName: []const u8) i32 {
+pub fn getFileLength(fileName: [:0]const u8) i32 {
     return @as(i32, cdef.GetFileLength(@ptrCast([*c]const u8, fileName)));
 }
 
-pub fn getFileExtension(fileName: []const u8) []const u8 {
+pub fn getFileExtension(fileName: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.GetFileExtension(@ptrCast([*c]const u8, fileName)));
 }
 
-pub fn getFileName(filePath: []const u8) []const u8 {
+pub fn getFileName(filePath: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.GetFileName(@ptrCast([*c]const u8, filePath)));
 }
 
-pub fn getFileNameWithoutExt(filePath: []const u8) []const u8 {
+pub fn getFileNameWithoutExt(filePath: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.GetFileNameWithoutExt(@ptrCast([*c]const u8, filePath)));
 }
 
-pub fn getDirectoryPath(filePath: []const u8) []const u8 {
+pub fn getDirectoryPath(filePath: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.GetDirectoryPath(@ptrCast([*c]const u8, filePath)));
 }
 
-pub fn getPrevDirectoryPath(dirPath: []const u8) []const u8 {
+pub fn getPrevDirectoryPath(dirPath: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.GetPrevDirectoryPath(@ptrCast([*c]const u8, dirPath)));
 }
 
-pub fn getWorkingDirectory() []const u8 {
+pub fn getWorkingDirectory() [:0]const u8 {
     return std.mem.span(cdef.GetWorkingDirectory());
 }
 
-pub fn getApplicationDirectory() []const u8 {
+pub fn getApplicationDirectory() [:0]const u8 {
     return std.mem.span(cdef.GetApplicationDirectory());
 }
 
-pub fn changeDirectory(dir: []const u8) bool {
+pub fn changeDirectory(dir: [:0]const u8) bool {
     return cdef.ChangeDirectory(@ptrCast([*c]const u8, dir));
 }
 
-pub fn isPathFile(path: []const u8) bool {
+pub fn isPathFile(path: [:0]const u8) bool {
     return cdef.IsPathFile(@ptrCast([*c]const u8, path));
 }
 
-pub fn loadDirectoryFiles(dirPath: []const u8) FilePathList {
+pub fn loadDirectoryFiles(dirPath: [:0]const u8) FilePathList {
     return cdef.LoadDirectoryFiles(@ptrCast([*c]const u8, dirPath));
 }
 
-pub fn loadDirectoryFilesEx(basePath: []const u8, filter: []const u8, scanSubdirs: bool) FilePathList {
+pub fn loadDirectoryFilesEx(basePath: [:0]const u8, filter: [:0]const u8, scanSubdirs: bool) FilePathList {
     return cdef.LoadDirectoryFilesEx(@ptrCast([*c]const u8, basePath), @ptrCast([*c]const u8, filter), scanSubdirs);
 }
 
@@ -1551,23 +1551,23 @@ pub fn unloadDroppedFiles(files: FilePathList) void {
     cdef.UnloadDroppedFiles(files);
 }
 
-pub fn getFileModTime(fileName: []const u8) i64 {
+pub fn getFileModTime(fileName: [:0]const u8) i64 {
     return @as(i64, cdef.GetFileModTime(@ptrCast([*c]const u8, fileName)));
 }
 
-pub fn compressData(data: []const u8, dataSize: i32, compDataSize: *i32) []u8 {
+pub fn compressData(data: []const u8, dataSize: i32, compDataSize: *i32) [:0]u8 {
     return std.mem.span(cdef.CompressData(@ptrCast([*c]const u8, data), @as(c_int, dataSize), @ptrCast([*c]c_int, compDataSize)));
 }
 
-pub fn decompressData(compData: []const u8, compDataSize: i32, dataSize: *i32) []u8 {
+pub fn decompressData(compData: []const u8, compDataSize: i32, dataSize: *i32) [:0]u8 {
     return std.mem.span(cdef.DecompressData(@ptrCast([*c]const u8, compData), @as(c_int, compDataSize), @ptrCast([*c]c_int, dataSize)));
 }
 
-pub fn encodeDataBase64(data: []const u8, dataSize: i32, outputSize: *i32) []u8 {
+pub fn encodeDataBase64(data: []const u8, dataSize: i32, outputSize: *i32) [:0]u8 {
     return std.mem.span(cdef.EncodeDataBase64(@ptrCast([*c]const u8, data), @as(c_int, dataSize), @ptrCast([*c]c_int, outputSize)));
 }
 
-pub fn decodeDataBase64(data: []const u8, outputSize: *i32) []u8 {
+pub fn decodeDataBase64(data: []const u8, outputSize: *i32) [:0]u8 {
     return std.mem.span(cdef.DecodeDataBase64(@ptrCast([*c]const u8, data), @ptrCast([*c]c_int, outputSize)));
 }
 
@@ -1603,7 +1603,7 @@ pub fn isGamepadAvailable(gamepad: i32) bool {
     return cdef.IsGamepadAvailable(@as(c_int, gamepad));
 }
 
-pub fn getGamepadName(gamepad: i32) []const u8 {
+pub fn getGamepadName(gamepad: i32) [:0]const u8 {
     return std.mem.span(cdef.GetGamepadName(@as(c_int, gamepad)));
 }
 
@@ -1635,7 +1635,7 @@ pub fn getGamepadAxisMovement(gamepad: i32, axis: i32) f32 {
     return cdef.GetGamepadAxisMovement(@as(c_int, gamepad), @as(c_int, axis));
 }
 
-pub fn setGamepadMappings(mappings: []const u8) i32 {
+pub fn setGamepadMappings(mappings: [:0]const u8) i32 {
     return @as(i32, cdef.SetGamepadMappings(@ptrCast([*c]const u8, mappings)));
 }
 
@@ -1963,15 +1963,15 @@ pub fn getCollisionRec(rec1: Rectangle, rec2: Rectangle) Rectangle {
     return cdef.GetCollisionRec(rec1, rec2);
 }
 
-pub fn loadImage(fileName: []const u8) Image {
+pub fn loadImage(fileName: [:0]const u8) Image {
     return cdef.LoadImage(@ptrCast([*c]const u8, fileName));
 }
 
-pub fn loadImageRaw(fileName: []const u8, width: i32, height: i32, format: i32, headerSize: i32) Image {
+pub fn loadImageRaw(fileName: [:0]const u8, width: i32, height: i32, format: i32, headerSize: i32) Image {
     return cdef.LoadImageRaw(@ptrCast([*c]const u8, fileName), @as(c_int, width), @as(c_int, height), @as(c_int, format), @as(c_int, headerSize));
 }
 
-pub fn loadImageAnim(fileName: []const u8, frames: []i32) Image {
+pub fn loadImageAnim(fileName: [:0]const u8, frames: []i32) Image {
     return cdef.LoadImageAnim(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_int, frames));
 }
 
@@ -1987,11 +1987,11 @@ pub fn unloadImage(image: Image) void {
     cdef.UnloadImage(image);
 }
 
-pub fn exportImage(image: Image, fileName: []const u8) bool {
+pub fn exportImage(image: Image, fileName: [:0]const u8) bool {
     return cdef.ExportImage(image, @ptrCast([*c]const u8, fileName));
 }
 
-pub fn exportImageAsCode(image: Image, fileName: []const u8) bool {
+pub fn exportImageAsCode(image: Image, fileName: [:0]const u8) bool {
     return cdef.ExportImageAsCode(image, @ptrCast([*c]const u8, fileName));
 }
 
@@ -2027,7 +2027,7 @@ pub fn genImageCellular(width: i32, height: i32, tileSize: i32) Image {
     return cdef.GenImageCellular(@as(c_int, width), @as(c_int, height), @as(c_int, tileSize));
 }
 
-pub fn genImageText(width: i32, height: i32, text: []const u8) Image {
+pub fn genImageText(width: i32, height: i32, text: [:0]const u8) Image {
     return cdef.GenImageText(@as(c_int, width), @as(c_int, height), @ptrCast([*c]const u8, text));
 }
 
@@ -2039,11 +2039,11 @@ pub fn imageFromImage(image: Image, rec: Rectangle) Image {
     return cdef.ImageFromImage(image, rec);
 }
 
-pub fn imageText(text: []const u8, fontSize: i32, color: Color) Image {
+pub fn imageText(text: [:0]const u8, fontSize: i32, color: Color) Image {
     return cdef.ImageText(@ptrCast([*c]const u8, text), @as(c_int, fontSize), color);
 }
 
-pub fn imageTextEx(font: Font, text: []const u8, fontSize: f32, spacing: f32, tint: Color) Image {
+pub fn imageTextEx(font: Font, text: [:0]const u8, fontSize: f32, spacing: f32, tint: Color) Image {
     return cdef.ImageTextEx(font, @ptrCast([*c]const u8, text), fontSize, spacing, tint);
 }
 
@@ -2211,15 +2211,15 @@ pub fn imageDraw(dst: *Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, 
     cdef.ImageDraw(@ptrCast([*c]Image, dst), src, srcRec, dstRec, tint);
 }
 
-pub fn imageDrawText(dst: *Image, text: []const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
+pub fn imageDrawText(dst: *Image, text: [:0]const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
     cdef.ImageDrawText(@ptrCast([*c]Image, dst), @ptrCast([*c]const u8, text), @as(c_int, posX), @as(c_int, posY), @as(c_int, fontSize), color);
 }
 
-pub fn imageDrawTextEx(dst: *Image, font: Font, text: []const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
+pub fn imageDrawTextEx(dst: *Image, font: Font, text: [:0]const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
     cdef.ImageDrawTextEx(@ptrCast([*c]Image, dst), font, @ptrCast([*c]const u8, text), position, fontSize, spacing, tint);
 }
 
-pub fn loadTexture(fileName: []const u8) Texture2D {
+pub fn loadTexture(fileName: [:0]const u8) Texture2D {
     return cdef.LoadTexture(@ptrCast([*c]const u8, fileName));
 }
 
@@ -2351,11 +2351,11 @@ pub fn getFontDefault() Font {
     return cdef.GetFontDefault();
 }
 
-pub fn loadFont(fileName: []const u8) Font {
+pub fn loadFont(fileName: [:0]const u8) Font {
     return cdef.LoadFont(@ptrCast([*c]const u8, fileName));
 }
 
-pub fn loadFontEx(fileName: []const u8, fontSize: i32, fontChars: []i32, glyphCount: i32) Font {
+pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32, glyphCount: i32) Font {
     return cdef.LoadFontEx(@ptrCast([*c]const u8, fileName), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @as(c_int, glyphCount));
 }
 
@@ -2375,7 +2375,7 @@ pub fn unloadFont(font: Font) void {
     cdef.UnloadFont(font);
 }
 
-pub fn exportFontAsCode(font: Font, fileName: []const u8) bool {
+pub fn exportFontAsCode(font: Font, fileName: [:0]const u8) bool {
     return cdef.ExportFontAsCode(font, @ptrCast([*c]const u8, fileName));
 }
 
@@ -2383,15 +2383,15 @@ pub fn drawFPS(posX: i32, posY: i32) void {
     cdef.DrawFPS(@as(c_int, posX), @as(c_int, posY));
 }
 
-pub fn drawText(text: []const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
+pub fn drawText(text: [:0]const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
     cdef.DrawText(@ptrCast([*c]const u8, text), @as(c_int, posX), @as(c_int, posY), @as(c_int, fontSize), color);
 }
 
-pub fn drawTextEx(font: Font, text: []const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
+pub fn drawTextEx(font: Font, text: [:0]const u8, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
     cdef.DrawTextEx(font, @ptrCast([*c]const u8, text), position, fontSize, spacing, tint);
 }
 
-pub fn drawTextPro(font: Font, text: []const u8, position: Vector2, origin: Vector2, rotation: f32, fontSize: f32, spacing: f32, tint: Color) void {
+pub fn drawTextPro(font: Font, text: [:0]const u8, position: Vector2, origin: Vector2, rotation: f32, fontSize: f32, spacing: f32, tint: Color) void {
     cdef.DrawTextPro(font, @ptrCast([*c]const u8, text), position, origin, rotation, fontSize, spacing, tint);
 }
 
@@ -2403,11 +2403,11 @@ pub fn drawTextCodepoints(font: Font, codepoints: []const c_int, count: i32, pos
     cdef.DrawTextCodepoints(font, @ptrCast([*c]const c_int, codepoints), @as(c_int, count), position, fontSize, spacing, tint);
 }
 
-pub fn measureText(text: []const u8, fontSize: i32) i32 {
+pub fn measureText(text: [:0]const u8, fontSize: i32) i32 {
     return @as(i32, cdef.MeasureText(@ptrCast([*c]const u8, text), @as(c_int, fontSize)));
 }
 
-pub fn measureTextEx(font: Font, text: []const u8, fontSize: f32, spacing: f32) Vector2 {
+pub fn measureTextEx(font: Font, text: [:0]const u8, fontSize: f32, spacing: f32) Vector2 {
     return cdef.MeasureTextEx(font, @ptrCast([*c]const u8, text), fontSize, spacing);
 }
 
@@ -2423,11 +2423,11 @@ pub fn getGlyphAtlasRec(font: Font, codepoint: i32) Rectangle {
     return cdef.GetGlyphAtlasRec(font, @as(c_int, codepoint));
 }
 
-pub fn loadUTF8(codepoints: []const c_int, length: i32) []u8 {
+pub fn loadUTF8(codepoints: []const c_int, length: i32) [:0]u8 {
     return std.mem.span(cdef.LoadUTF8(@ptrCast([*c]const c_int, codepoints), @as(c_int, length)));
 }
 
-pub fn unloadUTF8(text: []u8) void {
+pub fn unloadUTF8(text: [:0]u8) void {
     cdef.UnloadUTF8(@ptrCast([*c]u8, text));
 }
 
@@ -2435,75 +2435,75 @@ pub fn unloadCodepoints(codepoints: []i32) void {
     cdef.UnloadCodepoints(@ptrCast([*c]c_int, codepoints));
 }
 
-pub fn getCodepointCount(text: []const u8) i32 {
+pub fn getCodepointCount(text: [:0]const u8) i32 {
     return @as(i32, cdef.GetCodepointCount(@ptrCast([*c]const u8, text)));
 }
 
-pub fn getCodepoint(text: []const u8, codepointSize: *i32) i32 {
+pub fn getCodepoint(text: [:0]const u8, codepointSize: *i32) i32 {
     return @as(i32, cdef.GetCodepoint(@ptrCast([*c]const u8, text), @ptrCast([*c]c_int, codepointSize)));
 }
 
-pub fn getCodepointNext(text: []const u8, codepointSize: *i32) i32 {
+pub fn getCodepointNext(text: [:0]const u8, codepointSize: *i32) i32 {
     return @as(i32, cdef.GetCodepointNext(@ptrCast([*c]const u8, text), @ptrCast([*c]c_int, codepointSize)));
 }
 
-pub fn getCodepointPrevious(text: []const u8, codepointSize: *i32) i32 {
+pub fn getCodepointPrevious(text: [:0]const u8, codepointSize: *i32) i32 {
     return @as(i32, cdef.GetCodepointPrevious(@ptrCast([*c]const u8, text), @ptrCast([*c]c_int, codepointSize)));
 }
 
-pub fn codepointToUTF8(codepoint: i32, utf8Size: *i32) []const u8 {
+pub fn codepointToUTF8(codepoint: i32, utf8Size: *i32) [:0]const u8 {
     return std.mem.span(cdef.CodepointToUTF8(@as(c_int, codepoint), @ptrCast([*c]c_int, utf8Size)));
 }
 
-pub fn textCopy(dst: *u8, src: []const u8) i32 {
+pub fn textCopy(dst: *u8, src: [:0]const u8) i32 {
     return @as(i32, cdef.TextCopy(@ptrCast([*c]u8, dst), @ptrCast([*c]const u8, src)));
 }
 
-pub fn textIsEqual(text1: []const u8, text2: []const u8) bool {
+pub fn textIsEqual(text1: [:0]const u8, text2: [:0]const u8) bool {
     return cdef.TextIsEqual(@ptrCast([*c]const u8, text1), @ptrCast([*c]const u8, text2));
 }
 
-pub fn textLength(text: []const u8) u32 {
+pub fn textLength(text: [:0]const u8) u32 {
     return @as(u32, cdef.TextLength(@ptrCast([*c]const u8, text)));
 }
 
-pub fn textSubtext(text: []const u8, position: i32, length: i32) []const u8 {
+pub fn textSubtext(text: [:0]const u8, position: i32, length: i32) [:0]const u8 {
     return std.mem.span(cdef.TextSubtext(@ptrCast([*c]const u8, text), @as(c_int, position), @as(c_int, length)));
 }
 
-pub fn textReplace(text: []u8, replace: []const u8, by: []const u8) []u8 {
+pub fn textReplace(text: [:0]u8, replace: [:0]const u8, by: [:0]const u8) [:0]u8 {
     return std.mem.span(cdef.TextReplace(@ptrCast([*c]u8, text), @ptrCast([*c]const u8, replace), @ptrCast([*c]const u8, by)));
 }
 
-pub fn textInsert(text: []const u8, insert: []const u8, position: i32) []u8 {
+pub fn textInsert(text: [:0]const u8, insert: [:0]const u8, position: i32) [:0]u8 {
     return std.mem.span(cdef.TextInsert(@ptrCast([*c]const u8, text), @ptrCast([*c]const u8, insert), @as(c_int, position)));
 }
 
-pub fn textJoin(textList: [][]const u8, count: i32, delimiter: []const u8) []const u8 {
+pub fn textJoin(textList: [][]const u8, count: i32, delimiter: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.TextJoin(@ptrCast([*c][*c]const u8, textList), @as(c_int, count), @ptrCast([*c]const u8, delimiter)));
 }
 
-pub fn textAppend(text: []u8, append: []const u8, position: *i32) void {
+pub fn textAppend(text: [:0]u8, append: [:0]const u8, position: *i32) void {
     cdef.TextAppend(@ptrCast([*c]u8, text), @ptrCast([*c]const u8, append), @ptrCast([*c]c_int, position));
 }
 
-pub fn textFindIndex(text: []const u8, find: []const u8) i32 {
+pub fn textFindIndex(text: [:0]const u8, find: [:0]const u8) i32 {
     return @as(i32, cdef.TextFindIndex(@ptrCast([*c]const u8, text), @ptrCast([*c]const u8, find)));
 }
 
-pub fn textToUpper(text: []const u8) []const u8 {
+pub fn textToUpper(text: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.TextToUpper(@ptrCast([*c]const u8, text)));
 }
 
-pub fn textToLower(text: []const u8) []const u8 {
+pub fn textToLower(text: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.TextToLower(@ptrCast([*c]const u8, text)));
 }
 
-pub fn textToPascal(text: []const u8) []const u8 {
+pub fn textToPascal(text: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.TextToPascal(@ptrCast([*c]const u8, text)));
 }
 
-pub fn textToInteger(text: []const u8) i32 {
+pub fn textToInteger(text: [:0]const u8) i32 {
     return @as(i32, cdef.TextToInteger(@ptrCast([*c]const u8, text)));
 }
 
@@ -2591,7 +2591,7 @@ pub fn drawGrid(slices: i32, spacing: f32) void {
     cdef.DrawGrid(@as(c_int, slices), spacing);
 }
 
-pub fn loadModel(fileName: []const u8) Model {
+pub fn loadModel(fileName: [:0]const u8) Model {
     return cdef.LoadModel(@ptrCast([*c]const u8, fileName));
 }
 
@@ -2663,7 +2663,7 @@ pub fn drawMeshInstanced(mesh: Mesh, material: Material, transforms: []const Mat
     cdef.DrawMeshInstanced(mesh, material, @ptrCast([*c]const Matrix, transforms), @as(c_int, instances));
 }
 
-pub fn exportMesh(mesh: Mesh, fileName: []const u8) bool {
+pub fn exportMesh(mesh: Mesh, fileName: [:0]const u8) bool {
     return cdef.ExportMesh(mesh, @ptrCast([*c]const u8, fileName));
 }
 
@@ -2799,11 +2799,11 @@ pub fn setMasterVolume(volume: f32) void {
     cdef.SetMasterVolume(volume);
 }
 
-pub fn loadWave(fileName: []const u8) Wave {
+pub fn loadWave(fileName: [:0]const u8) Wave {
     return cdef.LoadWave(@ptrCast([*c]const u8, fileName));
 }
 
-pub fn loadSound(fileName: []const u8) Sound {
+pub fn loadSound(fileName: [:0]const u8) Sound {
     return cdef.LoadSound(@ptrCast([*c]const u8, fileName));
 }
 
@@ -2823,11 +2823,11 @@ pub fn unloadSound(sound: Sound) void {
     cdef.UnloadSound(sound);
 }
 
-pub fn exportWave(wave: Wave, fileName: []const u8) bool {
+pub fn exportWave(wave: Wave, fileName: [:0]const u8) bool {
     return cdef.ExportWave(wave, @ptrCast([*c]const u8, fileName));
 }
 
-pub fn exportWaveAsCode(wave: Wave, fileName: []const u8) bool {
+pub fn exportWaveAsCode(wave: Wave, fileName: [:0]const u8) bool {
     return cdef.ExportWaveAsCode(wave, @ptrCast([*c]const u8, fileName));
 }
 
@@ -2891,7 +2891,7 @@ pub fn unloadWaveSamples(samples: []f32) void {
     cdef.UnloadWaveSamples(@ptrCast([*c]f32, samples));
 }
 
-pub fn loadMusicStream(fileName: []const u8) Music {
+pub fn loadMusicStream(fileName: [:0]const u8) Music {
     return cdef.LoadMusicStream(@ptrCast([*c]const u8, fileName));
 }
 

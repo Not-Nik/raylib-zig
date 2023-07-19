@@ -40,17 +40,20 @@ def ziggify_type(name: str, t: str) -> str:
 
     single = ["value", "ptr", "bytesRead", "compDataSize", "dataSize", "outputSize", "camera", "collisionPoint", "image", "colorCount", "dst", "texture", "srcPtr", "dstPtr", "count", "codepointSize", "utf8Size", "position", "mesh", "materialCount", "material", "model", "animCount", "wave", "v1", "v2", "outAxis", "outAngle"]
     multi = ["data", "compData", "points", "frames", "fileData", "colors", "pixels", "fontChars", "chars", "recs", "codepoints", "textList", "transforms", "animations", "samples", "LoadImageColors", "LoadImagePalette", "LoadFontData", "LoadCodepoints", "TextSplit", "LoadMaterials", "LoadModelAnimations", "LoadWaveSamples"]
+    string = False
 
     if t.startswith("[*c]") and name not in single and name not in multi:
         if (t == "[*c]const u8" or t == "[*c]u8") and name not in NO_STRINGS: # strings are multis
-            pass
+            string = True
         else:
             raise ValueError(f"{t} {name} not classified")
     
     pre = ""
     while t.startswith("[*c]"):
         t = t[4:]
-        if name in single:
+        if string and not t.startswith("[*c]"):
+            pre += "[:0]"
+        elif name in single:
             pre += "*"
         else:
             pre += "[]"
