@@ -154,7 +154,7 @@ pub const Image = extern struct {
     mipmaps: c_int,
     format: PixelFormat,
 
-    pub fn init(fileName: []const u8) Image {
+    pub fn init(fileName: [:0]const u8) Image {
         return rl.loadImage(fileName);
     }
 
@@ -412,7 +412,7 @@ pub const Mesh = extern struct {
     }
 
     pub fn drawInstanced(self: Mesh, material: Material, transforms: []const Matrix) void {
-        rl.drawMeshInstanced(self, material, transforms, transforms.len);
+        rl.drawMeshInstanced(self, material, transforms);
     }
 };
 
@@ -995,11 +995,43 @@ pub fn saveFileData(fileName: [:0]const u8, data: []anyopaque) bool {
     return cdef.SaveFileData(@ptrCast([*c]const u8, fileName), @ptrCast(*anyopaque, data.ptr), @intCast(c_uint, data.len));
 }
 
-pub fn exportDataAsCode(data: []const u8, fileName: []const u8) bool {
-    return cdef.ExportDataAsCode(@ptrCast([*c]const u8, data), @as(c_uint, data.len), @ptrCast([*c]const u8, fileName));
+pub fn exportDataAsCode(data: []const u8, fileName: [:0]const u8) bool {
+    return cdef.ExportDataAsCode(@ptrCast([*c]const u8, data), @intCast(c_uint, data.len), @ptrCast([*c]const u8, fileName));
 }
 
-pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: []const u8) Image {
+pub fn compressData(data: []const u8) [:0]u8 {
+    var compDataSize = 0;
+    var res: []u8 = undefined;
+    res.ptr = cdef.CompressData(@ptrCast([*c]const u8, data), @intCast(c_int, data.len), @ptrCast([*c]c_int, &compDataSize));
+    res.len = @intCast(usize, compDataSize);
+    return res;
+}
+
+pub fn decompressData(compData: []const u8) [:0]u8 {
+    var dataSize = 0;
+    var res: []u8 = undefined;
+    res.ptr = cdef.DecompressData(@ptrCast([*c]const u8, compData), @intCast(c_int, compData.len), @ptrCast([*c]c_int, &dataSize));
+    res.len = @intCast(usize, dataSize);
+    return res;
+}
+
+pub fn encodeDataBase64(data: []const u8) []u8 {
+    var outputSize = 0;
+    var res: []u8 = undefined;
+    res.ptr = cdef.EncodeDataBase64(@ptrCast([*c]const u8, data), @intCast(c_int, data.len), @ptrCast([*c]c_int, &outputSize));
+    res.len = @intCast(usize, outputSize);
+    return res;
+}
+
+pub fn decodeDataBase64(data: []const u8) []u8 {
+    var outputSize = 0;
+    var res: []u8 = undefined;
+    res.ptr = cdef.DecodeDataBase64(@ptrCast([*c]const u8, data), @ptrCast([*c]c_int, &outputSize));
+    res.len = @intCast(usize, outputSize);
+    return res;
+}
+
+pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: [:0]const u8) Image {
     return cdef.LoadImageFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @intCast(c_int, fileData.len));
 }
 
@@ -1020,10 +1052,12 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) []Color {
 
 pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
     var fileDataFinal = @as([*c]const u8, 0);
+    var fileDataLen = 0;
     if (fileData) |fileDataSure| {
         fileDataFinal = @ptrCast([*c]const u8, fileDataSure);
+        fileDataLen = fileDataSure.len;
     }
-    return cdef.LoadFontFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileDataFinal), @intCast(c_int, fileData.len), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @intCast(c_int, fontChars.len));
+    return cdef.LoadFontFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileDataFinal), @intCast(c_int, fileDataLen), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @intCast(c_int, fontChars.len));
 }
 
 pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) []GlyphInfo {
@@ -1056,6 +1090,10 @@ pub fn textSplit(text: [:0]const u8, delimiter: u8) [][:0]const u8 {
     return res;
 }
 
+pub fn drawMeshInstanced(mesh: Mesh, material: Material, transforms: []const Matrix) void {
+    cdef.DrawMeshInstanced(mesh, material, @ptrCast([*c]const Matrix, transforms), @intCast(c_int, transforms.len));
+}
+
 pub fn loadMaterials(fileName: [:0]const u8) []Material {
     var materialCount = 0;
     var res: []Material = undefined;
@@ -1072,8 +1110,12 @@ pub fn loadModelAnimations(fileName: [:0]const u8) []ModelAnimation {
     return res;
 }
 
+pub fn unloadModelAnimations(animations: []ModelAnimation) void {
+    cdef.UnloadModelAnimations(@ptrCast([*c]ModelAnimation, animations), @intCast(c_uint, animations.len));
+}
+
 pub fn loadWaveFromMemory(fileType: [:0]const u8, fileData: []const u8) Wave {
-    return cdef.LoadWaveFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @as(c_int, fileData.len));
+    return cdef.LoadWaveFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @intCast(c_int, fileData.len));
 }
 
 pub fn loadWaveSamples(wave: Wave) []f32 {
@@ -1084,7 +1126,7 @@ pub fn loadWaveSamples(wave: Wave) []f32 {
 }
 
 pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music {
-    return cdef.LoadMusicStreamFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, data), @as(c_int, data.len));
+    return cdef.LoadMusicStreamFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, data), @intCast(c_int, data.len));
 }
 
 pub fn initWindow(width: i32, height: i32, title: [:0]const u8) void {
@@ -1597,22 +1639,6 @@ pub fn unloadDroppedFiles(files: FilePathList) void {
 
 pub fn getFileModTime(fileName: [:0]const u8) i64 {
     return @as(i64, cdef.GetFileModTime(@ptrCast([*c]const u8, fileName)));
-}
-
-pub fn compressData(data: []const u8, dataSize: i32, compDataSize: *i32) [:0]u8 {
-    return std.mem.span(cdef.CompressData(@ptrCast([*c]const u8, data), @as(c_int, dataSize), @ptrCast([*c]c_int, compDataSize)));
-}
-
-pub fn decompressData(compData: []const u8, compDataSize: i32, dataSize: *i32) [:0]u8 {
-    return std.mem.span(cdef.DecompressData(@ptrCast([*c]const u8, compData), @as(c_int, compDataSize), @ptrCast([*c]c_int, dataSize)));
-}
-
-pub fn encodeDataBase64(data: []const u8, dataSize: i32, outputSize: *i32) [:0]u8 {
-    return std.mem.span(cdef.EncodeDataBase64(@ptrCast([*c]const u8, data), @as(c_int, dataSize), @ptrCast([*c]c_int, outputSize)));
-}
-
-pub fn decodeDataBase64(data: []const u8, outputSize: *i32) [:0]u8 {
-    return std.mem.span(cdef.DecodeDataBase64(@ptrCast([*c]const u8, data), @ptrCast([*c]c_int, outputSize)));
 }
 
 pub fn isKeyPressed(key: KeyboardKey) bool {
@@ -2703,10 +2729,6 @@ pub fn drawMesh(mesh: Mesh, material: Material, transform: Matrix) void {
     cdef.DrawMesh(mesh, material, transform);
 }
 
-pub fn drawMeshInstanced(mesh: Mesh, material: Material, transforms: []const Matrix, instances: i32) void {
-    cdef.DrawMeshInstanced(mesh, material, @ptrCast([*c]const Matrix, transforms), @as(c_int, instances));
-}
-
 pub fn exportMesh(mesh: Mesh, fileName: [:0]const u8) bool {
     return cdef.ExportMesh(mesh, @ptrCast([*c]const u8, fileName));
 }
@@ -2785,10 +2807,6 @@ pub fn updateModelAnimation(model: Model, anim: ModelAnimation, frame: i32) void
 
 pub fn unloadModelAnimation(anim: ModelAnimation) void {
     cdef.UnloadModelAnimation(anim);
-}
-
-pub fn unloadModelAnimations(animations: []ModelAnimation, count: u32) void {
-    cdef.UnloadModelAnimations(@ptrCast([*c]ModelAnimation, animations), @as(c_uint, count));
 }
 
 pub fn isModelAnimationValid(model: Model, anim: ModelAnimation) bool {

@@ -248,7 +248,13 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
             "LoadFileData",
             "SaveFileData",
             "ExportDataAsCode",
-            "LoadImageFromMemory"
+            "LoadImageFromMemory",
+            "DrawMeshInstanced",
+            "UnloadModelAnimations",
+            "CompressData",
+            "DecompressData",
+            "EncodeDataBase64",
+            "DecodeDataBase64"
         ]
 
         if func_name in manual or "FromMemory" in func_name:
