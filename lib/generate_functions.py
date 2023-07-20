@@ -38,8 +38,8 @@ def c_to_zig_type(c: str) -> str:
 def ziggify_type(name: str, t: str) -> str:
     NO_STRINGS = ["data", "fileData", "compData"]
 
-    single = ["value", "ptr", "bytesRead", "compDataSize", "dataSize", "outputSize", "camera", "collisionPoint", "image", "colorCount", "dst", "texture", "srcPtr", "dstPtr", "count", "codepointSize", "utf8Size", "position", "mesh", "materialCount", "material", "model", "animCount", "wave", "v1", "v2", "outAxis", "outAngle"]
-    multi = ["data", "compData", "points", "frames", "fileData", "colors", "pixels", "fontChars", "chars", "recs", "codepoints", "textList", "transforms", "animations", "samples", "LoadImageColors", "LoadImagePalette", "LoadFontData", "LoadCodepoints", "TextSplit", "LoadMaterials", "LoadModelAnimations", "LoadWaveSamples"]
+    single = ["value", "ptr", "bytesRead", "compDataSize", "dataSize", "outputSize", "camera", "collisionPoint", "frames", "image", "colorCount", "dst", "texture", "srcPtr", "dstPtr", "count", "codepointSize", "utf8Size", "position", "mesh", "materialCount", "material", "model", "animCount", "wave", "v1", "v2", "outAxis", "outAngle"]
+    multi = ["data", "compData", "points", "fileData", "colors", "pixels", "fontChars", "chars", "recs", "codepoints", "textList", "transforms", "animations", "samples", "LoadImageColors", "LoadImagePalette", "LoadFontData", "LoadCodepoints", "TextSplit", "LoadMaterials", "LoadModelAnimations", "LoadWaveSamples"]
     string = False
 
     if t.startswith("[*c]") and name not in single and name not in multi:

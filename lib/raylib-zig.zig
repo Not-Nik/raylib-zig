@@ -166,24 +166,32 @@ pub const Image = extern struct {
         return rl.loadImage(fileName);
     }
 
-    pub fn initRaw(fileName: *const []u8, width: i32, height: i32, format: PixelFormat, headerSize: i32) Image {
+    pub fn initRaw(fileName: [:0]const u8, width: i32, height: i32, format: PixelFormat, headerSize: i32) Image {
         return rl.loadImageRaw(fileName, width, height, format, headerSize);
     }
 
-    pub fn initText(text: *const []u8, fontSize: i32, color: Color) Image {
+    pub fn initAnim(fileName: [:0]const u8, frames: *i32) Image {
+        return rl.loadImageAnim(fileName, frames);
+    }
+
+    pub fn fromTexture(texture: Texture) Image {
+        return rl.loadImageFromTexture(texture);
+    }
+
+    pub fn fromScreen() Image {
+        return rl.loadImageFromScreen();
+    }
+
+    pub fn unload(self: Image) void {
+        rl.unloadImage(self);
+    }
+
+    pub fn initText(text: [:0]const u8, fontSize: i32, color: Color) Image {
         return rl.imageText(text, fontSize, color);
     }
 
-    pub fn initTextEx(font: Font, text: *const []u8, fontSize: f32, spacing: f32, tint: Color) Image {
-        return rl.imageTextEx(font, text, fontSize, spacing, tint);
-    }
-
-    pub fn copy(self: Image) Image {
-        return rl.imageCopy(self);
-    }
-
-    pub fn copyRec(self: Image, rec: Rectangle) Image {
-        return rl.imageFromImage(self, rec);
+    pub fn initTextEx(font: Font, text: [:0]const u8, fontSize: f32, spacing: f32, t: Color) Image {
+        return rl.imageTextEx(font, text, fontSize, spacing, t);
     }
 
     pub fn genColor(width: i32, height: i32, color: Color) Image {
@@ -210,12 +218,198 @@ pub const Image = extern struct {
         return rl.genImageWhiteNoise(width, height, factor);
     }
 
+    pub fn genPerlinNoise(width: i32, height: i32, offsetX: i32, offsetY: i32, scale: f32) Image {
+        _ = scale;
+        return rl.genImagePerlinNoise(width, height, offsetX, offsetY);
+    }
+
     pub fn genCellular(width: i32, height: i32, tileSize: i32) Image {
         return rl.genImageCellular(width, height, tileSize);
     }
 
-    pub fn unload(self: Image) void {
-        rl.unloadImage(self);
+    pub fn genText(width: i32, height: i32, text: [:0]const u8) Image {
+        return rl.genImageText(width, height, text);
+    }
+
+    pub fn copy(self: Image) Image {
+        return rl.imageCopy(self);
+    }
+
+    pub fn copyRec(self: Image, rec: Rectangle) Image {
+        return rl.imageFromImage(self, rec);
+    }
+
+    // @todo: use PixelFormat enum for newFormat
+    pub fn setFormat(self: *Image, newFormat: i32) Image {
+        rl.imageFormat(self, newFormat);
+    }
+
+    pub fn toPOT(self: *Image, fill: Color) void {
+        rl.imageToPOT(self, fill);
+    }
+
+    pub fn crop(self: *Image, c: Rectangle) void {
+        rl.imageCrop(self, c);
+    }
+
+    pub fn alphaCrop(self: *Image, threshold: f32) void {
+        rl.imageAlphaCrop(self, threshold);
+    }
+
+    pub fn alphaClear(self: *Image, color: Color, threshold: f32) void {
+        rl.imageAlphaClear(self, color, threshold);
+    }
+
+    pub fn alphaMask(self: *Image, am: Image) void {
+        rl.imageAlphaMask(self, am);
+    }
+
+    pub fn alphaPremultiply(self: *Image) void {
+        rl.imageAlphaPremultiply(self);
+    }
+
+    pub fn blurGaussian(self: *Image, blurSize: i32) void {
+        rl.imageBlurGaussian(self, blurSize);
+    }
+
+    pub fn resize(self: *Image, newWidth: i32, newHeight: i32) void {
+        rl.imageResize(self, newWidth, newHeight);
+    }
+
+    pub fn resizeNN(self: *Image, newWidth: i32, newHeight: i32) void {
+        rl.imageResizeNN(self, newWidth, newHeight);
+    }
+
+    pub fn resizeCanvas(self: *Image, newWidth: i32, newHeight: i32, offsetX: i32, offsetY: i32, fill: Color) void {
+        rl.imageResizeCanvas(self, newWidth, newHeight, offsetX, offsetY, fill);
+    }
+
+    pub fn mimaps(self: *Image) void {
+        rl.imageMipmaps(self);
+    }
+
+    pub fn dither(self: *Image, rBpp: i32, gBpp: i32, bBpp: i32, aBpp: i32) void {
+        rl.imageDither(self, rBpp, gBpp, bBpp, aBpp);
+    }
+
+    pub fn flipVertical(self: *Image) void {
+        rl.imageFlipVertical(self);
+    }
+
+    pub fn flipHorizontal(self: *Image) void {
+        rl.imageFlipHorizontal(self);
+    }
+
+    pub fn rotateCW(self: *Image) void {
+        rl.imageRotateCW(self);
+    }
+
+    pub fn rotateCCW(self: *Image) void {
+        rl.imageRotateCCW(self);
+    }
+
+    pub fn tint(self: *Image, color: Color) void {
+        rl.imageColorTint(self, color);
+    }
+
+    pub fn invert(self: *Image) void {
+        rl.imageColorInvert(self);
+    }
+
+    pub fn grayscale(self: *Image) void {
+        rl.imageColorGrayscale(self);
+    }
+
+    pub fn contrast(self: *Image, c: f32) void {
+        rl.imageColorContrast(self, c);
+    }
+
+    pub fn brightness(self: *Image, b: i32) void {
+        rl.imageColorBrightness(self, @as(c_int, b));
+    }
+
+    pub fn replaceColor(self: *Image, color: Color, replace: Color) void {
+        rl.imageColorReplace(self, color, replace);
+    }
+
+    pub fn getAlphaBorder(self: Image, threshold: f32) Rectangle {
+        return rl.getImageAlphaBorder(self, threshold);
+    }
+
+    pub fn getColor(self: Image, x: i32, y: i32) Color {
+        return cdef.GetImageColor(self, x, y);
+    }
+
+    pub fn clearBackground(self: *Image, color: Color) void {
+        cdef.ImageClearBackground(self, color);
+    }
+
+    pub fn drawPixel(self: *Image, posX: i32, posY: i32, color: Color) void {
+        cdef.ImageDrawPixel(self, posX, posY, color);
+    }
+
+    pub fn drawPixelV(self: *Image, position: Vector2, color: Color) void {
+        cdef.ImageDrawPixelV(self, position, color);
+    }
+
+    pub fn drawLine(self: *Image, startPosX: i32, startPosY: i32, endPosX: i32, endPosY: i32, color: Color) void {
+        cdef.ImageDrawLine(self, startPosX, startPosY, endPosX, endPosY, color);
+    }
+
+    pub fn drawLineV(self: *Image, start: Vector2, end: Vector2, color: Color) void {
+        cdef.ImageDrawLineV(self, start, end, color);
+    }
+
+    pub fn drawCircle(self: *Image, centerX: i32, centerY: i32, radius: i32, color: Color) void {
+        cdef.ImageDrawCircle(self, centerX, centerY, radius, color);
+    }
+
+    pub fn drawCircleV(self: *Image, center: Vector2, radius: i32, color: Color) void {
+        cdef.ImageDrawCircleV(self, center, radius, color);
+    }
+
+    pub fn drawCircleLines(self: *Image, centerX: i32, centerY: i32, radius: i32, color: Color) void {
+        cdef.ImageDrawCircleLines(self, centerX, centerY, radius, color);
+    }
+
+    pub fn drawCircleLinesV(self: *Image, center: Vector2, radius: i32, color: Color) void {
+        cdef.ImageDrawCircleLinesV(self, center, radius, color);
+    }
+
+    pub fn drawRectangle(self: *Image, posX: i32, posY: i32, width: i32, height: i32, color: Color) void {
+        cdef.ImageDrawRectangle(self, posX, posY, width, height, color);
+    }
+
+    pub fn drawRectangleV(self: *Image, position: Vector2, size: Vector2, color: Color) void {
+        cdef.ImageDrawRectangleV(self, position, size, color);
+    }
+
+    pub fn drawRectangleRec(self: *Image, rec: Rectangle, color: Color) void {
+        cdef.ImageDrawRectangleRec(self, rec, color);
+    }
+
+    pub fn drawRectangleLines(self: *Image, rec: Rectangle, thick: i32, color: Color) void {
+        cdef.ImageDrawRectangleLines(self, rec, @as(c_int, thick), color);
+    }
+
+    pub fn drawImage(self: *Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, t: Color) void {
+        cdef.ImageDraw(self, src, srcRec, dstRec, t);
+    }
+
+    pub fn drawText(self: *Image, text: [:0]const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
+        cdef.ImageDrawText(self, @ptrCast([*c]const u8, text), posX, posY, fontSize, color);
+    }
+
+    pub fn drawTextEx(self: *Image, font: Font, text: [:0]const u8, position: Vector2, fontSize: f32, spacing: f32, t: Color) void {
+        cdef.ImageDrawTextEx(self, font, @ptrCast([*c]const u8, text), position, fontSize, spacing, t);
+    }
+
+    pub fn exportToFile(self: Image, fileName: [:0]const u8) bool {
+        return rl.exportImage(self, fileName);
+    }
+
+    pub fn exportAsCode(self: Image, fileName: [:0]const u8) bool {
+        return rl.exportImageAsCode(self, fileName);
     }
 
     pub fn useAsWindowIcon(self: Image) void {
@@ -226,6 +420,7 @@ pub const Image = extern struct {
         return Texture.fromImage(self);
     }
 
+    // @todo: use CubemapLayout enum for layout
     pub fn asCubemap(self: Image, layout: i32) Texture {
         return Texture.fromCubemap(self, layout);
     }
@@ -479,7 +674,7 @@ pub const Model = extern struct {
     bones: [*c]BoneInfo,
     bindPose: [*c]Transform,
 
-    pub fn init(fileName: [*c]const u8) Model {
+    pub fn init(fileName: [:0]const u8) Model {
         return rl.loadModel(fileName);
     }
 
@@ -2057,7 +2252,7 @@ pub fn loadImageRaw(fileName: [:0]const u8, width: i32, height: i32, format: i32
     return cdef.LoadImageRaw(@ptrCast([*c]const u8, fileName), @as(c_int, width), @as(c_int, height), @as(c_int, format), @as(c_int, headerSize));
 }
 
-pub fn loadImageAnim(fileName: [:0]const u8, frames: []i32) Image {
+pub fn loadImageAnim(fileName: [:0]const u8, frames: *i32) Image {
     return cdef.LoadImageAnim(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_int, frames));
 }
 
