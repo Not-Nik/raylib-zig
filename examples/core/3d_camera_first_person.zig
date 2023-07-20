@@ -11,6 +11,7 @@ pub fn main() anyerror!void {
     const screenHeight = 450;
 
     rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - 3d camera first person");
+    defer rl.closeWindow(); // Close window and OpenGL context
 
     var camera = rl.Camera3D{
         .position = rl.Vector3.init(4, 2, 4),
@@ -74,9 +75,4 @@ pub fn main() anyerror!void {
         rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    rl.closeWindow(); // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
 }

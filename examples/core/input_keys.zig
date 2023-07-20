@@ -9,6 +9,7 @@ pub fn main() anyerror!void {
     const screenHeight = 450;
 
     rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - keyboard input");
+    defer rl.closeWindow(); // Close window and OpenGL context
 
     var ballPosition = rl.Vector2.init(screenWidth / 2, screenHeight / 2);
 
@@ -47,9 +48,4 @@ pub fn main() anyerror!void {
         rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    rl.closeWindow(); // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
 }

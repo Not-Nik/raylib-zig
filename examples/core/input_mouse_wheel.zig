@@ -10,6 +10,7 @@ pub fn main() anyerror!void {
     const screenHeight = 450;
 
     rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
+    defer rl.closeWindow(); // Close window and OpenGL context
 
     var boxPositionY: f32 = screenHeight / 2 - 40;
     var scrollSpeed: f32 = 4; // Scrolling speed in pixels
@@ -39,9 +40,4 @@ pub fn main() anyerror!void {
         rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    rl.closeWindow(); // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
 }

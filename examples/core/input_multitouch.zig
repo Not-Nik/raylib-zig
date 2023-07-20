@@ -9,6 +9,7 @@ pub fn main() anyerror!void {
     const screenHeight = 450;
 
     rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - basic window");
+    defer rl.closeWindow(); // Close window and OpenGL context
 
     var ballPosition = rl.Vector2.init(-100, -100);
     var ballColor = rl.Color.beige;
@@ -80,9 +81,4 @@ pub fn main() anyerror!void {
         rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    rl.closeWindow(); // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
 }

@@ -12,6 +12,7 @@ pub fn main() anyerror!void {
     const screenHeight = 450;
 
     rl.initWindow(screenWidth, screenHeight, "raylib-zig [core] example - 2d camera");
+    defer rl.closeWindow(); // Close window and OpenGL context
 
     var player = rl.Rectangle{ .x = 400, .y = 280, .width = 40, .height = 40 };
     var buildings: [MAX_BUILDINGS]rl.Rectangle = undefined;
@@ -117,9 +118,4 @@ pub fn main() anyerror!void {
         rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    rl.closeWindow(); // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
 }

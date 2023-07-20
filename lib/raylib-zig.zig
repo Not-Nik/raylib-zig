@@ -222,7 +222,7 @@ pub const Texture = extern struct {
     mipmaps: c_int,
     format: c_int,
 
-    pub fn init(fileName: []const u8) Texture {
+    pub fn init(fileName: [:0]const u8) Texture {
         return rl.loadTexture(fileName);
     }
 

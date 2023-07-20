@@ -14,9 +14,11 @@ pub fn main() anyerror!void {
 
     rl.initAudioDevice(); // Initialize audio device
     rl.initWindow(screenWidth, screenHeight, "raylib [texture] example - sprite anim");
+    defer rl.closeWindow(); // Close window and OpenGL context
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
     const scarfy: rl.Texture = rl.Texture.init("resources/textures/scarfy.png"); // Texture loading
+    defer rl.unloadTexture(scarfy); // Texture unloading
 
     const position = rl.Vector2.init(350.0, 280.0);
     var frameRec = rl.Rectangle.init(0, 0, @intToFloat(f32, @divFloor(scarfy.width, 6)), @intToFloat(f32, scarfy.height));
@@ -86,11 +88,4 @@ pub fn main() anyerror!void {
         rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    rl.unloadTexture(scarfy); // Texture unloading
-
-    rl.closeWindow(); // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
 }

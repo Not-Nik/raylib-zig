@@ -13,10 +13,13 @@ pub fn main() anyerror!void {
     const screenHeight = 450;
 
     rl.initWindow(screenWidth, screenHeight, "raylib [shaders] example - Apply an outline to a texture");
+    defer rl.closeWindow(); // Close window and OpenGL context
 
     const texture: rl.Texture = rl.Texture.init("resources/textures/fudesumi.png");
+    defer rl.unloadTexture(texture);
 
     const shdrOutline: rl.Shader = rl.loadShader(null, "resources/shaders/glsl330/outline.fs");
+    defer rl.unloadShader(shdrOutline);
 
     var outlineSize: f32 = 2.0;
     const outlineColor = [4]f32{ 1.0, 0.0, 0.0, 1.0 }; // Normalized RED color
@@ -66,13 +69,4 @@ pub fn main() anyerror!void {
         rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    rl.unloadTexture(texture);
-    rl.unloadShader(shdrOutline);
-
-    rl.closeWindow(); // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
-
 }

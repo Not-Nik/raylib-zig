@@ -154,7 +154,7 @@ pub const Image = extern struct {
     mipmaps: c_int,
     format: PixelFormat,
 
-    pub fn init(fileName: []const u8) Image {
+    pub fn init(fileName: [:0]const u8) Image {
         return rl.loadImage(fileName);
     }
 
@@ -222,7 +222,7 @@ pub const Texture = extern struct {
     mipmaps: c_int,
     format: c_int,
 
-    pub fn init(fileName: []const u8) Texture {
+    pub fn init(fileName: [:0]const u8) Texture {
         return rl.loadTexture(fileName);
     }
 
@@ -995,11 +995,11 @@ pub fn saveFileData(fileName: [:0]const u8, data: []anyopaque) bool {
     return cdef.SaveFileData(@ptrCast([*c]const u8, fileName), @ptrCast(*anyopaque, data.ptr), @intCast(c_uint, data.len));
 }
 
-pub fn exportDataAsCode(data: []const u8, fileName: []const u8) bool {
+pub fn exportDataAsCode(data: [:0]const u8, fileName: [:0]const u8) bool {
     return cdef.ExportDataAsCode(@ptrCast([*c]const u8, data), @as(c_uint, data.len), @ptrCast([*c]const u8, fileName));
 }
 
-pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: []const u8) Image {
+pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: [:0]const u8) Image {
     return cdef.LoadImageFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @intCast(c_int, fileData.len));
 }
 
@@ -1020,10 +1020,12 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) []Color {
 
 pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
     var fileDataFinal = @as([*c]const u8, 0);
+    var fileDataLen = 0;
     if (fileData) |fileDataSure| {
         fileDataFinal = @ptrCast([*c]const u8, fileDataSure);
+        fileDataLen = fileDataSure.len;
     }
-    return cdef.LoadFontFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileDataFinal), @intCast(c_int, fileData.len), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @intCast(c_int, fontChars.len));
+    return cdef.LoadFontFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileDataFinal), @intCast(c_int, fileDataLen), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @intCast(c_int, fontChars.len));
 }
 
 pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) []GlyphInfo {
