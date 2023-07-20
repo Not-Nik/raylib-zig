@@ -51,22 +51,22 @@ pub fn main() anyerror!void {
         // Draw
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
+        defer rl.endDrawing();
 
         rl.clearBackground(rl.Color.ray_white);
 
-        rl.beginShaderMode(shdrOutline);
+        {
+            rl.beginShaderMode(shdrOutline);
+            defer rl.endShaderMode();
 
-        texture.draw(@divFloor(rl.getScreenWidth(), 2) - @divFloor(texture.width, 2), -30, rl.Color.white);
-
-        rl.endShaderMode();
+            texture.draw(@divFloor(rl.getScreenWidth(), 2) - @divFloor(texture.width, 2), -30, rl.Color.white);
+        }
 
         rl.drawText("Shader-based\ntexture\noutline", 10, 10, 20, rl.Color.gray);
 
         rl.drawText(rl.textFormat("Outline size: %i px", .{@floatToInt(i32, outlineSize)}), 10, 120, 20, rl.Color.maroon);
 
         rl.drawFPS(710, 10);
-
-        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 }

@@ -46,24 +46,26 @@ pub fn main() anyerror!void {
         // Draw
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
+        defer rl.endDrawing();
 
         rl.clearBackground(rl.Color.ray_white);
 
-        camera.begin();
+        {
+            camera.begin();
+            defer camera.end();
 
-        // Draw ground
-        rl.drawPlane(rl.Vector3.init(0, 0, 0), rl.Vector2.init(32, 32), rl.Color.light_gray);
-        rl.drawCube(rl.Vector3.init(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.blue); // Draw a blue wall
-        rl.drawCube(rl.Vector3.init(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.lime); // Draw a green wall
-        rl.drawCube(rl.Vector3.init(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, rl.Color.gold); // Draw a yellow wall
+            // Draw ground
+            rl.drawPlane(rl.Vector3.init(0, 0, 0), rl.Vector2.init(32, 32), rl.Color.light_gray);
+            rl.drawCube(rl.Vector3.init(-16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.blue); // Draw a blue wall
+            rl.drawCube(rl.Vector3.init(16.0, 2.5, 0.0), 1.0, 5.0, 32.0, rl.Color.lime); // Draw a green wall
+            rl.drawCube(rl.Vector3.init(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, rl.Color.gold); // Draw a yellow wall
 
-        // Draw some cubes around
-        for (heights) |height, i| {
-            rl.drawCube(positions[i], 2.0, height, 2.0, colors[i]);
-            rl.drawCubeWires(positions[i], 2.0, height, 2.0, rl.Color.maroon);
+            // Draw some cubes around
+            for (heights) |height, i| {
+                rl.drawCube(positions[i], 2.0, height, 2.0, colors[i]);
+                rl.drawCubeWires(positions[i], 2.0, height, 2.0, rl.Color.maroon);
+            }
         }
-
-        camera.end();
 
         rl.drawRectangle(10, 10, 220, 70, rl.Color.sky_blue.fade(0.5));
         rl.drawRectangleLines(10, 10, 220, 70, rl.Color.blue);

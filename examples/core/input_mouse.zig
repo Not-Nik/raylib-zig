@@ -37,14 +37,13 @@ pub fn main() anyerror!void {
         // Draw
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
+        defer rl.endDrawing();
 
         rl.clearBackground(rl.Color.ray_white);
 
         rl.drawCircleV(ballPosition, 40, ballColor);
 
         rl.drawText("move ball with mouse and click mouse button to change color", 10, 10, 20, rl.Color.dark_gray);
-
-        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 }

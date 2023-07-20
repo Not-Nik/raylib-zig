@@ -28,6 +28,7 @@ pub fn main() anyerror!void {
         // Draw
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
+        defer rl.endDrawing();
 
         rl.clearBackground(rl.Color.white);
 
@@ -36,8 +37,6 @@ pub fn main() anyerror!void {
         rl.drawText("Use mouse wheel to move the cube up and down!", 10, 10, 20, rl.Color.gray);
 
         rl.drawText(rl.textFormat("Box position Y: %03i", .{@floatToInt(c_int, boxPositionY)}), 10, 40, 20, rl.Color.light_gray);
-
-        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 }

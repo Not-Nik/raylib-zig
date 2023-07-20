@@ -56,6 +56,7 @@ pub fn main() anyerror!void {
         // Draw
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
+        defer rl.endDrawing();
 
         rl.clearBackground(rl.Color.ray_white);
 
@@ -77,8 +78,6 @@ pub fn main() anyerror!void {
 
         rl.drawText("move ball with mouse and click mouse button to change color", 10, 10, 20, rl.Color.dark_gray);
         rl.drawText("touch the screen at multiple locations to get multiple balls", 10, 30, 20, rl.Color.dark_gray);
-
-        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 }

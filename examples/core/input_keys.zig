@@ -38,14 +38,13 @@ pub fn main() anyerror!void {
         // Draw
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
+        defer rl.endDrawing();
 
         rl.clearBackground(rl.Color.ray_white);
 
         rl.drawText("move the ball with arrow keys", 10, 10, 20, rl.Color.dark_gray);
 
         rl.drawCircleV(ballPosition, 50, rl.Color.maroon);
-
-        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 }

@@ -63,6 +63,7 @@ pub fn main() anyerror!void {
         // Draw
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
+        defer rl.endDrawing();
 
         rl.clearBackground(rl.Color.ray_white);
 
@@ -84,8 +85,6 @@ pub fn main() anyerror!void {
         scarfy.drawRec(frameRec, position, rl.Color.white); // Draw part of the texture
 
         rl.drawText("(c) Scarfy sprite by Eiden Marsal", screenWidth - 200, screenHeight - 20, 10, rl.Color.gray);
-
-        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 }

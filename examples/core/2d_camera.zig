@@ -81,23 +81,25 @@ pub fn main() anyerror!void {
         // Draw
         //----------------------------------------------------------------------------------
         rl.beginDrawing();
+        defer rl.endDrawing();
 
         rl.clearBackground(rl.Color.ray_white);
 
-        camera.begin();
+        {
+            camera.begin();
+            defer camera.end();
 
-        rl.drawRectangle(-6000, 320, 13000, 8000, rl.Color.dark_gray);
+            rl.drawRectangle(-6000, 320, 13000, 8000, rl.Color.dark_gray);
 
-        for (buildings) |building, i| {
-            rl.drawRectangleRec(building, buildColors[i]);
+            for (buildings) |building, i| {
+                rl.drawRectangleRec(building, buildColors[i]);
+            }
+
+            rl.drawRectangleRec(player, rl.Color.red);
+
+            rl.drawLine(@floatToInt(i32, camera.target.x), -screenHeight * 10, @floatToInt(i32, camera.target.x), screenHeight * 10, rl.Color.green);
+            rl.drawLine(-screenWidth * 10, @floatToInt(i32, camera.target.y), screenWidth * 10, @floatToInt(i32, camera.target.y), rl.Color.green);
         }
-
-        rl.drawRectangleRec(player, rl.Color.red);
-
-        rl.drawLine(@floatToInt(i32, camera.target.x), -screenHeight * 10, @floatToInt(i32, camera.target.x), screenHeight * 10, rl.Color.green);
-        rl.drawLine(-screenWidth * 10, @floatToInt(i32, camera.target.y), screenWidth * 10, @floatToInt(i32, camera.target.y), rl.Color.green);
-
-        camera.end();
 
         rl.drawText("SCREEN AREA", 640, 10, 20, rl.Color.red);
 
@@ -114,8 +116,6 @@ pub fn main() anyerror!void {
         rl.drawText("- Mouse Wheel to Zoom in-out", 40, 60, 10, rl.Color.dark_gray);
         rl.drawText("- A / S to Rotate", 40, 80, 10, rl.Color.dark_gray);
         rl.drawText("- R to reset Zoom and Rotation", 40, 100, 10, rl.Color.dark_gray);
-
-        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 }
