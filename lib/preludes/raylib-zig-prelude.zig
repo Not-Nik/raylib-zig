@@ -206,6 +206,10 @@ pub const Image = extern struct {
         return rl.genImageCellular(width, height, tileSize);
     }
 
+    pub fn unload(self: Image) void {
+        rl.unloadImage(self);
+    }
+
     pub fn useAsWindowIcon(self: Image) void {
         rl.setWindowIcon(self);
     }
@@ -228,6 +232,10 @@ pub const Texture = extern struct {
 
     pub fn fromCubemap(image: Image, layout: i32) Texture {
         return rl.loadTextureCubemap(image, layout);
+    }
+
+    pub fn unload(self: Texture) void {
+        rl.unloadTexture(self);
     }
 
     pub fn draw(self: Texture, posX: i32, posY: i32, tint: Color) void {
@@ -266,6 +274,10 @@ pub const RenderTexture = extern struct {
         return rl.loadRenderTexture(width, height);
     }
 
+    pub fn unload(self: RenderTexture) void {
+        rl.unloadRenderTexture(self);
+    }
+
     pub fn begin(self: RenderTexture2D) void {
         rl.beginTextureMode(self);
     }
@@ -300,6 +312,34 @@ pub const Font = extern struct {
     texture: Texture2D,
     recs: [*c]Rectangle,
     glyphs: [*c]GlyphInfo,
+
+    pub fn init(fileName: [:0]const u8) Font {
+        return rl.loadFont(fileName);
+    }
+
+    pub fn initEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32, glyphCount: i32) Font {
+        return rl.loadFontEx(fileName, fontSize, fontChars, glyphCount);
+    }
+
+    pub fn initFromImage(image: Image, key: Color, firstChar: i32) Font {
+        return rl.loadFontFromImage(image, key, firstChar);
+    }
+
+    pub fn initFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
+        return rl.loadFontFromMemory(fileType, fileData, fontSize, fontChars);
+    }
+
+    pub fn unload(self: Font) void {
+        rl.unloadFont(self);
+    }
+
+    pub fn isReady(self: Font) bool {
+        return rl.isFontReady(self);
+    }
+
+    pub fn exportAsCode(self: Font, fileName: [:0]const u8) bool {
+        return rl.exportFontAsCode(self, fileName);
+    }
 };
 
 pub const Camera3D = extern struct {
@@ -429,6 +469,10 @@ pub const Model = extern struct {
 
     pub fn initFromMesh(mesh: Mesh) Model {
         return rl.loadModelFromMesh(mesh);
+    }
+
+    pub fn unload(self: Model) void {
+        rl.unloadModel(self);
     }
 
     pub fn draw(self: Mesh, position: Vector3, scale: f32, tint: Color) void {
