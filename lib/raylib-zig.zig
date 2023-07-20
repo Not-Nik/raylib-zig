@@ -145,6 +145,14 @@ pub const Rectangle = extern struct {
     pub fn init(x: f32, y: f32, width: f32, height: f32) Rectangle {
         return Rectangle{ .x = x, .y = y, .width = width, .height = height };
     }
+
+    pub fn checkCollision(self: Rectangle, rec2: Rectangle) bool {
+        return rl.CheckCollisionRecs(self, rec2);
+    }
+
+    pub fn getCollision(self: Rectangle, rec2: Rectangle) Rectangle {
+        return rl.GetCollisionRec(self, rec2);
+    }
 };
 
 pub const Image = extern struct {
@@ -170,12 +178,12 @@ pub const Image = extern struct {
         return rl.imageTextEx(font, text, fontSize, spacing, tint);
     }
 
-    pub fn copy(image: Image) Image {
-        return rl.imageCopy(image);
+    pub fn copy(self: Image) Image {
+        return rl.imageCopy(self);
     }
 
-    pub fn copyRec(image: Image, rec: Rectangle) Image {
-        return rl.imageFromImage(image, rec);
+    pub fn copyRec(self: Image, rec: Rectangle) Image {
+        return rl.imageFromImage(self, rec);
     }
 
     pub fn genColor(width: i32, height: i32, color: Color) Image {
@@ -212,6 +220,14 @@ pub const Image = extern struct {
 
     pub fn useAsWindowIcon(self: Image) void {
         rl.setWindowIcon(self);
+    }
+
+    pub fn toTexture(self: Image) Texture {
+        return Texture.fromImage(self);
+    }
+
+    pub fn asCubemap(self: Image, layout: i32) Texture {
+        return Texture.fromCubemap(self, layout);
     }
 };
 
@@ -321,11 +337,11 @@ pub const Font = extern struct {
         return rl.loadFontEx(fileName, fontSize, fontChars, glyphCount);
     }
 
-    pub fn initFromImage(image: Image, key: Color, firstChar: i32) Font {
+    pub fn fromImage(image: Image, key: Color, firstChar: i32) Font {
         return rl.loadFontFromImage(image, key, firstChar);
     }
 
-    pub fn initFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
+    pub fn fromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
         return rl.loadFontFromMemory(fileType, fileData, fontSize, fontChars);
     }
 
@@ -467,7 +483,7 @@ pub const Model = extern struct {
         return rl.loadModel(fileName);
     }
 
-    pub fn initFromMesh(mesh: Mesh) Model {
+    pub fn fromMesh(mesh: Mesh) Model {
         return rl.loadModelFromMesh(mesh);
     }
 
