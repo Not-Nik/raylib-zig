@@ -90,6 +90,10 @@ pub fn vector2Angle(v1: Vector2, v2: Vector2) f32 {
     return cdef.Vector2Angle(v1, v2);
 }
 
+pub fn vector2LineAngle(start: Vector2, end: Vector2) f32 {
+    return cdef.Vector2LineAngle(start, end);
+}
+
 pub fn vector2Scale(v: Vector2, scale: f32) Vector2 {
     return cdef.Vector2Scale(v, scale);
 }
@@ -223,7 +227,7 @@ pub fn vector3Normalize(v: Vector3) Vector3 {
 }
 
 pub fn vector3OrthoNormalize(v1: *Vector3, v2: *Vector3) void {
-    cdef.Vector3OrthoNormalize(@ptrCast([*c]Vector3, v1), @ptrCast([*c]Vector3, v2));
+    cdef.Vector3OrthoNormalize(@as([*c]Vector3, @ptrCast(v1)), @as([*c]Vector3, @ptrCast(v2)));
 }
 
 pub fn vector3Transform(v: Vector3, mat: Matrix) Vector3 {
@@ -354,12 +358,12 @@ pub fn matrixFrustum(left: f64, right: f64, bottom: f64, top: f64, near: f64, fa
     return cdef.MatrixFrustum(left, right, bottom, top, near, far);
 }
 
-pub fn matrixPerspective(fovy: f64, aspect: f64, near: f64, far: f64) Matrix {
-    return cdef.MatrixPerspective(fovy, aspect, near, far);
+pub fn matrixPerspective(fovY: f64, aspect: f64, nearPlane: f64, farPlane: f64) Matrix {
+    return cdef.MatrixPerspective(fovY, aspect, nearPlane, farPlane);
 }
 
-pub fn matrixOrtho(left: f64, right: f64, bottom: f64, top: f64, near: f64, far: f64) Matrix {
-    return cdef.MatrixOrtho(left, right, bottom, top, near, far);
+pub fn matrixOrtho(left: f64, right: f64, bottom: f64, top: f64, nearPlane: f64, farPlane: f64) Matrix {
+    return cdef.MatrixOrtho(left, right, bottom, top, nearPlane, farPlane);
 }
 
 pub fn matrixLookAt(eye: Vector3, target: Vector3, up: Vector3) Matrix {
@@ -443,7 +447,7 @@ pub fn quaternionFromAxisAngle(axis: Vector3, angle: f32) Quaternion {
 }
 
 pub fn quaternionToAxisAngle(q: Quaternion, outAxis: *Vector3, outAngle: *f32) void {
-    cdef.QuaternionToAxisAngle(q, @ptrCast([*c]Vector3, outAxis), @ptrCast([*c]f32, outAngle));
+    cdef.QuaternionToAxisAngle(q, @as([*c]Vector3, @ptrCast(outAxis)), @as([*c]f32, @ptrCast(outAngle)));
 }
 
 pub fn quaternionFromEuler(pitch: f32, yaw: f32, roll: f32) Quaternion {

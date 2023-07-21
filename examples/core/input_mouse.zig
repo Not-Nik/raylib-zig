@@ -22,8 +22,8 @@ pub fn main() anyerror!void {
         // Update
         //----------------------------------------------------------------------------------
         ballPosition = rl.getMousePosition();
-        ballPosition.x = @intToFloat(f32, rl.getMouseX());
-        ballPosition.y = @intToFloat(f32, rl.getMouseY());
+        ballPosition.x = @as(f32, @floatFromInt(rl.getMouseX()));
+        ballPosition.y = @as(f32, @floatFromInt(rl.getMouseY()));
 
         if (rl.isMouseButtonPressed(rl.MouseButton.mouse_button_left)) {
             ballColor = rl.Color.maroon;

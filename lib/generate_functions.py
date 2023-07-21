@@ -38,8 +38,8 @@ def c_to_zig_type(c: str) -> str:
 def ziggify_type(name: str, t: str) -> str:
     NO_STRINGS = ["data", "fileData", "compData"]
 
-    single = ["value", "ptr", "bytesRead", "compDataSize", "dataSize", "outputSize", "camera", "collisionPoint", "frames", "image", "colorCount", "dst", "texture", "srcPtr", "dstPtr", "count", "codepointSize", "utf8Size", "position", "mesh", "materialCount", "material", "model", "animCount", "wave", "v1", "v2", "outAxis", "outAngle"]
-    multi = ["data", "compData", "points", "fileData", "colors", "pixels", "fontChars", "chars", "recs", "codepoints", "textList", "transforms", "animations", "samples", "LoadImageColors", "LoadImagePalette", "LoadFontData", "LoadCodepoints", "TextSplit", "LoadMaterials", "LoadModelAnimations", "LoadWaveSamples"]
+    single = ["value", "ptr", "bytesRead", "compDataSize", "dataSize", "outputSize", "camera", "collisionPoint", "frames", "image", "colorCount", "dst", "texture", "srcPtr", "dstPtr", "count", "codepointSize", "utf8Size", "position", "mesh", "materialCount", "material", "model", "animCount", "wave", "v1", "v2", "outAxis", "outAngle", "fileSize"]
+    multi = ["data", "compData", "points", "fileData", "colors", "pixels", "fontChars", "chars", "recs", "codepoints", "textList", "transforms", "animations", "samples", "LoadImageColors", "LoadImagePalette", "LoadFontData", "LoadCodepoints", "TextSplit", "LoadMaterials", "LoadModelAnimations", "LoadWaveSamples", "images"]
     string = False
 
     if t.startswith("[*c]") and name not in single and name not in multi:
@@ -126,7 +126,7 @@ def fix_enums(arg_name, arg_type, func_name):
                 arg_type = "GamepadButton"
             else:
                 arg_type = "MouseButton"
-        elif arg_name == "mode" and func_name == "SetCameraMode":
+        elif arg_name == "mode" and func_name == "UpdateCamera":
             arg_type = "CameraMode"
         elif arg_name == "gesture":
             arg_type = "Gesture"
@@ -227,7 +227,7 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
                 zig_call_args.append(arg_name)
             else:
                 if arg_type.startswith("[*c]"):
-                    zig_call_args.append(f"@ptrCast({arg_type}, {arg_name})")
+                    zig_call_args.append(f"@as({arg_type}, @ptrCast({arg_name}))")
                 else:
                     zig_call_args.append(f"@as({arg_type}, {arg_name})")
         zig_c_arguments = ", ".join(zig_c_arguments)
@@ -254,7 +254,8 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
             "CompressData",
             "DecompressData",
             "EncodeDataBase64",
-            "DecodeDataBase64"
+            "DecodeDataBase64",
+            "SetWindowIcons"
         ]
 
         if func_name in manual or "FromMemory" in func_name:
@@ -283,5 +284,5 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
 
 
 if __name__ == "__main__":
-    parse_header("../raylib/src/raylib.h", "raylib-zig.zig", "raylib-zig-ext.zig", "RLAPI ", "preludes/raylib-zig-prelude.zig", "preludes/raylib-zig-ext-prelude.zig")
-    parse_header("../raylib/src/raymath.h", "raylib-zig-math.zig", "raylib-zig-math-ext.zig", "RMAPI ", "preludes/raylib-zig-math-prelude.zig", "preludes/raylib-zig-math-ext-prelude.zig")
+    parse_header("raylib.h", "raylib-zig.zig", "raylib-zig-ext.zig", "RLAPI ", "preludes/raylib-zig-prelude.zig", "preludes/raylib-zig-ext-prelude.zig")
+    parse_header("raymath.h", "raylib-zig-math.zig", "raylib-zig-math-ext.zig", "RMAPI ", "preludes/raylib-zig-math-prelude.zig", "preludes/raylib-zig-math-ext-prelude.zig")
