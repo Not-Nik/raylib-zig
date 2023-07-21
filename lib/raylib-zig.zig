@@ -393,7 +393,7 @@ pub const Image = extern struct {
     }
 
     pub fn drawRectangleLines(self: *Image, rec: Rectangle, thick: i32, color: Color) void {
-        rl.imageDrawRectangleLines(self, rec, @as(c_int, thick), color);
+        rl.imageDrawRectangleLines(self, rec, thick, color);
     }
 
     pub fn drawImage(self: *Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, t: Color) void {
@@ -1155,9 +1155,9 @@ pub const SaveFileTextCallback = ?fn ([*c]const u8, [*c]u8) callconv(.C) bool;
 pub const AudioCallback = ?*const fn (?*anyopaque, c_uint) callconv(.C) void;
 
 pub const RAYLIB_VERSION_MAJOR = @as(i32, 4);
-pub const RAYLIB_VERSION_MINOR = @as(i32, 5);
+pub const RAYLIB_VERSION_MINOR = @as(i32, 6);
 pub const RAYLIB_VERSION_PATCH = @as(i32, 0);
-pub const RAYLIB_VERSION = "4.5-dev";
+pub const RAYLIB_VERSION = "4.6-dev";
 
 pub const MAX_TOUCH_POINTS = 10;
 pub const MAX_MATERIAL_MAPS = 12;
@@ -1294,7 +1294,7 @@ pub fn loadCodepoints(text: [:0]const u8) []i32 {
 }
 
 pub fn textFormat(text: [:0]const u8, args: anytype) [:0]const u8 {
-    return std.mem.span(@call(.auto, cdef.TextFormat, .{@as([*c]const u8, @ptrCast(text))} ++ args));
+    return std.mem.span(@call(.{}, cdef.TextFormat, .{@as([*c]const u8, @ptrCast(text))} ++ args));
 }
 
 pub fn textSplit(text: [:0]const u8, delimiter: u8) [][:0]const u8 {

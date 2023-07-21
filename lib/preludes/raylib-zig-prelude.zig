@@ -393,7 +393,7 @@ pub const Image = extern struct {
     }
 
     pub fn drawRectangleLines(self: *Image, rec: Rectangle, thick: i32, color: Color) void {
-        rl.imageDrawRectangleLines(self, rec, @as(c_int, thick), color);
+        rl.imageDrawRectangleLines(self, rec, thick, color);
     }
 
     pub fn drawImage(self: *Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, t: Color) void {
