@@ -1195,7 +1195,7 @@ pub fn loadShaderFromMemory(vsCode: ?[:0]const u8, fsCode: ?[:0]const u8) Shader
 }
 
 pub fn loadFileData(fileName: [:0]const u8) []u8 {
-    var bytesRead = 0;
+    var bytesRead: i32 = 0;
     var res: []u8 = undefined;
     res.ptr = @ptrCast([*]u8, cdef.LoadFileData(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_uint, &bytesRead)));
     res.len = @intCast(usize, bytesRead);
@@ -1211,7 +1211,7 @@ pub fn exportDataAsCode(data: []const u8, fileName: [:0]const u8) bool {
 }
 
 pub fn compressData(data: []const u8) [:0]u8 {
-    var compDataSize = 0;
+    var compDataSize: i32 = 0;
     var res: []u8 = undefined;
     res.ptr = cdef.CompressData(@ptrCast([*c]const u8, data), @intCast(c_int, data.len), @ptrCast([*c]c_int, &compDataSize));
     res.len = @intCast(usize, compDataSize);
@@ -1219,7 +1219,7 @@ pub fn compressData(data: []const u8) [:0]u8 {
 }
 
 pub fn decompressData(compData: []const u8) [:0]u8 {
-    var dataSize = 0;
+    var dataSize: i32 = 0;
     var res: []u8 = undefined;
     res.ptr = cdef.DecompressData(@ptrCast([*c]const u8, compData), @intCast(c_int, compData.len), @ptrCast([*c]c_int, &dataSize));
     res.len = @intCast(usize, dataSize);
@@ -1227,7 +1227,7 @@ pub fn decompressData(compData: []const u8) [:0]u8 {
 }
 
 pub fn encodeDataBase64(data: []const u8) []u8 {
-    var outputSize = 0;
+    var outputSize: i32 = 0;
     var res: []u8 = undefined;
     res.ptr = cdef.EncodeDataBase64(@ptrCast([*c]const u8, data), @intCast(c_int, data.len), @ptrCast([*c]c_int, &outputSize));
     res.len = @intCast(usize, outputSize);
@@ -1235,14 +1235,14 @@ pub fn encodeDataBase64(data: []const u8) []u8 {
 }
 
 pub fn decodeDataBase64(data: []const u8) []u8 {
-    var outputSize = 0;
+    var outputSize: i32 = 0;
     var res: []u8 = undefined;
     res.ptr = cdef.DecodeDataBase64(@ptrCast([*c]const u8, data), @ptrCast([*c]c_int, &outputSize));
     res.len = @intCast(usize, outputSize);
     return res;
 }
 
-pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: [:0]const u8) Image {
+pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: []const u8) Image {
     return cdef.LoadImageFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileData), @intCast(c_int, fileData.len));
 }
 
@@ -1254,7 +1254,7 @@ pub fn loadImageColors(image: Image) []Color {
 }
 
 pub fn loadImagePalette(image: Image, maxPaletteSize: i32) []Color {
-    var colorCount = 0;
+    var colorCount: i32 = 0;
     var res: []Color = undefined;
     res.ptr = @ptrCast([*]Color, cdef.LoadImagePalette(image, @as(c_int, maxPaletteSize), @ptrCast([*c]c_int, &colorCount)));
     res.len = @intCast(usize, colorCount);
@@ -1263,10 +1263,10 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) []Color {
 
 pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
     var fileDataFinal = @as([*c]const u8, 0);
-    var fileDataLen = 0;
+    var fileDataLen: i32 = 0;
     if (fileData) |fileDataSure| {
         fileDataFinal = @ptrCast([*c]const u8, fileDataSure);
-        fileDataLen = fileDataSure.len;
+        fileDataLen = @intCast(i32, fileDataSure.len);
     }
     return cdef.LoadFontFromMemory(@ptrCast([*c]const u8, fileType), @ptrCast([*c]const u8, fileDataFinal), @intCast(c_int, fileDataLen), @as(c_int, fontSize), @ptrCast([*c]c_int, fontChars), @intCast(c_int, fontChars.len));
 }
@@ -1282,7 +1282,7 @@ pub fn loadCodepoints(text: [:0]const u8) []i32 {
     if (@sizeOf(c_int) != @sizeOf(i32)) {
         @compileError("Can't cast pointer to c_int array to i32 because they don't have the same size");
     }
-    var count = 0;
+    var count: i32 = 0;
     var res: []i32 = undefined;
     res.ptr = @ptrCast([*]i32, cdef.LoadCodepoints(@ptrCast([*c]const u8, text), @ptrCast([*c]c_int, &count)));
     res.len = @intCast(usize, count);
@@ -1294,7 +1294,7 @@ pub fn textFormat(text: [:0]const u8, args: anytype) [:0]const u8 {
 }
 
 pub fn textSplit(text: [:0]const u8, delimiter: u8) [][:0]const u8 {
-    var count = 0;
+    var count: i32 = 0;
     var res: [][*]const u8 = undefined;
     res.ptr = @ptrCast([*][*]const u8, cdef.TextSplit(@ptrCast([*c]const u8, text), delimiter, @ptrCast([*c]c_int, &count)));
     res.len = @intCast(usize, count);
@@ -1306,7 +1306,7 @@ pub fn drawMeshInstanced(mesh: Mesh, material: Material, transforms: []const Mat
 }
 
 pub fn loadMaterials(fileName: [:0]const u8) []Material {
-    var materialCount = 0;
+    var materialCount: i32 = 0;
     var res: []Material = undefined;
     res.ptr = @ptrCast([*]Material, cdef.LoadMaterials(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_int, &materialCount)));
     res.len = @intCast(usize, materialCount);
@@ -1314,7 +1314,7 @@ pub fn loadMaterials(fileName: [:0]const u8) []Material {
 }
 
 pub fn loadModelAnimations(fileName: [:0]const u8) []ModelAnimation {
-    var animCount = 0;
+    var animCount: i32 = 0;
     var res: []ModelAnimation = undefined;
     res.ptr = @ptrCast([*]ModelAnimation, cdef.LoadModelAnimations(@ptrCast([*c]const u8, fileName), @ptrCast([*c]c_uint, &animCount)));
     res.len = @intCast(usize, animCount);
