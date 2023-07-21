@@ -1241,7 +1241,7 @@ pub fn decodeDataBase64(data: []const u8) []u8 {
     return res;
 }
 
-pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: [:0]const u8) Image {
+pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: []const u8) Image {
     return cdef.LoadImageFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)));
 }
 
