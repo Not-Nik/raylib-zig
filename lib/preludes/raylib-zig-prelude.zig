@@ -337,71 +337,71 @@ pub const Image = extern struct {
     }
 
     pub fn getColor(self: Image, x: i32, y: i32) Color {
-        return cdef.GetImageColor(self, x, y);
+        return rl.getImageColor(self, x, y);
     }
 
     pub fn clearBackground(self: *Image, color: Color) void {
-        cdef.ImageClearBackground(self, color);
+        rl.imageClearBackground(self, color);
     }
 
     pub fn drawPixel(self: *Image, posX: i32, posY: i32, color: Color) void {
-        cdef.ImageDrawPixel(self, posX, posY, color);
+        rl.imageDrawPixel(self, posX, posY, color);
     }
 
     pub fn drawPixelV(self: *Image, position: Vector2, color: Color) void {
-        cdef.ImageDrawPixelV(self, position, color);
+        rl.imageDrawPixelV(self, position, color);
     }
 
     pub fn drawLine(self: *Image, startPosX: i32, startPosY: i32, endPosX: i32, endPosY: i32, color: Color) void {
-        cdef.ImageDrawLine(self, startPosX, startPosY, endPosX, endPosY, color);
+        rl.imageDrawLine(self, startPosX, startPosY, endPosX, endPosY, color);
     }
 
     pub fn drawLineV(self: *Image, start: Vector2, end: Vector2, color: Color) void {
-        cdef.ImageDrawLineV(self, start, end, color);
+        rl.imageDrawLineV(self, start, end, color);
     }
 
     pub fn drawCircle(self: *Image, centerX: i32, centerY: i32, radius: i32, color: Color) void {
-        cdef.ImageDrawCircle(self, centerX, centerY, radius, color);
+        rl.imageDrawCircle(self, centerX, centerY, radius, color);
     }
 
     pub fn drawCircleV(self: *Image, center: Vector2, radius: i32, color: Color) void {
-        cdef.ImageDrawCircleV(self, center, radius, color);
+        rl.imageDrawCircleV(self, center, radius, color);
     }
 
     pub fn drawCircleLines(self: *Image, centerX: i32, centerY: i32, radius: i32, color: Color) void {
-        cdef.ImageDrawCircleLines(self, centerX, centerY, radius, color);
+        rl.imageDrawCircleLines(self, centerX, centerY, radius, color);
     }
 
     pub fn drawCircleLinesV(self: *Image, center: Vector2, radius: i32, color: Color) void {
-        cdef.ImageDrawCircleLinesV(self, center, radius, color);
+        rl.imageDrawCircleLinesV(self, center, radius, color);
     }
 
     pub fn drawRectangle(self: *Image, posX: i32, posY: i32, width: i32, height: i32, color: Color) void {
-        cdef.ImageDrawRectangle(self, posX, posY, width, height, color);
+        rl.imageDrawRectangle(self, posX, posY, width, height, color);
     }
 
     pub fn drawRectangleV(self: *Image, position: Vector2, size: Vector2, color: Color) void {
-        cdef.ImageDrawRectangleV(self, position, size, color);
+        rl.imageDrawRectangleV(self, position, size, color);
     }
 
     pub fn drawRectangleRec(self: *Image, rec: Rectangle, color: Color) void {
-        cdef.ImageDrawRectangleRec(self, rec, color);
+        rl.imageDrawRectangleRec(self, rec, color);
     }
 
     pub fn drawRectangleLines(self: *Image, rec: Rectangle, thick: i32, color: Color) void {
-        cdef.ImageDrawRectangleLines(self, rec, @as(c_int, thick), color);
+        rl.imageDrawRectangleLines(self, rec, thick, color);
     }
 
     pub fn drawImage(self: *Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, t: Color) void {
-        cdef.ImageDraw(self, src, srcRec, dstRec, t);
+        rl.imageDraw(self, src, srcRec, dstRec, t);
     }
 
     pub fn drawText(self: *Image, text: [:0]const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
-        cdef.ImageDrawText(self, @ptrCast([*c]const u8, text), posX, posY, fontSize, color);
+        rl.imageDrawText(self, text, posX, posY, fontSize, color);
     }
 
     pub fn drawTextEx(self: *Image, font: Font, text: [:0]const u8, position: Vector2, fontSize: f32, spacing: f32, t: Color) void {
-        cdef.ImageDrawTextEx(self, font, @ptrCast([*c]const u8, text), position, fontSize, spacing, t);
+        rl.imageDrawTextEx(self, font, text, position, fontSize, spacing, t);
     }
 
     pub fn exportToFile(self: Image, fileName: [:0]const u8) bool {
