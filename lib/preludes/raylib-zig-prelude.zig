@@ -156,7 +156,7 @@ pub const Rectangle = extern struct {
 };
 
 pub const Image = extern struct {
-    data: ?*anyopaque,
+    data: [*c]anyopaque,
     width: c_int,
     height: c_int,
     mipmaps: c_int,
@@ -435,7 +435,7 @@ pub const Texture = extern struct {
     width: c_int,
     height: c_int,
     mipmaps: c_int,
-    format: c_int,
+    format: PixelFormat,
 
     pub fn init(fileName: [:0]const u8) Texture {
         return rl.loadTexture(fileName);
@@ -703,12 +703,7 @@ pub const Model = extern struct {
     }
 };
 
-pub const ModelAnimation = extern struct {
-    boneCount: c_int,
-    frameCount: c_int,
-    bones: [*c]BoneInfo,
-    framePoses: [*c][*c]Transform,
-};
+pub const ModelAnimation = extern struct { boneCount: c_int, frameCount: c_int, bones: [*c]BoneInfo, framePoses: [*c][*c]Transform, name: [32]u8 };
 
 pub const Ray = extern struct {
     position: Vector3,
@@ -732,15 +727,15 @@ pub const Wave = extern struct {
     sampleRate: c_uint,
     sampleSize: c_uint,
     channels: c_uint,
-    data: ?*anyopaque,
+    data: [*c]anyopaque,
 };
 
 pub const rAudioBuffer = opaque {};
 pub const rAudioProcessor = opaque {};
 
 pub const AudioStream = extern struct {
-    buffer: ?*rAudioBuffer,
-    processor: ?*rAudioProcessor,
+    buffer: *rAudioBuffer,
+    processor: *rAudioProcessor,
     sampleRate: c_uint,
     sampleSize: c_uint,
     channels: c_uint,
@@ -756,7 +751,7 @@ pub const Music = extern struct {
     frameCount: c_uint,
     looping: bool,
     ctxType: c_int,
-    ctxData: ?*anyopaque,
+    ctxData: [*c]anyopaque,
 };
 
 pub const VrDeviceInfo = extern struct {
