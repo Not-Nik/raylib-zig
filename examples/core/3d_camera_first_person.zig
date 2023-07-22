@@ -73,8 +73,6 @@ pub fn main() anyerror!void {
         rl.drawText("First person camera default controls:", 20, 20, 10, rl.Color.black);
         rl.drawText("- Move with keys: W, A, S, D", 40, 40, 10, rl.Color.dark_gray);
         rl.drawText("- Mouse move to look around", 40, 60, 10, rl.Color.dark_gray);
-
-        rl.endDrawing();
         //----------------------------------------------------------------------------------
     }
 }
