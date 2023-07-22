@@ -9,6 +9,52 @@ const Program = struct {
     desc: []const u8,
 };
 
+pub fn linkRaylib(b: *std.Build, exe: *std.Build.Step.Compile, target: std.zig.CrossTarget, optimize: std.builtin.Mode) void {
+    const raylib = b.dependency("raylib", .{
+        .target = target,
+        .optimize = optimize,
+    });
+
+    var art = raylib.artifact("raylib");
+
+    const target_os = exe.target.toTarget().os.tag;
+    switch (target_os) {
+        .windows => {
+            exe.linkSystemLibrary("winmm");
+            exe.linkSystemLibrary("gdi32");
+            exe.linkSystemLibrary("opengl32");
+        },
+        .macos => {
+            exe.linkFramework("OpenGL");
+            exe.linkFramework("Cocoa");
+            exe.linkFramework("IOKit");
+            exe.linkFramework("CoreAudio");
+            exe.linkFramework("CoreVideo");
+        },
+        .freebsd, .openbsd, .netbsd, .dragonfly => {
+            exe.linkSystemLibrary("GL");
+            exe.linkSystemLibrary("rt");
+            exe.linkSystemLibrary("dl");
+            exe.linkSystemLibrary("m");
+            exe.linkSystemLibrary("X11");
+            exe.linkSystemLibrary("Xrandr");
+            exe.linkSystemLibrary("Xinerama");
+            exe.linkSystemLibrary("Xi");
+            exe.linkSystemLibrary("Xxf86vm");
+            exe.linkSystemLibrary("Xcursor");
+        },
+        else => { // linux and possibly others
+            exe.linkSystemLibrary("GL");
+            exe.linkSystemLibrary("rt");
+            exe.linkSystemLibrary("dl");
+            exe.linkSystemLibrary("m");
+            exe.linkSystemLibrary("X11");
+        },
+    }
+
+    exe.linkLibrary(art);
+}
+
 pub fn getArtifact(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *std.Build.Step.Compile {
     const raylib = b.dependency("raylib", .{
         .target = target,
@@ -101,12 +147,11 @@ pub fn build(b: *std.Build) void {
 
     var raylib = getModule(b);
     var raylib_math = math.getModule(b);
-    var raylib_artifact = getArtifact(b, target, optimize);
 
     for (examples) |ex| {
         const exe = b.addExecutable(.{ .name = ex.name, .root_source_file = .{ .path = ex.path }, .optimize = optimize, .target = target });
 
-        exe.linkLibrary(raylib_artifact);
+        linkRaylib(b, exe, target, optimize);
         exe.addModule("raylib", raylib);
         exe.addModule("raylib-math", raylib_math);
 
