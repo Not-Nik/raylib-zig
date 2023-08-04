@@ -9,75 +9,9 @@ const Program = struct {
     desc: []const u8,
 };
 
-pub fn linkRaylib(b: *std.Build, exe: *std.Build.Step.Compile, target: std.zig.CrossTarget, optimize: std.builtin.Mode) void {
-    const raylib = b.dependency("raylib", .{
-        .target = target,
-        .optimize = optimize,
-    });
-
-    var art = raylib.artifact("raylib");
-
-    const target_os = exe.target.toTarget().os.tag;
-    switch (target_os) {
-        .windows => {
-            exe.linkSystemLibrary("winmm");
-            exe.linkSystemLibrary("gdi32");
-            exe.linkSystemLibrary("opengl32");
-        },
-        .macos => {
-            exe.linkFramework("OpenGL");
-            exe.linkFramework("Cocoa");
-            exe.linkFramework("IOKit");
-            exe.linkFramework("CoreAudio");
-            exe.linkFramework("CoreVideo");
-        },
-        .freebsd, .openbsd, .netbsd, .dragonfly => {
-            exe.linkSystemLibrary("GL");
-            exe.linkSystemLibrary("rt");
-            exe.linkSystemLibrary("dl");
-            exe.linkSystemLibrary("m");
-            exe.linkSystemLibrary("X11");
-            exe.linkSystemLibrary("Xrandr");
-            exe.linkSystemLibrary("Xinerama");
-            exe.linkSystemLibrary("Xi");
-            exe.linkSystemLibrary("Xxf86vm");
-            exe.linkSystemLibrary("Xcursor");
-        },
-        else => { // linux and possibly others
-            exe.linkSystemLibrary("GL");
-            exe.linkSystemLibrary("rt");
-            exe.linkSystemLibrary("dl");
-            exe.linkSystemLibrary("m");
-            exe.linkSystemLibrary("X11");
-        },
-    }
-
-    exe.linkLibrary(art);
-}
-
-pub fn getArtifact(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *std.Build.Step.Compile {
-    const raylib = b.dependency("raylib", .{
-        .target = target,
-        .optimize = optimize,
-    });
-
-    return raylib.artifact("raylib");
-}
-
-pub fn getModule(b: *std.Build) *std.Build.Module {
-    return b.addModule("raylib", .{ .source_file = .{ .path = "lib/raylib-zig.zig" } });
-}
-
-pub const math = struct {
-    pub fn getModule(b: *std.Build) *std.Build.Module {
-        return b.addModule("raylib-math", .{ .source_file = .{ .path = "lib/raylib-zig-math.zig" } });
-    }
-};
-
-pub fn build(b: *std.Build) void {
+pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-
     const examples = [_]Program{
         .{
             .name = "basic_window",
@@ -142,18 +76,77 @@ pub fn build(b: *std.Build) void {
     };
 
     const examples_step = b.step("examples", "Builds all the examples");
+    // TODO: system_lib flag currently not used
     const system_lib = b.option(bool, "system-raylib", "link to preinstalled raylib libraries") orelse false;
     _ = system_lib;
 
-    var raylib = getModule(b);
-    var raylib_math = math.getModule(b);
+    const raylib_zig = b.addModule("raylib-zig", .{ .source_file = .{ .path = "lib/raylib-zig.zig" } });
+    const raylib_zig_math = b.addModule("raylib-zig-math", .{
+        .source_file = .{ .path = "lib/raylib-zig-math.zig" },
+        .dependencies = &.{.{ .name = "raylib-zig", .module = raylib_zig }},
+    });
+
+    const raylib_dep = b.dependency("raylib", .{
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const raylib_artefact = raylib_dep.artifact("raylib");
+
+    // Add static library to expose dependency to modules
+    // using raylib-zig
+    const raylib_lib = b.addStaticLibrary(.{
+        .name = "raylib",
+        .target = target,
+        .optimize = optimize,
+    });
+
+    raylib_lib.linkLibrary(raylib_dep.artifact("raylib"));
+    raylib_lib.installLibraryHeaders(raylib_artefact);
+    const raylib_install_step = b.addInstallArtifact(raylib_lib, .{});
+    b.getInstallStep().dependOn(&raylib_install_step.step);
 
     for (examples) |ex| {
         const exe = b.addExecutable(.{ .name = ex.name, .root_source_file = .{ .path = ex.path }, .optimize = optimize, .target = target });
 
-        linkRaylib(b, exe, target, optimize);
-        exe.addModule("raylib", raylib);
-        exe.addModule("raylib-math", raylib_math);
+        const target_os = exe.target.toTarget().os.tag;
+        switch (target_os) {
+            .windows => {
+                exe.linkSystemLibrary("winmm");
+                exe.linkSystemLibrary("gdi32");
+                exe.linkSystemLibrary("opengl32");
+            },
+            .macos => {
+                exe.linkFramework("OpenGL");
+                exe.linkFramework("Cocoa");
+                exe.linkFramework("IOKit");
+                exe.linkFramework("CoreAudio");
+                exe.linkFramework("CoreVideo");
+            },
+            .freebsd, .openbsd, .netbsd, .dragonfly => {
+                exe.linkSystemLibrary("GL");
+                exe.linkSystemLibrary("rt");
+                exe.linkSystemLibrary("dl");
+                exe.linkSystemLibrary("m");
+                exe.linkSystemLibrary("X11");
+                exe.linkSystemLibrary("Xrandr");
+                exe.linkSystemLibrary("Xinerama");
+                exe.linkSystemLibrary("Xi");
+                exe.linkSystemLibrary("Xxf86vm");
+                exe.linkSystemLibrary("Xcursor");
+            },
+            else => { // linux and possibly others
+                exe.linkSystemLibrary("GL");
+                exe.linkSystemLibrary("rt");
+                exe.linkSystemLibrary("dl");
+                exe.linkSystemLibrary("m");
+                exe.linkSystemLibrary("X11");
+            },
+        }
+
+        exe.linkLibrary(raylib_artefact);
+        exe.addModule("raylib", raylib_zig);
+        exe.addModule("raylib-math", raylib_zig_math);
 
         const run_cmd = b.addRunArtifact(exe);
         const run_step = b.step(ex.name, ex.desc);
