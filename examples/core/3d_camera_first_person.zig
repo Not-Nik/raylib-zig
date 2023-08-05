@@ -25,13 +25,11 @@ pub fn main() anyerror!void {
     var positions: [MAX_COLUMNS]rl.Vector3 = undefined;
     var colors: [MAX_COLUMNS]rl.Color = undefined;
 
-    for (heights) |_, i| {
-        heights[i] = @intToFloat(f32, rl.getRandomValue(1, 12));
-        positions[i] = rl.Vector3.init(@intToFloat(f32, rl.getRandomValue(-15, 15)), heights[i] / 2.0, @intToFloat(f32, rl.getRandomValue(-15, 15)));
-        colors[i] = rl.Color.init(@intCast(u8, rl.getRandomValue(20, 255)), @intCast(u8, rl.getRandomValue(10, 55)), 30, 255);
+    for (0..heights.len) |i| {
+        heights[i] = @as(f32, @floatFromInt(rl.getRandomValue(1, 12)));
+        positions[i] = rl.Vector3.init(@as(f32, @floatFromInt(rl.getRandomValue(-15, 15))), heights[i] / 2.0, @as(f32, @floatFromInt(rl.getRandomValue(-15, 15))));
+        colors[i] = rl.Color.init(@as(u8, @intCast(rl.getRandomValue(20, 255))), @as(u8, @intCast(rl.getRandomValue(10, 55))), 30, 255);
     }
-
-    camera.setMode(rl.CameraMode.camera_first_person);
 
     rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
@@ -40,7 +38,7 @@ pub fn main() anyerror!void {
     while (!rl.windowShouldClose()) { // Detect window close button or ESC key
         // Update
         //----------------------------------------------------------------------------------
-        camera.update();
+        camera.update(rl.CameraMode.camera_first_person);
         //----------------------------------------------------------------------------------
 
         // Draw
@@ -61,7 +59,7 @@ pub fn main() anyerror!void {
             rl.drawCube(rl.Vector3.init(0.0, 2.5, 16.0), 32.0, 5.0, 1.0, rl.Color.gold); // Draw a yellow wall
 
             // Draw some cubes around
-            for (heights) |height, i| {
+            for (heights, 0..) |height, i| {
                 rl.drawCube(positions[i], 2.0, height, 2.0, colors[i]);
                 rl.drawCubeWires(positions[i], 2.0, height, 2.0, rl.Color.maroon);
             }

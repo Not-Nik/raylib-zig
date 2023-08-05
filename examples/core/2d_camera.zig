@@ -20,15 +20,15 @@ pub fn main() anyerror!void {
 
     var spacing: i32 = 0;
 
-    for (buildings) |_, i| {
-        buildings[i].width = @intToFloat(f32, rl.getRandomValue(50, 200));
-        buildings[i].height = @intToFloat(f32, rl.getRandomValue(100, 800));
+    for (0..buildings.len) |i| {
+        buildings[i].width = @as(f32, @floatFromInt(rl.getRandomValue(50, 200)));
+        buildings[i].height = @as(f32, @floatFromInt(rl.getRandomValue(100, 800)));
         buildings[i].y = screenHeight - 130 - buildings[i].height;
-        buildings[i].x = @intToFloat(f32, -6000 + spacing);
+        buildings[i].x = @as(f32, @floatFromInt(-6000 + spacing));
 
-        spacing += @floatToInt(i32, buildings[i].width);
+        spacing += @as(i32, @intFromFloat(buildings[i].width));
 
-        buildColors[i] = rl.Color.init(@intCast(u8, rl.getRandomValue(200, 240)), @intCast(u8, rl.getRandomValue(200, 240)), @intCast(u8, rl.getRandomValue(200, 250)), 255);
+        buildColors[i] = rl.Color.init(@as(u8, @intCast(rl.getRandomValue(200, 240))), @as(u8, @intCast(rl.getRandomValue(200, 240))), @as(u8, @intCast(rl.getRandomValue(200, 250))), 255);
     }
 
     var camera = rl.Camera2D{
@@ -91,14 +91,14 @@ pub fn main() anyerror!void {
 
             rl.drawRectangle(-6000, 320, 13000, 8000, rl.Color.dark_gray);
 
-            for (buildings) |building, i| {
+            for (buildings, 0..) |building, i| {
                 rl.drawRectangleRec(building, buildColors[i]);
             }
 
             rl.drawRectangleRec(player, rl.Color.red);
 
-            rl.drawLine(@floatToInt(i32, camera.target.x), -screenHeight * 10, @floatToInt(i32, camera.target.x), screenHeight * 10, rl.Color.green);
-            rl.drawLine(-screenWidth * 10, @floatToInt(i32, camera.target.y), screenWidth * 10, @floatToInt(i32, camera.target.y), rl.Color.green);
+            rl.drawLine(@as(i32, @intFromFloat(camera.target.x)), -screenHeight * 10, @as(i32, @intFromFloat(camera.target.x)), screenHeight * 10, rl.Color.green);
+            rl.drawLine(-screenWidth * 10, @as(i32, @intFromFloat(camera.target.y)), screenWidth * 10, @as(i32, @intFromFloat(camera.target.y)), rl.Color.green);
         }
 
         rl.drawText("SCREEN AREA", 640, 10, 20, rl.Color.red);

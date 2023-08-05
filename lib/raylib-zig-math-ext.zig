@@ -1,6 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
-const rl = @import("raylib-zig.zig");
+const rl = @import("raylib-zig");
 const rlm = @import("raylib-zig-math.zig");
 
 pub extern "c" fn Clamp(value: f32, min: f32, max: f32) f32;
@@ -21,6 +21,7 @@ pub extern "c" fn Vector2DotProduct(v1: rl.Vector2, v2: rl.Vector2) f32;
 pub extern "c" fn Vector2Distance(v1: rl.Vector2, v2: rl.Vector2) f32;
 pub extern "c" fn Vector2DistanceSqr(v1: rl.Vector2, v2: rl.Vector2) f32;
 pub extern "c" fn Vector2Angle(v1: rl.Vector2, v2: rl.Vector2) f32;
+pub extern "c" fn Vector2LineAngle(start: rl.Vector2, end: rl.Vector2) f32;
 pub extern "c" fn Vector2Scale(v: rl.Vector2, scale: f32) rl.Vector2;
 pub extern "c" fn Vector2Multiply(v1: rl.Vector2, v2: rl.Vector2) rl.Vector2;
 pub extern "c" fn Vector2Negate(v: rl.Vector2) rl.Vector2;
@@ -87,8 +88,8 @@ pub extern "c" fn MatrixRotateXYZ(angle: rl.Vector3) rl.Matrix;
 pub extern "c" fn MatrixRotateZYX(angle: rl.Vector3) rl.Matrix;
 pub extern "c" fn MatrixScale(x: f32, y: f32, z: f32) rl.Matrix;
 pub extern "c" fn MatrixFrustum(left: f64, right: f64, bottom: f64, top: f64, near: f64, far: f64) rl.Matrix;
-pub extern "c" fn MatrixPerspective(fovy: f64, aspect: f64, near: f64, far: f64) rl.Matrix;
-pub extern "c" fn MatrixOrtho(left: f64, right: f64, bottom: f64, top: f64, near: f64, far: f64) rl.Matrix;
+pub extern "c" fn MatrixPerspective(fovY: f64, aspect: f64, nearPlane: f64, farPlane: f64) rl.Matrix;
+pub extern "c" fn MatrixOrtho(left: f64, right: f64, bottom: f64, top: f64, nearPlane: f64, farPlane: f64) rl.Matrix;
 pub extern "c" fn MatrixLookAt(eye: rl.Vector3, target: rl.Vector3, up: rl.Vector3) rl.Matrix;
 pub extern "c" fn MatrixToFloatV(mat: rl.Matrix) rlm.float16;
 pub extern "c" fn QuaternionAdd(q1: rl.Quaternion, q2: rl.Quaternion) rl.Quaternion;

@@ -3,4 +3,6 @@ zig-cache/
 Project/*
 
 libraylib.a
+raylib.h
+raymath.h
 **/.DS_Store

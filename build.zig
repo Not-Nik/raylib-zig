@@ -1,13 +1,7 @@
-//
-// build
-// Zig version: 0.9.0
-// Author: Nikolas Wipper
-// Date: 2020-02-15
-//
+// raylib-zig (c) Nikolas Wipper 2020-2023
 
 const std = @import("std");
-const Builder = std.build.Builder;
-const raylib = @import("lib.zig");
+const rl = @This();
 
 const Program = struct {
     name: []const u8,
@@ -15,9 +9,78 @@ const Program = struct {
     desc: []const u8,
 };
 
-pub fn build(b: *Builder) void {
-    const mode = b.standardReleaseOptions();
+pub fn link(b: *std.Build, exe: *std.Build.Step.Compile, target: std.zig.CrossTarget, optimize: std.builtin.Mode) void {
+    const raylib = b.dependency("raylib", .{
+        .target = target,
+        .optimize = optimize,
+    });
+
+    var art = raylib.artifact("raylib");
+
+    const target_os = exe.target.toTarget().os.tag;
+    switch (target_os) {
+        .windows => {
+            exe.linkSystemLibrary("winmm");
+            exe.linkSystemLibrary("gdi32");
+            exe.linkSystemLibrary("opengl32");
+        },
+        .macos => {
+            exe.linkFramework("OpenGL");
+            exe.linkFramework("Cocoa");
+            exe.linkFramework("IOKit");
+            exe.linkFramework("CoreAudio");
+            exe.linkFramework("CoreVideo");
+        },
+        .freebsd, .openbsd, .netbsd, .dragonfly => {
+            exe.linkSystemLibrary("GL");
+            exe.linkSystemLibrary("rt");
+            exe.linkSystemLibrary("dl");
+            exe.linkSystemLibrary("m");
+            exe.linkSystemLibrary("X11");
+            exe.linkSystemLibrary("Xrandr");
+            exe.linkSystemLibrary("Xinerama");
+            exe.linkSystemLibrary("Xi");
+            exe.linkSystemLibrary("Xxf86vm");
+            exe.linkSystemLibrary("Xcursor");
+        },
+        else => { // linux and possibly others
+            exe.linkSystemLibrary("GL");
+            exe.linkSystemLibrary("rt");
+            exe.linkSystemLibrary("dl");
+            exe.linkSystemLibrary("m");
+            exe.linkSystemLibrary("X11");
+        },
+    }
+
+    exe.linkLibrary(art);
+}
+
+pub fn getArtifact(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *std.Build.Step.Compile {
+    const raylib = b.dependency("raylib", .{
+        .target = target,
+        .optimize = optimize,
+    });
+
+    return raylib.artifact("raylib");
+}
+
+pub fn getModule(b: *std.Build) *std.Build.Module {
+    if (b.modules.contains("raylib")) {
+        return b.modules.get("raylib").?;
+    }
+    return b.addModule("raylib", .{ .source_file = .{ .path = "lib/raylib-zig.zig" } });
+}
+
+pub const math = struct {
+    pub fn getModule(b: *std.Build) *std.Build.Module {
+        var raylib = rl.getModule(b);
+        return b.addModule("raylib-math", .{ .source_file = .{ .path = "lib/raylib-zig-math.zig" }, .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }} });
+    }
+};
+
+pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
+    const optimize = b.standardOptimizeOption(.{});
 
     const examples = [_]Program{
         .{
@@ -84,18 +147,19 @@ pub fn build(b: *Builder) void {
 
     const examples_step = b.step("examples", "Builds all the examples");
     const system_lib = b.option(bool, "system-raylib", "link to preinstalled raylib libraries") orelse false;
+    _ = system_lib;
+
+    var raylib = rl.getModule(b);
+    var raylib_math = rl.math.getModule(b);
 
     for (examples) |ex| {
-        const exe = b.addExecutable(ex.name, ex.path);
+        const exe = b.addExecutable(.{ .name = ex.name, .root_source_file = .{ .path = ex.path }, .optimize = optimize, .target = target });
 
-        exe.setBuildMode(mode);
-        exe.setTarget(target);
+        rl.link(b, exe, target, optimize);
+        exe.addModule("raylib", raylib);
+        exe.addModule("raylib-math", raylib_math);
 
-        raylib.link(exe, system_lib);
-        raylib.addAsPackage("raylib", exe);
-        raylib.math.addAsPackage("raylib-math", exe);
-
-        const run_cmd = exe.run();
+        const run_cmd = b.addRunArtifact(exe);
         const run_step = b.step(ex.name, ex.desc);
         run_step.dependOn(&run_cmd.step);
         examples_step.dependOn(&exe.step);
