@@ -703,7 +703,13 @@ pub const Model = extern struct {
     }
 };
 
-pub const ModelAnimation = extern struct { boneCount: c_int, frameCount: c_int, bones: [*c]BoneInfo, framePoses: [*c][*c]Transform, name: [32]u8 };
+pub const ModelAnimation = extern struct {
+    boneCount: c_int,
+    frameCount: c_int,
+    bones: [*c]BoneInfo,
+    framePoses: [*c][*c]Transform,
+    name: [32]u8,
+};
 
 pub const Ray = extern struct {
     position: Vector3,
@@ -799,6 +805,7 @@ pub const ConfigFlags = enum(c_int) {
     flag_window_topmost = 4096,
     flag_window_highdpi = 8192,
     flag_window_mouse_passthrough = 16384,
+    flag_borderless_windowed_mode = 32768,
     flag_interlaced_hint = 65536,
     _,
 };

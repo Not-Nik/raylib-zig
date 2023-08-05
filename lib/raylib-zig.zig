@@ -703,7 +703,13 @@ pub const Model = extern struct {
     }
 };
 
-pub const ModelAnimation = extern struct { boneCount: c_int, frameCount: c_int, bones: [*c]BoneInfo, framePoses: [*c][*c]Transform, name: [32]u8 };
+pub const ModelAnimation = extern struct {
+    boneCount: c_int,
+    frameCount: c_int,
+    bones: [*c]BoneInfo,
+    framePoses: [*c][*c]Transform,
+    name: [32]u8,
+};
 
 pub const Ray = extern struct {
     position: Vector3,
@@ -799,6 +805,7 @@ pub const ConfigFlags = enum(c_int) {
     flag_window_topmost = 4096,
     flag_window_highdpi = 8192,
     flag_window_mouse_passthrough = 16384,
+    flag_borderless_windowed_mode = 32768,
     flag_interlaced_hint = 65536,
     _,
 };
@@ -1393,6 +1400,10 @@ pub fn clearWindowState(flags: ConfigFlags) void {
 
 pub fn toggleFullscreen() void {
     cdef.ToggleFullscreen();
+}
+
+pub fn toggleBorderlessWindowed() void {
+    cdef.ToggleBorderlessWindowed();
 }
 
 pub fn maximizeWindow() void {
@@ -3111,6 +3122,10 @@ pub fn loadSoundFromWave(wave: Wave) Sound {
     return cdef.LoadSoundFromWave(wave);
 }
 
+pub fn loadSoundAlias(source: Sound) Sound {
+    return cdef.LoadSoundAlias(source);
+}
+
 pub fn isSoundReady(sound: Sound) bool {
     return cdef.IsSoundReady(sound);
 }
@@ -3125,6 +3140,10 @@ pub fn unloadWave(wave: Wave) void {
 
 pub fn unloadSound(sound: Sound) void {
     cdef.UnloadSound(sound);
+}
+
+pub fn unloadSoundAlias(alias: Sound) void {
+    cdef.UnloadSoundAlias(alias);
 }
 
 pub fn exportWave(wave: Wave, fileName: [:0]const u8) bool {
