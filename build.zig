@@ -2,6 +2,7 @@
 
 const std = @import("std");
 const Builder = std.build.Builder;
+const rl = @This();
 
 const Program = struct {
     name: []const u8,
@@ -65,12 +66,16 @@ pub fn getArtifact(b: *std.Build, target: std.zig.CrossTarget, optimize: std.bui
 }
 
 pub fn getModule(b: *std.Build) *std.Build.Module {
+    if (b.modules.contains("raylib")) {
+        return b.modules.get("raylib").?;
+    }
     return b.addModule("raylib", .{ .source_file = .{ .path = "lib/raylib-zig.zig" } });
 }
 
 pub const math = struct {
     pub fn getModule(b: *std.Build) *std.Build.Module {
-        return b.addModule("raylib-math", .{ .source_file = .{ .path = "lib/raylib-zig-math.zig" } });
+        var raylib = rl.getModule(b);
+        return b.addModule("raylib-math", .{ .source_file = .{ .path = "lib/raylib-zig-math.zig" }, .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }} });
     }
 };
 
