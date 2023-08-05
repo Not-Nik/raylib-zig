@@ -1,7 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2020-2023
 
 const std = @import("std");
-const Builder = std.build.Builder;
 const rl = @This();
 
 const Program = struct {
@@ -10,7 +9,7 @@ const Program = struct {
     desc: []const u8,
 };
 
-pub fn linkRaylib(b: *std.Build, exe: *std.Build.Step.Compile, target: std.zig.CrossTarget, optimize: std.builtin.Mode) void {
+pub fn link(b: *std.Build, exe: *std.Build.Step.Compile, target: std.zig.CrossTarget, optimize: std.builtin.Mode) void {
     const raylib = b.dependency("raylib", .{
         .target = target,
         .optimize = optimize,
@@ -150,13 +149,13 @@ pub fn build(b: *std.Build) void {
     const system_lib = b.option(bool, "system-raylib", "link to preinstalled raylib libraries") orelse false;
     _ = system_lib;
 
-    var raylib = getModule(b);
-    var raylib_math = math.getModule(b);
+    var raylib = rl.getModule(b);
+    var raylib_math = rl.math.getModule(b);
 
     for (examples) |ex| {
         const exe = b.addExecutable(.{ .name = ex.name, .root_source_file = .{ .path = ex.path }, .optimize = optimize, .target = target });
 
-        linkRaylib(b, exe, target, optimize);
+        rl.link(b, exe, target, optimize);
         exe.addModule("raylib", raylib);
         exe.addModule("raylib-math", raylib_math);
 
