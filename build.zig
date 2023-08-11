@@ -245,9 +245,9 @@ pub fn buildForEmscripten(b: *std.Build, name: []const u8, root_source_file: []c
         \\        const writer = std.io.getStdErr().writer();
         \\                //TODO: It seems zig doesn't put error info into wasm binaries: https://github.com/ziglang/zig/issues/10426
         \\                // So this always returns null.
-        \\                // if (@errorReturnTrace()) |trace| {
-        \\                //     trace.format("{s}", .{}, writer);
-        \\                // }
+        \\                // if (@errorReturnTrace()) |trace| {{
+        \\                //     trace.format("{{s}}", .{{}}, writer);
+        \\                // }}
         \\                // I'm not really worried since web outputs are usually reserved for release anyway, which by then most errors should be fixed.
         \\        writer.print("THERE WAS AN ERROR:{{s}}\n", .{{@errorName(e)}}) catch {{}};
         \\    }};
@@ -364,7 +364,11 @@ const webhack_c =
     \\int main(int argc, char** argv)
     \\{
     \\    //TODO: possibly pass arguments into zig?
-    \\    return web_emscripten_entry_point();
+    \\    int status = web_emscripten_entry_point();
+    \\    //emscripten won't print until a newline is formed, and often people forget the last "\n" of a print.
+    \\    // Missing lines can be really annoying, so to avoid that one last line is printed before the program exits.
+    \\    printf("\n");
+    \\    return status;
     \\}
     \\// Zig adds '__stack_chk_guard', '__stack_chk_fail', and 'errno',
     \\// which emscripten doesn't actually support.
