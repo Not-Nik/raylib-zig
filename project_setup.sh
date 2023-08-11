@@ -35,7 +35,7 @@ pub fn build(b: *std.Build) !void {
 
     //web exports are completely separate, due to the amount of hackery required.
     if (web_export) {
-        try rl.webExport(b, "src/main.zig", "raylib-zig", optimize);
+        b.getInstallStep().dependOn(try rl.webExport(b, "src/main.zig", "raylib-zig", optimize));
     }
 }
 ' >> build.zig
