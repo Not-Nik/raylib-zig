@@ -309,12 +309,11 @@ fn updateTargetForWeb(target: std.zig.CrossTarget) std.zig.CrossTarget {
     };
 }
 
-pub fn webExport(b: *std.Build, root_source_file: []const u8, comptime rl_path: []const u8) !*std.Build.Step {
+pub fn webExport(b: *std.Build, root_source_file: []const u8, comptime rl_path: []const u8, optimize: std.builtin.OptimizeMode) !*std.Build.Step {
     // EXPORTING to WEB, the only reasonable output is emscripten ReleaseSafe.
     // (Safe because since when was performance the main goal of the internet?)
     //Note: the name doesn't matter, it's only used as the file name of a temporary object, so it's just called "project"
     const target = try std.zig.CrossTarget.parse(.{ .arch_os_abi = "wasm32-emscripten" });
-    const optimize = std.builtin.OptimizeMode.ReleaseSafe;
     var raylib = rl.getModule(b, rl_path);
     var raylib_math = rl.math.getModule(b, rl_path);
     const build_step = try buildForEmscripten(b, "project", root_source_file, target, optimize, raylib, raylib_math);

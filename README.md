@@ -70,7 +70,7 @@ Once emsdk is installed, set it up by running
 
 Find the folder where it's installed and run
 
-`zig build webexport --sysroot [path to emsdk]/upstream/emscripten`
+`zig build -Dtarget=wasm32-emscripten --sysroot [path to emsdk]/upstream/emscripten`
 
 once that is finished, the exported project should be located at `zig-out/htmlout`
 

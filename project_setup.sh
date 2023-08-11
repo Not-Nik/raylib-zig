@@ -13,11 +13,10 @@ echo 'const std = @import("std");
 const rl = @import("raylib-zig/build.zig");
 
 pub fn build(b: *std.Build) !void {
-    const web_export = argsContainsWebexport(b.allocator);
+    const target = b.standardTargetOptions(.{});
+    const web_export = target.getOsTag() == .emscripten;
+    const optimize = b.standardOptimizeOption(.{});
     if (!web_export) {
-        const target = b.standardTargetOptions(.{});
-        const optimize = b.standardOptimizeOption(.{});
-
         var raylib = rl.getModule(b, "raylib-zig");
         var raylib_math = rl.math.getModule(b, "raylib-zig");
 
@@ -35,27 +34,9 @@ pub fn build(b: *std.Build) !void {
     }
 
     //web exports are completely separate, due to the amount of hackery required.
-    const export_step = b.step("webexport", "Export '$PROJECT_NAME' for the web");
     if (web_export) {
-        export_step.dependOn(try rl.webExport(b, "src/main.zig", "raylib-zig"));
+        try rl.webExport(b, "src/main.zig", "raylib-zig", optimize);
     }
-
-    // Building for web requires a --sysroot [emscripten and stuff]
-    // But asking for that for all builds is not a good user experience
-    // So it will only actually set up the build scripts if the web export is actually going to happen.
-}
-
-fn argsContainsWebexport(allocator: std.mem.Allocator) bool {
-    const args = std.process.argsAlloc(allocator) catch {
-        return false;
-    };
-    defer allocator.free(args);
-    for (args) |arg| {
-        if (std.mem.eql(u8, "webexport", arg)) {
-            return true;
-        }
-    }
-    return false;
 }
 ' >> build.zig
 
