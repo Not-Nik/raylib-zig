@@ -2,6 +2,7 @@
 
 const std = @import("std");
 const rl = @This();
+const builtin = @import("builtin");
 
 const Program = struct {
     name: []const u8,
@@ -14,7 +15,6 @@ pub fn link(b: *std.Build, exe: *std.Build.Step.Compile, target: std.zig.CrossTa
         .target = target,
         .optimize = optimize,
     });
-
     var art = raylib.artifact("raylib");
 
     const target_os = exe.target.toTarget().os.tag;
@@ -43,6 +43,12 @@ pub fn link(b: *std.Build, exe: *std.Build.Step.Compile, target: std.zig.CrossTa
             exe.linkSystemLibrary("Xxf86vm");
             exe.linkSystemLibrary("Xcursor");
         },
+        .emscripten, .wasi => {
+            //when using emscripten,
+            // the libries don't need to be linked
+            // because emscripten is going
+            // to do that later.
+        },
         else => { // linux and possibly others
             exe.linkSystemLibrary("GL");
             exe.linkSystemLibrary("rt");
@@ -64,7 +70,15 @@ pub fn getArtifact(b: *std.Build, target: std.zig.CrossTarget, optimize: std.bui
     return raylib.artifact("raylib");
 }
 
-pub fn getModule(b: *std.Build) *std.Build.Module {
+//TODO: make these not comptime
+pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
+    if (b.modules.contains("raylib")) {
+        return b.modules.get("raylib").?;
+    }
+    return b.addModule("raylib", .{ .source_file = .{ .path = rl_path ++ "/lib/raylib-zig.zig" } });
+}
+
+pub fn getModuleInternal(b: *std.Build) *std.Build.Module {
     if (b.modules.contains("raylib")) {
         return b.modules.get("raylib").?;
     }
@@ -72,13 +86,18 @@ pub fn getModule(b: *std.Build) *std.Build.Module {
 }
 
 pub const math = struct {
-    pub fn getModule(b: *std.Build) *std.Build.Module {
-        var raylib = rl.getModule(b);
+    pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
+        var raylib = rl.getModuleInternal(b);
+        return b.addModule("raylib-math", .{ .source_file = .{ .path = rl_path ++ "/lib/raylib-zig-math.zig" }, .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }} });
+    }
+
+    fn getModuleInternal(b: *std.Build) *std.Build.Module {
+        var raylib = rl.getModuleInternal(b);
         return b.addModule("raylib-math", .{ .source_file = .{ .path = "lib/raylib-zig-math.zig" }, .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }} });
     }
 };
 
-pub fn build(b: *std.Build) void {
+pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
@@ -149,19 +168,184 @@ pub fn build(b: *std.Build) void {
     const system_lib = b.option(bool, "system-raylib", "link to preinstalled raylib libraries") orelse false;
     _ = system_lib;
 
-    var raylib = rl.getModule(b);
-    var raylib_math = rl.math.getModule(b);
+    var raylib = rl.getModuleInternal(b);
+    var raylib_math = rl.math.getModuleInternal(b);
 
     for (examples) |ex| {
-        const exe = b.addExecutable(.{ .name = ex.name, .root_source_file = .{ .path = ex.path }, .optimize = optimize, .target = target });
+        //If compiling for emscripten, things need to be done COMPLETELY differently
+        if (target.getOsTag() == .emscripten) {
+            var build_step = try buildForEmscripten(b, ex.name, ex.path, target, optimize, raylib, raylib_math);
+            var emrun_step = try emscriptenRunStep(b);
+            emrun_step.step.dependOn(&build_step.step);
+            var run_step = b.step(ex.name, ex.desc);
+            run_step.dependOn(&emrun_step.step);
+            //examples_step.dependOn(&build_step.step);
+            continue;
+        }
 
+        const exe = b.addExecutable(.{ .name = ex.name, .root_source_file = .{ .path = ex.path }, .optimize = optimize, .target = target });
         rl.link(b, exe, target, optimize);
         exe.addModule("raylib", raylib);
         exe.addModule("raylib-math", raylib_math);
-
         const run_cmd = b.addRunArtifact(exe);
         const run_step = b.step(ex.name, ex.desc);
         run_step.dependOn(&run_cmd.step);
         examples_step.dependOn(&exe.step);
     }
 }
+
+pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
+    //find emrun
+    if (b.sysroot == null) {
+        @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
+    }
+    //If compiling on windows , use emrun.bat
+    const emrunExe = switch (builtin.os.tag) {
+        .windows => "emrun.bat",
+        else => "emrun",
+    };
+    var emrun_run_arg = try b.allocator.alloc(u8, b.sysroot.?.len + emrunExe.len + 1);
+    defer b.allocator.free(emrun_run_arg);
+
+    emrun_run_arg = try std.fmt.bufPrint(emrun_run_arg, "{s}" ++ std.fs.path.sep_str ++ "{s}", .{ b.sysroot.?, emrunExe });
+
+    const run_cmd = b.addSystemCommand(&[_][]const u8{ emrun_run_arg, "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str ++ "index.html" });
+    return run_cmd;
+}
+
+pub fn buildForEmscripten(b: *std.Build, name: []const u8, root_source_file: []const u8, target: std.zig.CrossTarget, optimize: std.builtin.Mode, raylib: *std.Build.Module, raylib_math: *std.Build.Module) !*std.Build.Step.Run {
+    const new_target = updateTargetForWeb(target);
+    // Emscripten is completely unable to find Zig's entry point.
+    // Solution: create a C compatible entry point in zig,
+    // and then a C file that calls that entry point in the main method.
+    // The C file is pre-written into the project,
+    // However since the zig file needs to @import the main project,
+    // it needs to be generated at compile time,
+    // and it needs to be in the project's source.
+
+    //First, generate the file string
+    const zig_entrypoint_format = "//This file is generated in order to allow web builds to start properly. It can safely be deleted.\nconst main = @import(\"{s}\");export fn web_emscripten_entry_point() c_int {{main.main() catch {{return -1;}};return 0;}}";
+    const zig_entrypoint_buffer = try b.allocator.alloc(u8, zig_entrypoint_format.len + root_source_file.len + 1);
+    const root_source_file_name = root_source_file[(lastIndexOf(root_source_file, '/') + 1)..];
+    const zig_entrypoint_code = try std.fmt.bufPrint(zig_entrypoint_buffer, zig_entrypoint_format, .{root_source_file_name});
+    const zig_entrypoint_dir = root_source_file[0..lastIndexOf(root_source_file, '/')];
+    const zig_entrypoint_file = try b.allocator.alloc(u8, zig_entrypoint_dir.len + "/web_emscripten_entry_point.zig".len);
+    _ = try std.fmt.bufPrint(zig_entrypoint_file, "{s}{s}", .{ zig_entrypoint_dir, "/web_emscripten_entry_point.zig" });
+
+    //TODO: find a way to create a C-compatible entrypoint without doing this
+    const write_zig_entrypoint = b.addWriteFiles();
+    write_zig_entrypoint.addBytesToSource(zig_entrypoint_code, zig_entrypoint_file);
+
+    //create the web back C file
+    const webhack_c_file_step = b.addWriteFiles();
+    const webhack_c_file = webhack_c_file_step.add("webhack.c", webhack_c);
+
+    //the project is built as a library and linked with everything later
+    const exe_lib = b.addStaticLibrary(.{ .name = name, .root_source_file = .{ .path = zig_entrypoint_file }, .target = new_target, .optimize = optimize });
+    exe_lib.addCSourceFile(.{ .file = webhack_c_file, .flags = &[_][]const u8{} });
+    exe_lib.addModule("raylib", raylib);
+    exe_lib.addModule("raylib-math", raylib_math);
+    //link with libc since raylib isn't going to be linked in until later
+    exe_lib.linkLibC();
+    exe_lib.step.dependOn(&write_zig_entrypoint.step);
+    exe_lib.step.dependOn(&webhack_c_file_step.step);
+    //Emcc has to be the one that links the project, in order to make sure that the web libraries are correctly linked.
+    if (b.sysroot == null) {
+        @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
+    }
+    //If compiling on windows , use emcc.bat
+    const emccExe = switch (builtin.os.tag) {
+        .windows => "emcc.bat",
+        else => "emcc",
+    };
+    var emcc_run_arg = try b.allocator.alloc(u8, b.sysroot.?.len + emccExe.len + 1);
+    defer b.allocator.free(emcc_run_arg);
+
+    emcc_run_arg = try std.fmt.bufPrint(emcc_run_arg, "{s}" ++ std.fs.path.sep_str ++ "{s}", .{ b.sysroot.?, emccExe });
+
+    const raylib_artifact = getArtifact(b, target, optimize);
+    //create the output directory because emcc can't do it.
+    const mkdir_command = b.addSystemCommand(&[_][]const u8{ "mkdir", "-p", "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str });
+    //Actually link everything together
+    const emcc_command = b.addSystemCommand(&[_][]const u8{emcc_run_arg});
+    emcc_command.addFileArg(raylib_artifact.getEmittedBin());
+    emcc_command.addFileArg(exe_lib.getEmittedBin());
+    //TODO: see if there is a way to properly integrate the output directory into zig's cache
+    // LATER: The way is by zig's writeFile creates place in the cache that can then be used to place emcc's output
+    // TODO: investigate why "-sSTANDALONE_WASM" completely freezes the page once the program loads and starts.
+    emcc_command.addArgs(&[_][]const u8{ "-o", "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str ++ "index.html", "-sFULL-ES3=1", "-sUSE_GLFW=3", "-sASYNCIFY", "-O3" });
+    emcc_command.step.dependOn(&exe_lib.step);
+    emcc_command.step.dependOn(&raylib_artifact.step);
+    emcc_command.step.dependOn(&mkdir_command.step);
+
+    return emcc_command;
+}
+
+//TODO: see if zig's standard library already has somehing like this
+fn lastIndexOf(string: []const u8, character: u8) usize {
+    //interestingly, zig has no nice way of iterating a slice backwards
+    for (0..string.len) |i| {
+        const index = string.len - i - 1;
+        if (string[index] == character) return index;
+    }
+    return string.len - 1;
+}
+fn updateTargetForWeb(target: std.zig.CrossTarget) std.zig.CrossTarget {
+    //zig building to emscripten doesn't really work,
+    // as the standard library doesn't compile for some reason
+    // So build to wasi instead.
+    return std.zig.CrossTarget{
+        .cpu_arch = target.cpu_arch,
+        .cpu_model = target.cpu_model,
+        .cpu_features_add = target.cpu_features_add,
+        .cpu_features_sub = target.cpu_features_sub,
+        .os_tag = .wasi,
+        .os_version_min = target.os_version_min,
+        .os_version_max = target.os_version_max,
+        .glibc_version = target.glibc_version,
+        .abi = target.abi,
+        .dynamic_linker = target.dynamic_linker,
+        .ofmt = target.ofmt,
+    };
+}
+
+pub fn webExport(b: *std.Build, root_source_file: []const u8, comptime rl_path: []const u8) !*std.Build.Step {
+    // EXPORTING to WEB, the only reasonable output is emscripten ReleaseSafe.
+    // (Safe because since when was performance the main goal of the internet?)
+    //Note: the name doesn't matter, it's only used as the file name of a temporary object, so it's just called "project"
+    const target = try std.zig.CrossTarget.parse(.{ .arch_os_abi = "wasm32-emscripten" });
+    const optimize = std.builtin.OptimizeMode.ReleaseSafe;
+    var raylib = rl.getModule(b, rl_path);
+    var raylib_math = rl.math.getModule(b, rl_path);
+    const build_step = try buildForEmscripten(b, "project", root_source_file, target, optimize, raylib, raylib_math);
+    const run_step = try emscriptenRunStep(b);
+    run_step.step.dependOn(&build_step.step);
+    const run_step_arg = b.step("run", "This only exists because the run step for web exports is different");
+    run_step_arg.dependOn(&run_step.step);
+    return &build_step.step;
+}
+const webhack_c =
+    \\ // Emscripten is completely unable to find Zig's entry point.
+    \\ // Solution: create a C compatible entry point in zig,
+    \\ // and then a C file that calls that entry point in the main method
+    \\ // This is that C file.
+    \\ //The entry point found in the zig project
+    \\ extern int web_emscripten_entry_point();
+    \\ //this is the method that emscripten calls automatically when the page loads
+    \\ int main(int argc, char** argv)
+    \\ {
+    \\     //TODO: possibly pass arguments into zig?
+    \\     return web_emscripten_entry_point();
+    \\ }
+    \\ // For some reason zig adds '__stack_chk_guard', '__stack_chk_fail', and 'errno',
+    \\ // which emscripten doesn't actually support.
+    \\ // Seems that zig ignores disabling stack checking,
+    \\ // and I honestly don't know why emscripten doesn't have errno.
+    \\ // there's a solution, although it's not a good one...
+    \\ #include <stdint.h>
+    \\ uintptr_t __stack_chk_guard;
+    \\ //Yes, this means that if there is a buffer overflow, nobody is going to know about it.
+    \\ // However, zig is pretty safe from those, so don't worry about it too much.
+    \\ void __stack_chk_fail(void){}
+    \\ int errno;
+;

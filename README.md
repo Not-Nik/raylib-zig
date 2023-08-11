@@ -62,6 +62,18 @@ To build all available examples simply `zig build examples`. To list available e
 + You can copy that folder anywhere you want and edit the source
 + Run `zig build run` at any time to test your project
 
+## Exporting for web
+To export your project for the web, first install emsdk.
+Once emsdk is installed, set it up by running
+
+`emsdk install latest`
+
+Find the folder where it's installed and run
+
+`zig build webexport --sysroot [path to emsdk]/upstream/emscripten`
+
+once that is finished, the exported project should be located at `zig-out/htmlout`
+
 ### When is the binding updated?
 
 I plan on updating it every mayor release (2.5, 3.0, etc.). Keep in mind these are technically header files, so any implementation stuff should be updatable with some hacks on your side.

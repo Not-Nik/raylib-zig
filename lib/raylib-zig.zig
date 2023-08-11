@@ -1296,7 +1296,7 @@ pub fn loadCodepoints(text: [:0]const u8) []i32 {
 }
 
 pub fn textFormat(text: [:0]const u8, args: anytype) [:0]const u8 {
-    return std.mem.span(@call(.{}, cdef.TextFormat, .{@as([*c]const u8, @ptrCast(text))} ++ args));
+    return std.mem.span(@call(.auto, cdef.TextFormat, .{@as([*c]const u8, @ptrCast(text))} ++ args));
 }
 
 pub fn textSplit(text: [:0]const u8, delimiter: u8) [][:0]const u8 {
