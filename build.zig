@@ -291,7 +291,7 @@ fn lastIndexOf(string: []const u8, character: u8) usize {
     return string.len - 1;
 }
 // TODO: each zig update, remove this and see if everything still works.
-// TODO: submit an issue to zig's repo to fix the problem that this works around
+// https://github.com/ziglang/zig/issues/16776 is where the issue is submitted
 fn updateTargetForWeb(target: std.zig.CrossTarget) std.zig.CrossTarget {
     //zig building to emscripten doesn't work, because the zig standard library is missing some things in the C system.
     // "std/c.zig" is missing fd_t, which causes compilation to fail.
@@ -312,12 +312,10 @@ fn updateTargetForWeb(target: std.zig.CrossTarget) std.zig.CrossTarget {
 }
 
 pub fn webExport(b: *std.Build, root_source_file: []const u8, comptime rl_path: []const u8, optimize: std.builtin.OptimizeMode) !*std.Build.Step {
-    // EXPORTING to WEB, the only reasonable output is emscripten ReleaseSafe.
-    // (Safe because since when was performance the main goal of the internet?)
-    //Note: the name doesn't matter, it's only used as the file name of a temporary object, so it's just called "project"
     const target = try std.zig.CrossTarget.parse(.{ .arch_os_abi = "wasm32-emscripten" });
     var raylib = rl.getModule(b, rl_path);
     var raylib_math = rl.math.getModule(b, rl_path);
+    //Note: the name doesn't matter, it's only used as the file name of a temporary object, so it's just called "project"
     const build_step = try buildForEmscripten(b, "project", root_source_file, target, optimize, raylib, raylib_math);
     const run_step = try emscriptenRunStep(b);
     run_step.step.dependOn(&build_step.step);
