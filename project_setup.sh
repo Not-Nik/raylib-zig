@@ -16,8 +16,8 @@ pub fn build(b: *std.Build) void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
-    var raylib = rl.getModule(b);
-    var raylib_math = rl.math.getModule(b);
+    var raylib = rl.getModule(b, "raylib-zig");
+    var raylib_math = rl.math.getModule(b, "raylib-zig");
 
     const exe = b.addExecutable(.{ .name = "'$PROJECT_NAME'", .root_source_file = .{ .path = "src/main.zig" }, .optimize = optimize, .target = target });
     

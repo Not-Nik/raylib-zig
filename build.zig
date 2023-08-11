@@ -64,7 +64,15 @@ pub fn getArtifact(b: *std.Build, target: std.zig.CrossTarget, optimize: std.bui
     return raylib.artifact("raylib");
 }
 
-pub fn getModule(b: *std.Build) *std.Build.Module {
+//TODO: make these not comptime
+pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
+    if (b.modules.contains("raylib")) {
+        return b.modules.get("raylib").?;
+    }
+    return b.addModule("raylib", .{ .source_file = .{ .path = rl_path ++ "/lib/raylib-zig.zig" } });
+}
+
+pub fn getModuleInternal(b: *std.Build) *std.Build.Module {
     if (b.modules.contains("raylib")) {
         return b.modules.get("raylib").?;
     }
@@ -72,8 +80,13 @@ pub fn getModule(b: *std.Build) *std.Build.Module {
 }
 
 pub const math = struct {
-    pub fn getModule(b: *std.Build) *std.Build.Module {
-        var raylib = rl.getModule(b);
+    pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
+        var raylib = rl.getModule(b, rl_path);
+        return b.addModule("raylib-math", .{ .source_file = .{ .path = rl_path ++ "/lib/raylib-zig-math.zig" }, .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }} });
+    }
+
+    fn getModuleInternal(b: *std.Build) *std.Build.Module {
+        var raylib = rl.getModuleInternal(b);
         return b.addModule("raylib-math", .{ .source_file = .{ .path = "lib/raylib-zig-math.zig" }, .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }} });
     }
 };
@@ -149,8 +162,8 @@ pub fn build(b: *std.Build) void {
     const system_lib = b.option(bool, "system-raylib", "link to preinstalled raylib libraries") orelse false;
     _ = system_lib;
 
-    var raylib = rl.getModule(b);
-    var raylib_math = rl.math.getModule(b);
+    var raylib = rl.getModuleInternal(b);
+    var raylib_math = rl.math.getModuleInternal(b);
 
     for (examples) |ex| {
         const exe = b.addExecutable(.{ .name = ex.name, .root_source_file = .{ .path = ex.path }, .optimize = optimize, .target = target });
