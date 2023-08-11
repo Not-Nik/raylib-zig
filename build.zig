@@ -204,10 +204,10 @@ pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
         .windows => "emrun.bat",
         else => "emrun",
     };
-    var emrun_run_arg = try b.allocator.alloc(u8, b.sysroot.?.len + emrunExe.len + 1);
+    const emrun_run_arg = try b.allocator.alloc(u8, b.sysroot.?.len + emrunExe.len + 1);
     defer b.allocator.free(emrun_run_arg);
 
-    emrun_run_arg = try std.fmt.bufPrint(emrun_run_arg, "{s}" ++ std.fs.path.sep_str ++ "{s}", .{ b.sysroot.?, emrunExe });
+    _ = try std.fmt.bufPrint(emrun_run_arg, "{s}" ++ std.fs.path.sep_str ++ "{s}", .{ b.sysroot.?, emrunExe });
 
     const run_cmd = b.addSystemCommand(&[_][]const u8{ emrun_run_arg, "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str ++ "index.html" });
     return run_cmd;
@@ -223,37 +223,67 @@ pub fn buildForEmscripten(b: *std.Build, name: []const u8, root_source_file: []c
     // it needs to be generated at compile time,
     // and it needs to be in the project's source.
 
-    //First, generate the file string
-    const zig_entrypoint_format = "//This file is generated in order to allow web builds to start properly. It can safely be deleted.\nconst main = @import(\"{s}\");export fn web_emscripten_entry_point() c_int {{main.main() catch {{return -1;}};return 0;}}";
-    const zig_entrypoint_buffer = try b.allocator.alloc(u8, zig_entrypoint_format.len + root_source_file.len + 1);
-    const root_source_file_name = root_source_file[(lastIndexOf(root_source_file, '/') + 1)..];
-    const zig_entrypoint_code = try std.fmt.bufPrint(zig_entrypoint_buffer, zig_entrypoint_format, .{root_source_file_name});
+    //TODO: find a way to create a C-compatible entrypoint without doing this
+
+    //Figure out where to write the file
+    //TODO: This does mean that building all of the examples at once would cause them to clash,
+    // However for now that is not a problem
     const zig_entrypoint_dir = root_source_file[0..lastIndexOf(root_source_file, '/')];
     const zig_entrypoint_file = try b.allocator.alloc(u8, zig_entrypoint_dir.len + "/web_emscripten_entry_point.zig".len);
     _ = try std.fmt.bufPrint(zig_entrypoint_file, "{s}{s}", .{ zig_entrypoint_dir, "/web_emscripten_entry_point.zig" });
 
-    //TODO: find a way to create a C-compatible entrypoint without doing this
+    //create the file
+    const zig_entrypoint_format =
+        \\//This file is generated in order to allow web builds to start properly. It can safely be deleted.
+        \\const main = @import("{s}");
+        \\const std = @import("std");
+        \\export fn web_emscripten_entry_point() c_int
+        \\{{
+        \\    main.main() catch |e| {{
+        \\        //Since emscripten isn't going to get the stack trace,
+        \\        // it needs to be printed elsewhere
+        \\        const writer = std.io.getStdErr().writer();
+        \\                //TODO: It seems zig doesn't put error info into wasm binaries: https://github.com/ziglang/zig/issues/10426
+        \\                // So this always returns null.
+        \\                // if (@errorReturnTrace()) |trace| {
+        \\                //     trace.format("{s}", .{}, writer);
+        \\                // }
+        \\                // I'm not really worried since web outputs are usually reserved for release anyway, which by then most errors should be fixed.
+        \\        writer.print("THERE WAS AN ERROR:{{s}}\n", .{{@errorName(e)}}) catch {{}};
+        \\    }};
+        \\    return 0;
+        \\}}
+    ;
+    const zig_entrypoint_buffer = try b.allocator.alloc(u8, zig_entrypoint_format.len + root_source_file.len + 1);
+    const root_source_file_name = root_source_file[(lastIndexOf(root_source_file, '/') + 1)..];
+    const zig_entrypoint_code = try std.fmt.bufPrint(zig_entrypoint_buffer, zig_entrypoint_format, .{root_source_file_name});
+
     const write_zig_entrypoint = b.addWriteFiles();
     write_zig_entrypoint.addBytesToSource(zig_entrypoint_code, zig_entrypoint_file);
 
-    //create the web back C file
+    //create the entrypoint C file - unlike the zig file, this can be placed anywhere, so it goes into the cache
+    // It's worth noting that this also defines some symbols that zig adds for wasi that emscripten doesn't support.
     const webhack_c_file_step = b.addWriteFiles();
     const webhack_c_file = webhack_c_file_step.add("webhack.c", webhack_c);
 
-    //the project is built as a library and linked with everything later
+    //Emcc has to be the one that links the project, in order to make sure that the web libraries are correctly linked.
+    if (b.sysroot == null) {
+        @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
+    }
+    //the project is built as a library and linked later
     const exe_lib = b.addStaticLibrary(.{ .name = name, .root_source_file = .{ .path = zig_entrypoint_file }, .target = new_target, .optimize = optimize });
-    exe_lib.addCSourceFile(.{ .file = webhack_c_file, .flags = &[_][]const u8{} });
+    const cache_include = std.fs.path.join(b.allocator, &.{ b.sysroot.?, "cache", "sysroot", "include" }) catch @panic("Out of memory");
+    defer b.allocator.free(cache_include);
+    exe_lib.addCSourceFile(.{ .file = webhack_c_file, .flags = &[_][]u8{} });
     const raylib_artifact = getArtifact(b, target, optimize);
+    //Since it's creating a static library, the symbols raylib uses to webgl and glfw don't need to be linked by emscripten yet.
     exe_lib.linkLibrary(raylib_artifact);
     exe_lib.addModule("raylib", raylib);
     exe_lib.addModule("raylib-math", raylib_math);
     exe_lib.step.dependOn(&write_zig_entrypoint.step);
     exe_lib.step.dependOn(&webhack_c_file_step.step);
     exe_lib.step.dependOn(&raylib_artifact.step);
-    //Emcc has to be the one that links the project, in order to make sure that the web libraries are correctly linked.
-    if (b.sysroot == null) {
-        @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
-    }
+
     //If compiling on windows , use emcc.bat
     const emccExe = switch (builtin.os.tag) {
         .windows => "emcc.bat",
@@ -270,9 +300,8 @@ pub fn buildForEmscripten(b: *std.Build, name: []const u8, root_source_file: []c
     const emcc_command = b.addSystemCommand(&[_][]const u8{emcc_run_arg});
     emcc_command.addFileArg(raylib_artifact.getEmittedBin());
     emcc_command.addFileArg(exe_lib.getEmittedBin());
-    //TODO: see if there is a way to properly integrate the output directory into zig's cache
-    // LATER: The way is by zig's writeFile creates place in the cache that can then be used to place emcc's output
-    // TODO: investigate why "-sSTANDALONE_WASM" completely freezes the page once the program loads and starts.
+    //TODO: This does mean that building all of the examples at once would cause them to clash,
+    // However for now that is not a problem
     emcc_command.addArgs(&[_][]const u8{ "-o", "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str ++ "index.html", "-sFULL-ES3=1", "-sUSE_GLFW=3", "-sASYNCIFY", "-O3" });
     emcc_command.step.dependOn(&exe_lib.step);
     emcc_command.step.dependOn(&raylib_artifact.step);
@@ -324,27 +353,29 @@ pub fn webExport(b: *std.Build, root_source_file: []const u8, comptime rl_path: 
     return &build_step.step;
 }
 const webhack_c =
-    \\ // Emscripten is completely unable to find Zig's entry point.
-    \\ // Solution: create a C compatible entry point in zig,
-    \\ // and then a C file that calls that entry point in the main method
-    \\ // This is that C file.
-    \\ //The entry point found in the zig project
-    \\ extern int web_emscripten_entry_point();
-    \\ //this is the method that emscripten calls automatically when the page loads
-    \\ int main(int argc, char** argv)
-    \\ {
-    \\     //TODO: possibly pass arguments into zig?
-    \\     return web_emscripten_entry_point();
-    \\ }
-    \\ // For some reason zig adds '__stack_chk_guard', '__stack_chk_fail', and 'errno',
-    \\ // which emscripten doesn't actually support.
-    \\ // Seems that zig ignores disabling stack checking,
-    \\ // and I honestly don't know why emscripten doesn't have errno.
-    \\ // there's a solution, although it's not a good one...
-    \\ #include <stdint.h>
-    \\ uintptr_t __stack_chk_guard;
-    \\ //Yes, this means that if there is a buffer overflow, nobody is going to know about it.
-    \\ // However, zig is pretty safe from those, so don't worry about it too much.
-    \\ void __stack_chk_fail(void){}
-    \\ int errno;
+    \\// Emscripten is completely unable to find Zig's entry point.
+    \\// Solution: create a C compatible entry point in zig,
+    \\// and then a C file that calls that entry point in the main method
+    \\// This is that C file.
+    \\#include <stdio.h>
+    \\//The entry point found in the zig project
+    \\extern int web_emscripten_entry_point();
+    \\//this is the method that emscripten calls automatically when the page loads
+    \\int main(int argc, char** argv)
+    \\{
+    \\    //TODO: possibly pass arguments into zig?
+    \\    return web_emscripten_entry_point();
+    \\}
+    \\// Zig adds '__stack_chk_guard', '__stack_chk_fail', and 'errno',
+    \\// which emscripten doesn't actually support.
+    \\// Seems that zig ignores disabling stack checking,
+    \\// and I honestly don't know why emscripten doesn't have errno.
+    \\// TODO: when the updateTargetForWeb workaround gets removed, see if those are nessesary anymore
+    \\// there's a solution, although it's not a good one...
+    \\#include <stdint.h>
+    \\uintptr_t __stack_chk_guard;
+    \\//Yes, this means that if there is a buffer overflow, nobody is going to know about it.
+    \\// However, zig is pretty safe from those, so don't worry about it too much.
+    \\void __stack_chk_fail(void){}
+    \\int errno;
 ;
