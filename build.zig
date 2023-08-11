@@ -87,7 +87,7 @@ pub fn getModuleInternal(b: *std.Build) *std.Build.Module {
 
 pub const math = struct {
     pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
-        var raylib = rl.getModuleInternal(b);
+        var raylib = rl.getModule(b, rl_path);
         return b.addModule("raylib-math", .{ .source_file = .{ .path = rl_path ++ "/lib/raylib-zig-math.zig" }, .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }} });
     }
 
