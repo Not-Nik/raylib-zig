@@ -293,9 +293,9 @@ fn lastIndexOf(string: []const u8, character: u8) usize {
 // TODO: each zig update, remove this and see if everything still works.
 // TODO: submit an issue to zig's repo to fix the problem that this works around
 fn updateTargetForWeb(target: std.zig.CrossTarget) std.zig.CrossTarget {
-    //zig building to emscripten doesn't really work,
-    // as the standard library doesn't compile for some reason
-    // So build to wasi instead.
+    //zig building to emscripten doesn't work, because the zig standard library is missing some things in the C system.
+    // "std/c.zig" is missing fd_t, which causes compilation to fail.
+    // So build to wasi instead, until it gets fixed.
     return std.zig.CrossTarget{
         .cpu_arch = target.cpu_arch,
         .cpu_model = target.cpu_model,
