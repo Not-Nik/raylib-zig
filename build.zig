@@ -214,7 +214,6 @@ pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
 }
 
 pub fn buildForEmscripten(b: *std.Build, name: []const u8, root_source_file: []const u8, target: std.zig.CrossTarget, optimize: std.builtin.Mode, raylib: *std.Build.Module, raylib_math: *std.Build.Module) !*std.Build.Step.Run {
-    const new_target = updateTargetForWeb(target);
     // Emscripten is completely unable to find Zig's entry point.
     // Solution: create a C compatible entry point in zig,
     // and then a C file that calls that entry point in the main method.
@@ -241,7 +240,7 @@ pub fn buildForEmscripten(b: *std.Build, name: []const u8, root_source_file: []c
     const webhack_c_file = webhack_c_file_step.add("webhack.c", webhack_c);
 
     //the project is built as a library and linked with everything later
-    const exe_lib = b.addStaticLibrary(.{ .name = name, .root_source_file = .{ .path = zig_entrypoint_file }, .target = new_target, .optimize = optimize });
+    const exe_lib = b.addStaticLibrary(.{ .name = name, .root_source_file = .{ .path = zig_entrypoint_file }, .target = target, .optimize = optimize });
     exe_lib.addCSourceFile(.{ .file = webhack_c_file, .flags = &[_][]const u8{} });
     exe_lib.addModule("raylib", raylib);
     exe_lib.addModule("raylib-math", raylib_math);
@@ -289,24 +288,6 @@ fn lastIndexOf(string: []const u8, character: u8) usize {
         if (string[index] == character) return index;
     }
     return string.len - 1;
-}
-fn updateTargetForWeb(target: std.zig.CrossTarget) std.zig.CrossTarget {
-    //zig building to emscripten doesn't really work,
-    // as the standard library doesn't compile for some reason
-    // So build to wasi instead.
-    return std.zig.CrossTarget{
-        .cpu_arch = target.cpu_arch,
-        .cpu_model = target.cpu_model,
-        .cpu_features_add = target.cpu_features_add,
-        .cpu_features_sub = target.cpu_features_sub,
-        .os_tag = .wasi,
-        .os_version_min = target.os_version_min,
-        .os_version_max = target.os_version_max,
-        .glibc_version = target.glibc_version,
-        .abi = target.abi,
-        .dynamic_linker = target.dynamic_linker,
-        .ofmt = target.ofmt,
-    };
 }
 
 pub fn webExport(b: *std.Build, root_source_file: []const u8, comptime rl_path: []const u8, optimize: std.builtin.OptimizeMode) !*std.Build.Step {
