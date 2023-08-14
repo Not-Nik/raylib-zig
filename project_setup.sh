@@ -33,6 +33,7 @@ pub fn build(b: *std.Build) !void {
         run_step.step.dependOn(&link_step.step);
         const run_option = b.step("run", "Run '$PROJECT_NAME'");
         run_option.dependOn(&run_step.step);
+        return;
     }
 
     const exe = b.addExecutable(.{ .name = "'$PROJECT_NAME'", .root_source_file = .{ .path = "src/main.zig" }, .optimize = optimize, .target = target });
