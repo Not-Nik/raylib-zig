@@ -221,7 +221,7 @@ pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
 }
 
 //Creates the static library to build a project for Emscripten
-fn compileForEmscripten(b: *std.Build, name: []const u8, root_source_file: []const u8, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *std.Build.Step.Compile {
+pub fn compileForEmscripten(b: *std.Build, name: []const u8, root_source_file: []const u8, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *std.Build.Step.Compile {
     // TODO: It might be a good idea to create a custom compile step,
     // that does both the compile to static library and the link with emcc
     // By overidding the make function of the step,
@@ -249,7 +249,7 @@ fn compileForEmscripten(b: *std.Build, name: []const u8, root_source_file: []con
 // TODO: test if shared libraries are accepted, I don't remember if emcc can link a shared library with a project or not
 // TODO: add a way to convert from an input path to the output path, if emscripten even allows such a thing.
 // TODO: add a parameter that allows a custom output directory
-fn linkWithEmscripten(b: *std.Build, itemsToLink: []const *std.Build.Step.Compile, filesToInclude: []const std.Build.LazyPath) !*std.Build.Step.Run {
+pub fn linkWithEmscripten(b: *std.Build, itemsToLink: []const *std.Build.Step.Compile, filesToInclude: []const std.Build.LazyPath) !*std.Build.Step.Run {
     //Raylib uses --sysroot in order to find emscripten, so do the same here
     if (b.sysroot == null) {
         @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
