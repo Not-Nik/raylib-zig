@@ -2,8 +2,6 @@ zig-cache/
 zig-out/
 .idea/
 Project/*
-#This is a file that is auto-generated to make a hack work
-**/web_emscripten_entry_point.zig
 libraylib.a
 raylib.h
 raymath.h
