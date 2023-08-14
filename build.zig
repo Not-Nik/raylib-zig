@@ -172,28 +172,35 @@ pub fn build(b: *std.Build) !void {
     var raylib_math = rl.math.getModuleInternal(b);
 
     for (examples) |ex| {
-        //If compiling for emscripten, things need to be done COMPLETELY differently
         if (target.getOsTag() == .emscripten) {
-            var build_step = try buildForEmscripten(b, ex.name, ex.path, target, optimize, raylib, raylib_math);
-            var emrun_step = try emscriptenRunStep(b);
-            emrun_step.step.dependOn(&build_step.step);
-            var run_step = b.step(ex.name, ex.desc);
-            run_step.dependOn(&emrun_step.step);
-            //examples_step.dependOn(&build_step.step);
-            continue;
+            const exe_lib = compileForEmscripten(b, ex.name, ex.path, target, optimize);
+            exe_lib.addModule("raylib", raylib);
+            exe_lib.addModule("raylib-math", raylib_math);
+            const raylib_artifact = getArtifact(b, target, optimize);
+            // Note that raylib itself isn't actually added to the exe_lib output file, so it also needs to be linked with emscripten.
+            exe_lib.linkLibrary(raylib_artifact);
+            const link_step = try linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact }, &[_]std.Build.LazyPath{.{ .path = "resources/" }});
+            link_step.step.dependOn(&raylib_artifact.step);
+            link_step.step.dependOn(&exe_lib.step);
+            const run_step = try emscriptenRunStep(b);
+            run_step.step.dependOn(&link_step.step);
+            const run_option = b.step(ex.name, ex.desc);
+            run_option.dependOn(&run_step.step);
+        } else {
+            const exe = b.addExecutable(.{ .name = ex.name, .root_source_file = .{ .path = ex.path }, .optimize = optimize, .target = target });
+            rl.link(b, exe, target, optimize);
+            exe.addModule("raylib", raylib);
+            exe.addModule("raylib-math", raylib_math);
+            const run_cmd = b.addRunArtifact(exe);
+            const run_step = b.step(ex.name, ex.desc);
+            run_step.dependOn(&run_cmd.step);
+            examples_step.dependOn(&exe.step);
         }
-
-        const exe = b.addExecutable(.{ .name = ex.name, .root_source_file = .{ .path = ex.path }, .optimize = optimize, .target = target });
-        rl.link(b, exe, target, optimize);
-        exe.addModule("raylib", raylib);
-        exe.addModule("raylib-math", raylib_math);
-        const run_cmd = b.addRunArtifact(exe);
-        const run_step = b.step(ex.name, ex.desc);
-        run_step.dependOn(&run_cmd.step);
-        examples_step.dependOn(&exe.step);
     }
 }
 
+const emccOutputDir = "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str;
+const emccOutputFile = "index.html";
 pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
     //find emrun
     if (b.sysroot == null) {
@@ -209,35 +216,44 @@ pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
 
     _ = try std.fmt.bufPrint(emrun_run_arg, "{s}" ++ std.fs.path.sep_str ++ "{s}", .{ b.sysroot.?, emrunExe });
 
-    const run_cmd = b.addSystemCommand(&[_][]const u8{ emrun_run_arg, "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str ++ "index.html" });
+    const run_cmd = b.addSystemCommand(&[_][]const u8{ emrun_run_arg, emccOutputDir ++ emccOutputFile });
     return run_cmd;
 }
 
-pub fn buildForEmscripten(b: *std.Build, name: []const u8, root_source_file: []const u8, target: std.zig.CrossTarget, optimize: std.builtin.Mode, raylib: *std.Build.Module, raylib_math: *std.Build.Module) !*std.Build.Step.Run {
+//Creates the static library to build a project for Emscripten
+fn compileForEmscripten(b: *std.Build, name: []const u8, root_source_file: []const u8, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *std.Build.Step.Compile {
+    // TODO: It might be a good idea to create a custom compile step,
+    // that does both the compile to static library and the link with emcc
+    // By overidding the make function of the step,
+    // However it might also be a bad idea since it messes with the build system itself.
+
     const new_target = updateTargetForWeb(target);
+
+    //the project is built as a library and linked later
+    const exe_lib = b.addStaticLibrary(.{ .name = name, .root_source_file = .{ .path = root_source_file }, .target = new_target, .optimize = optimize });
 
     //There are some symbols that need to be defined in C.
     const webhack_c_file_step = b.addWriteFiles();
     const webhack_c_file = webhack_c_file_step.add("webhack.c", webhack_c);
+    exe_lib.addCSourceFile(.{ .file = webhack_c_file, .flags = &[_][]u8{} });
+    //Since it's creating a static library, the symbols raylib uses to webgl and glfw don't need to be linked by emscripten yet.
+    exe_lib.step.dependOn(&webhack_c_file_step.step);
+    return exe_lib;
+}
 
-    //Emcc has to be the one that links the project, in order to make sure that the web libraries are correctly linked.
+//links a set of items together using emscripten.
+// Will accept objects and static libraries as items to link
+// As for files to include, it is recomended to have a single resources directory and just pass the entire directory
+// instead of passing every file individually. The entire path given will be the path to read the file within the program.
+// So, if "resources/image.png" is passed, your program will use "resources/image.png" as the path to load the file.
+// TODO: test if shared libraries are accepted, I don't remember if emcc can link a shared library with a project or not
+// TODO: add a way to convert from an input path to the output path, if emscripten even allows such a thing.
+// TODO: add a parameter that allows a custom output directory
+fn linkWithEmscripten(b: *std.Build, itemsToLink: []const *std.Build.Step.Compile, filesToInclude: []const std.Build.LazyPath) !*std.Build.Step.Run {
+    //Raylib uses --sysroot in order to find emscripten, so do the same here
     if (b.sysroot == null) {
         @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
     }
-    //the project is built as a library and linked later
-    const exe_lib = b.addStaticLibrary(.{ .name = name, .root_source_file = .{ .path = root_source_file }, .target = new_target, .optimize = optimize });
-    const cache_include = std.fs.path.join(b.allocator, &.{ b.sysroot.?, "cache", "sysroot", "include" }) catch @panic("Out of memory");
-    defer b.allocator.free(cache_include);
-    exe_lib.addCSourceFile(.{ .file = webhack_c_file, .flags = &[_][]u8{} });
-    const raylib_artifact = getArtifact(b, target, optimize);
-    //Since it's creating a static library, the symbols raylib uses to webgl and glfw don't need to be linked by emscripten yet.
-    exe_lib.linkLibrary(raylib_artifact);
-    exe_lib.addModule("raylib", raylib);
-    exe_lib.addModule("raylib-math", raylib_math);
-    exe_lib.step.dependOn(&webhack_c_file_step.step);
-    exe_lib.step.dependOn(&raylib_artifact.step);
-
-    //If compiling on windows , use emcc.bat
     const emccExe = switch (builtin.os.tag) {
         .windows => "emcc.bat",
         else => "emcc",
@@ -248,18 +264,23 @@ pub fn buildForEmscripten(b: *std.Build, name: []const u8, root_source_file: []c
     emcc_run_arg = try std.fmt.bufPrint(emcc_run_arg, "{s}" ++ std.fs.path.sep_str ++ "{s}", .{ b.sysroot.?, emccExe });
 
     //create the output directory because emcc can't do it.
-    const mkdir_command = b.addSystemCommand(&[_][]const u8{ "mkdir", "-p", "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str });
+    const mkdir_command = b.addSystemCommand(&[_][]const u8{ "mkdir", "-p", emccOutputDir });
     //Actually link everything together
     const emcc_command = b.addSystemCommand(&[_][]const u8{emcc_run_arg});
-    emcc_command.addFileArg(raylib_artifact.getEmittedBin());
-    emcc_command.addFileArg(exe_lib.getEmittedBin());
-    //TODO: This does mean that building all of the examples at once would cause them to clash,
-    // However for now that is not a problem
-    emcc_command.addArgs(&[_][]const u8{ "-o", "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str ++ "index.html", "-sFULL-ES3=1", "-sUSE_GLFW=3", "-sASYNCIFY", "-O3" });
-    emcc_command.step.dependOn(&exe_lib.step);
-    emcc_command.step.dependOn(&raylib_artifact.step);
-    emcc_command.step.dependOn(&mkdir_command.step);
 
+    for (itemsToLink) |item| {
+        emcc_command.addFileArg(item.getEmittedBin());
+        emcc_command.step.dependOn(&item.step);
+    }
+    //This puts the file in zig-out/htmlout/index.html
+    emcc_command.step.dependOn(&mkdir_command.step);
+    emcc_command.addArgs(&[_][]const u8{ "-o", emccOutputDir ++ emccOutputFile, "-sFULL-ES3=1", "-sUSE_GLFW=3", "-sASYNCIFY", "-O3", "--emrun" });
+
+    //Web builds can't just have the files next to the executable, they have to be linked with the program
+    for (filesToInclude) |file| {
+        emcc_command.addArg("--embed-file");
+        emcc_command.addArg(file.path);
+    }
     return emcc_command;
 }
 
@@ -292,29 +313,15 @@ fn updateTargetForWeb(target: std.zig.CrossTarget) std.zig.CrossTarget {
         .ofmt = target.ofmt,
     };
 }
-
-pub fn webExport(b: *std.Build, root_source_file: []const u8, comptime rl_path: []const u8, optimize: std.builtin.OptimizeMode) !*std.Build.Step {
-    const target = try std.zig.CrossTarget.parse(.{ .arch_os_abi = "wasm32-emscripten" });
-    var raylib = rl.getModule(b, rl_path);
-    var raylib_math = rl.math.getModule(b, rl_path);
-    //Note: the name doesn't matter, it's only used as the file name of a temporary object, so it's just called "project"
-    const build_step = try buildForEmscripten(b, "project", root_source_file, target, optimize, raylib, raylib_math);
-    const run_step = try emscriptenRunStep(b);
-    run_step.step.dependOn(&build_step.step);
-    const run_step_arg = b.step("run", "This only exists because the run step for web exports is different");
-    run_step_arg.dependOn(&run_step.step);
-    return &build_step.step;
-}
 const webhack_c =
     \\// Zig adds '__stack_chk_guard', '__stack_chk_fail', and 'errno',
     \\// which emscripten doesn't actually support.
     \\// Seems that zig ignores disabling stack checking,
     \\// and I honestly don't know why emscripten doesn't have errno.
     \\// TODO: when the updateTargetForWeb workaround gets removed, see if those are nessesary anymore
-    \\// there's a solution, although it's not a good one...
     \\#include <stdint.h>
     \\uintptr_t __stack_chk_guard;
-    \\//Yes, this means that if there is a buffer overflow, nobody is going to know about it.
+    \\//I'm not certain if this means buffer overflows won't be detected,
     \\// However, zig is pretty safe from those, so don't worry about it too much.
     \\void __stack_chk_fail(void){}
     \\int errno;

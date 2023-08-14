@@ -15,13 +15,25 @@ const rl = @import("raylib-zig/build.zig");
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    //web exports are completely separate, due to the amount of hackery required.
-    if (target.getOsTag()) {
-        b.getInstallStep().dependOn(try rl.webExport(b, "src/main.zig", "raylib-zig", optimize));
-        return;
-    }
     var raylib = rl.getModule(b, "raylib-zig");
     var raylib_math = rl.math.getModule(b, "raylib-zig");
+    //web exports are completely separate
+    if (target.getOsTag() == .emscripten) {
+        const exe_lib = compileForEmscripten(b, '$PROJECT_NAME', "src/main.zig", target, optimize);
+        exe_lib.addModule("raylib", raylib);
+        exe_lib.addModule("raylib-math", raylib_math);
+        const raylib_artifact = rl.getArtifact(b, target, optimize);
+        // Note that raylib itself isn't actually added to the exe_lib output file, so it also needs to be linked with emscripten.
+        exe_lib.linkLibrary(raylib_artifact);
+        const link_step = try linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact }, &[_]std.Build.LazyPath{.{ .path = "resources/" }});
+        link_step.step.dependOn(&raylib_artifact.step);
+        link_step.step.dependOn(&exe_lib.step);
+        b.getInstallStep.dependOn(&link_step.step);
+        const run_step = try emscriptenRunStep(b);
+        run_step.step.dependOn(&link_step.step);
+        const run_option = b.step("run", "Run '$PROJECT_NAME'");
+        run_option.dependOn(&run_step.step);
+    }
 
     const exe = b.addExecutable(.{ .name = "'$PROJECT_NAME'", .root_source_file = .{ .path = "src/main.zig" }, .optimize = optimize, .target = target });
 
