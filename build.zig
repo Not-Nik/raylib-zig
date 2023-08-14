@@ -179,7 +179,9 @@ pub fn build(b: *std.Build) !void {
             const raylib_artifact = getArtifact(b, target, optimize);
             // Note that raylib itself isn't actually added to the exe_lib output file, so it also needs to be linked with emscripten.
             exe_lib.linkLibrary(raylib_artifact);
-            const link_step = try linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact }, &[_]std.Build.LazyPath{.{ .path = "resources/" }});
+            const link_step = try linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
+            link_step.addArg("--embed-file");
+            link_step.addArg("resources/");
             link_step.step.dependOn(&raylib_artifact.step);
             link_step.step.dependOn(&exe_lib.step);
             const run_step = try emscriptenRunStep(b);
@@ -249,7 +251,7 @@ pub fn compileForEmscripten(b: *std.Build, name: []const u8, root_source_file: [
 // TODO: test if shared libraries are accepted, I don't remember if emcc can link a shared library with a project or not
 // TODO: add a way to convert from an input path to the output path, if emscripten even allows such a thing.
 // TODO: add a parameter that allows a custom output directory
-pub fn linkWithEmscripten(b: *std.Build, itemsToLink: []const *std.Build.Step.Compile, filesToInclude: []const std.Build.LazyPath) !*std.Build.Step.Run {
+pub fn linkWithEmscripten(b: *std.Build, itemsToLink: []const *std.Build.Step.Compile) !*std.Build.Step.Run {
     //Raylib uses --sysroot in order to find emscripten, so do the same here
     if (b.sysroot == null) {
         @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
@@ -275,12 +277,6 @@ pub fn linkWithEmscripten(b: *std.Build, itemsToLink: []const *std.Build.Step.Co
     //This puts the file in zig-out/htmlout/index.html
     emcc_command.step.dependOn(&mkdir_command.step);
     emcc_command.addArgs(&[_][]const u8{ "-o", emccOutputDir ++ emccOutputFile, "-sFULL-ES3=1", "-sUSE_GLFW=3", "-sASYNCIFY", "-O3", "--emrun" });
-
-    //Web builds can't just have the files next to the executable, they have to be linked with the program
-    for (filesToInclude) |file| {
-        emcc_command.addArg("--embed-file");
-        emcc_command.addArg(file.path);
-    }
     return emcc_command;
 }
 

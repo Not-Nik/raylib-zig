@@ -25,7 +25,7 @@ pub fn build(b: *std.Build) !void {
         const raylib_artifact = rl.getArtifact(b, target, optimize);
         // Note that raylib itself is not actually added to the exe_lib output file, so it also needs to be linked with emscripten.
         exe_lib.linkLibrary(raylib_artifact);
-        const link_step = try rl.linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact }, &[_]std.Build.LazyPath{.{ .path = "resources/" }});
+        const link_step = try rl.linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
         link_step.step.dependOn(&raylib_artifact.step);
         link_step.step.dependOn(&exe_lib.step);
         b.getInstallStep().dependOn(&link_step.step);
