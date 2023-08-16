@@ -182,8 +182,7 @@ pub fn build(b: *std.Build) !void {
             const link_step = try linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
             link_step.addArg("--embed-file");
             link_step.addArg("resources/");
-            link_step.step.dependOn(&raylib_artifact.step);
-            link_step.step.dependOn(&exe_lib.step);
+
             const run_step = try emscriptenRunStep(b);
             run_step.step.dependOn(&link_step.step);
             const run_option = b.step(ex.name, ex.desc);
@@ -249,7 +248,6 @@ pub fn compileForEmscripten(b: *std.Build, name: []const u8, root_source_file: [
 // instead of passing every file individually. The entire path given will be the path to read the file within the program.
 // So, if "resources/image.png" is passed, your program will use "resources/image.png" as the path to load the file.
 // TODO: test if shared libraries are accepted, I don't remember if emcc can link a shared library with a project or not
-// TODO: add a way to convert from an input path to the output path, if emscripten even allows such a thing.
 // TODO: add a parameter that allows a custom output directory
 pub fn linkWithEmscripten(b: *std.Build, itemsToLink: []const *std.Build.Step.Compile) !*std.Build.Step.Run {
     //Raylib uses --sysroot in order to find emscripten, so do the same here
