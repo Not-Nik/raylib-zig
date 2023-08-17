@@ -1346,6 +1346,46 @@ pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music
     return cdef.LoadMusicStreamFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)));
 }
 
+pub fn drawLineStrip(points: []Vector2, color: Color) void {
+    cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+}
+
+pub fn drawTriangleFan(points: []Vector2, color: Color) void {
+    cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+}
+
+pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
+    cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+}
+
+pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
+    return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
+}
+
+pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32) Font {
+    return cdef.LoadFontEx(@as([*c]const u8, @ptrCast(fileName)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)));
+}
+
+pub fn genImageFontAtlas(chars: []const GlyphInfo, recs: [][]Rectangle, fontSize: i32, padding: i32, packMethod: i32) Image {
+    return cdef.GenImageFontAtlas(@as([*c]const GlyphInfo, @ptrCast(chars)), @as([*c][*c]Rectangle, @ptrCast(recs)), @as(c_int, @intCast(recs.len)), @as(c_int, fontSize), @as(c_int, padding), @as(c_int, packMethod));
+}
+
+pub fn unloadFontData(chars: []GlyphInfo) void {
+    cdef.UnloadFontData(@as([*c]GlyphInfo, @ptrCast(chars)), @as(c_int, @intCast(chars.len)));
+}
+
+pub fn loadUTF8(codepoints: []const c_int) [:0]u8 {
+    return std.mem.span(cdef.LoadUTF8(@as([*c]const c_int, @ptrCast(codepoints)), @as(c_int, @intCast(codepoints.len))));
+}
+
+pub fn textJoin(textList: [][:0]const u8, delimiter: [:0]const u8) [:0]const u8 {
+    return std.mem.span(cdef.TextJoin(@as([*c][*c]const u8, @ptrCast(textList)), @as(c_int, @intCast(textList.len)), @as([*c]const u8, @ptrCast(delimiter))));
+}
+
+pub fn drawTriangleStrip3D(points: []Vector3, color: Color) void {
+    cdef.DrawTriangleStrip3D(@as([*c]Vector3, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+}
+
 pub fn initWindow(width: i32, height: i32, title: [:0]const u8) void {
     cdef.InitWindow(@as(c_int, width), @as(c_int, height), @as([*c]const u8, @ptrCast(title)));
 }
@@ -2090,10 +2130,6 @@ pub fn drawLineBezierCubic(startPos: Vector2, endPos: Vector2, startControlPos: 
     cdef.DrawLineBezierCubic(startPos, endPos, startControlPos, endControlPos, thick, color);
 }
 
-pub fn drawLineStrip(points: []Vector2, pointCount: i32, color: Color) void {
-    cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
-}
-
 pub fn drawCircle(centerX: i32, centerY: i32, radius: f32, color: Color) void {
     cdef.DrawCircle(@as(c_int, centerX), @as(c_int, centerY), radius, color);
 }
@@ -2186,14 +2222,6 @@ pub fn drawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) vo
     cdef.DrawTriangleLines(v1, v2, v3, color);
 }
 
-pub fn drawTriangleFan(points: []Vector2, pointCount: i32, color: Color) void {
-    cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
-}
-
-pub fn drawTriangleStrip(points: []Vector2, pointCount: i32, color: Color) void {
-    cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
-}
-
 pub fn drawPoly(center: Vector2, sides: i32, radius: f32, rotation: f32, color: Color) void {
     cdef.DrawPoly(center, @as(c_int, sides), radius, rotation, color);
 }
@@ -2228,10 +2256,6 @@ pub fn checkCollisionPointCircle(point: Vector2, center: Vector2, radius: f32) b
 
 pub fn checkCollisionPointTriangle(point: Vector2, p1: Vector2, p2: Vector2, p3: Vector2) bool {
     return cdef.CheckCollisionPointTriangle(point, p1, p2, p3);
-}
-
-pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2, pointCount: i32) bool {
-    return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount));
 }
 
 pub fn checkCollisionLines(startPos1: Vector2, endPos1: Vector2, startPos2: Vector2, endPos2: Vector2, collisionPoint: *Vector2) bool {
@@ -2658,24 +2682,12 @@ pub fn loadFont(fileName: [:0]const u8) Font {
     return cdef.LoadFont(@as([*c]const u8, @ptrCast(fileName)));
 }
 
-pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32, glyphCount: i32) Font {
-    return cdef.LoadFontEx(@as([*c]const u8, @ptrCast(fileName)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, glyphCount));
-}
-
 pub fn loadFontFromImage(image: Image, key: Color, firstChar: i32) Font {
     return cdef.LoadFontFromImage(image, key, @as(c_int, firstChar));
 }
 
 pub fn isFontReady(font: Font) bool {
     return cdef.IsFontReady(font);
-}
-
-pub fn genImageFontAtlas(chars: []const GlyphInfo, recs: [][]Rectangle, glyphCount: i32, fontSize: i32, padding: i32, packMethod: i32) Image {
-    return cdef.GenImageFontAtlas(@as([*c]const GlyphInfo, @ptrCast(chars)), @as([*c][*c]Rectangle, @ptrCast(recs)), @as(c_int, glyphCount), @as(c_int, fontSize), @as(c_int, padding), @as(c_int, packMethod));
-}
-
-pub fn unloadFontData(chars: []GlyphInfo, glyphCount: i32) void {
-    cdef.UnloadFontData(@as([*c]GlyphInfo, @ptrCast(chars)), @as(c_int, glyphCount));
 }
 
 pub fn unloadFont(font: Font) void {
@@ -2706,10 +2718,6 @@ pub fn drawTextCodepoint(font: Font, codepoint: i32, position: Vector2, fontSize
     cdef.DrawTextCodepoint(font, @as(c_int, codepoint), position, fontSize, tint);
 }
 
-pub fn drawTextCodepoints(font: Font, codepoints: []const c_int, count: i32, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
-    cdef.DrawTextCodepoints(font, @as([*c]const c_int, @ptrCast(codepoints)), @as(c_int, count), position, fontSize, spacing, tint);
-}
-
 pub fn setTextLineSpacing(spacing: i32) void {
     cdef.SetTextLineSpacing(@as(c_int, spacing));
 }
@@ -2732,10 +2740,6 @@ pub fn getGlyphInfo(font: Font, codepoint: i32) GlyphInfo {
 
 pub fn getGlyphAtlasRec(font: Font, codepoint: i32) Rectangle {
     return cdef.GetGlyphAtlasRec(font, @as(c_int, codepoint));
-}
-
-pub fn loadUTF8(codepoints: []const c_int, length: i32) [:0]u8 {
-    return std.mem.span(cdef.LoadUTF8(@as([*c]const c_int, @ptrCast(codepoints)), @as(c_int, length)));
 }
 
 pub fn unloadUTF8(text: [:0]u8) void {
@@ -2790,10 +2794,6 @@ pub fn textInsert(text: [:0]const u8, insert: [:0]const u8, position: i32) [:0]u
     return std.mem.span(cdef.TextInsert(@as([*c]const u8, @ptrCast(text)), @as([*c]const u8, @ptrCast(insert)), @as(c_int, position)));
 }
 
-pub fn textJoin(textList: [][]const u8, count: i32, delimiter: [:0]const u8) [:0]const u8 {
-    return std.mem.span(cdef.TextJoin(@as([*c][*c]const u8, @ptrCast(textList)), @as(c_int, count), @as([*c]const u8, @ptrCast(delimiter))));
-}
-
 pub fn textAppend(text: [:0]u8, append: [:0]const u8, position: *i32) void {
     cdef.TextAppend(@as([*c]u8, @ptrCast(text)), @as([*c]const u8, @ptrCast(append)), @as([*c]c_int, @ptrCast(position)));
 }
@@ -2832,10 +2832,6 @@ pub fn drawCircle3D(center: Vector3, radius: f32, rotationAxis: Vector3, rotatio
 
 pub fn drawTriangle3D(v1: Vector3, v2: Vector3, v3: Vector3, color: Color) void {
     cdef.DrawTriangle3D(v1, v2, v3, color);
-}
-
-pub fn drawTriangleStrip3D(points: []Vector3, pointCount: i32, color: Color) void {
-    cdef.DrawTriangleStrip3D(@as([*c]Vector3, @ptrCast(points)), @as(c_int, pointCount), color);
 }
 
 pub fn drawCube(position: Vector3, width: f32, height: f32, length: f32, color: Color) void {

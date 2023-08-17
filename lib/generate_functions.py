@@ -255,7 +255,18 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
             "DecompressData",
             "EncodeDataBase64",
             "DecodeDataBase64",
-            "SetWindowIcons"
+            "SetWindowIcons",
+            "DrawLineStrip",
+            "DrawTriangleFan",
+            "DrawTriangleStrip",
+            "CheckCollisionPointPoly",
+            "LoadFontEx",
+            "GenImageFontAtlas",
+            "UnloadFontData",
+            "DrawTextCodepoints",
+            "LoadUTF8",
+            "TextJoin",
+            "DrawTriangleStrip3D",
         ]
 
         if func_name in manual or "FromMemory" in func_name:

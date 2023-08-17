@@ -1345,3 +1345,43 @@ pub fn loadWaveSamples(wave: Wave) []f32 {
 pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music {
     return cdef.LoadMusicStreamFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)));
 }
+
+pub fn drawLineStrip(points: []Vector2, color: Color) void {
+    cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+}
+
+pub fn drawTriangleFan(points: []Vector2, color: Color) void {
+    cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+}
+
+pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
+    cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+}
+
+pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
+    return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
+}
+
+pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32) Font {
+    return cdef.LoadFontEx(@as([*c]const u8, @ptrCast(fileName)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)));
+}
+
+pub fn genImageFontAtlas(chars: []const GlyphInfo, recs: [][]Rectangle, fontSize: i32, padding: i32, packMethod: i32) Image {
+    return cdef.GenImageFontAtlas(@as([*c]const GlyphInfo, @ptrCast(chars)), @as([*c][*c]Rectangle, @ptrCast(recs)), @as(c_int, @intCast(recs.len)), @as(c_int, fontSize), @as(c_int, padding), @as(c_int, packMethod));
+}
+
+pub fn unloadFontData(chars: []GlyphInfo) void {
+    cdef.UnloadFontData(@as([*c]GlyphInfo, @ptrCast(chars)), @as(c_int, @intCast(chars.len)));
+}
+
+pub fn loadUTF8(codepoints: []const c_int) [:0]u8 {
+    return std.mem.span(cdef.LoadUTF8(@as([*c]const c_int, @ptrCast(codepoints)), @as(c_int, @intCast(codepoints.len))));
+}
+
+pub fn textJoin(textList: [][:0]const u8, delimiter: [:0]const u8) [:0]const u8 {
+    return std.mem.span(cdef.TextJoin(@as([*c][*c]const u8, @ptrCast(textList)), @as(c_int, @intCast(textList.len)), @as([*c]const u8, @ptrCast(delimiter))));
+}
+
+pub fn drawTriangleStrip3D(points: []Vector3, color: Color) void {
+    cdef.DrawTriangleStrip3D(@as([*c]Vector3, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+}
