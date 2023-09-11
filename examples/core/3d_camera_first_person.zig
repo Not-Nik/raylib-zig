@@ -27,8 +27,17 @@ pub fn main() anyerror!void {
 
     for (0..heights.len) |i| {
         heights[i] = @as(f32, @floatFromInt(rl.getRandomValue(1, 12)));
-        positions[i] = rl.Vector3.init(@as(f32, @floatFromInt(rl.getRandomValue(-15, 15))), heights[i] / 2.0, @as(f32, @floatFromInt(rl.getRandomValue(-15, 15))));
-        colors[i] = rl.Color.init(@as(u8, @intCast(rl.getRandomValue(20, 255))), @as(u8, @intCast(rl.getRandomValue(10, 55))), 30, 255);
+        positions[i] = rl.Vector3.init(
+            @as(f32, @floatFromInt(rl.getRandomValue(-15, 15))),
+            heights[i] / 2.0,
+            @as(f32, @floatFromInt(rl.getRandomValue(-15, 15))),
+        );
+        colors[i] = rl.Color.init(
+            @as(u8, @intCast(rl.getRandomValue(20, 255))),
+            @as(u8, @intCast(rl.getRandomValue(10, 55))),
+            30,
+            255,
+        );
     }
 
     rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second

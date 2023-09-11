@@ -36,7 +36,13 @@ pub fn main() anyerror!void {
 
         rl.drawText("Use mouse wheel to move the cube up and down!", 10, 10, 20, rl.Color.gray);
 
-        rl.drawText(rl.textFormat("Box position Y: %03i", .{@as(i32, @intFromFloat(boxPositionY))}), 10, 40, 20, rl.Color.light_gray);
+        rl.drawText(
+            rl.textFormat("Box position Y: %03i", .{@as(i32, @intFromFloat(boxPositionY))}),
+            10,
+            40,
+            20,
+            rl.Color.light_gray,
+        );
         //----------------------------------------------------------------------------------
     }
 }

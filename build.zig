@@ -10,7 +10,12 @@ const Program = struct {
     desc: []const u8,
 };
 
-pub fn link(b: *std.Build, exe: *std.Build.Step.Compile, target: std.zig.CrossTarget, optimize: std.builtin.Mode) void {
+pub fn link(
+    b: *std.Build,
+    exe: *std.Build.Step.Compile,
+    target: std.zig.CrossTarget,
+    optimize: std.builtin.Mode,
+) void {
     const raylib = b.dependency("raylib", .{
         .target = target,
         .optimize = optimize,
@@ -44,12 +49,10 @@ pub fn link(b: *std.Build, exe: *std.Build.Step.Compile, target: std.zig.CrossTa
             exe.linkSystemLibrary("Xcursor");
         },
         .emscripten, .wasi => {
-            //when using emscripten,
-            // the libries don't need to be linked
-            // because emscripten is going
-            // to do that later.
+            // When using emscripten, the libries don't need to be linked
+            // because emscripten is going to do that later.
         },
-        else => { // linux and possibly others
+        else => { // Linux and possibly others.
             exe.linkSystemLibrary("GL");
             exe.linkSystemLibrary("rt");
             exe.linkSystemLibrary("dl");
@@ -61,7 +64,11 @@ pub fn link(b: *std.Build, exe: *std.Build.Step.Compile, target: std.zig.CrossTa
     exe.linkLibrary(art);
 }
 
-pub fn getArtifact(b: *std.Build, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *std.Build.Step.Compile {
+pub fn getArtifact(
+    b: *std.Build,
+    target: std.zig.CrossTarget,
+    optimize: std.builtin.Mode,
+) *std.Build.Step.Compile {
     const raylib = b.dependency("raylib", .{
         .target = target,
         .optimize = optimize,
@@ -70,7 +77,7 @@ pub fn getArtifact(b: *std.Build, target: std.zig.CrossTarget, optimize: std.bui
     return raylib.artifact("raylib");
 }
 
-//TODO: make these not comptime
+// TODO: Make these not comptime.
 pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
     if (b.modules.contains("raylib")) {
         return b.modules.get("raylib").?;
@@ -88,12 +95,18 @@ pub fn getModuleInternal(b: *std.Build) *std.Build.Module {
 pub const math = struct {
     pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
         var raylib = rl.getModule(b, rl_path);
-        return b.addModule("raylib-math", .{ .source_file = .{ .path = rl_path ++ "/lib/raylib-zig-math.zig" }, .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }} });
+        return b.addModule("raylib-math", .{
+            .source_file = .{ .path = rl_path ++ "/lib/raylib-zig-math.zig" },
+            .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }},
+        });
     }
 
     fn getModuleInternal(b: *std.Build) *std.Build.Module {
         var raylib = rl.getModuleInternal(b);
-        return b.addModule("raylib-math", .{ .source_file = .{ .path = "lib/raylib-zig-math.zig" }, .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }} });
+        return b.addModule("raylib-math", .{
+            .source_file = .{ .path = "lib/raylib-zig-math.zig" },
+            .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }},
+        });
     }
 };
 
@@ -177,7 +190,9 @@ pub fn build(b: *std.Build) !void {
             exe_lib.addModule("raylib", raylib);
             exe_lib.addModule("raylib-math", raylib_math);
             const raylib_artifact = getArtifact(b, target, optimize);
-            // Note that raylib itself isn't actually added to the exe_lib output file, so it also needs to be linked with emscripten.
+
+            // Note that raylib itself isn't actually added to the exe_lib
+            // output file, so it also needs to be linked with emscripten.
             exe_lib.linkLibrary(raylib_artifact);
             const link_step = try linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
             link_step.addArg("--embed-file");
@@ -188,7 +203,12 @@ pub fn build(b: *std.Build) !void {
             const run_option = b.step(ex.name, ex.desc);
             run_option.dependOn(&run_step.step);
         } else {
-            const exe = b.addExecutable(.{ .name = ex.name, .root_source_file = .{ .path = ex.path }, .optimize = optimize, .target = target });
+            const exe = b.addExecutable(.{
+                .name = ex.name,
+                .root_source_file = .{ .path = ex.path },
+                .optimize = optimize,
+                .target = target,
+            });
             rl.link(b, exe, target, optimize);
             exe.addModule("raylib", raylib);
             exe.addModule("raylib-math", raylib_math);
@@ -203,11 +223,11 @@ pub fn build(b: *std.Build) !void {
 const emccOutputDir = "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str;
 const emccOutputFile = "index.html";
 pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
-    //find emrun
+    // Find emrun.
     if (b.sysroot == null) {
         @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
     }
-    //If compiling on windows , use emrun.bat
+    // If compiling on windows , use emrun.bat.
     const emrunExe = switch (builtin.os.tag) {
         .windows => "emrun.bat",
         else => "emrun",
@@ -221,36 +241,56 @@ pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
     return run_cmd;
 }
 
-//Creates the static library to build a project for Emscripten
-pub fn compileForEmscripten(b: *std.Build, name: []const u8, root_source_file: []const u8, target: std.zig.CrossTarget, optimize: std.builtin.Mode) *std.Build.Step.Compile {
-    // TODO: It might be a good idea to create a custom compile step,
-    // that does both the compile to static library and the link with emcc
-    // By overidding the make function of the step,
-    // However it might also be a bad idea since it messes with the build system itself.
+// Creates the static library to build a project for Emscripten.
+pub fn compileForEmscripten(
+    b: *std.Build,
+    name: []const u8,
+    root_source_file: []const u8,
+    target: std.zig.CrossTarget,
+    optimize: std.builtin.Mode,
+) *std.Build.Step.Compile {
+    // TODO: It might be a good idea to create a custom compile step, that does
+    // both the compile to static library and the link with emcc by overidding
+    // the make function of the step. However it might also be a bad idea since
+    // it messes with the build system itself.
 
     const new_target = updateTargetForWeb(target);
 
-    //the project is built as a library and linked later
-    const exe_lib = b.addStaticLibrary(.{ .name = name, .root_source_file = .{ .path = root_source_file }, .target = new_target, .optimize = optimize });
+    // The project is built as a library and linked later.
+    const exe_lib = b.addStaticLibrary(.{
+        .name = name,
+        .root_source_file = .{ .path = root_source_file },
+        .target = new_target,
+        .optimize = optimize,
+    });
 
-    //There are some symbols that need to be defined in C.
+    // There are some symbols that need to be defined in C.
     const webhack_c_file_step = b.addWriteFiles();
     const webhack_c_file = webhack_c_file_step.add("webhack.c", webhack_c);
     exe_lib.addCSourceFile(.{ .file = webhack_c_file, .flags = &[_][]u8{} });
-    //Since it's creating a static library, the symbols raylib uses to webgl and glfw don't need to be linked by emscripten yet.
+    // Since it's creating a static library, the symbols raylib uses to webgl
+    // and glfw don't need to be linked by emscripten yet.
     exe_lib.step.dependOn(&webhack_c_file_step.step);
     return exe_lib;
 }
 
-//links a set of items together using emscripten.
-// Will accept objects and static libraries as items to link
-// As for files to include, it is recomended to have a single resources directory and just pass the entire directory
-// instead of passing every file individually. The entire path given will be the path to read the file within the program.
-// So, if "resources/image.png" is passed, your program will use "resources/image.png" as the path to load the file.
-// TODO: test if shared libraries are accepted, I don't remember if emcc can link a shared library with a project or not
-// TODO: add a parameter that allows a custom output directory
-pub fn linkWithEmscripten(b: *std.Build, itemsToLink: []const *std.Build.Step.Compile) !*std.Build.Step.Run {
-    //Raylib uses --sysroot in order to find emscripten, so do the same here
+// Links a set of items together using emscripten.
+//
+// Will accept objects and static libraries as items to link. As for files to
+// include, it is recomended to have a single resources directory and just pass
+// the entire directory instead of passing every file individually. The entire
+// path given will be the path to read the file within the program. So, if
+// "resources/image.png" is passed, your program will use "resources/image.png"
+// as the path to load the file.
+//
+// TODO: Test if shared libraries are accepted, I don't remember if emcc can
+//       link a shared library with a project or not.
+// TODO: Add a parameter that allows a custom output directory.
+pub fn linkWithEmscripten(
+    b: *std.Build,
+    itemsToLink: []const *std.Build.Step.Compile,
+) !*std.Build.Step.Run {
+    // Raylib uses --sysroot in order to find emscripten, so do the same here.
     if (b.sysroot == null) {
         @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
     }
@@ -261,26 +301,39 @@ pub fn linkWithEmscripten(b: *std.Build, itemsToLink: []const *std.Build.Step.Co
     var emcc_run_arg = try b.allocator.alloc(u8, b.sysroot.?.len + emccExe.len + 1);
     defer b.allocator.free(emcc_run_arg);
 
-    emcc_run_arg = try std.fmt.bufPrint(emcc_run_arg, "{s}" ++ std.fs.path.sep_str ++ "{s}", .{ b.sysroot.?, emccExe });
+    emcc_run_arg = try std.fmt.bufPrint(
+        emcc_run_arg,
+        "{s}" ++ std.fs.path.sep_str ++ "{s}",
+        .{ b.sysroot.?, emccExe },
+    );
 
-    //create the output directory because emcc can't do it.
+    // Create the output directory because emcc can't do it.
     const mkdir_command = b.addSystemCommand(&[_][]const u8{ "mkdir", "-p", emccOutputDir });
-    //Actually link everything together
+
+    // Actually link everything together.
     const emcc_command = b.addSystemCommand(&[_][]const u8{emcc_run_arg});
 
     for (itemsToLink) |item| {
         emcc_command.addFileArg(item.getEmittedBin());
         emcc_command.step.dependOn(&item.step);
     }
-    //This puts the file in zig-out/htmlout/index.html
+    // This puts the file in zig-out/htmlout/index.html.
     emcc_command.step.dependOn(&mkdir_command.step);
-    emcc_command.addArgs(&[_][]const u8{ "-o", emccOutputDir ++ emccOutputFile, "-sFULL-ES3=1", "-sUSE_GLFW=3", "-sASYNCIFY", "-O3", "--emrun" });
+    emcc_command.addArgs(&[_][]const u8{
+        "-o",
+        emccOutputDir ++ emccOutputFile,
+        "-sFULL-ES3=1",
+        "-sUSE_GLFW=3",
+        "-sASYNCIFY",
+        "-O3",
+        "--emrun",
+    });
     return emcc_command;
 }
 
-//TODO: see if zig's standard library already has somehing like this
+// TODO: See if zig's standard library already has somehing like this.
 fn lastIndexOf(string: []const u8, character: u8) usize {
-    //interestingly, zig has no nice way of iterating a slice backwards
+    // Interestingly, Zig has no nice way of iterating a slice backwards.
     for (0..string.len) |i| {
         const index = string.len - i - 1;
         if (string[index] == character) return index;
@@ -288,11 +341,12 @@ fn lastIndexOf(string: []const u8, character: u8) usize {
     return string.len - 1;
 }
 // TODO: each zig update, remove this and see if everything still works.
-// https://github.com/ziglang/zig/issues/16776 is where the issue is submitted
+// https://github.com/ziglang/zig/issues/16776 is where the issue is submitted.
 fn updateTargetForWeb(target: std.zig.CrossTarget) std.zig.CrossTarget {
-    //zig building to emscripten doesn't work, because the zig standard library is missing some things in the C system.
-    // "std/c.zig" is missing fd_t, which causes compilation to fail.
-    // So build to wasi instead, until it gets fixed.
+    // Zig building to emscripten doesn't work, because the Zig standard library
+    // is missing some things in the C system. "std/c.zig" is missing fd_t,
+    // which causes compilation to fail. So build to wasi instead, until it gets
+    // fixed.
     return std.zig.CrossTarget{
         .cpu_arch = target.cpu_arch,
         .cpu_model = target.cpu_model,

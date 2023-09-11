@@ -28,7 +28,12 @@ pub fn main() anyerror!void {
 
         spacing += @as(i32, @intFromFloat(buildings[i].width));
 
-        buildColors[i] = rl.Color.init(@as(u8, @intCast(rl.getRandomValue(200, 240))), @as(u8, @intCast(rl.getRandomValue(200, 240))), @as(u8, @intCast(rl.getRandomValue(200, 250))), 255);
+        buildColors[i] = rl.Color.init(
+            @as(u8, @intCast(rl.getRandomValue(200, 240))),
+            @as(u8, @intCast(rl.getRandomValue(200, 240))),
+            @as(u8, @intCast(rl.getRandomValue(200, 250))),
+            255,
+        );
     }
 
     var camera = rl.Camera2D{
@@ -97,8 +102,20 @@ pub fn main() anyerror!void {
 
             rl.drawRectangleRec(player, rl.Color.red);
 
-            rl.drawLine(@as(i32, @intFromFloat(camera.target.x)), -screenHeight * 10, @as(i32, @intFromFloat(camera.target.x)), screenHeight * 10, rl.Color.green);
-            rl.drawLine(-screenWidth * 10, @as(i32, @intFromFloat(camera.target.y)), screenWidth * 10, @as(i32, @intFromFloat(camera.target.y)), rl.Color.green);
+            rl.drawLine(
+                @as(i32, @intFromFloat(camera.target.x)),
+                -screenHeight * 10,
+                @as(i32, @intFromFloat(camera.target.x)),
+                screenHeight * 10,
+                rl.Color.green,
+            );
+            rl.drawLine(
+                -screenWidth * 10,
+                @as(i32, @intFromFloat(camera.target.y)),
+                screenWidth * 10,
+                @as(i32, @intFromFloat(camera.target.y)),
+                rl.Color.green,
+            );
         }
 
         rl.drawText("SCREEN AREA", 640, 10, 20, rl.Color.red);
