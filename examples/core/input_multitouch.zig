@@ -69,7 +69,13 @@ pub fn main() anyerror!void {
 
                 // Draw circle and touch index number
                 rl.drawCircleV(touchPosition, 34, rl.Color.orange);
-                rl.drawText(rl.textFormat("%d", .{i}), @as(i32, @intFromFloat(touchPosition.x)) - 10, @as(i32, @intFromFloat(touchPosition.y)) - 70, 40, rl.Color.black);
+                rl.drawText(
+                    rl.textFormat("%d", .{i}),
+                    @as(i32, @intFromFloat(touchPosition.x)) - 10,
+                    @as(i32, @intFromFloat(touchPosition.y)) - 70,
+                    40,
+                    rl.Color.black,
+                );
             }
         }
 
