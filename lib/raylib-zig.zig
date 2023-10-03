@@ -3,6 +3,8 @@
 const rl = @This();
 const std = @import("std");
 
+pub const RaylibError = error{GenericError};
+
 pub const Vector2 = extern struct {
     x: f32,
     y: f32,
@@ -1200,10 +1202,14 @@ pub fn loadShaderFromMemory(vsCode: ?[:0]const u8, fsCode: ?[:0]const u8) Shader
     return cdef.LoadShaderFromMemory(vsCodeFinal, fsCodeFinal);
 }
 
-pub fn loadFileData(fileName: [:0]const u8) []u8 {
+pub fn loadFileData(fileName: [:0]const u8) ![]u8 {
     var bytesRead: i32 = 0;
     var res: []u8 = undefined;
-    res.ptr = @as([*]u8, @ptrCast(cdef.LoadFileData(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_uint, @ptrCast(&bytesRead)))));
+
+    const ptr = cdef.LoadFileData(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_uint, @ptrCast(&bytesRead)));
+    if (ptr == 0) return RaylibError.GenericError;
+
+    res.ptr = @as([*]u8, @ptrCast(ptr));
     res.len = @as(usize, @intCast(bytesRead));
     return res;
 }
@@ -1254,7 +1260,11 @@ pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: []const u8) Image {
 
 pub fn loadImageColors(image: Image) []Color {
     var res: []Color = undefined;
-    res.ptr = @as([*]Color, @ptrCast(cdef.LoadImageColors(image)));
+
+    const ptr = cdef.LoadImageColors(image);
+    if (ptr == 0) return RaylibError.GenericError;
+
+    res.ptr = @as([*]Color, @ptrCast(ptr));
     res.len = @as(usize, @intCast(image.width * image.height));
     return res;
 }
@@ -1262,7 +1272,11 @@ pub fn loadImageColors(image: Image) []Color {
 pub fn loadImagePalette(image: Image, maxPaletteSize: i32) []Color {
     var colorCount: i32 = 0;
     var res: []Color = undefined;
-    res.ptr = @as([*]Color, @ptrCast(cdef.LoadImagePalette(image, @as(c_int, maxPaletteSize), @as([*c]c_int, @ptrCast(&colorCount)))));
+
+    const ptr = cdef.LoadImagePalette(image, @as(c_int, maxPaletteSize), @as([*c]c_int, @ptrCast(&colorCount)));
+    if (ptr == 0) return RaylibError.GenericError;
+
+    res.ptr = @as([*]Color, @ptrCast(ptr));
     res.len = @as(usize, @intCast(colorCount));
     return res;
 }
@@ -1279,7 +1293,11 @@ pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSiz
 
 pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) []GlyphInfo {
     var res: []GlyphInfo = undefined;
-    res.ptr = @as([*]GlyphInfo, @ptrCast(cdef.LoadFontData(@as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)), @as(c_int, ty))));
+
+    const ptr = cdef.LoadFontData(@as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)), @as(c_int, ty));
+    if (ptr == 0) return RaylibError.GenericError;
+
+    res.ptr = @as([*]GlyphInfo, @ptrCast(ptr));
     res.len = @as(usize, @intCast(fontChars.len));
     return res;
 }
@@ -1290,7 +1308,11 @@ pub fn loadCodepoints(text: [:0]const u8) []i32 {
     }
     var count: i32 = 0;
     var res: []i32 = undefined;
-    res.ptr = @as([*]i32, @ptrCast(cdef.LoadCodepoints(@as([*c]const u8, @ptrCast(text)), @as([*c]c_int, @ptrCast(&count)))));
+
+    const ptr = cdef.LoadCodepoints(@as([*c]const u8, @ptrCast(text)), @as([*c]c_int, @ptrCast(&count)));
+    if (ptr == 0) return RaylibError.GenericError;
+
+    res.ptr = @as([*]i32, @ptrCast(ptr));
     res.len = @as(usize, @intCast(count));
     return res;
 }
@@ -1314,7 +1336,11 @@ pub fn drawMeshInstanced(mesh: Mesh, material: Material, transforms: []const Mat
 pub fn loadMaterials(fileName: [:0]const u8) []Material {
     var materialCount: i32 = 0;
     var res: []Material = undefined;
-    res.ptr = @as([*]Material, @ptrCast(cdef.LoadMaterials(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_int, @ptrCast(&materialCount)))));
+
+    const ptr = cdef.LoadMaterials(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_int, @ptrCast(&materialCount)));
+    if (ptr == 0) return RaylibError.GenericError;
+
+    res.ptr = @as([*]Material, @ptrCast(ptr));
     res.len = @as(usize, @intCast(materialCount));
     return res;
 }
@@ -1322,7 +1348,11 @@ pub fn loadMaterials(fileName: [:0]const u8) []Material {
 pub fn loadModelAnimations(fileName: [:0]const u8) []ModelAnimation {
     var animCount: i32 = 0;
     var res: []ModelAnimation = undefined;
-    res.ptr = @as([*]ModelAnimation, @ptrCast(cdef.LoadModelAnimations(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_uint, @ptrCast(&animCount)))));
+
+    const ptr = cdef.LoadModelAnimations(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_uint, @ptrCast(&animCount)));
+    if (ptr == 0) return RaylibError.GenericError;
+
+    res.ptr = @as([*]ModelAnimation, @ptrCast(ptr));
     res.len = @as(usize, @intCast(animCount));
     return res;
 }
