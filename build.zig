@@ -178,8 +178,6 @@ pub fn build(b: *std.Build) !void {
     };
 
     const examples_step = b.step("examples", "Builds all the examples");
-    const system_lib = b.option(bool, "system-raylib", "link to preinstalled raylib libraries") orelse false;
-    _ = system_lib;
 
     var raylib = rl.getModuleInternal(b);
     var raylib_math = rl.math.getModuleInternal(b);
