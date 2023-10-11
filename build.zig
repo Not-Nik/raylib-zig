@@ -85,7 +85,7 @@ pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module 
     return b.addModule("raylib", .{ .source_file = .{ .path = rl_path ++ "/lib/raylib-zig.zig" } });
 }
 
-pub fn getModuleInternal(b: *std.Build) *std.Build.Module {
+fn getModuleInternal(b: *std.Build) *std.Build.Module {
     if (b.modules.contains("raylib")) {
         return b.modules.get("raylib").?;
     }
