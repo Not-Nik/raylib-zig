@@ -20,7 +20,7 @@ pub fn link(
         .target = target,
         .optimize = optimize,
     });
-    var art = raylib.artifact("raylib");
+    const art = raylib.artifact("raylib");
 
     const target_os = exe.target.toTarget().os.tag;
     switch (target_os) {
@@ -94,7 +94,7 @@ fn getModuleInternal(b: *std.Build) *std.Build.Module {
 
 pub const math = struct {
     pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
-        var raylib = rl.getModule(b, rl_path);
+        const raylib = rl.getModule(b, rl_path);
         return b.addModule("raylib-math", .{
             .source_file = .{ .path = rl_path ++ "/lib/raylib-zig-math.zig" },
             .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }},
@@ -102,7 +102,7 @@ pub const math = struct {
     }
 
     fn getModuleInternal(b: *std.Build) *std.Build.Module {
-        var raylib = rl.getModuleInternal(b);
+        const raylib = rl.getModuleInternal(b);
         return b.addModule("raylib-math", .{
             .source_file = .{ .path = "lib/raylib-zig-math.zig" },
             .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }},
@@ -179,8 +179,8 @@ pub fn build(b: *std.Build) !void {
 
     const examples_step = b.step("examples", "Builds all the examples");
 
-    var raylib = rl.getModuleInternal(b);
-    var raylib_math = rl.math.getModuleInternal(b);
+    const raylib = rl.getModuleInternal(b);
+    const raylib_math = rl.math.getModuleInternal(b);
 
     for (examples) |ex| {
         if (target.getOsTag() == .emscripten) {
