@@ -16,11 +16,7 @@ pub fn link(
     target: std.zig.CrossTarget,
     optimize: std.builtin.Mode,
 ) void {
-    const raylib = b.dependency("raylib", .{
-        .target = target,
-        .optimize = optimize,
-    });
-    const art = raylib.artifact("raylib");
+    const lib = getRaylib(b, target, optimize);
 
     const target_os = exe.target.toTarget().os.tag;
     switch (target_os) {
@@ -61,20 +57,26 @@ pub fn link(
         },
     }
 
-    exe.linkLibrary(art);
+    exe.linkLibrary(lib);
 }
 
-pub fn getArtifact(
+var _raylib_lib_cache: ?*std.build.Step.Compile = null;
+pub fn getRaylib(
     b: *std.Build,
     target: std.zig.CrossTarget,
     optimize: std.builtin.Mode,
 ) *std.Build.Step.Compile {
-    const raylib = b.dependency("raylib", .{
-        .target = target,
-        .optimize = optimize,
-    });
+    if (_raylib_lib_cache) |lib| return lib else {
+        const raylib = b.dependency("raylib", .{
+            .target = target,
+            .optimize = optimize,
+        });
 
-    return raylib.artifact("raylib");
+        const lib = raylib.artifact("raylib");
+        b.installArtifact(lib);
+        _raylib_lib_cache = lib;
+        return lib;
+    }
 }
 
 // TODO: Make these not comptime.
@@ -187,12 +189,12 @@ pub fn build(b: *std.Build) !void {
             const exe_lib = compileForEmscripten(b, ex.name, ex.path, target, optimize);
             exe_lib.addModule("raylib", raylib);
             exe_lib.addModule("raylib-math", raylib_math);
-            const raylib_artifact = getArtifact(b, target, optimize);
+            const raylib_lib = getRaylib(b, target, optimize);
 
             // Note that raylib itself isn't actually added to the exe_lib
             // output file, so it also needs to be linked with emscripten.
-            exe_lib.linkLibrary(raylib_artifact);
-            const link_step = try linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
+            exe_lib.linkLibrary(raylib_lib);
+            const link_step = try linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_lib });
             link_step.addArg("--embed-file");
             link_step.addArg("resources/");
 
