@@ -2184,6 +2184,10 @@ pub fn drawCircleLines(centerX: i32, centerY: i32, radius: f32, color: Color) vo
     cdef.DrawCircleLines(@as(c_int, centerX), @as(c_int, centerY), radius, color);
 }
 
+pub fn drawCircleLinesV(center: Vector2, radius: f32, color: Color) void {
+    cdef.DrawCircleLinesV(center, radius, color);
+}
+
 pub fn drawEllipse(centerX: i32, centerY: i32, radiusH: f32, radiusV: f32, color: Color) void {
     cdef.DrawEllipse(@as(c_int, centerX), @as(c_int, centerY), radiusH, radiusV, color);
 }

@@ -205,6 +205,7 @@ pub extern "c" fn DrawCircleSectorLines(center: rl.Vector2, radius: f32, startAn
 pub extern "c" fn DrawCircleGradient(centerX: c_int, centerY: c_int, radius: f32, color1: rl.Color, color2: rl.Color) void;
 pub extern "c" fn DrawCircleV(center: rl.Vector2, radius: f32, color: rl.Color) void;
 pub extern "c" fn DrawCircleLines(centerX: c_int, centerY: c_int, radius: f32, color: rl.Color) void;
+pub extern "c" fn DrawCircleLinesV(center: rl.Vector2, radius: f32, color: rl.Color) void;
 pub extern "c" fn DrawEllipse(centerX: c_int, centerY: c_int, radiusH: f32, radiusV: f32, color: rl.Color) void;
 pub extern "c" fn DrawEllipseLines(centerX: c_int, centerY: c_int, radiusH: f32, radiusV: f32, color: rl.Color) void;
 pub extern "c" fn DrawRing(center: rl.Vector2, innerRadius: f32, outerRadius: f32, startAngle: f32, endAngle: f32, segments: c_int, color: rl.Color) void;
