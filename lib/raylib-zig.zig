@@ -1376,19 +1376,7 @@ pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music
     return cdef.LoadMusicStreamFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)));
 }
 
-pub fn drawLineStrip(points: []Vector2, color: Color) void {
-    cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
-}
-
-pub fn drawTriangleFan(points: []Vector2, color: Color) void {
-    cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
-}
-
-pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
-    cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
-}
-
-pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
+pub fn checkCollisionPointPoly(point: Vector2, points: []const Vector2) bool {
     return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
 }
 
@@ -1412,7 +1400,7 @@ pub fn textJoin(textList: [][:0]const u8, delimiter: [:0]const u8) [:0]const u8 
     return std.mem.span(cdef.TextJoin(@as([*c][*c]const u8, @ptrCast(textList)), @as(c_int, @intCast(textList.len)), @as([*c]const u8, @ptrCast(delimiter))));
 }
 
-pub fn drawTriangleStrip3D(points: []Vector3, color: Color) void {
+pub fn drawTriangleStrip3D(points: []const Vector3, color: Color) void {
     cdef.DrawTriangleStrip3D(@as([*c]Vector3, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
@@ -2192,10 +2180,6 @@ pub fn drawLineEx(startPos: Vector2, endPos: Vector2, thick: f32, color: Color) 
     cdef.DrawLineEx(startPos, endPos, thick, color);
 }
 
-pub fn drawLineStrip(points: []const Vector2, pointCount: i32, color: Color) void {
-    cdef.DrawLineStrip(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
-}
-
 pub fn drawLineBezier(startPos: Vector2, endPos: Vector2, thick: f32, color: Color) void {
     cdef.DrawLineBezier(startPos, endPos, thick, color);
 }
@@ -2294,14 +2278,6 @@ pub fn drawTriangle(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) void {
 
 pub fn drawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) void {
     cdef.DrawTriangleLines(v1, v2, v3, color);
-}
-
-pub fn drawTriangleFan(points: []const Vector2, pointCount: i32, color: Color) void {
-    cdef.DrawTriangleFan(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
-}
-
-pub fn drawTriangleStrip(points: []const Vector2, pointCount: i32, color: Color) void {
-    cdef.DrawTriangleStrip(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
 }
 
 pub fn drawPoly(center: Vector2, sides: i32, radius: f32, rotation: f32, color: Color) void {

@@ -290,6 +290,9 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
             "DrawTextCodepoints",
             "LoadUTF8",
             "TextJoin",
+            "DrawLineStrip",
+            "DrawTriangleFan",
+            "DrawTriangleStrip",
             "DrawTriangleStrip3D",
         ]
 
