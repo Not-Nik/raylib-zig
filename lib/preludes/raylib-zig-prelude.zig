@@ -1158,6 +1158,17 @@ pub const LoadFileTextCallback = ?fn ([*c]const u8) callconv(.C) [*c]u8;
 pub const SaveFileTextCallback = ?fn ([*c]const u8, [*c]u8) callconv(.C) bool;
 pub const AudioCallback = ?*const fn (?*anyopaque, c_uint) callconv(.C) void;
 
+pub const AutomationEvent = extern struct {
+    frame: c_uint = @import("std").mem.zeroes(c_uint),
+    type: c_uint = @import("std").mem.zeroes(c_uint),
+    params: [4]c_int = @import("std").mem.zeroes([4]c_int),
+};
+pub const AutomationEventList = extern struct {
+    capacity: c_uint = @import("std").mem.zeroes(c_uint),
+    count: c_uint = @import("std").mem.zeroes(c_uint),
+    events: [*c]AutomationEvent = @import("std").mem.zeroes([*c]AutomationEvent),
+};
+
 pub const RAYLIB_VERSION_MAJOR = @as(i32, 4);
 pub const RAYLIB_VERSION_MINOR = @as(i32, 6);
 pub const RAYLIB_VERSION_PATCH = @as(i32, 0);

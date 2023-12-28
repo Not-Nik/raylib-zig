@@ -13,7 +13,7 @@ pub fn main() anyerror!void {
     defer rl.closeWindow(); // Close window and OpenGL context
 
     var boxPositionY: f32 = screenHeight / 2 - 40;
-    var scrollSpeed: f32 = 4; // Scrolling speed in pixels
+    const scrollSpeed: f32 = 4; // Scrolling speed in pixels
 
     rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
     //--------------------------------------------------------------------------------------
