@@ -1376,20 +1376,20 @@ pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music
     return cdef.LoadMusicStreamFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)));
 }
 
-pub fn drawLineStrip(points: []const Vector2, color: Color) void {
-    cdef.DrawLineStrip(@as([*c]Vector2, @constCast(@ptrCast(points))), @as(c_int, @intCast(points.len)), color);
+pub fn drawLineStrip(points: []Vector2, color: Color) void {
+    cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn drawTriangleFan(points: []const Vector2, color: Color) void {
-    cdef.DrawTriangleFan(@as([*c]Vector2, @constCast(@ptrCast(points))), @as(c_int, @intCast(points.len)), color);
+pub fn drawTriangleFan(points: []Vector2, color: Color) void {
+    cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn drawTriangleStrip(points: []const Vector2, color: Color) void {
-    cdef.DrawTriangleStrip(@as([*c]Vector2, @constCast(@ptrCast(points))), @as(c_int, @intCast(points.len)), color);
+pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
+    cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn checkCollisionPointPoly(point: Vector2, points: []const Vector2) bool {
-    return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @constCast(@ptrCast(points))), @as(c_int, @intCast(points.len)));
+pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
+    return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
 }
 
 pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32) Font {
@@ -1420,12 +1420,12 @@ pub fn initWindow(width: i32, height: i32, title: [:0]const u8) void {
     cdef.InitWindow(@as(c_int, width), @as(c_int, height), @as([*c]const u8, @ptrCast(title)));
 }
 
-pub fn windowShouldClose() bool {
-    return cdef.WindowShouldClose();
-}
-
 pub fn closeWindow() void {
     cdef.CloseWindow();
+}
+
+pub fn windowShouldClose() bool {
+    return cdef.WindowShouldClose();
 }
 
 pub fn isWindowReady() bool {
@@ -1506,6 +1506,10 @@ pub fn setWindowMonitor(monitor: i32) void {
 
 pub fn setWindowMinSize(width: i32, height: i32) void {
     cdef.SetWindowMinSize(@as(c_int, width), @as(c_int, height));
+}
+
+pub fn setWindowMaxSize(width: i32, height: i32) void {
+    cdef.SetWindowMaxSize(@as(c_int, width), @as(c_int, height));
 }
 
 pub fn setWindowSize(width: i32, height: i32) void {
@@ -1598,18 +1602,6 @@ pub fn enableEventWaiting() void {
 
 pub fn disableEventWaiting() void {
     cdef.DisableEventWaiting();
-}
-
-pub fn swapScreenBuffer() void {
-    cdef.SwapScreenBuffer();
-}
-
-pub fn pollInputEvents() void {
-    cdef.PollInputEvents();
-}
-
-pub fn waitTime(seconds: f64) void {
-    cdef.WaitTime(seconds);
 }
 
 pub fn showCursor() void {
@@ -1776,10 +1768,6 @@ pub fn setTargetFPS(fps: i32) void {
     cdef.SetTargetFPS(@as(c_int, fps));
 }
 
-pub fn getFPS() i32 {
-    return @as(i32, cdef.GetFPS());
-}
-
 pub fn getFrameTime() f32 {
     return cdef.GetFrameTime();
 }
@@ -1788,12 +1776,32 @@ pub fn getTime() f64 {
     return cdef.GetTime();
 }
 
-pub fn getRandomValue(min: i32, max: i32) i32 {
-    return @as(i32, cdef.GetRandomValue(@as(c_int, min), @as(c_int, max)));
+pub fn getFPS() i32 {
+    return @as(i32, cdef.GetFPS());
+}
+
+pub fn swapScreenBuffer() void {
+    cdef.SwapScreenBuffer();
+}
+
+pub fn pollInputEvents() void {
+    cdef.PollInputEvents();
+}
+
+pub fn waitTime(seconds: f64) void {
+    cdef.WaitTime(seconds);
 }
 
 pub fn setRandomSeed(seed: u32) void {
     cdef.SetRandomSeed(@as(c_uint, seed));
+}
+
+pub fn getRandomValue(min: i32, max: i32) i32 {
+    return @as(i32, cdef.GetRandomValue(@as(c_int, min), @as(c_int, max)));
+}
+
+pub fn unloadRandomSequence(sequence: []i32) void {
+    cdef.UnloadRandomSequence(@as([*c]c_int, @ptrCast(sequence)));
 }
 
 pub fn takeScreenshot(fileName: [:0]const u8) void {
@@ -1802,6 +1810,10 @@ pub fn takeScreenshot(fileName: [:0]const u8) void {
 
 pub fn setConfigFlags(flags: ConfigFlags) void {
     cdef.SetConfigFlags(flags);
+}
+
+pub fn openURL(url: [:0]const u8) void {
+    cdef.OpenURL(@as([*c]const u8, @ptrCast(url)));
 }
 
 pub fn traceLog(logLevel: TraceLogLevel, text: [:0]const u8) void {
@@ -1822,10 +1834,6 @@ pub fn memRealloc(ptr: *anyopaque, size: u32) *anyopaque {
 
 pub fn memFree(ptr: *anyopaque) void {
     cdef.MemFree(ptr);
-}
-
-pub fn openURL(url: [:0]const u8) void {
-    cdef.OpenURL(@as([*c]const u8, @ptrCast(url)));
 }
 
 pub fn setLoadFileDataCallback(callback: LoadFileDataCallback) void {
@@ -1940,8 +1948,44 @@ pub fn getFileModTime(fileName: [:0]const u8) i64 {
     return @as(i64, cdef.GetFileModTime(@as([*c]const u8, @ptrCast(fileName))));
 }
 
+pub fn loadAutomationEventList(fileName: [:0]const u8) AutomationEventList {
+    return cdef.LoadAutomationEventList(@as([*c]const u8, @ptrCast(fileName)));
+}
+
+pub fn unloadAutomationEventList(list: AutomationEventList) void {
+    cdef.UnloadAutomationEventList(list);
+}
+
+pub fn exportAutomationEventList(list: AutomationEventList, fileName: [:0]const u8) bool {
+    return cdef.ExportAutomationEventList(list, @as([*c]const u8, @ptrCast(fileName)));
+}
+
+pub fn setAutomationEventList(list: *AutomationEventList) void {
+    cdef.SetAutomationEventList(@as([*c]AutomationEventList, @ptrCast(list)));
+}
+
+pub fn setAutomationEventBaseFrame(frame: i32) void {
+    cdef.SetAutomationEventBaseFrame(@as(c_int, frame));
+}
+
+pub fn startAutomationEventRecording() void {
+    cdef.StartAutomationEventRecording();
+}
+
+pub fn stopAutomationEventRecording() void {
+    cdef.StopAutomationEventRecording();
+}
+
+pub fn playAutomationEvent(event: AutomationEvent) void {
+    cdef.PlayAutomationEvent(event);
+}
+
 pub fn isKeyPressed(key: KeyboardKey) bool {
     return cdef.IsKeyPressed(key);
+}
+
+pub fn isKeyPressedRepeat(key: KeyboardKey) bool {
+    return cdef.IsKeyPressedRepeat(key);
 }
 
 pub fn isKeyDown(key: KeyboardKey) bool {
@@ -1956,16 +2000,16 @@ pub fn isKeyUp(key: KeyboardKey) bool {
     return cdef.IsKeyUp(key);
 }
 
-pub fn setExitKey(key: KeyboardKey) void {
-    cdef.SetExitKey(key);
-}
-
 pub fn getKeyPressed() KeyboardKey {
     return cdef.GetKeyPressed();
 }
 
 pub fn getCharPressed() i32 {
     return @as(i32, cdef.GetCharPressed());
+}
+
+pub fn setExitKey(key: KeyboardKey) void {
+    cdef.SetExitKey(key);
 }
 
 pub fn isGamepadAvailable(gamepad: i32) bool {
@@ -2148,16 +2192,12 @@ pub fn drawLineEx(startPos: Vector2, endPos: Vector2, thick: f32, color: Color) 
     cdef.DrawLineEx(startPos, endPos, thick, color);
 }
 
+pub fn drawLineStrip(points: []const Vector2, pointCount: i32, color: Color) void {
+    cdef.DrawLineStrip(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
+}
+
 pub fn drawLineBezier(startPos: Vector2, endPos: Vector2, thick: f32, color: Color) void {
     cdef.DrawLineBezier(startPos, endPos, thick, color);
-}
-
-pub fn drawLineBezierQuad(startPos: Vector2, endPos: Vector2, controlPos: Vector2, thick: f32, color: Color) void {
-    cdef.DrawLineBezierQuad(startPos, endPos, controlPos, thick, color);
-}
-
-pub fn drawLineBezierCubic(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: f32, color: Color) void {
-    cdef.DrawLineBezierCubic(startPos, endPos, startControlPos, endControlPos, thick, color);
 }
 
 pub fn drawCircle(centerX: i32, centerY: i32, radius: f32, color: Color) void {
@@ -2256,6 +2296,14 @@ pub fn drawTriangleLines(v1: Vector2, v2: Vector2, v3: Vector2, color: Color) vo
     cdef.DrawTriangleLines(v1, v2, v3, color);
 }
 
+pub fn drawTriangleFan(points: []const Vector2, pointCount: i32, color: Color) void {
+    cdef.DrawTriangleFan(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
+}
+
+pub fn drawTriangleStrip(points: []const Vector2, pointCount: i32, color: Color) void {
+    cdef.DrawTriangleStrip(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
+}
+
 pub fn drawPoly(center: Vector2, sides: i32, radius: f32, rotation: f32, color: Color) void {
     cdef.DrawPoly(center, @as(c_int, sides), radius, rotation, color);
 }
@@ -2266,6 +2314,66 @@ pub fn drawPolyLines(center: Vector2, sides: i32, radius: f32, rotation: f32, co
 
 pub fn drawPolyLinesEx(center: Vector2, sides: i32, radius: f32, rotation: f32, lineThick: f32, color: Color) void {
     cdef.DrawPolyLinesEx(center, @as(c_int, sides), radius, rotation, lineThick, color);
+}
+
+pub fn drawSplineLinear(points: []const Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineLinear(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+}
+
+pub fn drawSplineBasis(points: []const Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineBasis(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+}
+
+pub fn drawSplineCatmullRom(points: []const Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineCatmullRom(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+}
+
+pub fn drawSplineBezierQuadratic(points: []const Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineBezierQuadratic(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+}
+
+pub fn drawSplineBezierCubic(points: []const Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineBezierCubic(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+}
+
+pub fn drawSplineSegmentLinear(p1: Vector2, p2: Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineSegmentLinear(p1, p2, thick, color);
+}
+
+pub fn drawSplineSegmentBasis(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineSegmentBasis(p1, p2, p3, p4, thick, color);
+}
+
+pub fn drawSplineSegmentCatmullRom(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineSegmentCatmullRom(p1, p2, p3, p4, thick, color);
+}
+
+pub fn drawSplineSegmentBezierQuadratic(p1: Vector2, c2: Vector2, p3: Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineSegmentBezierQuadratic(p1, c2, p3, thick, color);
+}
+
+pub fn drawSplineSegmentBezierCubic(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineSegmentBezierCubic(p1, c2, c3, p4, thick, color);
+}
+
+pub fn getSplinePointLinear(startPos: Vector2, endPos: Vector2, t: f32) Vector2 {
+    return cdef.GetSplinePointLinear(startPos, endPos, t);
+}
+
+pub fn getSplinePointBasis(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: f32) Vector2 {
+    return cdef.GetSplinePointBasis(p1, p2, p3, p4, t);
+}
+
+pub fn getSplinePointCatmullRom(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: f32) Vector2 {
+    return cdef.GetSplinePointCatmullRom(p1, p2, p3, p4, t);
+}
+
+pub fn getSplinePointBezierQuad(p1: Vector2, c2: Vector2, p3: Vector2, t: f32) Vector2 {
+    return cdef.GetSplinePointBezierQuad(p1, c2, p3, t);
+}
+
+pub fn getSplinePointBezierCubic(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, t: f32) Vector2 {
+    return cdef.GetSplinePointBezierCubic(p1, c2, c3, p4, t);
 }
 
 pub fn checkCollisionRecs(rec1: Rectangle, rec2: Rectangle) bool {
@@ -2310,6 +2418,10 @@ pub fn loadImage(fileName: [:0]const u8) Image {
 
 pub fn loadImageRaw(fileName: [:0]const u8, width: i32, height: i32, format: i32, headerSize: i32) Image {
     return cdef.LoadImageRaw(@as([*c]const u8, @ptrCast(fileName)), @as(c_int, width), @as(c_int, height), @as(c_int, format), @as(c_int, headerSize));
+}
+
+pub fn loadImageSvg(fileNameOrString: [:0]const u8, width: i32, height: i32) Image {
+    return cdef.LoadImageSvg(@as([*c]const u8, @ptrCast(fileNameOrString)), @as(c_int, width), @as(c_int, height));
 }
 
 pub fn loadImageAnim(fileName: [:0]const u8, frames: *i32) Image {
@@ -2426,6 +2538,10 @@ pub fn imageAlphaPremultiply(image: *Image) void {
 
 pub fn imageBlurGaussian(image: *Image, blurSize: i32) void {
     cdef.ImageBlurGaussian(@as([*c]Image, @ptrCast(image)), @as(c_int, blurSize));
+}
+
+pub fn imageKernelConvolution(image: *Image, kernel: []f32, kernelSize: i32) void {
+    cdef.ImageKernelConvolution(@as([*c]Image, @ptrCast(image)), @as([*c]f32, @ptrCast(kernel)), @as(c_int, kernelSize));
 }
 
 pub fn imageResize(image: *Image, newWidth: i32, newHeight: i32) void {
@@ -2852,6 +2968,10 @@ pub fn textToInteger(text: [:0]const u8) i32 {
     return @as(i32, cdef.TextToInteger(@as([*c]const u8, @ptrCast(text))));
 }
 
+pub fn textToFloat(text: [:0]const u8) f32 {
+    return cdef.TextToFloat(@as([*c]const u8, @ptrCast(text)));
+}
+
 pub fn drawLine3D(startPos: Vector3, endPos: Vector3, color: Color) void {
     cdef.DrawLine3D(startPos, endPos, color);
 }
@@ -3000,16 +3120,20 @@ pub fn drawMesh(mesh: Mesh, material: Material, transform: Matrix) void {
     cdef.DrawMesh(mesh, material, transform);
 }
 
-pub fn exportMesh(mesh: Mesh, fileName: [:0]const u8) bool {
-    return cdef.ExportMesh(mesh, @as([*c]const u8, @ptrCast(fileName)));
-}
-
 pub fn getMeshBoundingBox(mesh: Mesh) BoundingBox {
     return cdef.GetMeshBoundingBox(mesh);
 }
 
 pub fn genMeshTangents(mesh: *Mesh) void {
     cdef.GenMeshTangents(@as([*c]Mesh, @ptrCast(mesh)));
+}
+
+pub fn exportMesh(mesh: Mesh, fileName: [:0]const u8) bool {
+    return cdef.ExportMesh(mesh, @as([*c]const u8, @ptrCast(fileName)));
+}
+
+pub fn exportMeshAsCode(mesh: Mesh, fileName: [:0]const u8) bool {
+    return cdef.ExportMeshAsCode(mesh, @as([*c]const u8, @ptrCast(fileName)));
 }
 
 pub fn genMeshPoly(sides: i32, radius: f32) Mesh {
@@ -3134,6 +3258,10 @@ pub fn isAudioDeviceReady() bool {
 
 pub fn setMasterVolume(volume: f32) void {
     cdef.SetMasterVolume(volume);
+}
+
+pub fn getMasterVolume() f32 {
+    return cdef.GetMasterVolume();
 }
 
 pub fn loadWave(fileName: [:0]const u8) Wave {

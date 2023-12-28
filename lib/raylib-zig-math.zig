@@ -226,6 +226,14 @@ pub fn vector3Normalize(v: Vector3) Vector3 {
     return cdef.Vector3Normalize(v);
 }
 
+pub fn vector3Project(v1: Vector3, v2: Vector3) Vector3 {
+    return cdef.Vector3Project(v1, v2);
+}
+
+pub fn vector3Reject(v1: Vector3, v2: Vector3) Vector3 {
+    return cdef.Vector3Reject(v1, v2);
+}
+
 pub fn vector3OrthoNormalize(v1: *Vector3, v2: *Vector3) void {
     cdef.Vector3OrthoNormalize(@as([*c]Vector3, @ptrCast(v1)), @as([*c]Vector3, @ptrCast(v2)));
 }
