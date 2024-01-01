@@ -1,6 +1,7 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
 const rl = @This();
+const rlm = @import("raylib-zig-math.zig");
 const std = @import("std");
 
 pub const RaylibError = error{GenericError};
@@ -22,6 +23,8 @@ pub const Vector3 = extern struct {
     pub fn init(x: f32, y: f32, z: f32) Vector3 {
         return Vector3{ .x = x, .y = y, .z = z };
     }
+    pub const add = rlm.vector2Add;
+    pub const sub = rlm.vector2Subtract;
 };
 
 pub const Vector4 = extern struct {
@@ -1388,11 +1391,11 @@ pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music
 }
 
 pub fn drawLineStrip(points: []const Vector2, color: Color) void {
-    cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(@constCast(points))), @as(c_int, @intCast(points.len)), color);
+    cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
 pub fn drawTriangleFan(points: []const Vector2, color: Color) void {
-    cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(@constCast(points))), @as(c_int, @intCast(points.len)), color);
+    cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
 pub fn drawTriangleStrip(points: []const Vector2, color: Color) void {
@@ -1400,7 +1403,7 @@ pub fn drawTriangleStrip(points: []const Vector2, color: Color) void {
 }
 
 pub fn checkCollisionPointPoly(point: Vector2, points: []const Vector2) bool {
-    return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(@constCast(points))), @as(c_int, @intCast(points.len)));
+    return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
 }
 
 pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32) Font {
