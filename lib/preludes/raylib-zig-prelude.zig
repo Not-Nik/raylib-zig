@@ -23,8 +23,6 @@ pub const Vector3 = extern struct {
     pub fn init(x: f32, y: f32, z: f32) Vector3 {
         return Vector3{ .x = x, .y = y, .z = z };
     }
-    pub const add = rlm.vector2Add;
-    pub const sub = rlm.vector2Subtract;
 };
 
 pub const Vector4 = extern struct {
