@@ -542,7 +542,7 @@ pub const Font = extern struct {
         return rl.loadFontFromImage(image, key, firstChar);
     }
 
-    pub fn fromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
+    pub fn fromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: ?[]i32) Font {
         return rl.loadFontFromMemory(fileType, fileData, fontSize, fontChars);
     }
 
@@ -1281,14 +1281,20 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) []Color {
     return res;
 }
 
-pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
-    var fileDataFinal = @as([*c]const u8, 0);
-    var fileDataLen: i32 = 0;
+pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: ?[]i32) Font {
+    var fileDataFinal: [*c]const u8 = 0;
+    var fileDataLen: c_int = undefined;
     if (fileData) |fileDataSure| {
-        fileDataFinal = @as([*c]const u8, @ptrCast(fileDataSure));
-        fileDataLen = @as(i32, @intCast(fileDataSure.len));
+        fileDataFinal = @ptrCast(fileDataSure);
+        fileDataLen = @intCast(fileDataSure.len);
     }
-    return cdef.LoadFontFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileDataFinal)), @as(c_int, @intCast(fileDataLen)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)));
+    var fontCharsFinal: [*c]c_int = 0;
+    var fontCharsLen: c_int = undefined;
+    if (fontChars) |fontCharsSure| {
+        fontCharsFinal = @ptrCast(fontCharsSure);
+        fontCharsLen = @intCast(fontCharsSure.len);
+    }
+    return cdef.LoadFontFromMemory(@ptrCast(fileType), fileDataFinal, fileDataLen, fontSize, fontCharsFinal, fontCharsLen);
 }
 
 pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) []GlyphInfo {
