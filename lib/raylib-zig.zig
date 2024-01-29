@@ -1,7 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
 const rl = @This();
-const rlm = @import("raylib-zig-math.zig");
 const std = @import("std");
 
 pub const RaylibError = error{GenericError};
@@ -1964,8 +1963,8 @@ pub fn loadAutomationEventList(fileName: [:0]const u8) AutomationEventList {
     return cdef.LoadAutomationEventList(@as([*c]const u8, @ptrCast(fileName)));
 }
 
-pub fn unloadAutomationEventList(list: AutomationEventList) void {
-    cdef.UnloadAutomationEventList(list);
+pub fn unloadAutomationEventList(list: *AutomationEventList) void {
+    cdef.UnloadAutomationEventList(@as([*c]AutomationEventList, @ptrCast(list)));
 }
 
 pub fn exportAutomationEventList(list: AutomationEventList, fileName: [:0]const u8) bool {
@@ -2316,24 +2315,24 @@ pub fn drawPolyLinesEx(center: Vector2, sides: i32, radius: f32, rotation: f32, 
     cdef.DrawPolyLinesEx(center, @as(c_int, sides), radius, rotation, lineThick, color);
 }
 
-pub fn drawSplineLinear(points: []const Vector2, pointCount: i32, thick: f32, color: Color) void {
-    cdef.DrawSplineLinear(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+pub fn drawSplineLinear(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineLinear(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
 }
 
-pub fn drawSplineBasis(points: []const Vector2, pointCount: i32, thick: f32, color: Color) void {
-    cdef.DrawSplineBasis(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+pub fn drawSplineBasis(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineBasis(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
 }
 
-pub fn drawSplineCatmullRom(points: []const Vector2, pointCount: i32, thick: f32, color: Color) void {
-    cdef.DrawSplineCatmullRom(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+pub fn drawSplineCatmullRom(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineCatmullRom(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
 }
 
-pub fn drawSplineBezierQuadratic(points: []const Vector2, pointCount: i32, thick: f32, color: Color) void {
-    cdef.DrawSplineBezierQuadratic(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+pub fn drawSplineBezierQuadratic(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineBezierQuadratic(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
 }
 
-pub fn drawSplineBezierCubic(points: []const Vector2, pointCount: i32, thick: f32, color: Color) void {
-    cdef.DrawSplineBezierCubic(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+pub fn drawSplineBezierCubic(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineBezierCubic(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
 }
 
 pub fn drawSplineSegmentLinear(p1: Vector2, p2: Vector2, thick: f32, color: Color) void {
@@ -2538,10 +2537,6 @@ pub fn imageAlphaPremultiply(image: *Image) void {
 
 pub fn imageBlurGaussian(image: *Image, blurSize: i32) void {
     cdef.ImageBlurGaussian(@as([*c]Image, @ptrCast(image)), @as(c_int, blurSize));
-}
-
-pub fn imageKernelConvolution(image: *Image, kernel: []f32, kernelSize: i32) void {
-    cdef.ImageKernelConvolution(@as([*c]Image, @ptrCast(image)), @as([*c]f32, @ptrCast(kernel)), @as(c_int, kernelSize));
 }
 
 pub fn imageResize(image: *Image, newWidth: i32, newHeight: i32) void {
@@ -2968,10 +2963,6 @@ pub fn textToInteger(text: [:0]const u8) i32 {
     return @as(i32, cdef.TextToInteger(@as([*c]const u8, @ptrCast(text))));
 }
 
-pub fn textToFloat(text: [:0]const u8) f32 {
-    return cdef.TextToFloat(@as([*c]const u8, @ptrCast(text)));
-}
-
 pub fn drawLine3D(startPos: Vector3, endPos: Vector3, color: Color) void {
     cdef.DrawLine3D(startPos, endPos, color);
 }
@@ -3120,20 +3111,16 @@ pub fn drawMesh(mesh: Mesh, material: Material, transform: Matrix) void {
     cdef.DrawMesh(mesh, material, transform);
 }
 
+pub fn exportMesh(mesh: Mesh, fileName: [:0]const u8) bool {
+    return cdef.ExportMesh(mesh, @as([*c]const u8, @ptrCast(fileName)));
+}
+
 pub fn getMeshBoundingBox(mesh: Mesh) BoundingBox {
     return cdef.GetMeshBoundingBox(mesh);
 }
 
 pub fn genMeshTangents(mesh: *Mesh) void {
     cdef.GenMeshTangents(@as([*c]Mesh, @ptrCast(mesh)));
-}
-
-pub fn exportMesh(mesh: Mesh, fileName: [:0]const u8) bool {
-    return cdef.ExportMesh(mesh, @as([*c]const u8, @ptrCast(fileName)));
-}
-
-pub fn exportMeshAsCode(mesh: Mesh, fileName: [:0]const u8) bool {
-    return cdef.ExportMeshAsCode(mesh, @as([*c]const u8, @ptrCast(fileName)));
 }
 
 pub fn genMeshPoly(sides: i32, radius: f32) Mesh {

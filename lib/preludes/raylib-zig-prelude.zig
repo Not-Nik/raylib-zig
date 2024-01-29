@@ -1,7 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
 const rl = @This();
-const rlm = @import("raylib-zig-math.zig");
 const std = @import("std");
 
 pub const RaylibError = error{GenericError};
