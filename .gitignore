@@ -3,6 +3,4 @@ zig-out/
 .idea/
 Project/*
 libraylib.a
-raylib.h
-raymath.h
 **/.DS_Store

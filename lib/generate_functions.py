@@ -21,7 +21,15 @@ ZIGGIFY = {
     "c_uint": "u32"
 }
 
-
+IGNORE_TYPES = [
+    "[*c]Color",
+    "[*c]GlyphInfo",
+    "[*c]c_int",
+    "[*c][*c]const u8",
+    "[*c]Material",
+    "[*c]ModelAnimation",
+    "[*c]f32",
+]
 # Some C types have a different sizes on different systems and Zig
 # knows that so we tell it to get the system specific size for us.
 def c_to_zig_type(c: str) -> str:
@@ -43,14 +51,16 @@ def ziggify_type(name: str, t: str) -> str:
         "camera", "collisionPoint", "frames", "image", "colorCount", "dst",
         "texture", "srcPtr", "dstPtr", "count", "codepointSize", "utf8Size",
         "position", "mesh", "materialCount", "material", "model", "animCount",
-        "wave", "v1", "v2", "outAxis", "outAngle", "fileSize"
+        "wave", "v1", "v2", "outAxis", "outAngle", "fileSize",
+        "AutomationEventList", "list"
     ]
     multi = [
         "data", "compData", "points", "fileData", "colors", "pixels",
         "fontChars", "chars", "recs", "codepoints", "textList", "transforms",
         "animations", "samples", "LoadImageColors", "LoadImagePalette",
         "LoadFontData", "LoadCodepoints", "TextSplit", "LoadMaterials",
-        "LoadModelAnimations", "LoadWaveSamples", "images"
+        "LoadModelAnimations", "LoadWaveSamples", "images",
+        "LoadRandomSequence", "sequence", "kernel", "GlyphInfo", "glyphs", "glyphRecs",
     ]
     string = False
 
@@ -106,15 +116,7 @@ def make_return_cast(source_type: str, dest_type: str, inner: str) -> str:
 
     # These all have to be done manually because their sizes depend on the
     # function arguments.
-    if source_type in [
-            "[*c]Color",
-            "[*c]GlyphInfo",
-            "[*c]c_int",
-            "[*c][*c]const u8",
-            "[*c]Material",
-            "[*c]ModelAnimation",
-            "[*c]f32",
-    ]:
+    if source_type in IGNORE_TYPES:
         return None
     else:
         raise ValueError(f"Don't know what to do {source_type} {dest_type} {inner}")
@@ -281,9 +283,6 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
             "EncodeDataBase64",
             "DecodeDataBase64",
             "SetWindowIcons",
-            "DrawLineStrip",
-            "DrawTriangleFan",
-            "DrawTriangleStrip",
             "CheckCollisionPointPoly",
             "LoadFontEx",
             "GenImageFontAtlas",
@@ -291,6 +290,9 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
             "DrawTextCodepoints",
             "LoadUTF8",
             "TextJoin",
+            "DrawLineStrip",
+            "DrawTriangleFan",
+            "DrawTriangleStrip",
             "DrawTriangleStrip3D",
         ]
 

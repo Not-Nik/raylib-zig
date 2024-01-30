@@ -1,6 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
-const rl = @import("raylib-zig");
+const rl = @import("raylib-zig.zig");
 const cdef = @import("raylib-zig-math-ext.zig");
 const std = @import("std");
 
@@ -224,6 +224,14 @@ pub fn vector3Divide(v1: Vector3, v2: Vector3) Vector3 {
 
 pub fn vector3Normalize(v: Vector3) Vector3 {
     return cdef.Vector3Normalize(v);
+}
+
+pub fn vector3Project(v1: Vector3, v2: Vector3) Vector3 {
+    return cdef.Vector3Project(v1, v2);
+}
+
+pub fn vector3Reject(v1: Vector3, v2: Vector3) Vector3 {
+    return cdef.Vector3Reject(v1, v2);
 }
 
 pub fn vector3OrthoNormalize(v1: *Vector3, v2: *Vector3) void {

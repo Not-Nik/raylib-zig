@@ -1,6 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
-const rl = @import("raylib-zig");
+const rl = @import("raylib-zig.zig");
 const rlm = @import("raylib-zig-math.zig");
 
 pub extern "c" fn Clamp(value: f32, min: f32, max: f32) f32;
@@ -55,6 +55,8 @@ pub extern "c" fn Vector3Angle(v1: rl.Vector3, v2: rl.Vector3) f32;
 pub extern "c" fn Vector3Negate(v: rl.Vector3) rl.Vector3;
 pub extern "c" fn Vector3Divide(v1: rl.Vector3, v2: rl.Vector3) rl.Vector3;
 pub extern "c" fn Vector3Normalize(v: rl.Vector3) rl.Vector3;
+pub extern "c" fn Vector3Project(v1: rl.Vector3, v2: rl.Vector3) rl.Vector3;
+pub extern "c" fn Vector3Reject(v1: rl.Vector3, v2: rl.Vector3) rl.Vector3;
 pub extern "c" fn Vector3OrthoNormalize(v1: [*c]rl.Vector3, v2: [*c]rl.Vector3) void;
 pub extern "c" fn Vector3Transform(v: rl.Vector3, mat: rl.Matrix) rl.Vector3;
 pub extern "c" fn Vector3RotateByQuaternion(v: rl.Vector3, q: rl.Quaternion) rl.Vector3;

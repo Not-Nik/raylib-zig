@@ -1158,6 +1158,17 @@ pub const LoadFileTextCallback = ?fn ([*c]const u8) callconv(.C) [*c]u8;
 pub const SaveFileTextCallback = ?fn ([*c]const u8, [*c]u8) callconv(.C) bool;
 pub const AudioCallback = ?*const fn (?*anyopaque, c_uint) callconv(.C) void;
 
+pub const AutomationEvent = extern struct {
+    frame: c_uint = @import("std").mem.zeroes(c_uint),
+    type: c_uint = @import("std").mem.zeroes(c_uint),
+    params: [4]c_int = @import("std").mem.zeroes([4]c_int),
+};
+pub const AutomationEventList = extern struct {
+    capacity: c_uint = @import("std").mem.zeroes(c_uint),
+    count: c_uint = @import("std").mem.zeroes(c_uint),
+    events: [*c]AutomationEvent = @import("std").mem.zeroes([*c]AutomationEvent),
+};
+
 pub const RAYLIB_VERSION_MAJOR = @as(i32, 4);
 pub const RAYLIB_VERSION_MINOR = @as(i32, 6);
 pub const RAYLIB_VERSION_PATCH = @as(i32, 0);
@@ -1376,19 +1387,19 @@ pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music
     return cdef.LoadMusicStreamFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)));
 }
 
-pub fn drawLineStrip(points: []Vector2, color: Color) void {
+pub fn drawLineStrip(points: []const Vector2, color: Color) void {
     cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn drawTriangleFan(points: []Vector2, color: Color) void {
+pub fn drawTriangleFan(points: []const Vector2, color: Color) void {
     cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
+pub fn drawTriangleStrip(points: []const Vector2, color: Color) void {
     cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
+pub fn checkCollisionPointPoly(point: Vector2, points: []const Vector2) bool {
     return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
 }
 
@@ -1412,6 +1423,6 @@ pub fn textJoin(textList: [][:0]const u8, delimiter: [:0]const u8) [:0]const u8 
     return std.mem.span(cdef.TextJoin(@as([*c][*c]const u8, @ptrCast(textList)), @as(c_int, @intCast(textList.len)), @as([*c]const u8, @ptrCast(delimiter))));
 }
 
-pub fn drawTriangleStrip3D(points: []Vector3, color: Color) void {
+pub fn drawTriangleStrip3D(points: []const Vector3, color: Color) void {
     cdef.DrawTriangleStrip3D(@as([*c]Vector3, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }

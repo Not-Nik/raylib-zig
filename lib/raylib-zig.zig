@@ -542,7 +542,7 @@ pub const Font = extern struct {
         return rl.loadFontFromImage(image, key, firstChar);
     }
 
-    pub fn fromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: ?[]i32) Font {
+    pub fn fromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
         return rl.loadFontFromMemory(fileType, fileData, fontSize, fontChars);
     }
 
@@ -1158,6 +1158,17 @@ pub const LoadFileTextCallback = ?fn ([*c]const u8) callconv(.C) [*c]u8;
 pub const SaveFileTextCallback = ?fn ([*c]const u8, [*c]u8) callconv(.C) bool;
 pub const AudioCallback = ?*const fn (?*anyopaque, c_uint) callconv(.C) void;
 
+pub const AutomationEvent = extern struct {
+    frame: c_uint = @import("std").mem.zeroes(c_uint),
+    type: c_uint = @import("std").mem.zeroes(c_uint),
+    params: [4]c_int = @import("std").mem.zeroes([4]c_int),
+};
+pub const AutomationEventList = extern struct {
+    capacity: c_uint = @import("std").mem.zeroes(c_uint),
+    count: c_uint = @import("std").mem.zeroes(c_uint),
+    events: [*c]AutomationEvent = @import("std").mem.zeroes([*c]AutomationEvent),
+};
+
 pub const RAYLIB_VERSION_MAJOR = @as(i32, 4);
 pub const RAYLIB_VERSION_MINOR = @as(i32, 6);
 pub const RAYLIB_VERSION_PATCH = @as(i32, 0);
@@ -1281,20 +1292,14 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) []Color {
     return res;
 }
 
-pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: ?[]i32) Font {
-    var fileDataFinal: [*c]const u8 = 0;
-    var fileDataLen: c_int = undefined;
+pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
+    var fileDataFinal = @as([*c]const u8, 0);
+    var fileDataLen: i32 = 0;
     if (fileData) |fileDataSure| {
-        fileDataFinal = @ptrCast(fileDataSure);
-        fileDataLen = @intCast(fileDataSure.len);
+        fileDataFinal = @as([*c]const u8, @ptrCast(fileDataSure));
+        fileDataLen = @as(i32, @intCast(fileDataSure.len));
     }
-    var fontCharsFinal: [*c]c_int = 0;
-    var fontCharsLen: c_int = undefined;
-    if (fontChars) |fontCharsSure| {
-        fontCharsFinal = @ptrCast(fontCharsSure);
-        fontCharsLen = @intCast(fontCharsSure.len);
-    }
-    return cdef.LoadFontFromMemory(@ptrCast(fileType), fileDataFinal, fileDataLen, fontSize, fontCharsFinal, fontCharsLen);
+    return cdef.LoadFontFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileDataFinal)), @as(c_int, @intCast(fileDataLen)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)));
 }
 
 pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) []GlyphInfo {
@@ -1382,19 +1387,19 @@ pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music
     return cdef.LoadMusicStreamFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)));
 }
 
-pub fn drawLineStrip(points: []Vector2, color: Color) void {
+pub fn drawLineStrip(points: []const Vector2, color: Color) void {
     cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn drawTriangleFan(points: []Vector2, color: Color) void {
+pub fn drawTriangleFan(points: []const Vector2, color: Color) void {
     cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
+pub fn drawTriangleStrip(points: []const Vector2, color: Color) void {
     cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
+pub fn checkCollisionPointPoly(point: Vector2, points: []const Vector2) bool {
     return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
 }
 
@@ -1418,7 +1423,7 @@ pub fn textJoin(textList: [][:0]const u8, delimiter: [:0]const u8) [:0]const u8 
     return std.mem.span(cdef.TextJoin(@as([*c][*c]const u8, @ptrCast(textList)), @as(c_int, @intCast(textList.len)), @as([*c]const u8, @ptrCast(delimiter))));
 }
 
-pub fn drawTriangleStrip3D(points: []Vector3, color: Color) void {
+pub fn drawTriangleStrip3D(points: []const Vector3, color: Color) void {
     cdef.DrawTriangleStrip3D(@as([*c]Vector3, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
@@ -1426,12 +1431,12 @@ pub fn initWindow(width: i32, height: i32, title: [:0]const u8) void {
     cdef.InitWindow(@as(c_int, width), @as(c_int, height), @as([*c]const u8, @ptrCast(title)));
 }
 
-pub fn windowShouldClose() bool {
-    return cdef.WindowShouldClose();
-}
-
 pub fn closeWindow() void {
     cdef.CloseWindow();
+}
+
+pub fn windowShouldClose() bool {
+    return cdef.WindowShouldClose();
 }
 
 pub fn isWindowReady() bool {
@@ -1512,6 +1517,10 @@ pub fn setWindowMonitor(monitor: i32) void {
 
 pub fn setWindowMinSize(width: i32, height: i32) void {
     cdef.SetWindowMinSize(@as(c_int, width), @as(c_int, height));
+}
+
+pub fn setWindowMaxSize(width: i32, height: i32) void {
+    cdef.SetWindowMaxSize(@as(c_int, width), @as(c_int, height));
 }
 
 pub fn setWindowSize(width: i32, height: i32) void {
@@ -1604,18 +1613,6 @@ pub fn enableEventWaiting() void {
 
 pub fn disableEventWaiting() void {
     cdef.DisableEventWaiting();
-}
-
-pub fn swapScreenBuffer() void {
-    cdef.SwapScreenBuffer();
-}
-
-pub fn pollInputEvents() void {
-    cdef.PollInputEvents();
-}
-
-pub fn waitTime(seconds: f64) void {
-    cdef.WaitTime(seconds);
 }
 
 pub fn showCursor() void {
@@ -1782,10 +1779,6 @@ pub fn setTargetFPS(fps: i32) void {
     cdef.SetTargetFPS(@as(c_int, fps));
 }
 
-pub fn getFPS() i32 {
-    return @as(i32, cdef.GetFPS());
-}
-
 pub fn getFrameTime() f32 {
     return cdef.GetFrameTime();
 }
@@ -1794,12 +1787,32 @@ pub fn getTime() f64 {
     return cdef.GetTime();
 }
 
-pub fn getRandomValue(min: i32, max: i32) i32 {
-    return @as(i32, cdef.GetRandomValue(@as(c_int, min), @as(c_int, max)));
+pub fn getFPS() i32 {
+    return @as(i32, cdef.GetFPS());
+}
+
+pub fn swapScreenBuffer() void {
+    cdef.SwapScreenBuffer();
+}
+
+pub fn pollInputEvents() void {
+    cdef.PollInputEvents();
+}
+
+pub fn waitTime(seconds: f64) void {
+    cdef.WaitTime(seconds);
 }
 
 pub fn setRandomSeed(seed: u32) void {
     cdef.SetRandomSeed(@as(c_uint, seed));
+}
+
+pub fn getRandomValue(min: i32, max: i32) i32 {
+    return @as(i32, cdef.GetRandomValue(@as(c_int, min), @as(c_int, max)));
+}
+
+pub fn unloadRandomSequence(sequence: []i32) void {
+    cdef.UnloadRandomSequence(@as([*c]c_int, @ptrCast(sequence)));
 }
 
 pub fn takeScreenshot(fileName: [:0]const u8) void {
@@ -1808,6 +1821,10 @@ pub fn takeScreenshot(fileName: [:0]const u8) void {
 
 pub fn setConfigFlags(flags: ConfigFlags) void {
     cdef.SetConfigFlags(flags);
+}
+
+pub fn openURL(url: [:0]const u8) void {
+    cdef.OpenURL(@as([*c]const u8, @ptrCast(url)));
 }
 
 pub fn traceLog(logLevel: TraceLogLevel, text: [:0]const u8) void {
@@ -1828,10 +1845,6 @@ pub fn memRealloc(ptr: *anyopaque, size: u32) *anyopaque {
 
 pub fn memFree(ptr: *anyopaque) void {
     cdef.MemFree(ptr);
-}
-
-pub fn openURL(url: [:0]const u8) void {
-    cdef.OpenURL(@as([*c]const u8, @ptrCast(url)));
 }
 
 pub fn setLoadFileDataCallback(callback: LoadFileDataCallback) void {
@@ -1946,8 +1959,44 @@ pub fn getFileModTime(fileName: [:0]const u8) i64 {
     return @as(i64, cdef.GetFileModTime(@as([*c]const u8, @ptrCast(fileName))));
 }
 
+pub fn loadAutomationEventList(fileName: [:0]const u8) AutomationEventList {
+    return cdef.LoadAutomationEventList(@as([*c]const u8, @ptrCast(fileName)));
+}
+
+pub fn unloadAutomationEventList(list: *AutomationEventList) void {
+    cdef.UnloadAutomationEventList(@as([*c]AutomationEventList, @ptrCast(list)));
+}
+
+pub fn exportAutomationEventList(list: AutomationEventList, fileName: [:0]const u8) bool {
+    return cdef.ExportAutomationEventList(list, @as([*c]const u8, @ptrCast(fileName)));
+}
+
+pub fn setAutomationEventList(list: *AutomationEventList) void {
+    cdef.SetAutomationEventList(@as([*c]AutomationEventList, @ptrCast(list)));
+}
+
+pub fn setAutomationEventBaseFrame(frame: i32) void {
+    cdef.SetAutomationEventBaseFrame(@as(c_int, frame));
+}
+
+pub fn startAutomationEventRecording() void {
+    cdef.StartAutomationEventRecording();
+}
+
+pub fn stopAutomationEventRecording() void {
+    cdef.StopAutomationEventRecording();
+}
+
+pub fn playAutomationEvent(event: AutomationEvent) void {
+    cdef.PlayAutomationEvent(event);
+}
+
 pub fn isKeyPressed(key: KeyboardKey) bool {
     return cdef.IsKeyPressed(key);
+}
+
+pub fn isKeyPressedRepeat(key: KeyboardKey) bool {
+    return cdef.IsKeyPressedRepeat(key);
 }
 
 pub fn isKeyDown(key: KeyboardKey) bool {
@@ -1962,16 +2011,16 @@ pub fn isKeyUp(key: KeyboardKey) bool {
     return cdef.IsKeyUp(key);
 }
 
-pub fn setExitKey(key: KeyboardKey) void {
-    cdef.SetExitKey(key);
-}
-
 pub fn getKeyPressed() KeyboardKey {
     return cdef.GetKeyPressed();
 }
 
 pub fn getCharPressed() i32 {
     return @as(i32, cdef.GetCharPressed());
+}
+
+pub fn setExitKey(key: KeyboardKey) void {
+    cdef.SetExitKey(key);
 }
 
 pub fn isGamepadAvailable(gamepad: i32) bool {
@@ -2158,14 +2207,6 @@ pub fn drawLineBezier(startPos: Vector2, endPos: Vector2, thick: f32, color: Col
     cdef.DrawLineBezier(startPos, endPos, thick, color);
 }
 
-pub fn drawLineBezierQuad(startPos: Vector2, endPos: Vector2, controlPos: Vector2, thick: f32, color: Color) void {
-    cdef.DrawLineBezierQuad(startPos, endPos, controlPos, thick, color);
-}
-
-pub fn drawLineBezierCubic(startPos: Vector2, endPos: Vector2, startControlPos: Vector2, endControlPos: Vector2, thick: f32, color: Color) void {
-    cdef.DrawLineBezierCubic(startPos, endPos, startControlPos, endControlPos, thick, color);
-}
-
 pub fn drawCircle(centerX: i32, centerY: i32, radius: f32, color: Color) void {
     cdef.DrawCircle(@as(c_int, centerX), @as(c_int, centerY), radius, color);
 }
@@ -2188,6 +2229,10 @@ pub fn drawCircleV(center: Vector2, radius: f32, color: Color) void {
 
 pub fn drawCircleLines(centerX: i32, centerY: i32, radius: f32, color: Color) void {
     cdef.DrawCircleLines(@as(c_int, centerX), @as(c_int, centerY), radius, color);
+}
+
+pub fn drawCircleLinesV(center: Vector2, radius: f32, color: Color) void {
+    cdef.DrawCircleLinesV(center, radius, color);
 }
 
 pub fn drawEllipse(centerX: i32, centerY: i32, radiusH: f32, radiusV: f32, color: Color) void {
@@ -2270,6 +2315,66 @@ pub fn drawPolyLinesEx(center: Vector2, sides: i32, radius: f32, rotation: f32, 
     cdef.DrawPolyLinesEx(center, @as(c_int, sides), radius, rotation, lineThick, color);
 }
 
+pub fn drawSplineLinear(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineLinear(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+}
+
+pub fn drawSplineBasis(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineBasis(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+}
+
+pub fn drawSplineCatmullRom(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineCatmullRom(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+}
+
+pub fn drawSplineBezierQuadratic(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineBezierQuadratic(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+}
+
+pub fn drawSplineBezierCubic(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
+    cdef.DrawSplineBezierCubic(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
+}
+
+pub fn drawSplineSegmentLinear(p1: Vector2, p2: Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineSegmentLinear(p1, p2, thick, color);
+}
+
+pub fn drawSplineSegmentBasis(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineSegmentBasis(p1, p2, p3, p4, thick, color);
+}
+
+pub fn drawSplineSegmentCatmullRom(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineSegmentCatmullRom(p1, p2, p3, p4, thick, color);
+}
+
+pub fn drawSplineSegmentBezierQuadratic(p1: Vector2, c2: Vector2, p3: Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineSegmentBezierQuadratic(p1, c2, p3, thick, color);
+}
+
+pub fn drawSplineSegmentBezierCubic(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineSegmentBezierCubic(p1, c2, c3, p4, thick, color);
+}
+
+pub fn getSplinePointLinear(startPos: Vector2, endPos: Vector2, t: f32) Vector2 {
+    return cdef.GetSplinePointLinear(startPos, endPos, t);
+}
+
+pub fn getSplinePointBasis(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: f32) Vector2 {
+    return cdef.GetSplinePointBasis(p1, p2, p3, p4, t);
+}
+
+pub fn getSplinePointCatmullRom(p1: Vector2, p2: Vector2, p3: Vector2, p4: Vector2, t: f32) Vector2 {
+    return cdef.GetSplinePointCatmullRom(p1, p2, p3, p4, t);
+}
+
+pub fn getSplinePointBezierQuad(p1: Vector2, c2: Vector2, p3: Vector2, t: f32) Vector2 {
+    return cdef.GetSplinePointBezierQuad(p1, c2, p3, t);
+}
+
+pub fn getSplinePointBezierCubic(p1: Vector2, c2: Vector2, c3: Vector2, p4: Vector2, t: f32) Vector2 {
+    return cdef.GetSplinePointBezierCubic(p1, c2, c3, p4, t);
+}
+
 pub fn checkCollisionRecs(rec1: Rectangle, rec2: Rectangle) bool {
     return cdef.CheckCollisionRecs(rec1, rec2);
 }
@@ -2312,6 +2417,10 @@ pub fn loadImage(fileName: [:0]const u8) Image {
 
 pub fn loadImageRaw(fileName: [:0]const u8, width: i32, height: i32, format: i32, headerSize: i32) Image {
     return cdef.LoadImageRaw(@as([*c]const u8, @ptrCast(fileName)), @as(c_int, width), @as(c_int, height), @as(c_int, format), @as(c_int, headerSize));
+}
+
+pub fn loadImageSvg(fileNameOrString: [:0]const u8, width: i32, height: i32) Image {
+    return cdef.LoadImageSvg(@as([*c]const u8, @ptrCast(fileNameOrString)), @as(c_int, width), @as(c_int, height));
 }
 
 pub fn loadImageAnim(fileName: [:0]const u8, frames: *i32) Image {
@@ -3136,6 +3245,10 @@ pub fn isAudioDeviceReady() bool {
 
 pub fn setMasterVolume(volume: f32) void {
     cdef.SetMasterVolume(volume);
+}
+
+pub fn getMasterVolume() f32 {
+    return cdef.GetMasterVolume();
 }
 
 pub fn loadWave(fileName: [:0]const u8) Wave {
