@@ -22,7 +22,7 @@ pub fn build(b: *std.Build) !void {
         const exe_lib = rl.compileForEmscripten(b, "'$PROJECT_NAME'", "src/main.zig", target, optimize);
         exe_lib.addModule("raylib", raylib);
         exe_lib.addModule("raylib-math", raylib_math);
-        const raylib_artifact = rl.getArtifact(b, target, optimize);
+        const raylib_artifact = rl.getRaylib(b, target, optimize);
         // Note that raylib itself is not actually added to the exe_lib output file, so it also needs to be linked with emscripten.
         exe_lib.linkLibrary(raylib_artifact);
         const link_step = try rl.linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
