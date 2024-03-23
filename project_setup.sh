@@ -15,8 +15,8 @@ const rl = @import("raylib-zig/build.zig");
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
-    var raylib = rl.getModule(b, "raylib-zig");
-    var raylib_math = rl.math.getModule(b, "raylib-zig");
+    const raylib = rl.getModule(b, "raylib-zig");
+    const raylib_math = rl.math.getModule(b, "raylib-zig");
     //web exports are completely separate
     if (target.getOsTag() == .emscripten) {
         const exe_lib = rl.compileForEmscripten(b, "'$PROJECT_NAME'", "src/main.zig", target, optimize);
