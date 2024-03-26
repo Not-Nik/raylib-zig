@@ -40,8 +40,8 @@ pub fn main() anyerror!void {
         );
     }
 
+    rl.disableCursor(); // Limit cursor to relative movement inside the window
     rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
-    rl.disableCursor(); // Lock the cursor to the window
     //--------------------------------------------------------------------------------------
 
     // Main game loop
