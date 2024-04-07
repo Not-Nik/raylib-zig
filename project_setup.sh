@@ -63,8 +63,8 @@ echo '.{
     .version = "0.0.1",
     .dependencies = .{
         .@"raylib-zig" = .{
-            .url = "https://github.com/Not-Nik/raylib-zig/archive/d002b702c8fb2c1c7fd4508addae50ffe27620cd.tar.gz",
-            .hash = "1220d18ffceb49556360746f7f269ebb280f2d9b0f36f6d22e282426477f27056889",
+            .url = "https://github.com/Not-Nik/raylib-zig/archive/068f9e18168b986de0858b25e7adec3e212a3726.tar.gz",
+            .hash = "122023d07e20acf3a819c083365fff62c148d707915061d21929663948c72af90c7a",
         },
     },
     .paths = .{""},

@@ -1,6 +1,6 @@
 .{
     .name = "raylib-zig",
-    .version = "0.1.1",
+    .version = "5.0.0",
     .dependencies = .{
         .raylib = .{
             .url = "https://github.com/raysan5/raylib/archive/5.0.tar.gz",
