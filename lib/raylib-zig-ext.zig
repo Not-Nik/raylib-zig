@@ -207,7 +207,7 @@ pub extern "c" fn DrawPixelV(position: rl.Vector2, color: rl.Color) void;
 pub extern "c" fn DrawLine(startPosX: c_int, startPosY: c_int, endPosX: c_int, endPosY: c_int, color: rl.Color) void;
 pub extern "c" fn DrawLineV(startPos: rl.Vector2, endPos: rl.Vector2, color: rl.Color) void;
 pub extern "c" fn DrawLineEx(startPos: rl.Vector2, endPos: rl.Vector2, thick: f32, color: rl.Color) void;
-pub extern "c" fn DrawLineStrip(points: [*c]const rl.Vector2, pointCount: c_int, color: rl.Color) void;
+pub extern "c" fn DrawLineStrip(points: [*c]rl.Vector2, pointCount: c_int, color: rl.Color) void;
 pub extern "c" fn DrawLineBezier(startPos: rl.Vector2, endPos: rl.Vector2, thick: f32, color: rl.Color) void;
 pub extern "c" fn DrawCircle(centerX: c_int, centerY: c_int, radius: f32, color: rl.Color) void;
 pub extern "c" fn DrawCircleSector(center: rl.Vector2, radius: f32, startAngle: f32, endAngle: f32, segments: c_int, color: rl.Color) void;
@@ -233,8 +233,8 @@ pub extern "c" fn DrawRectangleRounded(rec: rl.Rectangle, roundness: f32, segmen
 pub extern "c" fn DrawRectangleRoundedLines(rec: rl.Rectangle, roundness: f32, segments: c_int, lineThick: f32, color: rl.Color) void;
 pub extern "c" fn DrawTriangle(v1: rl.Vector2, v2: rl.Vector2, v3: rl.Vector2, color: rl.Color) void;
 pub extern "c" fn DrawTriangleLines(v1: rl.Vector2, v2: rl.Vector2, v3: rl.Vector2, color: rl.Color) void;
-pub extern "c" fn DrawTriangleFan(points: [*c]const rl.Vector2, pointCount: c_int, color: rl.Color) void;
-pub extern "c" fn DrawTriangleStrip(points: [*c]const rl.Vector2, pointCount: c_int, color: rl.Color) void;
+pub extern "c" fn DrawTriangleFan(points: [*c]rl.Vector2, pointCount: c_int, color: rl.Color) void;
+pub extern "c" fn DrawTriangleStrip(points: [*c]rl.Vector2, pointCount: c_int, color: rl.Color) void;
 pub extern "c" fn DrawPoly(center: rl.Vector2, sides: c_int, radius: f32, rotation: f32, color: rl.Color) void;
 pub extern "c" fn DrawPolyLines(center: rl.Vector2, sides: c_int, radius: f32, rotation: f32, color: rl.Color) void;
 pub extern "c" fn DrawPolyLinesEx(center: rl.Vector2, sides: c_int, radius: f32, rotation: f32, lineThick: f32, color: rl.Color) void;
@@ -259,7 +259,7 @@ pub extern "c" fn CheckCollisionCircleRec(center: rl.Vector2, radius: f32, rec: 
 pub extern "c" fn CheckCollisionPointRec(point: rl.Vector2, rec: rl.Rectangle) bool;
 pub extern "c" fn CheckCollisionPointCircle(point: rl.Vector2, center: rl.Vector2, radius: f32) bool;
 pub extern "c" fn CheckCollisionPointTriangle(point: rl.Vector2, p1: rl.Vector2, p2: rl.Vector2, p3: rl.Vector2) bool;
-pub extern "c" fn CheckCollisionPointPoly(point: rl.Vector2, points: [*c]const rl.Vector2, pointCount: c_int) bool;
+pub extern "c" fn CheckCollisionPointPoly(point: rl.Vector2, points: [*c]rl.Vector2, pointCount: c_int) bool;
 pub extern "c" fn CheckCollisionLines(startPos1: rl.Vector2, endPos1: rl.Vector2, startPos2: rl.Vector2, endPos2: rl.Vector2, collisionPoint: [*c]rl.Vector2) bool;
 pub extern "c" fn CheckCollisionPointLine(point: rl.Vector2, p1: rl.Vector2, p2: rl.Vector2, threshold: c_int) bool;
 pub extern "c" fn GetCollisionRec(rec1: rl.Rectangle, rec2: rl.Rectangle) rl.Rectangle;
