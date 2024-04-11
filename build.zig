@@ -118,6 +118,11 @@ pub fn build(b: *std.Build) !void {
 
     const examples = [_]Program{
         .{
+            .name = "basic_screen_manager",
+            .path = "examples/core/basic_screen_manager.zig",
+            .desc = "Illustrates simple screen manager based on a state machine",
+        },
+        .{
             .name = "basic_window",
             .path = "examples/core/basic_window.zig",
             .desc = "Creates a basic window with text",
