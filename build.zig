@@ -158,6 +158,11 @@ pub fn build(b: *std.Build) !void {
             .desc = "Simple first person demo",
         },
         .{
+            .name = "window_flags",
+            .path = "examples/core/window_flags.zig",
+            .desc = "Demonstrates various flags used during and after window creation",
+        },
+        .{
             .name = "texture_outline",
             .path = "examples/shaders/texture_outline.zig",
             .desc = "Uses a shader to create an outline around a sprite",
