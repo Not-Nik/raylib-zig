@@ -174,15 +174,15 @@ pub fn main() anyerror!void {
 
             // Draw window state info
             rl.drawText(
-                "Following flags can be set after window creation",
+                "Following flags can be set after window creation:",
                 10,
                 60,
                 10,
                 rl.Color.gray,
             );
             rl.drawText(
-                rl.textFormat("[F] flag_fullscreen_mode: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_fullscreen_mode))) "on" else "off",
+                rl.textFormat("[F] flag_fullscreen_mode: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_fullscreen_mode)))),
                 }),
                 10,
                 80,
@@ -190,8 +190,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("[R] flag_window_resizable: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_resizable))) "on" else "off",
+                rl.textFormat("[R] flag_window_resizable: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_resizable)))),
                 }),
                 10,
                 100,
@@ -199,8 +199,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("[D] flag_window_undecorated: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_undecorated))) "on" else "off",
+                rl.textFormat("[D] flag_window_undecorated: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_undecorated)))),
                 }),
                 10,
                 120,
@@ -208,8 +208,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("[H] flag_window_hidden: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_hidden))) "on" else "off",
+                rl.textFormat("[H] flag_window_hidden: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_hidden)))),
                 }),
                 10,
                 140,
@@ -217,8 +217,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("[N] flag_window_minimized: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_minimized))) "on" else "off",
+                rl.textFormat("[N] flag_window_minimized: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_minimized)))),
                 }),
                 10,
                 160,
@@ -226,8 +226,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("[M] flag_window_maximized: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_maximized))) "on" else "off",
+                rl.textFormat("[M] flag_window_maximized: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_maximized)))),
                 }),
                 10,
                 180,
@@ -235,8 +235,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("[G] flag_window_unfocused: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_unfocused))) "on" else "off",
+                rl.textFormat("[U] flag_window_unfocused: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_unfocused)))),
                 }),
                 10,
                 200,
@@ -244,8 +244,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("[T] flag_window_topmost: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_topmost))) "on" else "off",
+                rl.textFormat("[T] flag_window_topmost: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_topmost)))),
                 }),
                 10,
                 220,
@@ -253,8 +253,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("[A] flag_window_always_run: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_always_run))) "on" else "off",
+                rl.textFormat("[A] flag_window_always_run: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_always_run)))),
                 }),
                 10,
                 240,
@@ -262,8 +262,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("[V] flag_vsync_hint: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_vsync_hint))) "on" else "off",
+                rl.textFormat("[V] flag_vsync_hint: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_vsync_hint)))),
                 }),
                 10,
                 260,
@@ -279,8 +279,8 @@ pub fn main() anyerror!void {
                 rl.Color.gray,
             );
             rl.drawText(
-                rl.textFormat("flag_window_highdpi: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_highdpi))) "on" else "off",
+                rl.textFormat("flag_window_highdpi: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_highdpi)))),
                 }),
                 10,
                 320,
@@ -288,8 +288,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("flag_window_transparent: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_transparent))) "on" else "off",
+                rl.textFormat("flag_window_transparent: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_window_transparent)))),
                 }),
                 10,
                 340,
@@ -297,8 +297,8 @@ pub fn main() anyerror!void {
                 rl.Color.lime,
             );
             rl.drawText(
-                rl.textFormat("flag_msaa_4x_hint: %s", .{
-                    if (rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_msaa_4x_hint))) "on" else "off",
+                rl.textFormat("flag_msaa_4x_hint: %d", .{
+                    @as(i32, @intFromBool(rl.isWindowState(@intFromEnum(rl.ConfigFlags.flag_msaa_4x_hint)))),
                 }),
                 10,
                 360,
