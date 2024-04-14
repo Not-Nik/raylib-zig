@@ -331,19 +331,19 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
 if __name__ == "__main__":
     parse_header(
         "raylib.h",
-        "raylib-zig.zig",
-        "raylib-zig-ext.zig",
+        "raylib.zig",
+        "raylib-ext.zig",
         "RLAPI ",
-        "preludes/raylib-zig-prelude.zig",
-        "preludes/raylib-zig-ext-prelude.zig"
+        "preludes/raylib-prelude.zig",
+        "preludes/raylib-ext-prelude.zig"
     )
     parse_header(
         "raymath.h",
-        "raylib-zig-math.zig",
-        "raylib-zig-math-ext.zig",
+        "raymath.zig",
+        "raymath-ext.zig",
         "RMAPI ",
-        "preludes/raylib-zig-math-prelude.zig",
-        "preludes/raylib-zig-math-ext-prelude.zig"
+        "preludes/raymath-prelude.zig",
+        "preludes/raymath-ext-prelude.zig"
     )
     parse_header(
         "rlgl.h",

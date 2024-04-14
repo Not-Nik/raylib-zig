@@ -1,7 +1,7 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
 const rl = @import("raylib-zig");
-const rlm = @import("raylib-zig-math.zig");
+const rlm = @import("raymath.zig");
 
 pub extern "c" fn Clamp(value: f32, min: f32, max: f32) f32;
 pub extern "c" fn Lerp(start: f32, end: f32, amount: f32) f32;

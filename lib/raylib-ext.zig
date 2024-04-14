@@ -1,6 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
-const rl = @import("raylib-zig.zig");
+const rl = @import("raylib.zig");
 
 pub extern "c" fn InitWindow(width: c_int, height: c_int, title: [*c]const u8) void;
 pub extern "c" fn CloseWindow() void;

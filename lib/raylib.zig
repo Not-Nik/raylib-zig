@@ -1189,7 +1189,7 @@ pub const MATERIAL_MAP_SPECULAR = MaterialMapIndex.material_map_metalness;
 pub const SHADER_LOC_MAP_DIFFUSE = ShaderLocationIndex.shader_loc_map_albedo;
 pub const SHADER_LOC_MAP_SPECULAR = ShaderLocationIndex.shader_loc_map_metalness;
 
-const cdef = @import("raylib-zig-ext.zig");
+const cdef = @import("raylib-ext.zig");
 
 pub fn setWindowIcons(images: []Image) void {
     cdef.SetWindowIcons(@as([*c]Image, @ptrCast(images)), @as(c_int, @intCast(images.len)));

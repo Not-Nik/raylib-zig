@@ -84,21 +84,21 @@ pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module 
     if (b.modules.contains("raylib")) {
         return b.modules.get("raylib").?;
     }
-    return b.addModule("raylib", .{ .source_file = .{ .path = rl_path ++ "/lib/raylib-zig.zig" } });
+    return b.addModule("raylib", .{ .source_file = .{ .path = rl_path ++ "/lib/raylib.zig" } });
 }
 
 fn getModuleInternal(b: *std.Build) *std.Build.Module {
     if (b.modules.contains("raylib")) {
         return b.modules.get("raylib").?;
     }
-    return b.addModule("raylib", .{ .source_file = .{ .path = "lib/raylib-zig.zig" } });
+    return b.addModule("raylib", .{ .source_file = .{ .path = "lib/raylib.zig" } });
 }
 
 pub const math = struct {
     pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
         const raylib = rl.getModule(b, rl_path);
         return b.addModule("raylib-math", .{
-            .source_file = .{ .path = rl_path ++ "/lib/raylib-zig-math.zig" },
+            .source_file = .{ .path = rl_path ++ "/lib/raymath.zig" },
             .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }},
         });
     }
@@ -106,7 +106,7 @@ pub const math = struct {
     fn getModuleInternal(b: *std.Build) *std.Build.Module {
         const raylib = rl.getModuleInternal(b);
         return b.addModule("raylib-math", .{
-            .source_file = .{ .path = "lib/raylib-zig-math.zig" },
+            .source_file = .{ .path = "lib/raymath.zig" },
             .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }},
         });
     }
@@ -214,13 +214,13 @@ pub fn build(b: *std.Build) !void {
     const rlgl = rl.gl.getModuleInternal(b);
 
     const raylib_test = b.addTest(.{
-        .root_source_file = .{ .path = "lib/raylib-zig.zig" },
+        .root_source_file = .{ .path = "lib/raylib.zig" },
         .target = target,
         .optimize = optimize,
     });
 
     const raylib_math_test = b.addTest(.{
-        .root_source_file = .{ .path = "lib/raylib-zig-math.zig" },
+        .root_source_file = .{ .path = "lib/raymath.zig" },
         .target = target,
         .optimize = optimize,
     });
