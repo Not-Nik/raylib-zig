@@ -51,10 +51,53 @@ To build all available examples simply `zig build examples`. To list available e
 
 ## Building and using
 
-+ (Optional) Install raylib
-+ Execute `project_setup.sh project_name`, this will create a folder with the name specified
-+ You can copy that folder anywhere you want and edit the source
-+ Run `zig build run` at any time to test your project
+### Using raylib-zig's template
+
+* Execute `project_setup.sh project_name`, this will create a folder with the name specified
+* You can copy that folder anywhere you want and edit the source
+* Run `zig build run` at any time to test your project
+
+### In an existing project (e.g. created with `zig init-exe`)
+
+Create a `build.zig.zon` and add raylib-zig as a dependency like so:
+
+```
+.{
+    // ...
+    .dependencies = .{
+        .@"raylib-zig" = .{
+            .url = "https://github.com/Not-Nik/raylib-zig/archive/devel.tar.gz",
+            .hash = "12000000000000000000000000000000000000000000000000000000000000000000", // put the actual hash here
+        },
+    },
+    // ...
+}
+```
+
+Then add raylib-zig as a dependency and import it's modules and artifact in your `build.zig`:
+
+```zig
+const raylib_dep = b.dependency("raylib-zig", .{
+    .target = target,
+    .optimize = optimize,
+});
+
+const raylib = raylib_dep.module("raylib"); // main raylib module
+const raylib_math = raylib_dep.module("raylib-math"); // raymath module
+const rlgl = raylib_dep.module("rlgl"); // rlgl module
+const raylib_artifact = raylib_dep.artifact("raylib"); // raylib C library
+```
+
+Now add the modules and artifact to your target as you would normally:
+
+```zig
+exe.linkLibrary(raylib_artifact);
+exe.addModule("raylib", raylib);
+exe.addModule("raylib-math", raylib_math);
+exe.addModule("rlgl", raylib_math);
+```
+
+If you additionally want to support Web as a platform with emscripten, you will need `emcc.zig`. Refer to raylib-zig's project template on how to use it
 
 ## Exporting for web
 To export your project for the web, first install emsdk.
