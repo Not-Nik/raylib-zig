@@ -4,6 +4,10 @@ const rl = @import("raylib-zig");
 const cdef = @import("raylib-zig-math-ext.zig");
 const std = @import("std");
 
+test {
+    std.testing.refAllDeclsRecursive(@This());
+}
+
 const Matrix = rl.Matrix;
 const Quaternion = rl.Quaternion;
 const Vector2 = rl.Vector2;

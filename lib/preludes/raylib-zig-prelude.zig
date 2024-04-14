@@ -3,6 +3,10 @@
 const rl = @This();
 const std = @import("std");
 
+test {
+    std.testing.refAllDeclsRecursive(@This());
+}
+
 pub const RaylibError = error{GenericError};
 
 pub const Vector2 = extern struct {
@@ -1219,7 +1223,7 @@ pub fn loadFileData(fileName: [:0]const u8) ![]u8 {
     var bytesRead: i32 = 0;
     var res: []u8 = undefined;
 
-    const ptr = cdef.LoadFileData(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_uint, @ptrCast(&bytesRead)));
+    const ptr = cdef.LoadFileData(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_int, @ptrCast(&bytesRead)));
     if (ptr == 0) return RaylibError.GenericError;
 
     res.ptr = @as([*]u8, @ptrCast(ptr));
@@ -1228,11 +1232,11 @@ pub fn loadFileData(fileName: [:0]const u8) ![]u8 {
 }
 
 pub fn saveFileData(fileName: [:0]const u8, data: []u8) bool {
-    return cdef.SaveFileData(@as([*c]const u8, @ptrCast(fileName)), @as(*anyopaque, @ptrCast(data.ptr)), @as(c_uint, @intCast(data.len)));
+    return cdef.SaveFileData(@as([*c]const u8, @ptrCast(fileName)), @as(*anyopaque, @ptrCast(data.ptr)), @as(c_int, @intCast(data.len)));
 }
 
 pub fn exportDataAsCode(data: []const u8, fileName: [:0]const u8) bool {
-    return cdef.ExportDataAsCode(@as([*c]const u8, @ptrCast(data)), @as(c_uint, @intCast(data.len)), @as([*c]const u8, @ptrCast(fileName)));
+    return cdef.ExportDataAsCode(@as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)), @as([*c]const u8, @ptrCast(fileName)));
 }
 
 pub fn compressData(data: []const u8) []u8 {
@@ -1362,7 +1366,7 @@ pub fn loadModelAnimations(fileName: [:0]const u8) ![]ModelAnimation {
     var animCount: i32 = 0;
     var res: []ModelAnimation = undefined;
 
-    const ptr = cdef.LoadModelAnimations(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_uint, @ptrCast(&animCount)));
+    const ptr = cdef.LoadModelAnimations(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_int, @ptrCast(&animCount)));
     if (ptr == 0) return RaylibError.GenericError;
 
     res.ptr = @as([*]ModelAnimation, @ptrCast(ptr));
@@ -1371,7 +1375,7 @@ pub fn loadModelAnimations(fileName: [:0]const u8) ![]ModelAnimation {
 }
 
 pub fn unloadModelAnimations(animations: []ModelAnimation) void {
-    cdef.UnloadModelAnimations(@as([*c]ModelAnimation, @ptrCast(animations)), @as(c_uint, @intCast(animations.len)));
+    cdef.UnloadModelAnimations(@as([*c]ModelAnimation, @ptrCast(animations)), @as(c_int, @intCast(animations.len)));
 }
 
 pub fn loadWaveFromMemory(fileType: [:0]const u8, fileData: []const u8) Wave {
@@ -1425,6 +1429,6 @@ pub fn textJoin(textList: [][:0]const u8, delimiter: [:0]const u8) [:0]const u8 
     return std.mem.span(cdef.TextJoin(@as([*c][*c]const u8, @ptrCast(textList)), @as(c_int, @intCast(textList.len)), @as([*c]const u8, @ptrCast(delimiter))));
 }
 
-pub fn drawTriangleStrip3D(points: []const Vector3, color: Color) void {
+pub fn drawTriangleStrip3D(points: []Vector3, color: Color) void {
     cdef.DrawTriangleStrip3D(@as([*c]Vector3, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
