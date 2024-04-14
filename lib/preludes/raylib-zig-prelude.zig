@@ -1062,17 +1062,20 @@ pub const PixelFormat = enum(c_int) {
     pixelformat_uncompressed_r32 = 8,
     pixelformat_uncompressed_r32g32b32 = 9,
     pixelformat_uncompressed_r32g32b32a32 = 10,
-    pixelformat_compressed_dxt1_rgb = 11,
-    pixelformat_compressed_dxt1_rgba = 12,
-    pixelformat_compressed_dxt3_rgba = 13,
-    pixelformat_compressed_dxt5_rgba = 14,
-    pixelformat_compressed_etc1_rgb = 15,
-    pixelformat_compressed_etc2_rgb = 16,
-    pixelformat_compressed_etc2_eac_rgba = 17,
-    pixelformat_compressed_pvrt_rgb = 18,
-    pixelformat_compressed_pvrt_rgba = 19,
-    pixelformat_compressed_astc_4x4_rgba = 20,
-    pixelformat_compressed_astc_8x8_rgba = 21,
+    pixelformat_uncompressed_r16 = 11,
+    pixelformat_uncompressed_r16g16b16 = 12,
+    pixelformat_uncompressed_r16g16b16a16 = 13,
+    pixelformat_compressed_dxt1_rgb = 14,
+    pixelformat_compressed_dxt1_rgba = 15,
+    pixelformat_compressed_dxt3_rgba = 16,
+    pixelformat_compressed_dxt5_rgba = 17,
+    pixelformat_compressed_etc1_rgb = 18,
+    pixelformat_compressed_etc2_rgb = 19,
+    pixelformat_compressed_etc2_eac_rgba = 20,
+    pixelformat_compressed_pvrt_rgb = 21,
+    pixelformat_compressed_pvrt_rgba = 22,
+    pixelformat_compressed_astc_4x4_rgba = 23,
+    pixelformat_compressed_astc_8x8_rgba = 24,
 };
 
 pub const TextureFilter = enum(c_int) {
@@ -1386,19 +1389,19 @@ pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music
     return cdef.LoadMusicStreamFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)));
 }
 
-pub fn drawLineStrip(points: []const Vector2, color: Color) void {
+pub fn drawLineStrip(points: []Vector2, color: Color) void {
     cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn drawTriangleFan(points: []const Vector2, color: Color) void {
+pub fn drawTriangleFan(points: []Vector2, color: Color) void {
     cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn drawTriangleStrip(points: []const Vector2, color: Color) void {
+pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
     cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
-pub fn checkCollisionPointPoly(point: Vector2, points: []const Vector2) bool {
+pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
     return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
 }
 
