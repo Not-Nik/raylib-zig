@@ -118,6 +118,11 @@ pub fn build(b: *std.Build) !void {
 
     const examples = [_]Program{
         .{
+            .name = "basic_screen_manager",
+            .path = "examples/core/basic_screen_manager.zig",
+            .desc = "Illustrates simple screen manager based on a state machine",
+        },
+        .{
             .name = "basic_window",
             .path = "examples/core/basic_window.zig",
             .desc = "Creates a basic window with text",
@@ -151,6 +156,11 @@ pub fn build(b: *std.Build) !void {
             .name = "3d_camera_first_person",
             .path = "examples/core/3d_camera_first_person.zig",
             .desc = "Simple first person demo",
+        },
+        .{
+            .name = "window_flags",
+            .path = "examples/core/window_flags.zig",
+            .desc = "Demonstrates various flags used during and after window creation",
         },
         .{
             .name = "texture_outline",
