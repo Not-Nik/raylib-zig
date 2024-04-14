@@ -7,5 +7,6 @@
             .hash = "1220c28847ca8e8756734ae84355802b764c9d9cf4de057dbc6fc2b15c56e726f27b",
         },
     },
-    .paths = .{""},
+    .minimum_zig_version = "0.11",
+    .paths = .{"lib/raylib.zig", "lib/raylib-ext.zig", "lib/raymath.zig", "lib/raymath-ext.zig", "lib/rlgl.zig", "lib/rlgl-ext.zig"},
 }
