@@ -8,7 +8,7 @@ fi
 
 mkdir "$PROJECT_NAME" && cd "$PROJECT_NAME" || exit
 touch build.zig
-echo "generating project files..."
+echo "Generating project files..."
 echo 'const std = @import("std");
 const emcc = @import("emcc.zig");
 
@@ -63,14 +63,15 @@ echo '.{
     .version = "0.0.1",
     .dependencies = .{
         .@"raylib-zig" = .{
-            .url = "https://github.com/Not-Nik/raylib-zig/archive/068f9e18168b986de0858b25e7adec3e212a3726.tar.gz",
-            .hash = "122023d07e20acf3a819c083365fff62c148d707915061d21929663948c72af90c7a",
+            .url = "https://github.com/Not-Nik/raylib-zig/archive/devel.tar.gz",
+            .hash = "12000000000000000000000000000000000000000000000000000000000000000000",
         },
     },
     .paths = .{""},
 }
-
 ' >> build.zig.zon
+
+echo "Please manually update the dependency hash!"
 
 cp ../emcc.zig .
 
