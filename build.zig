@@ -194,6 +194,23 @@ pub fn build(b: *std.Build) !void {
     const raylib = rl.getModuleInternal(b);
     const raylib_math = rl.math.getModuleInternal(b);
 
+    const raylib_test = b.addTest(.{
+        .root_source_file = .{ .path = "lib/raylib-zig.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const raylib_math_test = b.addTest(.{
+        .root_source_file = .{ .path = "lib/raylib-zig-math.zig" },
+        .target = target,
+        .optimize = optimize,
+    });
+    raylib_math_test.addModule("raylib-zig", raylib);
+
+    const test_step = b.step("test", "Check for library compilation errors");
+    test_step.dependOn(&raylib_test.step);
+    test_step.dependOn(&raylib_math_test.step);
+
     for (examples) |ex| {
         if (target.getOsTag() == .emscripten) {
             const exe_lib = emcc.compileForEmscripten(b, ex.name, ex.path, target, optimize);
