@@ -52,7 +52,8 @@ def ziggify_type(name: str, t: str) -> str:
         "texture", "srcPtr", "dstPtr", "count", "codepointSize", "utf8Size",
         "position", "mesh", "materialCount", "material", "model", "animCount",
         "wave", "v1", "v2", "outAxis", "outAngle", "fileSize",
-        "AutomationEventList", "list"
+        "AutomationEventList", "list", "batch", "glInternalFormat", "glFormat",
+        "glType", "mipmaps"
     ]
     multi = [
         "data", "compData", "points", "fileData", "colors", "pixels",
@@ -61,6 +62,7 @@ def ziggify_type(name: str, t: str) -> str:
         "LoadFontData", "LoadCodepoints", "TextSplit", "LoadMaterials",
         "LoadModelAnimations", "LoadWaveSamples", "images",
         "LoadRandomSequence", "sequence", "kernel", "GlyphInfo", "glyphs", "glyphRecs",
+        "matf", "rlGetShaderLocsDefault", "locs"
     ]
     string = False
 
@@ -98,9 +100,10 @@ def add_namespace_to_type(t: str) -> str:
 
     if t[0].isupper():
         t = "rl." + t
-
-    if t in ["float3", "float16"]:
+    elif t in ["float3", "float16"]:
         t = "rlm." + t
+    elif t.startswith("rl"):
+        t = "rlgl." + t
 
     return pre + t
 
@@ -166,7 +169,7 @@ def convert_name_case(name):
     return name[:1].lower() + name[1:] if name else ''
 
 
-def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str, *args: str):
+def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str, prelude_file: str, ext_prelude_file: str, skip_after: str = "#/never\\#"):
     header = open(header_name, mode="r")
     ext_heads = []
     zig_funcs = []
@@ -175,6 +178,8 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
     leftover = ""
 
     for line in header.readlines():
+        if line == skip_after:
+            break
 
         if line.startswith("typedef struct"):
             zig_types.add(line.split(' ')[2])
@@ -311,8 +316,8 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
                 "\n}"
             )
 
-    prelude = open(args[0], mode="r").read()
-    ext_prelude = open(args[1], mode="r").read()
+    prelude = open(prelude_file, mode="r").read()
+    ext_prelude = open(ext_prelude_file, mode="r").read()
 
     ext_header = open(ext_file, mode="w")
     print(ext_prelude, file=ext_header)
@@ -339,4 +344,13 @@ if __name__ == "__main__":
         "RMAPI ",
         "preludes/raylib-zig-math-prelude.zig",
         "preludes/raylib-zig-math-ext-prelude.zig"
+    )
+    parse_header(
+        "rlgl.h",
+        "rlgl.zig",
+        "rlgl-ext.zig",
+        "RLAPI ",
+        "preludes/rlgl-prelude.zig",
+        "preludes/rlgl-ext-prelude.zig",
+        "#if defined(RLGL_IMPLEMENTATION)\n"
     )
