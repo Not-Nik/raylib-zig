@@ -94,7 +94,7 @@ Now add the modules and artifact to your target as you would normally:
 exe.linkLibrary(raylib_artifact);
 exe.addModule("raylib", raylib);
 exe.addModule("raylib-math", raylib_math);
-exe.addModule("rlgl", raylib_math);
+exe.addModule("rlgl", rlgl);
 ```
 
 If you additionally want to support Web as a platform with emscripten, you will need `emcc.zig`. Refer to raylib-zig's project template on how to use it
