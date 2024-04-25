@@ -29,7 +29,7 @@ pub fn compileForEmscripten(
     b: *std.Build,
     name: []const u8,
     root_source_file: []const u8,
-    target: std.zig.CrossTarget,
+    target: std.Build.ResolvedTarget,
     optimize: std.builtin.Mode,
 ) *std.Build.Step.Compile {
     // TODO: It might be a good idea to create a custom compile step, that does
@@ -37,13 +37,13 @@ pub fn compileForEmscripten(
     // the make function of the step. However it might also be a bad idea since
     // it messes with the build system itself.
 
-    const new_target = updateTargetForWeb(target);
+    //const new_target = updateTargetForWeb(target);
 
     // The project is built as a library and linked later.
     const exe_lib = b.addStaticLibrary(.{
         .name = name,
         .root_source_file = .{ .path = root_source_file },
-        .target = new_target,
+        .target = target,
         .optimize = optimize,
     });
 

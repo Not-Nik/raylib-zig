@@ -1,12 +1,12 @@
 .{
     .name = "raylib-zig",
-    .version = "5.0.0",
+    .version = "5.1.0",
     .dependencies = .{
         .raylib = .{
-            .url = "https://github.com/raysan5/raylib/archive/5.0.tar.gz",
-            .hash = "1220c28847ca8e8756734ae84355802b764c9d9cf4de057dbc6fc2b15c56e726f27b",
+            .url = "https://github.com/raysan5/raylib/archive/e47ebec66134800e734710038ea4e5f070f3ef06.tar.gz",
+            .hash = "12208edb6d35c0aa5f57262014b02392c6ccfd0685a8eff1d961b42a612d3418fa89",
         },
     },
-    .minimum_zig_version = "0.11.0",
+    .minimum_zig_version = "0.12.0",
     .paths = .{ "lib/raylib.zig", "lib/raylib-ext.zig", "lib/raymath.zig", "lib/raymath-ext.zig", "lib/rlgl.zig", "lib/rlgl-ext.zig" },
 }
