@@ -10,7 +10,7 @@ const Program = struct {
     desc: []const u8,
 };
 
-pub fn link(
+fn link(
     b: *std.Build,
     exe: *std.Build.Step.Compile,
     target: std.zig.CrossTarget,
@@ -61,7 +61,7 @@ pub fn link(
 }
 
 var _raylib_lib_cache: ?*std.build.Step.Compile = null;
-pub fn getRaylib(
+fn getRaylib(
     b: *std.Build,
     target: std.zig.CrossTarget,
     optimize: std.builtin.Mode,
@@ -79,32 +79,16 @@ pub fn getRaylib(
     }
 }
 
-// TODO: Make these not comptime.
-pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
-    if (b.modules.contains("raylib")) {
-        return b.modules.get("raylib").?;
-    }
-    return b.addModule("raylib", .{ .source_file = .{ .path = rl_path ++ "/lib/raylib.zig" } });
-}
-
-fn getModuleInternal(b: *std.Build) *std.Build.Module {
+fn getModule(b: *std.Build) *std.Build.Module {
     if (b.modules.contains("raylib")) {
         return b.modules.get("raylib").?;
     }
     return b.addModule("raylib", .{ .source_file = .{ .path = "lib/raylib.zig" } });
 }
 
-pub const math = struct {
-    pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
-        const raylib = rl.getModule(b, rl_path);
-        return b.addModule("raylib-math", .{
-            .source_file = .{ .path = rl_path ++ "/lib/raymath.zig" },
-            .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }},
-        });
-    }
-
-    fn getModuleInternal(b: *std.Build) *std.Build.Module {
-        const raylib = rl.getModuleInternal(b);
+const math = struct {
+    fn getModule(b: *std.Build) *std.Build.Module {
+        const raylib = rl.getModule(b);
         return b.addModule("raylib-math", .{
             .source_file = .{ .path = "lib/raymath.zig" },
             .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }},
@@ -112,17 +96,9 @@ pub const math = struct {
     }
 };
 
-pub const gl = struct {
-    pub fn getModule(b: *std.Build, comptime rl_path: []const u8) *std.Build.Module {
-        const raylib = rl.getModule(b, rl_path);
-        return b.addModule("rlgl", .{
-            .source_file = .{ .path = rl_path ++ "/lib/rlgl.zig" },
-            .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }},
-        });
-    }
-
-    fn getModuleInternal(b: *std.Build) *std.Build.Module {
-        const raylib = rl.getModuleInternal(b);
+const gl = struct {
+    fn getModule(b: *std.Build) *std.Build.Module {
+        const raylib = rl.getModule(b);
         return b.addModule("rlgl", .{
             .source_file = .{ .path = "lib/rlgl.zig" },
             .dependencies = &.{.{ .name = "raylib-zig", .module = raylib }},
@@ -130,7 +106,7 @@ pub const gl = struct {
     }
 };
 
-pub fn build(b: *std.Build) !void {
+fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
@@ -209,9 +185,9 @@ pub fn build(b: *std.Build) !void {
 
     const examples_step = b.step("examples", "Builds all the examples");
 
-    const raylib = rl.getModuleInternal(b);
-    const raylib_math = rl.math.getModuleInternal(b);
-    const rlgl = rl.gl.getModuleInternal(b);
+    const raylib = rl.getModule(b);
+    const raylib_math = rl.math.getModule(b);
+    const rlgl = rl.gl.getModule(b);
 
     const raylib_test = b.addTest(.{
         .root_source_file = .{ .path = "lib/raylib.zig" },
