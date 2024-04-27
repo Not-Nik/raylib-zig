@@ -187,8 +187,6 @@ pub fn build(b: *std.Build) !void {
         // },
     };
 
-    const examples_step = b.step("examples", "Builds all the examples");
-
     const raylib = rl.getModule(b, target, optimize);
     const raylib_math = rl.math.getModule(b, target, optimize);
     const rlgl = rl.gl.getModule(b, target, optimize);
@@ -218,6 +216,8 @@ pub fn build(b: *std.Build) !void {
     test_step.dependOn(&raylib_math_test.step);
     test_step.dependOn(&rlgl_test.step);
 
+    const examples_step = b.step("examples", "Builds all the examples");
+
     for (examples) |ex| {
         if (target.query.os_tag == .emscripten) {
             const exe_lib = emcc.compileForEmscripten(b, ex.name, ex.path, target, optimize);
@@ -236,7 +236,9 @@ pub fn build(b: *std.Build) !void {
             const run_step = try emcc.emscriptenRunStep(b);
             run_step.step.dependOn(&link_step.step);
             const run_option = b.step(ex.name, ex.desc);
+
             run_option.dependOn(&run_step.step);
+            examples_step.dependOn(&exe_lib.step);
         } else {
             const exe = b.addExecutable(.{
                 .name = ex.name,
@@ -248,8 +250,10 @@ pub fn build(b: *std.Build) !void {
             exe.root_module.addImport("raylib", raylib);
             exe.root_module.addImport("raylib-math", raylib_math);
             exe.root_module.addImport("rlgl", rlgl);
+
             const run_cmd = b.addRunArtifact(exe);
             const run_step = b.step(ex.name, ex.desc);
+            
             run_step.dependOn(&run_cmd.step);
             examples_step.dependOn(&exe.step);
         }
