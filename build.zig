@@ -16,7 +16,7 @@ fn link(
     target: std.Build.ResolvedTarget,
     optimize: std.builtin.Mode,
 ) void {
-    const lib = getRaylib(b, target.query, optimize);
+    const lib = getRaylib(b, target, optimize);
 
     const target_os = exe.rootModuleTarget().os.tag;
     switch (target_os) {
@@ -61,11 +61,7 @@ fn link(
 }
 
 var _raylib_lib_cache: ?*std.Build.Step.Compile = null;
-fn getRaylib(
-    b: *std.Build,
-    target: std.zig.CrossTarget,
-    optimize: std.builtin.Mode,
-) *std.Build.Step.Compile {
+fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.Mode) *std.Build.Step.Compile {
     if (_raylib_lib_cache) |lib| return lib else {
         const raylib = b.dependency("raylib", .{
             .target = target,
@@ -220,7 +216,7 @@ pub fn build(b: *std.Build) !void {
             exe_lib.root_module.addImport("raylib", raylib);
             exe_lib.root_module.addImport("raylib-math", raylib_math);
             exe_lib.root_module.addImport("rlgl", rlgl);
-            const raylib_lib = getRaylib(b, target.query, optimize);
+            const raylib_lib = getRaylib(b, target, optimize);
 
             // Note that raylib itself isn't actually added to the exe_lib
             // output file, so it also needs to be linked with emscripten.
@@ -236,7 +232,7 @@ pub fn build(b: *std.Build) !void {
         } else {
             const exe = b.addExecutable(.{
                 .name = ex.name,
-                .root_source_file = .{ .path = ex.path },
+                .root_source_file = b.path(ex.path),
                 .optimize = optimize,
                 .target = target,
             });
