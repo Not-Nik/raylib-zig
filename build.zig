@@ -75,29 +75,37 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
     }
 }
 
-fn getModule(b: *std.Build) *std.Build.Module {
+fn getModule(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.Mode) *std.Build.Module {
     if (b.modules.contains("raylib")) {
         return b.modules.get("raylib").?;
     }
-    return b.addModule("raylib", .{ .root_source_file = b.path("lib/raylib.zig")});
+    return b.addModule("raylib", .{
+        .root_source_file = b.path("lib/raylib.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
 }
 
 const math = struct {
-    fn getModule(b: *std.Build) *std.Build.Module {
-        const raylib = rl.getModule(b);
+    fn getModule(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.Mode) *std.Build.Module {
+        const raylib = rl.getModule(b, target, optimize);
         return b.addModule("raylib-math", .{
             .root_source_file = b.path("lib/raymath.zig"),
             .imports = &.{.{ .name = "raylib-zig", .module = raylib }},
+            .target = target,
+            .optimize = optimize,
         });
     }
 };
 
 const gl = struct {
-    fn getModule(b: *std.Build) *std.Build.Module {
-        const raylib = rl.getModule(b);
+    fn getModule(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.Mode) *std.Build.Module {
+        const raylib = rl.getModule(b, target, optimize);
         return b.addModule("rlgl", .{
             .root_source_file = b.path("lib/rlgl.zig"),
             .imports = &.{.{ .name = "raylib-zig", .module = raylib }},
+            .target = target,
+            .optimize = optimize,
         });
     }
 };
@@ -181,9 +189,9 @@ pub fn build(b: *std.Build) !void {
 
     const examples_step = b.step("examples", "Builds all the examples");
 
-    const raylib = rl.getModule(b);
-    const raylib_math = rl.math.getModule(b);
-    const rlgl = rl.gl.getModule(b);
+    const raylib = rl.getModule(b, target, optimize);
+    const raylib_math = rl.math.getModule(b, target, optimize);
+    const rlgl = rl.gl.getModule(b, target, optimize);
 
     const raylib_test = b.addTest(.{
         .root_source_file = b.path("lib/raylib.zig"),
