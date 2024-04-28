@@ -14,10 +14,11 @@ pub const rlVertexBuffer = extern struct {
     elementCount: c_int,
     vertices: [*c]f32,
     texcoords: [*c]f32,
+    normals: [*c]f32,
     colors: [*c]u8,
     indices: [*c]c_ushort,
     vaoId: c_uint,
-    vboId: [4]c_uint,
+    vboId: [5]c_uint,
 };
 
 pub const rlDrawCall = extern struct {

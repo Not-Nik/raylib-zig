@@ -29,7 +29,7 @@ pub fn compileForEmscripten(
     b: *std.Build,
     name: []const u8,
     root_source_file: []const u8,
-    target: std.zig.CrossTarget,
+    target: std.Build.ResolvedTarget,
     optimize: std.builtin.Mode,
 ) *std.Build.Step.Compile {
     // TODO: It might be a good idea to create a custom compile step, that does
@@ -37,13 +37,13 @@ pub fn compileForEmscripten(
     // the make function of the step. However it might also be a bad idea since
     // it messes with the build system itself.
 
-    const new_target = updateTargetForWeb(target);
+    //const new_target = updateTargetForWeb(target);
 
     // The project is built as a library and linked later.
     const exe_lib = b.addStaticLibrary(.{
         .name = name,
         .root_source_file = .{ .path = root_source_file },
-        .target = new_target,
+        .target = target,
         .optimize = optimize,
     });
 
@@ -123,27 +123,7 @@ fn lastIndexOf(string: []const u8, character: u8) usize {
     }
     return string.len - 1;
 }
-// TODO: each zig update, remove this and see if everything still works.
-// https://github.com/ziglang/zig/issues/16776 is where the issue is submitted.
-fn updateTargetForWeb(target: std.zig.CrossTarget) std.zig.CrossTarget {
-    // Zig building to emscripten doesn't work, because the Zig standard library
-    // is missing some things in the C system. "std/c.zig" is missing fd_t,
-    // which causes compilation to fail. So build to wasi instead, until it gets
-    // fixed.
-    return std.zig.CrossTarget{
-        .cpu_arch = target.cpu_arch,
-        .cpu_model = target.cpu_model,
-        .cpu_features_add = target.cpu_features_add,
-        .cpu_features_sub = target.cpu_features_sub,
-        .os_tag = .wasi,
-        .os_version_min = target.os_version_min,
-        .os_version_max = target.os_version_max,
-        .glibc_version = target.glibc_version,
-        .abi = target.abi,
-        .dynamic_linker = target.dynamic_linker,
-        .ofmt = target.ofmt,
-    };
-}
+
 const webhack_c =
     \\// Zig adds '__stack_chk_guard', '__stack_chk_fail', and 'errno',
     \\// which emscripten doesn't actually support.

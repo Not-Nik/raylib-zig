@@ -795,6 +795,18 @@ pub const FilePathList = extern struct {
     paths: [*c][*c]u8,
 };
 
+pub const AutomationEvent = extern struct {
+    frame: c_uint,
+    @"type": c_uint,
+    params: [4]c_int,
+};
+
+pub const AutomationEventList = extern struct {
+    capacity: c_uint,
+    count: c_uint,
+    events: [*c]AutomationEvent
+};
+
 pub const ConfigFlags = enum(c_int) {
     flag_fullscreen_mode = 2,
     flag_window_resizable = 4,
@@ -1164,21 +1176,10 @@ pub const LoadFileTextCallback = *const fn ([*c]const u8) callconv(.C) [*c]u8;
 pub const SaveFileTextCallback = *const fn ([*c]const u8, [*c]u8) callconv(.C) bool;
 pub const AudioCallback = ?*const fn (?*anyopaque, c_uint) callconv(.C) void;
 
-pub const AutomationEvent = extern struct {
-    frame: c_uint = @import("std").mem.zeroes(c_uint),
-    type: c_uint = @import("std").mem.zeroes(c_uint),
-    params: [4]c_int = @import("std").mem.zeroes([4]c_int),
-};
-pub const AutomationEventList = extern struct {
-    capacity: c_uint = @import("std").mem.zeroes(c_uint),
-    count: c_uint = @import("std").mem.zeroes(c_uint),
-    events: [*c]AutomationEvent = @import("std").mem.zeroes([*c]AutomationEvent),
-};
-
-pub const RAYLIB_VERSION_MAJOR = @as(i32, 4);
-pub const RAYLIB_VERSION_MINOR = @as(i32, 6);
+pub const RAYLIB_VERSION_MAJOR = @as(i32, 5);
+pub const RAYLIB_VERSION_MINOR = @as(i32, 1);
 pub const RAYLIB_VERSION_PATCH = @as(i32, 0);
-pub const RAYLIB_VERSION = "4.6-dev";
+pub const RAYLIB_VERSION = "5.1-dev";
 
 pub const MAX_TOUCH_POINTS = 10;
 pub const MAX_MATERIAL_MAPS = 12;
@@ -1269,6 +1270,10 @@ pub fn decodeDataBase64(data: []const u8) []u8 {
     res.ptr = cdef.DecodeDataBase64(@as([*c]const u8, @ptrCast(data)), @as([*c]c_int, @ptrCast(&outputSize)));
     res.len = @as(usize, @intCast(outputSize));
     return res;
+}
+
+pub fn loadImageAnimFromMemory(fileType: [:0]const u8, fileData: []const u8, frames: *i32) Image {
+    return cdef.LoadImageAnimFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)), @as([*c]c_int, @ptrCast(frames)));
 }
 
 pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: []const u8) Image {

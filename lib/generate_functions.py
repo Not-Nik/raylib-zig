@@ -234,6 +234,10 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
         zig_c_arguments = []
         zig_arguments = []
         zig_call_args = []
+        
+        if not arguments:
+            arguments = "void"
+
         for arg in arguments.split(", "):
             if arg == "void":
                 break

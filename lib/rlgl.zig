@@ -14,10 +14,11 @@ pub const rlVertexBuffer = extern struct {
     elementCount: c_int,
     vertices: [*c]f32,
     texcoords: [*c]f32,
+    normals: [*c]f32,
     colors: [*c]u8,
     indices: [*c]c_ushort,
     vaoId: c_uint,
-    vboId: [4]c_uint,
+    vboId: [5]c_uint,
 };
 
 pub const rlDrawCall = extern struct {
@@ -225,6 +226,18 @@ pub fn rlViewport(x: i32, y: i32, width: i32, height: i32) void {
     cdef.rlViewport(@as(c_int, x), @as(c_int, y), @as(c_int, width), @as(c_int, height));
 }
 
+pub fn rlSetClipPlanes(near: f64, far: f64) void {
+    cdef.rlSetClipPlanes(near, far);
+}
+
+pub fn rlGetCullDistanceNear() f64 {
+    return cdef.rlGetCullDistanceNear();
+}
+
+pub fn rlGetCullDistanceFar() f64 {
+    return cdef.rlGetCullDistanceFar();
+}
+
 pub fn rlBegin(mode: i32) void {
     cdef.rlBegin(@as(c_int, mode));
 }
@@ -349,12 +362,20 @@ pub fn rlDisableFramebuffer() void {
     cdef.rlDisableFramebuffer();
 }
 
+pub fn rlGetActiveFramebuffer() u32 {
+    return @as(u32, cdef.rlGetActiveFramebuffer());
+}
+
 pub fn rlActiveDrawBuffers(count: i32) void {
     cdef.rlActiveDrawBuffers(@as(c_int, count));
 }
 
 pub fn rlBlitFramebuffer(srcX: i32, srcY: i32, srcWidth: i32, srcHeight: i32, dstX: i32, dstY: i32, dstWidth: i32, dstHeight: i32, bufferMask: i32) void {
     cdef.rlBlitFramebuffer(@as(c_int, srcX), @as(c_int, srcY), @as(c_int, srcWidth), @as(c_int, srcHeight), @as(c_int, dstX), @as(c_int, dstY), @as(c_int, dstWidth), @as(c_int, dstHeight), @as(c_int, bufferMask));
+}
+
+pub fn rlBindFramebuffer(target: u32, framebuffer: u32) void {
+    cdef.rlBindFramebuffer(@as(c_uint, target), @as(c_uint, framebuffer));
 }
 
 pub fn rlEnableColorBlend() void {
@@ -387,6 +408,10 @@ pub fn rlEnableBackfaceCulling() void {
 
 pub fn rlDisableBackfaceCulling() void {
     cdef.rlDisableBackfaceCulling();
+}
+
+pub fn rlColorMask(r: bool, g: bool, b: bool, a: bool) void {
+    cdef.rlColorMask(r, g, b, a);
 }
 
 pub fn rlSetCullFace(mode: i32) void {
@@ -565,8 +590,8 @@ pub fn rlUnloadVertexBuffer(vboId: u32) void {
     cdef.rlUnloadVertexBuffer(@as(c_uint, vboId));
 }
 
-pub fn rlSetVertexAttribute(index: u32, compSize: i32, ty: i32, normalized: bool, stride: i32, pointer: *const anyopaque) void {
-    cdef.rlSetVertexAttribute(@as(c_uint, index), @as(c_int, compSize), @as(c_int, ty), normalized, @as(c_int, stride), pointer);
+pub fn rlSetVertexAttribute(index: u32, compSize: i32, ty: i32, normalized: bool, stride: i32, offset: i32) void {
+    cdef.rlSetVertexAttribute(@as(c_uint, index), @as(c_int, compSize), @as(c_int, ty), normalized, @as(c_int, stride), @as(c_int, offset));
 }
 
 pub fn rlSetVertexAttributeDivisor(index: u32, divisor: i32) void {
@@ -633,8 +658,8 @@ pub fn rlReadScreenPixels(width: i32, height: i32) [:0]u8 {
     return std.mem.span(cdef.rlReadScreenPixels(@as(c_int, width), @as(c_int, height)));
 }
 
-pub fn rlLoadFramebuffer(width: i32, height: i32) u32 {
-    return @as(u32, cdef.rlLoadFramebuffer(@as(c_int, width), @as(c_int, height)));
+pub fn rlLoadFramebuffer() u32 {
+    return @as(u32, cdef.rlLoadFramebuffer());
 }
 
 pub fn rlFramebufferAttach(fboId: u32, texId: u32, attachType: i32, texType: i32, mipLevel: i32) void {
