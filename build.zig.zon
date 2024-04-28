@@ -8,5 +8,5 @@
         },
     },
     .minimum_zig_version = "0.12.0",
-    .paths = .{ "lib/raylib.zig", "lib/raylib-ext.zig", "lib/raymath.zig", "lib/raymath-ext.zig", "lib/rlgl.zig", "lib/rlgl-ext.zig" },
+    .paths = .{ "build.zig", "build.zig.zon", "emcc.zig", "lib/raylib.zig", "lib/raylib-ext.zig", "lib/raymath.zig", "lib/raymath-ext.zig", "lib/rlgl.zig", "lib/rlgl-ext.zig" },
 }
