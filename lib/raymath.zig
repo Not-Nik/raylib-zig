@@ -130,6 +130,14 @@ pub fn vector2Reflect(v: Vector2, normal: Vector2) Vector2 {
     return cdef.Vector2Reflect(v, normal);
 }
 
+pub fn vector2Min(v1: Vector2, v2: Vector2) Vector2 {
+    return cdef.Vector2Min(v1, v2);
+}
+
+pub fn vector2Max(v1: Vector2, v2: Vector2) Vector2 {
+    return cdef.Vector2Max(v1, v2);
+}
+
 pub fn vector2Rotate(v: Vector2, angle: f32) Vector2 {
     return cdef.Vector2Rotate(v, angle);
 }
@@ -152,6 +160,10 @@ pub fn vector2ClampValue(v: Vector2, min: f32, max: f32) Vector2 {
 
 pub fn vector2Equals(p: Vector2, q: Vector2) i32 {
     return @as(i32, cdef.Vector2Equals(p, q));
+}
+
+pub fn vector2Refract(v: Vector2, n: Vector2, r: f32) Vector2 {
+    return cdef.Vector2Refract(v, n, r);
 }
 
 pub fn vector3Zero() Vector3 {
@@ -254,8 +266,16 @@ pub fn vector3RotateByAxisAngle(v: Vector3, axis: Vector3, angle: f32) Vector3 {
     return cdef.Vector3RotateByAxisAngle(v, axis, angle);
 }
 
+pub fn vector3MoveTowards(v: Vector3, target: Vector3, maxDistance: f32) Vector3 {
+    return cdef.Vector3MoveTowards(v, target, maxDistance);
+}
+
 pub fn vector3Lerp(v1: Vector3, v2: Vector3, amount: f32) Vector3 {
     return cdef.Vector3Lerp(v1, v2, amount);
+}
+
+pub fn vector3CubicHermite(v1: Vector3, tangent1: Vector3, v2: Vector3, tangent2: Vector3, amount: f32) Vector3 {
+    return cdef.Vector3CubicHermite(v1, tangent1, v2, tangent2, amount);
 }
 
 pub fn vector3Reflect(v: Vector3, normal: Vector3) Vector3 {
@@ -300,6 +320,94 @@ pub fn vector3Equals(p: Vector3, q: Vector3) i32 {
 
 pub fn vector3Refract(v: Vector3, n: Vector3, r: f32) Vector3 {
     return cdef.Vector3Refract(v, n, r);
+}
+
+pub fn vector4Zero() Vector4 {
+    return cdef.Vector4Zero();
+}
+
+pub fn vector4One() Vector4 {
+    return cdef.Vector4One();
+}
+
+pub fn vector4Add(v1: Vector4, v2: Vector4) Vector4 {
+    return cdef.Vector4Add(v1, v2);
+}
+
+pub fn vector4AddValue(v: Vector4, add: f32) Vector4 {
+    return cdef.Vector4AddValue(v, add);
+}
+
+pub fn vector4Subtract(v1: Vector4, v2: Vector4) Vector4 {
+    return cdef.Vector4Subtract(v1, v2);
+}
+
+pub fn vector4SubtractValue(v: Vector4, add: f32) Vector4 {
+    return cdef.Vector4SubtractValue(v, add);
+}
+
+pub fn vector4Length(v: Vector4) f32 {
+    return cdef.Vector4Length(v);
+}
+
+pub fn vector4LengthSqr(v: Vector4) f32 {
+    return cdef.Vector4LengthSqr(v);
+}
+
+pub fn vector4DotProduct(v1: Vector4, v2: Vector4) f32 {
+    return cdef.Vector4DotProduct(v1, v2);
+}
+
+pub fn vector4Distance(v1: Vector4, v2: Vector4) f32 {
+    return cdef.Vector4Distance(v1, v2);
+}
+
+pub fn vector4DistanceSqr(v1: Vector4, v2: Vector4) f32 {
+    return cdef.Vector4DistanceSqr(v1, v2);
+}
+
+pub fn vector4Scale(v: Vector4, scale: f32) Vector4 {
+    return cdef.Vector4Scale(v, scale);
+}
+
+pub fn vector4Multiply(v1: Vector4, v2: Vector4) Vector4 {
+    return cdef.Vector4Multiply(v1, v2);
+}
+
+pub fn vector4Negate(v: Vector4) Vector4 {
+    return cdef.Vector4Negate(v);
+}
+
+pub fn vector4Divide(v1: Vector4, v2: Vector4) Vector4 {
+    return cdef.Vector4Divide(v1, v2);
+}
+
+pub fn vector4Normalize(v: Vector4) Vector4 {
+    return cdef.Vector4Normalize(v);
+}
+
+pub fn vector4Min(v1: Vector4, v2: Vector4) Vector4 {
+    return cdef.Vector4Min(v1, v2);
+}
+
+pub fn vector4Max(v1: Vector4, v2: Vector4) Vector4 {
+    return cdef.Vector4Max(v1, v2);
+}
+
+pub fn vector4Lerp(v1: Vector4, v2: Vector4, amount: f32) Vector4 {
+    return cdef.Vector4Lerp(v1, v2, amount);
+}
+
+pub fn vector4MoveTowards(v: Vector4, target: Vector4, maxDistance: f32) Vector4 {
+    return cdef.Vector4MoveTowards(v, target, maxDistance);
+}
+
+pub fn vector4Invert(v: Vector4) Vector4 {
+    return cdef.Vector4Invert(v);
+}
+
+pub fn vector4Equals(p: Vector4, q: Vector4) i32 {
+    return @as(i32, cdef.Vector4Equals(p, q));
 }
 
 pub fn matrixDeterminant(mat: Matrix) f32 {
@@ -440,6 +548,10 @@ pub fn quaternionNlerp(q1: Quaternion, q2: Quaternion, amount: f32) Quaternion {
 
 pub fn quaternionSlerp(q1: Quaternion, q2: Quaternion, amount: f32) Quaternion {
     return cdef.QuaternionSlerp(q1, q2, amount);
+}
+
+pub fn quaternionCubicHermiteSpline(q1: Quaternion, outTangent1: Quaternion, q2: Quaternion, inTangent2: Quaternion, t: f32) Quaternion {
+    return cdef.QuaternionCubicHermiteSpline(q1, outTangent1, q2, inTangent2, t);
 }
 
 pub fn quaternionFromVector3ToVector3(from: Vector3, to: Vector3) Quaternion {
