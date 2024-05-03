@@ -10,7 +10,7 @@ mkdir "$PROJECT_NAME" && cd "$PROJECT_NAME" || exit
 touch build.zig
 echo "Generating project files..."
 echo 'const std = @import("std");
-const emcc = @import("emcc.zig");
+const rlz = @import("raylib-zig");
 
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
@@ -27,17 +27,17 @@ pub fn build(b: *std.Build) !void {
 
     //web exports are completely separate
     if (target.query.os_tag == .emscripten) {
-        const exe_lib = emcc.compileForEmscripten(b, "'$PROJECT_NAME'", "src/main.zig", target, optimize);
+        const exe_lib = rlz.emcc.compileForEmscripten(b, "'$PROJECT_NAME'", "src/main.zig", target, optimize);
 
         exe_lib.linkLibrary(raylib_artifact);
         exe_lib.root_module.addImport("raylib", raylib);
         exe_lib.root_module.addImport("raylib-math", raylib_math);
 
         // Note that raylib itself is not actually added to the exe_lib output file, so it also needs to be linked with emscripten.
-        const link_step = try emcc.linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
+        const link_step = try rlz.emcc.linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
 
         b.getInstallStep().dependOn(&link_step.step);
-        const run_step = try emcc.emscriptenRunStep(b);
+        const run_step = try rlz.emcc.emscriptenRunStep(b);
         run_step.step.dependOn(&link_step.step);
         const run_option = b.step("run", "Run '$PROJECT_NAME'");
         run_option.dependOn(&run_step.step);
@@ -72,8 +72,6 @@ echo '.{
 ' >> build.zig.zon
 
 echo "Please manually update the dependency hash!"
-
-cp ../emcc.zig .
 
 mkdir src
 cp ../examples/core/basic_window.zig src/main.zig
