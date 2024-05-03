@@ -2,7 +2,8 @@
 
 const std = @import("std");
 const rl = @This();
-const emcc = @import("emcc.zig");
+
+pub const emcc = @import("emcc.zig");
 
 const Program = struct {
     name: []const u8,
