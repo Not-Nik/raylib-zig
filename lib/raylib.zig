@@ -1220,7 +1220,7 @@ pub fn loadShaderFromMemory(vsCode: ?[:0]const u8, fsCode: ?[:0]const u8) Shader
     return cdef.LoadShaderFromMemory(vsCodeFinal, fsCodeFinal);
 }
 
-pub fn loadFileData(fileName: [:0]const u8) ![]u8 {
+pub fn loadFileData(fileName: [:0]const u8) RaylibError![]u8 {
     var bytesRead: i32 = 0;
     var res: []u8 = undefined;
 
@@ -1280,7 +1280,7 @@ pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: []const u8) Image {
     return cdef.LoadImageFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)));
 }
 
-pub fn loadImageColors(image: Image) ![]Color {
+pub fn loadImageColors(image: Image) RaylibError![]Color {
     var res: []Color = undefined;
 
     const ptr = cdef.LoadImageColors(image);
@@ -1291,7 +1291,7 @@ pub fn loadImageColors(image: Image) ![]Color {
     return res;
 }
 
-pub fn loadImagePalette(image: Image, maxPaletteSize: i32) ![]Color {
+pub fn loadImagePalette(image: Image, maxPaletteSize: i32) RaylibError![]Color {
     var colorCount: i32 = 0;
     var res: []Color = undefined;
 
@@ -1313,7 +1313,7 @@ pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSiz
     return cdef.LoadFontFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileDataFinal)), @as(c_int, @intCast(fileDataLen)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)));
 }
 
-pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) ![]GlyphInfo {
+pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) RaylibError![]GlyphInfo {
     var res: []GlyphInfo = undefined;
 
     const ptr = cdef.LoadFontData(@as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)), @as(c_int, ty));
@@ -1324,7 +1324,7 @@ pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i
     return res;
 }
 
-pub fn loadCodepoints(text: [:0]const u8) ![]i32 {
+pub fn loadCodepoints(text: [:0]const u8) RaylibError![]i32 {
     if (@sizeOf(c_int) != @sizeOf(i32)) {
         @compileError("Can't cast pointer to c_int array to i32 because they don't have the same size");
     }
@@ -1355,7 +1355,7 @@ pub fn drawMeshInstanced(mesh: Mesh, material: Material, transforms: []const Mat
     cdef.DrawMeshInstanced(mesh, material, @as([*c]const Matrix, @ptrCast(transforms)), @as(c_int, @intCast(transforms.len)));
 }
 
-pub fn loadMaterials(fileName: [:0]const u8) ![]Material {
+pub fn loadMaterials(fileName: [:0]const u8) RaylibError![]Material {
     var materialCount: i32 = 0;
     var res: []Material = undefined;
 
@@ -1367,7 +1367,7 @@ pub fn loadMaterials(fileName: [:0]const u8) ![]Material {
     return res;
 }
 
-pub fn loadModelAnimations(fileName: [:0]const u8) ![]ModelAnimation {
+pub fn loadModelAnimations(fileName: [:0]const u8) RaylibError![]ModelAnimation {
     var animCount: i32 = 0;
     var res: []ModelAnimation = undefined;
 
