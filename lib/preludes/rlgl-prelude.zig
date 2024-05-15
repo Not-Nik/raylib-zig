@@ -181,3 +181,9 @@ pub const rlCullMode = enum(c_uint) {
     rl_cull_face_back = 1,
 };
 
+pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION = @as(i32, 0);
+pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD = @as(i32, 1);
+pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_NORMAL = @as(i32, 2);
+pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_COLOR = @as(i32, 3);
+pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT = @as(i32, 4);
+pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD2 = @as(i32, 5);
