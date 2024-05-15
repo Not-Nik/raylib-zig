@@ -55,8 +55,9 @@ pub fn build(b: *std.Build) !void {
     run_step.dependOn(&run_cmd.step);
 
     b.installArtifact(exe);
-}
-' >> build.zig
+}' >> build.zig
+
+HASH=$(zig fetch https://github.com/Not-Nik/raylib-zig/archive/devel.tar.gz)
 
 echo '.{
     .name = "'$PROJECT_NAME'",
@@ -64,14 +65,11 @@ echo '.{
     .dependencies = .{
         .@"raylib-zig" = .{
             .url = "https://github.com/Not-Nik/raylib-zig/archive/devel.tar.gz",
-            .hash = "12000000000000000000000000000000000000000000000000000000000000000000",
+            .hash = "'$HASH'",
         },
     },
     .paths = .{""},
-}
-' >> build.zig.zon
-
-echo "Please manually update the dependency hash!"
+}' >> build.zig.zon
 
 mkdir src
 cp ../examples/core/basic_window.zig src/main.zig
