@@ -42,7 +42,7 @@ pub fn compileForEmscripten(
     // The project is built as a library and linked later.
     const exe_lib = b.addStaticLibrary(.{
         .name = name,
-        .root_source_file = .{ .path = root_source_file },
+        .root_source_file = b.path(root_source_file),
         .target = target,
         .optimize = optimize,
     });
