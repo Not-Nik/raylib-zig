@@ -5,6 +5,32 @@ const rl = @This();
 
 pub const emcc = @import("emcc.zig");
 
+pub const Options = struct {
+    raudio: bool = true,
+    rmodels: bool = true,
+    rshapes: bool = true,
+    rtext: bool = true,
+    rtextures: bool = true,
+    platform_drm: bool = false,
+    linux_display_backend: LinuxDisplayBackend = .X11,
+    opengl_version: OpenglVersion = .auto,
+};
+
+pub const OpenglVersion = enum {
+    auto,
+    gl_1_1,
+    gl_2_1,
+    gl_3_3,
+    gl_4_3,
+    gles_2,
+    gles_3,
+};
+
+pub const LinuxDisplayBackend = enum {
+    X11,
+    Wayland,
+};
+
 const Program = struct {
     name: []const u8,
     path: []const u8,
@@ -16,8 +42,9 @@ fn link(
     exe: *std.Build.Step.Compile,
     target: std.Build.ResolvedTarget,
     optimize: std.builtin.Mode,
+    options: Options
 ) void {
-    const lib = getRaylib(b, target, optimize);
+    const lib = getRaylib(b, target, optimize, options);
 
     const target_os = exe.rootModuleTarget().os.tag;
     switch (target_os) {
@@ -62,11 +89,19 @@ fn link(
 }
 
 var _raylib_lib_cache: ?*std.Build.Step.Compile = null;
-fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.Mode) *std.Build.Step.Compile {
+fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.Mode, options: Options) *std.Build.Step.Compile {
     if (_raylib_lib_cache) |lib| return lib else {
         const raylib = b.dependency("raylib", .{
             .target = target,
             .optimize = optimize,
+            .raudio = options.raudio,
+            .rmodels = options.rmodels,
+            .rshapes = options.rshapes,
+            .rtext = options.rtext,
+            .rtextures = options.rtextures,
+            .platform_drm = options.platform_drm,
+            .shared = false,
+            .linux_display_backend = options.linux_display_backend,
         });
 
         const lib = raylib.artifact("raylib");
@@ -114,6 +149,18 @@ const gl = struct {
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
+
+    const defaults = Options{};
+    const options = Options{
+        .platform_drm = b.option(bool, "platform_drm", "Compile raylib in native mode (no X11)") orelse defaults.platform_drm,
+        .raudio = b.option(bool, "raudio", "Compile with audio support") orelse defaults.raudio,
+        .rmodels = b.option(bool, "rmodels", "Compile with models support") orelse defaults.rmodels,
+        .rtext = b.option(bool, "rtext", "Compile with text support") orelse defaults.rtext,
+        .rtextures = b.option(bool, "rtextures", "Compile with textures support") orelse defaults.rtextures,
+        .rshapes = b.option(bool, "rshapes", "Compile with shapes support") orelse defaults.rshapes,
+        .linux_display_backend = b.option(LinuxDisplayBackend, "linux_display_backend", "Linux display backend to use") orelse defaults.linux_display_backend,
+        .opengl_version = b.option(OpenglVersion, "opengl_version", "OpenGL version to use") orelse defaults.opengl_version,
+    };
 
     const examples = [_]Program{
         .{
@@ -225,7 +272,7 @@ pub fn build(b: *std.Build) !void {
             exe_lib.root_module.addImport("raylib", raylib);
             exe_lib.root_module.addImport("raylib-math", raylib_math);
             exe_lib.root_module.addImport("rlgl", rlgl);
-            const raylib_lib = getRaylib(b, target, optimize);
+            const raylib_lib = getRaylib(b, target, optimize, options);
 
             // Note that raylib itself isn't actually added to the exe_lib
             // output file, so it also needs to be linked with emscripten.
@@ -247,7 +294,7 @@ pub fn build(b: *std.Build) !void {
                 .optimize = optimize,
                 .target = target,
             });
-            rl.link(b, exe, target, optimize);
+            rl.link(b, exe, target, optimize, options);
             exe.root_module.addImport("raylib", raylib);
             exe.root_module.addImport("raylib-math", raylib_math);
             exe.root_module.addImport("rlgl", rlgl);
