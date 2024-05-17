@@ -84,6 +84,7 @@ const raylib_dep = b.dependency("raylib-zig", .{
 
 const raylib = raylib_dep.module("raylib"); // main raylib module
 const raylib_math = raylib_dep.module("raylib-math"); // raymath module
+const raylib_gui = raylib_dep.module("raylib-gui"); // raygui module
 const rlgl = raylib_dep.module("rlgl"); // rlgl module
 const raylib_artifact = raylib_dep.artifact("raylib"); // raylib C library
 ```
@@ -94,6 +95,7 @@ Now add the modules and artifact to your target as you would normally:
 exe.linkLibrary(raylib_artifact);
 exe.root_module.addImport("raylib", raylib);
 exe.root_module.addImport("raylib-math", raylib_math);
+exe.root_module.addImport("raylib-gui", raylib_gui);
 exe.root_module.addImport("rlgl", rlgl);
 ```
 
