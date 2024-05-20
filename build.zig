@@ -164,6 +164,11 @@ pub fn build(b: *std.Build) !void {
 
     const examples = [_]Program{
         .{
+            .name = "raw_stream",
+            .path = "examples/audio/raw_stream.zig",
+            .desc = "Plays a sine wave",
+        },
+        .{
             .name = "basic_screen_manager",
             .path = "examples/core/basic_screen_manager.zig",
             .desc = "Illustrates simple screen manager based on a state machine",
