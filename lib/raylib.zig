@@ -1438,6 +1438,30 @@ pub fn drawTriangleStrip3D(points: []Vector3, color: Color) void {
     cdef.DrawTriangleStrip3D(@as([*c]Vector3, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
+fn alloc(_: *anyopaque, len: usize, _: u8, _: usize) ?[*]u8 {
+    std.debug.assert(len > 0);
+    return @ptrCast(cdef.MemAlloc(@intCast(len)));
+}
+
+fn resize(_: *anyopaque, buf: []u8, _: u8, new_len: usize, _: usize) bool {
+    return (new_len <= buf.len);
+}
+
+fn free(_: *anyopaque, buf: []u8, _: u8, _: usize) void {
+    cdef.MemFree(buf.ptr);
+}
+
+const mem_vtable = std.mem.Allocator.VTable{
+    .alloc = alloc,
+    .resize = resize,
+    .free = free,
+};
+
+pub const mem = std.mem.Allocator{
+    .ptr = undefined,
+    .vtable = &mem_vtable,
+};
+
 pub fn initWindow(width: i32, height: i32, title: [:0]const u8) void {
     cdef.InitWindow(@as(c_int, width), @as(c_int, height), @as([*c]const u8, @ptrCast(title)));
 }
