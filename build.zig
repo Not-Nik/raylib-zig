@@ -223,6 +223,11 @@ pub fn build(b: *std.Build) !void {
             .path = "examples/textures/sprite_anim.zig",
             .desc = "Animate a sprite",
         },
+        .{
+            .name = "textures_background_scrolling",
+            .path = "examples/textures/textures_background_scrolling.zig",
+            .desc = "Background scrolling & parallax demo",
+        },
         // .{
         //     .name = "models_loading",
         //     .path = "examples/models/models_loading.zig",
@@ -301,7 +306,7 @@ pub fn build(b: *std.Build) !void {
 
             const run_cmd = b.addRunArtifact(exe);
             const run_step = b.step(ex.name, ex.desc);
-            
+
             run_step.dependOn(&run_cmd.step);
             examples_step.dependOn(&exe.step);
         }
