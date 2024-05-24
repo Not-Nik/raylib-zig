@@ -358,3 +358,12 @@ if __name__ == "__main__":
         "preludes/rlgl-ext-prelude.zig",
         "#if defined(RLGL_IMPLEMENTATION)\n"
     )
+    parse_header(
+        "raygui.h",
+        "raygui.zig",
+        "raygui-ext.zig",
+        "RGAPI ",
+        "preludes/raygui-prelude.zig",
+        "preludes/raygui-ext-prelude.zig",
+        "#if defined(RAYGUI_IMPLEMENTATION)\n"
+    )
