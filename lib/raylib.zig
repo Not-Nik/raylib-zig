@@ -244,9 +244,8 @@ pub const Image = extern struct {
         return rl.imageFromImage(self, rec);
     }
 
-    // @todo: use PixelFormat enum for newFormat
-    pub fn setFormat(self: *Image, newFormat: i32) void {
-        return rl.imageFormat(self, newFormat);
+    pub fn setFormat(self: *Image, newFormat: PixelFormat) void {
+        return rl.imageFormat(self, @intFromEnum(newFormat));
     }
 
     pub fn toPOT(self: *Image, fill: Color) void {
@@ -429,9 +428,8 @@ pub const Image = extern struct {
         return Texture.fromImage(self);
     }
 
-    // @todo: use CubemapLayout enum for layout
-    pub fn asCubemap(self: Image, layout: i32) Texture {
-        return Texture.fromCubemap(self, layout);
+    pub fn asCubemap(self: Image, layout: CubemapLayout) Texture {
+        return Texture.fromCubemap(self, @intFromEnum(layout));
     }
 };
 
@@ -797,14 +795,14 @@ pub const FilePathList = extern struct {
 
 pub const AutomationEvent = extern struct {
     frame: c_uint,
-    @"type": c_uint,
+    type: c_uint,
     params: [4]c_int,
 };
 
 pub const AutomationEventList = extern struct {
     capacity: c_uint,
     count: c_uint,
-    events: [*c]AutomationEvent
+    events: [*c]AutomationEvent,
 };
 
 pub const ConfigFlags = enum(c_int) {
@@ -1125,6 +1123,11 @@ pub const FontType = enum(c_int) {
     font_sdf = 2,
 };
 
+pub const FontAtlasPackMethod = enum(c_int) {
+    pack_method_default = 0,
+    pack_method_skyline = 1,
+};
+
 pub const BlendMode = enum(c_int) {
     blend_alpha = 0,
     blend_additive = 1,
@@ -1313,7 +1316,7 @@ pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSiz
     return cdef.LoadFontFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileDataFinal)), @as(c_int, @intCast(fileDataLen)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)));
 }
 
-pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) RaylibError![]GlyphInfo {
+pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: FontType) RaylibError![]GlyphInfo {
     var res: []GlyphInfo = undefined;
 
     const ptr = cdef.LoadFontData(@as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)), @as(c_int, ty));
@@ -1418,8 +1421,8 @@ pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32) Font 
     return cdef.LoadFontEx(@as([*c]const u8, @ptrCast(fileName)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)));
 }
 
-pub fn genImageFontAtlas(chars: []const GlyphInfo, recs: [][]Rectangle, fontSize: i32, padding: i32, packMethod: i32) Image {
-    return cdef.GenImageFontAtlas(@as([*c]const GlyphInfo, @ptrCast(chars)), @as([*c][*c]Rectangle, @ptrCast(recs)), @as(c_int, @intCast(recs.len)), @as(c_int, fontSize), @as(c_int, padding), @as(c_int, packMethod));
+pub fn genImageFontAtlas(chars: []const GlyphInfo, recs: [][]Rectangle, fontSize: i32, padding: i32, packMethod: FontAtlasPackMethod) Image {
+    return cdef.GenImageFontAtlas(@as([*c]const GlyphInfo, @ptrCast(chars)), @as([*c][*c]Rectangle, @ptrCast(recs)), @as(c_int, @intCast(recs.len)), @as(c_int, fontSize), @as(c_int, padding), @intFromEnum(packMethod));
 }
 
 pub fn unloadFontData(chars: []GlyphInfo) void {
@@ -1718,8 +1721,8 @@ pub fn endShaderMode() void {
     cdef.EndShaderMode();
 }
 
-pub fn beginBlendMode(mode: i32) void {
-    cdef.BeginBlendMode(@as(c_int, mode));
+pub fn beginBlendMode(mode: BlendMode) void {
+    cdef.BeginBlendMode(@intFromEnum(mode));
 }
 
 pub fn endBlendMode() void {
@@ -1762,12 +1765,12 @@ pub fn getShaderLocationAttrib(shader: Shader, attribName: [:0]const u8) i32 {
     return @as(i32, cdef.GetShaderLocationAttrib(shader, @as([*c]const u8, @ptrCast(attribName))));
 }
 
-pub fn setShaderValue(shader: Shader, locIndex: i32, value: *const anyopaque, uniformType: i32) void {
-    cdef.SetShaderValue(shader, @as(c_int, locIndex), value, @as(c_int, uniformType));
+pub fn setShaderValue(shader: Shader, locIndex: i32, value: *const anyopaque, uniformType: ShaderUniformDataType) void {
+    cdef.SetShaderValue(shader, @as(c_int, locIndex), value, @intFromEnum(uniformType));
 }
 
-pub fn setShaderValueV(shader: Shader, locIndex: i32, value: *const anyopaque, uniformType: i32, count: i32) void {
-    cdef.SetShaderValueV(shader, @as(c_int, locIndex), value, @as(c_int, uniformType), @as(c_int, count));
+pub fn setShaderValueV(shader: Shader, locIndex: i32, value: *const anyopaque, uniformType: ShaderUniformDataType, count: i32) void {
+    cdef.SetShaderValueV(shader, @as(c_int, locIndex), value, @intFromEnum(uniformType), @as(c_int, count));
 }
 
 pub fn setShaderValueMatrix(shader: Shader, locIndex: i32, mat: Matrix) void {
@@ -2158,8 +2161,8 @@ pub fn getMouseWheelMoveV() Vector2 {
     return cdef.GetMouseWheelMoveV();
 }
 
-pub fn setMouseCursor(cursor: i32) void {
-    cdef.SetMouseCursor(@as(c_int, cursor));
+pub fn setMouseCursor(cursor: MouseCursor) void {
+    cdef.SetMouseCursor(@intFromEnum(cursor));
 }
 
 pub fn getTouchX() i32 {
@@ -2182,8 +2185,8 @@ pub fn getTouchPointCount() i32 {
     return @as(i32, cdef.GetTouchPointCount());
 }
 
-pub fn setGesturesEnabled(flags: u32) void {
-    cdef.SetGesturesEnabled(@as(c_uint, flags));
+pub fn setGesturesEnabled(flags: Gesture) void {
+    cdef.SetGesturesEnabled(@intFromEnum(flags));
 }
 
 pub fn isGestureDetected(gesture: Gesture) bool {
@@ -2562,8 +2565,8 @@ pub fn imageTextEx(font: Font, text: [:0]const u8, fontSize: f32, spacing: f32, 
     return cdef.ImageTextEx(font, @as([*c]const u8, @ptrCast(text)), fontSize, spacing, tint);
 }
 
-pub fn imageFormat(image: *Image, newFormat: i32) void {
-    cdef.ImageFormat(@as([*c]Image, @ptrCast(image)), @as(c_int, newFormat));
+pub fn imageFormat(image: *Image, newFormat: PixelFormat) void {
+    cdef.ImageFormat(@as([*c]Image, @ptrCast(image)), @intFromEnum(newFormat));
 }
 
 pub fn imageToPOT(image: *Image, fill: Color) void {
@@ -2750,8 +2753,8 @@ pub fn loadTextureFromImage(image: Image) Texture2D {
     return cdef.LoadTextureFromImage(image);
 }
 
-pub fn loadTextureCubemap(image: Image, layout: i32) TextureCubemap {
-    return cdef.LoadTextureCubemap(image, @as(c_int, layout));
+pub fn loadTextureCubemap(image: Image, layout: CubemapLayout) TextureCubemap {
+    return cdef.LoadTextureCubemap(image, @intFromEnum(layout));
 }
 
 pub fn loadRenderTexture(width: i32, height: i32) RenderTexture2D {
@@ -2786,12 +2789,12 @@ pub fn genTextureMipmaps(texture: *Texture2D) void {
     cdef.GenTextureMipmaps(@as([*c]Texture2D, @ptrCast(texture)));
 }
 
-pub fn setTextureFilter(texture: Texture2D, filter: i32) void {
-    cdef.SetTextureFilter(texture, @as(c_int, filter));
+pub fn setTextureFilter(texture: Texture2D, filter: TextureFilter) void {
+    cdef.SetTextureFilter(texture, @intFromEnum(filter));
 }
 
-pub fn setTextureWrap(texture: Texture2D, wrap: i32) void {
-    cdef.SetTextureWrap(texture, @as(c_int, wrap));
+pub fn setTextureWrap(texture: Texture2D, wrap: TextureWrap) void {
+    cdef.SetTextureWrap(texture, @intFromEnum(wrap));
 }
 
 pub fn drawTexture(texture: Texture2D, posX: i32, posY: i32, tint: Color) void {
@@ -2870,16 +2873,16 @@ pub fn getColor(hexValue: u32) Color {
     return cdef.GetColor(@as(c_uint, hexValue));
 }
 
-pub fn getPixelColor(srcPtr: *anyopaque, format: i32) Color {
-    return cdef.GetPixelColor(srcPtr, @as(c_int, format));
+pub fn getPixelColor(srcPtr: *anyopaque, format: PixelFormat) Color {
+    return cdef.GetPixelColor(srcPtr, @intFromEnum(format));
 }
 
-pub fn setPixelColor(dstPtr: *anyopaque, color: Color, format: i32) void {
-    cdef.SetPixelColor(dstPtr, color, @as(c_int, format));
+pub fn setPixelColor(dstPtr: *anyopaque, color: Color, format: PixelFormat) void {
+    cdef.SetPixelColor(dstPtr, color, @intFromEnum(format));
 }
 
-pub fn getPixelDataSize(width: i32, height: i32, format: i32) i32 {
-    return @as(i32, cdef.GetPixelDataSize(@as(c_int, width), @as(c_int, height), @as(c_int, format)));
+pub fn getPixelDataSize(width: i32, height: i32, format: PixelFormat) i32 {
+    return @as(i32, cdef.GetPixelDataSize(@as(c_int, width), @as(c_int, height), @intFromEnum(format)));
 }
 
 pub fn getFontDefault() Font {
@@ -3250,8 +3253,8 @@ pub fn unloadMaterial(material: Material) void {
     cdef.UnloadMaterial(material);
 }
 
-pub fn setMaterialTexture(material: *Material, mapType: i32, texture: Texture2D) void {
-    cdef.SetMaterialTexture(@as([*c]Material, @ptrCast(material)), @as(c_int, mapType), texture);
+pub fn setMaterialTexture(material: *Material, mapType: MaterialMapIndex, texture: Texture2D) void {
+    cdef.SetMaterialTexture(@as([*c]Material, @ptrCast(material)), @intFromEnum(mapType), texture);
 }
 
 pub fn setModelMeshMaterial(model: *Model, meshId: i32, materialId: i32) void {
