@@ -25,6 +25,8 @@ IGNORE_TYPES = [
     "[*c]Color",
     "[*c]GlyphInfo",
     "[*c]c_int",
+    "[*c]c_uint",
+    "[*c][*c]u8",
     "[*c][*c]const u8",
     "[*c]Material",
     "[*c]ModelAnimation",
@@ -53,7 +55,8 @@ def ziggify_type(name: str, t: str) -> str:
         "position", "mesh", "materialCount", "material", "model", "animCount",
         "wave", "v1", "v2", "outAxis", "outAngle", "fileSize",
         "AutomationEventList", "list", "batch", "glInternalFormat", "glFormat",
-        "glType", "mipmaps"
+        "glType", "mipmaps", "active", "scroll", "view", "checked", "mouseCell", 
+        "scrollIndex", "focus", "secretViewActive", "color", "alpha", "colorHsv"
     ]
     multi = [
         "data", "compData", "points", "fileData", "colors", "pixels",
@@ -62,7 +65,7 @@ def ziggify_type(name: str, t: str) -> str:
         "LoadFontData", "LoadCodepoints", "TextSplit", "LoadMaterials",
         "LoadModelAnimations", "LoadWaveSamples", "images",
         "LoadRandomSequence", "sequence", "kernel", "GlyphInfo", "glyphs", "glyphRecs",
-        "matf", "rlGetShaderLocsDefault", "locs"
+        "matf", "rlGetShaderLocsDefault", "locs", "GuiGetIcons", "GuiLoadIcons"
     ]
     string = False
 
@@ -362,7 +365,7 @@ if __name__ == "__main__":
         "raygui.h",
         "raygui.zig",
         "raygui-ext.zig",
-        "RGAPI ",
+        "RAYGUIAPI ",
         "preludes/raygui-prelude.zig",
         "preludes/raygui-ext-prelude.zig",
         "#if defined(RAYGUI_IMPLEMENTATION)\n"
