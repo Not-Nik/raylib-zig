@@ -69,6 +69,9 @@ def ziggify_type(name: str, t: str) -> str:
     ]
     string = False
 
+    if name == "text" and t == "[*c][*c]const u8":
+        return "[][:0]const u8"
+
     if t.startswith("[*c]") and name not in single and name not in multi:
         if (t == "[*c]const u8" or t == "[*c]u8") and name not in NO_STRINGS:  # Strings are multis.
             string = True
