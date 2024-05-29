@@ -6,17 +6,13 @@ test {
     std.testing.refAllDeclsRecursive(@This());
 }
 
-// The following has been imported because raygui imports or defines them if it's standalone.
 const Vector2 = rl.Vector2;
 const Vector3 = rl.Vector3;
 const Color = rl.Color;
 const Rectangle = rl.Rectangle;
-const Texture2D = rl.Texture2D;
-const Image = rl.Image;
-const GlyphInfo = rl.GlyphInfo;
 const Font = rl.Font;
 
-const GuiStyleProp = extern struct {
+pub const GuiStyleProp = extern struct {
     controlId: c_ushort,
     propertyId: c_ushort,
     propertyValue: c_int,
@@ -154,9 +150,6 @@ pub const GuiColorPickerProperty = enum(c_int) {
     huebar_selector_overflow,
 };
 
-// I don't know if this how the following should be coded in zig.
-// #define SCROLLBAR_LEFT_SIDE     0
-// #define SCROLLBAR_RIGHT_SIDE    1
 pub const scrollbar_left_side: c_int = 0;
 pub const scrollbar_right_side: c_int = 1;
 
