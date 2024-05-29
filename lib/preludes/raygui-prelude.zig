@@ -1,5 +1,6 @@
 const rl = @import("raylib-zig");
 const std = @import("std");
+const cdef = @import("raygui-ext.zig");
 
 test {
     std.testing.refAllDeclsRecursive(@This());
