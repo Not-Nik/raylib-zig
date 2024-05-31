@@ -412,6 +412,22 @@ pub const GuiIconName = enum(c_int) {
     icon_255 = 255,
 };
 
+pub fn guiGetIcons() rl.RaylibError![]u32 {
+    var res: []u32 = undefined;
+
+    const ptr = cdef.GuiGetIcons();
+    if (ptr == 0) return rl.RaylibError.GenericError;
+
+    res.ptr = @as([*]u32, @ptrCast(ptr));
+    res.len = @as(usize, @intCast(256 * 256)); // RAYGUI_ICON_MAX_ICONS * RAYGUI_ICON_MAX_ICONS
+    return res;
+}
+
+// If you REALLY need the return value of the function, you'll know what to do with it and its size yourself
+pub fn guiLoadIcons(fileName: [*c]const u8, loadIconsName: bool) [*c][*c]u8 {
+    return cdef.GuiLoadIcons(fileName, loadIconsName);
+}
+
 pub fn guiTabBar(bounds: Rectangle, text: [][:0]const u8, active: *i32) i32 {
     return @as(i32, cdef.GuiTabBar(bounds, @as([*c][*c]const u8, @ptrCast(text)), @as(c_int, @intCast(text.len)), @as([*c]c_int, @ptrCast(active))));
 }
