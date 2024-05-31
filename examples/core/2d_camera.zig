@@ -1,7 +1,7 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
 const rl = @import("raylib");
-const rlm = @import("raylib-math");
+const rlm = @import("raymath");
 
 const MAX_BUILDINGS = 100;
 

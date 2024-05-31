@@ -125,7 +125,7 @@ fn getModule(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
 const math = struct {
     fn getModule(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.Mode) *std.Build.Module {
         const raylib = rl.getModule(b, target, optimize);
-        return b.addModule("raylib-math", .{
+        return b.addModule("raymath", .{
             .root_source_file = b.path("lib/raymath.zig"),
             .imports = &.{.{ .name = "raylib-zig", .module = raylib }},
             .target = target,
@@ -258,7 +258,7 @@ pub fn build(b: *std.Build) !void {
     };
 
     const raylib = rl.getModule(b, target, optimize);
-    const raylib_math = rl.math.getModule(b, target, optimize);
+    const raymath = rl.math.getModule(b, target, optimize);
     const rlgl = rl.gl.getModule(b, target, optimize);
     const raygui = rl.gui.getModule(b, target, optimize);
 
@@ -268,12 +268,12 @@ pub fn build(b: *std.Build) !void {
         .optimize = optimize,
     });
 
-    const raylib_math_test = b.addTest(.{
+    const raymath_test = b.addTest(.{
         .root_source_file = b.path("lib/raymath.zig"),
         .target = target,
         .optimize = optimize,
     });
-    raylib_math_test.root_module.addImport("raylib-zig", raylib);
+    raymath_test.root_module.addImport("raylib-zig", raylib);
 
     const rlgl_test = b.addTest(.{
         .root_source_file = b.path("lib/rlgl.zig"),
@@ -291,7 +291,7 @@ pub fn build(b: *std.Build) !void {
 
     const test_step = b.step("test", "Check for library compilation errors");
     test_step.dependOn(&raylib_test.step);
-    test_step.dependOn(&raylib_math_test.step);
+    test_step.dependOn(&raymath_test.step);
     test_step.dependOn(&rlgl_test.step);
     test_step.dependOn(&raygui_test.step);
 
@@ -301,7 +301,7 @@ pub fn build(b: *std.Build) !void {
         if (target.query.os_tag == .emscripten) {
             const exe_lib = emcc.compileForEmscripten(b, ex.name, ex.path, target, optimize);
             exe_lib.root_module.addImport("raylib", raylib);
-            exe_lib.root_module.addImport("raylib-math", raylib_math);
+            exe_lib.root_module.addImport("raymath", raymath);
             exe_lib.root_module.addImport("rlgl", rlgl);
             exe_lib.root_module.addImport("raygui", raygui);
             const raylib_lib = getRaylib(b, target, optimize, options);
@@ -328,7 +328,7 @@ pub fn build(b: *std.Build) !void {
             });
             rl.link(b, exe, target, optimize, options);
             exe.root_module.addImport("raylib", raylib);
-            exe.root_module.addImport("raylib-math", raylib_math);
+            exe.root_module.addImport("raymath", raymath);
             exe.root_module.addImport("rlgl", rlgl);
             exe.root_module.addImport("raygui", raygui);
 

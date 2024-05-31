@@ -22,7 +22,7 @@ pub fn build(b: *std.Build) !void {
     });
 
     const raylib = raylib_dep.module("raylib");
-    const raylib_math = raylib_dep.module("raylib-math");
+    const raymath = raylib_dep.module("raymath");
     const raylib_artifact = raylib_dep.artifact("raylib");
 
     //web exports are completely separate
@@ -31,7 +31,7 @@ pub fn build(b: *std.Build) !void {
 
         exe_lib.linkLibrary(raylib_artifact);
         exe_lib.root_module.addImport("raylib", raylib);
-        exe_lib.root_module.addImport("raylib-math", raylib_math);
+        exe_lib.root_module.addImport("raymath", raymath);
 
         // Note that raylib itself is not actually added to the exe_lib output file, so it also needs to be linked with emscripten.
         const link_step = try rlz.emcc.linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
@@ -48,7 +48,7 @@ pub fn build(b: *std.Build) !void {
 
     exe.linkLibrary(raylib_artifact);
     exe.root_module.addImport("raylib", raylib);
-    exe.root_module.addImport("raylib-math", raylib_math);
+    exe.root_module.addImport("raymath", raymath);
 
     const run_cmd = b.addRunArtifact(exe);
     const run_step = b.step("run", "Run '$PROJECT_NAME'");

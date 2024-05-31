@@ -10,7 +10,7 @@
 //! Copyright (c) Nikolas Wipper 2024
 
 const rl = @import("raylib");
-const rlm = @import("raylib-math");
+const rlm = @import("raymath");
 
 const screen_width = 800;
 const screen_height = 450;
