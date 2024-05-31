@@ -797,7 +797,7 @@ pub const FilePathList = extern struct {
 
 pub const AutomationEvent = extern struct {
     frame: c_uint,
-    @"type": c_uint,
+    type: c_uint,
     params: [4]c_int,
 };
 
