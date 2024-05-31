@@ -411,3 +411,11 @@ pub const GuiIconName = enum(c_int) {
     icon_254 = 254,
     icon_255 = 255,
 };
+
+pub fn guiTabBar(bounds: Rectangle, text: [][:0]const u8, active: *i32) i32 {
+    return @as(i32, cdef.GuiTabBar(bounds, @as([*c][*c]const u8, @ptrCast(text)), @as(c_int, @intCast(text.len)), @as([*c]c_int, @ptrCast(active))));
+}
+
+pub fn guiListViewEx(bounds: Rectangle, text: [][:0]const u8, scrollIndex: *i32, active: *i32, focus: *i32) i32 {
+    return @as(i32, cdef.GuiListViewEx(bounds, @as([*c][*c]const u8, @ptrCast(text)), @as(c_int, @intCast(text.len)), @as([*c]c_int, @ptrCast(scrollIndex)), @as([*c]c_int, @ptrCast(active)), @as([*c]c_int, @ptrCast(focus))));
+}

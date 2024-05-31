@@ -412,6 +412,14 @@ pub const GuiIconName = enum(c_int) {
     icon_255 = 255,
 };
 
+pub fn guiTabBar(bounds: Rectangle, text: [][:0]const u8, active: *i32) i32 {
+    return @as(i32, cdef.GuiTabBar(bounds, @as([*c][*c]const u8, @ptrCast(text)), @as(c_int, @intCast(text.len)), @as([*c]c_int, @ptrCast(active))));
+}
+
+pub fn guiListViewEx(bounds: Rectangle, text: [][:0]const u8, scrollIndex: *i32, active: *i32, focus: *i32) i32 {
+    return @as(i32, cdef.GuiListViewEx(bounds, @as([*c][*c]const u8, @ptrCast(text)), @as(c_int, @intCast(text.len)), @as([*c]c_int, @ptrCast(scrollIndex)), @as([*c]c_int, @ptrCast(active)), @as([*c]c_int, @ptrCast(focus))));
+}
+
 pub fn guiEnable() void {
     cdef.GuiEnable();
 }
@@ -508,10 +516,6 @@ pub fn guiPanel(bounds: Rectangle, text: [:0]const u8) i32 {
     return @as(i32, cdef.GuiPanel(bounds, @as([*c]const u8, @ptrCast(text))));
 }
 
-pub fn guiTabBar(bounds: Rectangle, text: [][:0]const u8, count: i32, active: *i32) i32 {
-    return @as(i32, cdef.GuiTabBar(bounds, @as([*c][*c]const u8, @ptrCast(text)), @as(c_int, count), @as([*c]c_int, @ptrCast(active))));
-}
-
 pub fn guiScrollPanel(bounds: Rectangle, text: [:0]const u8, content: Rectangle, scroll: *Vector2, view: *Rectangle) i32 {
     return @as(i32, cdef.GuiScrollPanel(bounds, @as([*c]const u8, @ptrCast(text)), content, @as([*c]Vector2, @ptrCast(scroll)), @as([*c]Rectangle, @ptrCast(view))));
 }
@@ -594,10 +598,6 @@ pub fn guiGrid(bounds: Rectangle, text: [:0]const u8, spacing: f32, subdivs: i32
 
 pub fn guiListView(bounds: Rectangle, text: [:0]const u8, scrollIndex: *i32, active: *i32) i32 {
     return @as(i32, cdef.GuiListView(bounds, @as([*c]const u8, @ptrCast(text)), @as([*c]c_int, @ptrCast(scrollIndex)), @as([*c]c_int, @ptrCast(active))));
-}
-
-pub fn guiListViewEx(bounds: Rectangle, text: [][:0]const u8, count: i32, scrollIndex: *i32, active: *i32, focus: *i32) i32 {
-    return @as(i32, cdef.GuiListViewEx(bounds, @as([*c][*c]const u8, @ptrCast(text)), @as(c_int, count), @as([*c]c_int, @ptrCast(scrollIndex)), @as([*c]c_int, @ptrCast(active)), @as([*c]c_int, @ptrCast(focus))));
 }
 
 pub fn guiMessageBox(bounds: Rectangle, title: [:0]const u8, message: [:0]const u8, buttons: [:0]const u8) i32 {
