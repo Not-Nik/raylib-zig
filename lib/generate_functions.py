@@ -148,6 +148,9 @@ def fix_pointer(name: str, t: str):
 
 
 def fix_enums(arg_name, arg_type, func_name):
+    if func_name.startswith("rl"):
+        return arg_type
+
     # Hacking specific enums in here.
     # Raylib doesn't use the enums but rather the resulting ints.
     if arg_type == "int" or arg_type == "unsigned int":
@@ -174,9 +177,9 @@ def fix_enums(arg_name, arg_type, func_name):
                 arg_type = "Gesture"
         elif arg_name == "logLevel":
             arg_type = "TraceLogLevel"
-        elif arg_name == "ty" and not func_name.startswith("rl"):
+        elif arg_name == "ty":
             arg_type = "FontType"
-        elif arg_name == "UniformType":
+        elif arg_name == "uniformType":
             arg_type = "ShaderUniformDataType"
         elif arg_name == "Cursor":
             arg_type = "MouseCursor"
@@ -188,7 +191,7 @@ def fix_enums(arg_name, arg_type, func_name):
             arg_type = "TextureFilter"
         elif arg_name == "TextureWrap":
             arg_type = "TextureWrap"
-        elif arg_name == "format" and not func_name.startswith("rl"):
+        elif arg_name == "format":
             arg_type = "PixelFormat"
         elif arg_name == "mapType":
             arg_type = "MaterialMapIndex"

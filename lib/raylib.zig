@@ -1775,12 +1775,12 @@ pub fn getShaderLocationAttrib(shader: Shader, attribName: [:0]const u8) i32 {
     return @as(i32, cdef.GetShaderLocationAttrib(shader, @as([*c]const u8, @ptrCast(attribName))));
 }
 
-pub fn setShaderValue(shader: Shader, locIndex: i32, value: *const anyopaque, uniformType: i32) void {
-    cdef.SetShaderValue(shader, @as(c_int, locIndex), value, @as(c_int, uniformType));
+pub fn setShaderValue(shader: Shader, locIndex: i32, value: *const anyopaque, uniformType: ShaderUniformDataType) void {
+    cdef.SetShaderValue(shader, @as(c_int, locIndex), value, uniformType);
 }
 
-pub fn setShaderValueV(shader: Shader, locIndex: i32, value: *const anyopaque, uniformType: i32, count: i32) void {
-    cdef.SetShaderValueV(shader, @as(c_int, locIndex), value, @as(c_int, uniformType), @as(c_int, count));
+pub fn setShaderValueV(shader: Shader, locIndex: i32, value: *const anyopaque, uniformType: ShaderUniformDataType, count: i32) void {
+    cdef.SetShaderValueV(shader, @as(c_int, locIndex), value, uniformType, @as(c_int, count));
 }
 
 pub fn setShaderValueMatrix(shader: Shader, locIndex: i32, mat: Matrix) void {

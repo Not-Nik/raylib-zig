@@ -80,8 +80,8 @@ pub extern "c" fn LoadShaderFromMemory(vsCode: [*c]const u8, fsCode: [*c]const u
 pub extern "c" fn IsShaderReady(shader: rl.Shader) bool;
 pub extern "c" fn GetShaderLocation(shader: rl.Shader, uniformName: [*c]const u8) c_int;
 pub extern "c" fn GetShaderLocationAttrib(shader: rl.Shader, attribName: [*c]const u8) c_int;
-pub extern "c" fn SetShaderValue(shader: rl.Shader, locIndex: c_int, value: *const anyopaque, uniformType: c_int) void;
-pub extern "c" fn SetShaderValueV(shader: rl.Shader, locIndex: c_int, value: *const anyopaque, uniformType: c_int, count: c_int) void;
+pub extern "c" fn SetShaderValue(shader: rl.Shader, locIndex: c_int, value: *const anyopaque, uniformType: rl.ShaderUniformDataType) void;
+pub extern "c" fn SetShaderValueV(shader: rl.Shader, locIndex: c_int, value: *const anyopaque, uniformType: rl.ShaderUniformDataType, count: c_int) void;
 pub extern "c" fn SetShaderValueMatrix(shader: rl.Shader, locIndex: c_int, mat: rl.Matrix) void;
 pub extern "c" fn SetShaderValueTexture(shader: rl.Shader, locIndex: c_int, texture: rl.Texture2D) void;
 pub extern "c" fn UnloadShader(shader: rl.Shader) void;

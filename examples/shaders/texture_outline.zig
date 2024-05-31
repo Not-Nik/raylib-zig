@@ -38,19 +38,19 @@ pub fn main() anyerror!void {
         shdrOutline,
         outlineSizeLoc,
         &outlineSize,
-        @intFromEnum(rl.ShaderUniformDataType.shader_uniform_float),
+        rl.ShaderUniformDataType.shader_uniform_float,
     );
     rl.setShaderValue(
         shdrOutline,
         outlineColorLoc,
         &outlineColor,
-        @intFromEnum(rl.ShaderUniformDataType.shader_uniform_vec4),
+        rl.ShaderUniformDataType.shader_uniform_vec4,
     );
     rl.setShaderValue(
         shdrOutline,
         textureSizeLoc,
         &textureSize,
-        @intFromEnum(rl.ShaderUniformDataType.shader_uniform_vec2),
+        rl.ShaderUniformDataType.shader_uniform_vec2,
     );
 
     rl.setTargetFPS(60); // Set our game to run at 60 frames-per-second
@@ -67,7 +67,7 @@ pub fn main() anyerror!void {
             shdrOutline,
             outlineSizeLoc,
             &outlineSize,
-            @intFromEnum(rl.ShaderUniformDataType.shader_uniform_float),
+            rl.ShaderUniformDataType.shader_uniform_float,
         );
         //----------------------------------------------------------------------------------
 
