@@ -173,7 +173,7 @@ pub const Image = extern struct {
     }
 
     pub fn initRaw(fileName: [:0]const u8, width: i32, height: i32, format: PixelFormat, headerSize: i32) Image {
-        return rl.loadImageRaw(fileName, width, height, @intFromEnum(format), headerSize);
+        return rl.loadImageRaw(fileName, width, height, format, headerSize);
     }
 
     pub fn initAnim(fileName: [:0]const u8, frames: *i32) Image {
@@ -244,8 +244,7 @@ pub const Image = extern struct {
         return rl.imageFromImage(self, rec);
     }
 
-    // @todo: use PixelFormat enum for newFormat
-    pub fn setFormat(self: *Image, newFormat: i32) void {
+    pub fn setFormat(self: *Image, newFormat: PixelFormat) void {
         return rl.imageFormat(self, newFormat);
     }
 
@@ -429,8 +428,7 @@ pub const Image = extern struct {
         return Texture.fromImage(self);
     }
 
-    // @todo: use CubemapLayout enum for layout
-    pub fn asCubemap(self: Image, layout: i32) Texture {
+    pub fn asCubemap(self: Image, layout: CubemapLayout) Texture {
         return Texture.fromCubemap(self, layout);
     }
 };
@@ -450,7 +448,7 @@ pub const Texture = extern struct {
         return rl.loadTextureFromImage(image);
     }
 
-    pub fn fromCubemap(image: Image, layout: i32) Texture {
+    pub fn fromCubemap(image: Image, layout: CubemapLayout) Texture {
         return rl.loadTextureCubemap(image, layout);
     }
 
@@ -1313,10 +1311,10 @@ pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSiz
     return cdef.LoadFontFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileDataFinal)), @as(c_int, @intCast(fileDataLen)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)));
 }
 
-pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: i32) RaylibError![]GlyphInfo {
+pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: FontType) RaylibError![]GlyphInfo {
     var res: []GlyphInfo = undefined;
 
-    const ptr = cdef.LoadFontData(@as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)), @as(c_int, ty));
+    const ptr = cdef.LoadFontData(@as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)), ty);
     if (ptr == 0) return RaylibError.GenericError;
 
     res.ptr = @as([*]GlyphInfo, @ptrCast(ptr));

@@ -158,16 +158,40 @@ def fix_enums(arg_name, arg_type, func_name):
                 arg_type = "GamepadButton"
             else:
                 arg_type = "MouseButton"
-        elif arg_name == "mode" and func_name == "UpdateCamera":
-            arg_type = "CameraMode"
+        elif arg_name == "mode":
+            if func_name == "UpdateCamera":
+                arg_type = "CameraMode"
+            elif func_name == "BeginBlendMode":
+                arg_type = "BlendMode"
         elif arg_name == "gesture":
             arg_type = "Gesture"
-        elif arg_name == "flags" and func_name in [
-                "SetWindowState", "ClearWindowState", "SetConfigFlags"
-        ]:
-            arg_type = "ConfigFlags"
+        elif arg_name == "flags":
+            if func_name in [
+                    "SetWindowState", "ClearWindowState", "SetConfigFlags"
+            ]:
+                arg_type = "ConfigFlags"
+            elif func_name == "SetGesturesEnabled":
+                arg_type = "Gesture"
         elif arg_name == "logLevel":
             arg_type = "TraceLogLevel"
+        elif arg_name == "ty" and not func_name.startswith("rl"):
+            arg_type = "FontType"
+        elif arg_name == "UniformType":
+            arg_type = "ShaderUniformDataType"
+        elif arg_name == "Cursor":
+            arg_type = "MouseCursor"
+        elif arg_name == "newFormat":
+            arg_type = "PixelFormat"
+        elif arg_name == "layout":
+            arg_type = "CubemapLayout"
+        elif arg_name == "filter" and func_name == "SetTextureFilter":
+            arg_type = "TextureFilter"
+        elif arg_name == "TextureWrap":
+            arg_type = "TextureWrap"
+        elif arg_name == "format" and not func_name.startswith("rl"):
+            arg_type = "PixelFormat"
+        elif arg_name == "mapType":
+            arg_type = "MaterialMapIndex"
     return arg_type
 
 
@@ -253,10 +277,11 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
             # Everything but the last element (for stuff like "const Vector3").
             arg_type = " ".join(arg.split(" ")[0:-1])
             arg_name = arg.split(" ")[-1]  # Last element should be the name.
-            arg_type = fix_enums(arg_name, arg_type, func_name)
 
             if arg_name == "type":
                 arg_name = "ty"
+
+            arg_type = fix_enums(arg_name, arg_type, func_name)
 
             arg_type = c_to_zig_type(arg_type)
             arg_name, arg_type = fix_pointer(arg_name, arg_type)
