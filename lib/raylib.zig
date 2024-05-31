@@ -805,24 +805,39 @@ pub const AutomationEventList = extern struct {
     events: [*c]AutomationEvent
 };
 
-pub const ConfigFlags = enum(c_int) {
-    flag_fullscreen_mode = 2,
-    flag_window_resizable = 4,
-    flag_window_undecorated = 8,
-    flag_window_transparent = 16,
-    flag_msaa_4x_hint = 32,
-    flag_vsync_hint = 64,
-    flag_window_hidden = 128,
-    flag_window_always_run = 256,
-    flag_window_minimized = 512,
-    flag_window_maximized = 1024,
-    flag_window_unfocused = 2048,
-    flag_window_topmost = 4096,
-    flag_window_highdpi = 8192,
-    flag_window_mouse_passthrough = 16384,
-    flag_borderless_windowed_mode = 32768,
-    flag_interlaced_hint = 65536,
-    _,
+pub const ConfigFlags = packed struct {
+    __reserved: bool = false,
+    fullscreen_mode: bool = false,
+    window_resizable: bool = false,
+    window_undecorated: bool = false,
+    window_transparent: bool = false,
+    msaa_4x_hint: bool = false,
+    vsync_hint: bool = false,
+    window_hidden: bool = false,
+    window_always_run: bool = false,
+    window_minimized: bool = false,
+    window_maximized: bool = false,
+    window_unfocused: bool = false,
+    window_topmost: bool = false,
+    window_highdpi: bool = false,
+    window_mouse_passthrough: bool = false,
+    borderless_windowed_mode: bool = false,
+    interlaced_hint: bool = false,
+    __reserved2: bool = false,
+    __reserved3: bool = false,
+    __reserved4: bool = false,
+    __reserved5: bool = false,
+    __reserved6: bool = false,
+    __reserved7: bool = false,
+    __reserved8: bool = false,
+    __reserved9: bool = false,
+    __reserved10: bool = false,
+    __reserved11: bool = false,
+    __reserved12: bool = false,
+    __reserved13: bool = false,
+    __reserved14: bool = false,
+    __reserved15: bool = false,
+    __reserved16: bool = false,
 };
 
 pub const TraceLogLevel = enum(c_int) {
@@ -1500,8 +1515,8 @@ pub fn isWindowResized() bool {
     return cdef.IsWindowResized();
 }
 
-pub fn isWindowState(flag: u32) bool {
-    return cdef.IsWindowState(@as(c_uint, flag));
+pub fn isWindowState(flag: ConfigFlags) bool {
+    return cdef.IsWindowState(flag);
 }
 
 pub fn setWindowState(flags: ConfigFlags) void {

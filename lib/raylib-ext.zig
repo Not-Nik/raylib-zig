@@ -12,7 +12,7 @@ pub extern "c" fn IsWindowMinimized() bool;
 pub extern "c" fn IsWindowMaximized() bool;
 pub extern "c" fn IsWindowFocused() bool;
 pub extern "c" fn IsWindowResized() bool;
-pub extern "c" fn IsWindowState(flag: c_uint) bool;
+pub extern "c" fn IsWindowState(flag: rl.ConfigFlags) bool;
 pub extern "c" fn SetWindowState(flags: rl.ConfigFlags) void;
 pub extern "c" fn ClearWindowState(flags: rl.ConfigFlags) void;
 pub extern "c" fn ToggleFullscreen() void;

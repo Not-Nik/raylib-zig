@@ -165,9 +165,9 @@ def fix_enums(arg_name, arg_type, func_name):
                 arg_type = "BlendMode"
         elif arg_name == "gesture":
             arg_type = "Gesture"
-        elif arg_name == "flags":
+        elif arg_name == "flags" or arg_name == "flag":
             if func_name in [
-                    "SetWindowState", "ClearWindowState", "SetConfigFlags"
+                    "SetWindowState", "ClearWindowState", "SetConfigFlags", "IsWindowState"
             ]:
                 arg_type = "ConfigFlags"
             elif func_name == "SetGesturesEnabled":
