@@ -107,10 +107,25 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
 
         const lib = raylib.artifact("raylib");
 
-        rl.addRaygui(b, lib, b.dependency("raygui", .{
+        const raygui_dep = b.dependency("raygui", .{
             .target = target,
             .optimize = optimize,
-        }));
+        });
+
+        var gen_step = b.addWriteFiles();
+        lib.step.dependOn(&gen_step.step);
+
+        const raygui_c_path = gen_step.add("raygui.c", "#define RAYGUI_IMPLEMENTATION\n#include \"raygui.h\"\n");
+        lib.addCSourceFile(.{ .file = raygui_c_path, .flags = &[_][]const u8{
+            "-std=gnu99",
+            "-D_GNU_SOURCE",
+            "-DGL_SILENCE_DEPRECATION=199309L",
+            "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/3674
+        }});
+        lib.addIncludePath(raylib.path("src"));
+        lib.addIncludePath(raygui_dep.path("src"));
+
+        lib.installHeader(raygui_dep.path("src/raygui.h"), "raygui.h");
 
         b.installArtifact(lib);
         _raylib_lib_cache = lib;

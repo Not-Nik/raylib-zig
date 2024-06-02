@@ -8,7 +8,7 @@
         },
         .raygui = .{
             .url = "https://github.com/raysan5/raygui/archive/4b3d94f5df6a5a2aa86286350f7e20c0ca35f516.tar.gz",
-            .hash = "12205f45151f556dd41348acc8a93099f19d6a2e830978ace86733ce0bfe52978812",
+            .hash = "122002d98ca255ec706ef8e5497b3723d6c6e163511761d116dac3aee87747d46cf1",
         }
     },
     .minimum_zig_version = "0.12.0",
