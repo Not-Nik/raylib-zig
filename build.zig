@@ -103,6 +103,7 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
             .platform_drm = options.platform_drm,
             .shared = false,
             .linux_display_backend = options.linux_display_backend,
+            .opengl_version = options.opengl_version
         });
 
         const lib = raylib.artifact("raylib");
