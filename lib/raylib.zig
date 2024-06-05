@@ -1983,6 +1983,10 @@ pub fn isPathFile(path: [:0]const u8) bool {
     return cdef.IsPathFile(@as([*c]const u8, @ptrCast(path)));
 }
 
+pub fn isFileNameValid(fileName: [:0]const u8) bool {
+    return cdef.IsFileNameValid(@as([*c]const u8, @ptrCast(fileName)));
+}
+
 pub fn loadDirectoryFiles(dirPath: [:0]const u8) FilePathList {
     return cdef.LoadDirectoryFiles(@as([*c]const u8, @ptrCast(dirPath)));
 }
@@ -2473,6 +2477,10 @@ pub fn checkCollisionLines(startPos1: Vector2, endPos1: Vector2, startPos2: Vect
 
 pub fn checkCollisionPointLine(point: Vector2, p1: Vector2, p2: Vector2, threshold: i32) bool {
     return cdef.CheckCollisionPointLine(point, p1, p2, @as(c_int, threshold));
+}
+
+pub fn checkCollisionCircleLine(center: Vector2, radius: f32, p1: Vector2, p2: Vector2) bool {
+    return cdef.CheckCollisionCircleLine(center, radius, p1, p2);
 }
 
 pub fn getCollisionRec(rec1: Rectangle, rec2: Rectangle) Rectangle {
@@ -3035,6 +3043,14 @@ pub fn textToPascal(text: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.TextToPascal(@as([*c]const u8, @ptrCast(text))));
 }
 
+pub fn textToSnake(text: [:0]const u8) [:0]const u8 {
+    return std.mem.span(cdef.TextToSnake(@as([*c]const u8, @ptrCast(text))));
+}
+
+pub fn textToCamel(text: [:0]const u8) [:0]const u8 {
+    return std.mem.span(cdef.TextToCamel(@as([*c]const u8, @ptrCast(text))));
+}
+
 pub fn textToInteger(text: [:0]const u8) i32 {
     return @as(i32, cdef.TextToInteger(@as([*c]const u8, @ptrCast(text))));
 }
@@ -3419,8 +3435,8 @@ pub fn waveCopy(wave: Wave) Wave {
     return cdef.WaveCopy(wave);
 }
 
-pub fn waveCrop(wave: *Wave, initSample: i32, finalSample: i32) void {
-    cdef.WaveCrop(@as([*c]Wave, @ptrCast(wave)), @as(c_int, initSample), @as(c_int, finalSample));
+pub fn waveCrop(wave: *Wave, initFrame: i32, finalFrame: i32) void {
+    cdef.WaveCrop(@as([*c]Wave, @ptrCast(wave)), @as(c_int, initFrame), @as(c_int, finalFrame));
 }
 
 pub fn waveFormat(wave: *Wave, sampleRate: i32, sampleSize: i32, channels: i32) void {
