@@ -3,8 +3,8 @@
     .version = "5.1.0",
     .dependencies = .{
         .raylib = .{
-            .url = "https://github.com/raysan5/raylib/archive/d6b22b17aecd2346d4fd1fc8ebaea8212e40008f.tar.gz",
-            .hash = "12205f45151f556dd41348acc8a93099f19d6a2e830978ace86733ce0bfe52978812",
+            .url = "https://github.com/raysan5/raylib/archive/5767c4cd059e07355ae5588966d0aee97038a86b.tar.gz",
+            .hash = "1220aa75240ee6459499456ef520ab7e8bddffaed8a5055441da457b198fc4e92b26",
         },
         .raygui = .{
             .url = "https://github.com/raysan5/raygui/archive/4b3d94f5df6a5a2aa86286350f7e20c0ca35f516.tar.gz",
