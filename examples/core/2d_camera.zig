@@ -1,7 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2023
 
 const rl = @import("raylib");
-const rlm = @import("raymath");
 
 const MAX_BUILDINGS = 100;
 
@@ -69,12 +68,12 @@ pub fn main() anyerror!void {
         }
 
         // Limit camera rotation to 80 degrees (-40 to 40)
-        camera.rotation = rlm.clamp(camera.rotation, -40, 40);
+        camera.rotation = rl.math.clamp(camera.rotation, -40, 40);
 
         // Camera zoom controls
         camera.zoom += rl.getMouseWheelMove() * 0.05;
 
-        camera.zoom = rlm.clamp(camera.zoom, 0.1, 3.0);
+        camera.zoom = rl.math.clamp(camera.zoom, 0.1, 3.0);
 
         // Camera reset (zoom and rotation)
         if (rl.isKeyPressed(rl.KeyboardKey.key_r)) {

@@ -10,7 +10,6 @@
 //! Copyright (c) Nikolas Wipper 2024
 
 const rl = @import("raylib");
-const rlm = @import("raymath");
 
 const screen_width = 800;
 const screen_height = 450;
@@ -133,7 +132,7 @@ pub fn main() anyerror!void {
         }
 
         // Bouncing ball logic
-        ball_position = rlm.vector2Add(ball_position, ball_speed);
+        ball_position = ball_position.add(ball_speed);
 
         if (ball_position.x >= (@as(f32, @floatFromInt(rl.getScreenWidth())) - ball_radius) or ball_position.x <= ball_radius) {
             ball_speed.x *= -1;

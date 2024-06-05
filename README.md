@@ -83,8 +83,6 @@ const raylib_dep = b.dependency("raylib-zig", .{
 });
 
 const raylib = raylib_dep.module("raylib"); // main raylib module
-const raylib_math = raylib_dep.module("raylib-math"); // raymath module
-const rlgl = raylib_dep.module("rlgl"); // rlgl module
 const raygui = raylib_dep.module("raygui"); // raygui module
 const raylib_artifact = raylib_dep.artifact("raylib"); // raylib C library
 ```
@@ -94,8 +92,7 @@ Now add the modules and artifact to your target as you would normally:
 ```zig
 exe.linkLibrary(raylib_artifact);
 exe.root_module.addImport("raylib", raylib);
-exe.root_module.addImport("raymath", raylib_math);
-exe.root_module.addImport("rlgl", rlgl);
+exe.root_module.addImport("raygui", raygui);
 ```
 
 If you additionally want to support Web as a platform with emscripten, you will need to use `emcc.zig` by importing raylib-zig's build script with `const rlz = @import("raylib-zig");` and then accessing its functions with `rlz.emcc`. Refer to raylib-zig's project template on how to use them.

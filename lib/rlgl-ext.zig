@@ -1,6 +1,6 @@
 // raylib-zig (c) Nikolas Wipper 2024
 
-const rl = @import("raylib-zig");
+const rl = @import("raylib.zig");
 const rlgl = @import("rlgl.zig");
 
 pub extern "c" fn rlMatrixMode(mode: c_int) void;

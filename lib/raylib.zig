@@ -3,6 +3,9 @@
 const rl = @This();
 const std = @import("std");
 
+pub const gl = @import("rlgl.zig");
+pub const math = @import("raymath.zig");
+
 test {
     std.testing.refAllDeclsRecursive(@This());
 }
@@ -16,6 +19,126 @@ pub const Vector2 = extern struct {
     pub fn init(x: f32, y: f32) Vector2 {
         return Vector2{ .x = x, .y = y };
     }
+
+    pub fn zero() Vector2 {
+        return math.vector2Zero();
+    }
+
+    pub fn one() Vector2 {
+        return math.vector2One();
+    }
+
+    pub fn add(self: Vector2, v: Vector2) Vector2 {
+        return math.vector2Add(self, v);
+    }
+
+    pub fn addValue(self: Vector2, v: f32) Vector2 {
+        return math.vector2AddValue(self, v);
+    }
+
+    pub fn subtract(self: Vector2, v: Vector2) Vector2 {
+        return math.vector2Subtract(self, v);
+    }
+
+    pub fn subtractValue(self: Vector2, v: f32) Vector2 {
+        return math.vector2SubtractValue(self, v);
+    }
+
+    pub fn length(self: Vector2) f32 {
+        return math.vector2Length(self);
+    }
+
+    pub fn lengthSqr(self: Vector2) f32 {
+        return math.vector2LengthSqr(self);
+    }
+
+    pub fn dotProduct(self: Vector2, v: Vector2) f32 {
+        return math.vector2DotProduct(self, v);
+    }
+
+    pub fn distance(self: Vector2, v: Vector2) f32 {
+        return math.vector2Distance(self, v);
+    }
+
+    pub fn distanceSqr(self: Vector2, v: Vector2) f32 {
+        return math.vector2DistanceSqr(self, v);
+    }
+
+    pub fn angle(self: Vector2, v: Vector2) f32 {
+        return math.vector2Angle(self, v);
+    }
+
+    pub fn lineAngle(self: Vector2, end: Vector2) f32 {
+        return math.vector2LineAngle(self, end);
+    }
+
+    pub fn scale(self: Vector2, scale_: f32) Vector2 {
+        return math.vector2Scale(self, scale_);
+    }
+
+    pub fn multiply(self: Vector2, v2: Vector2) Vector2 {
+        return math.vector2Multiply(self, v2);
+    }
+
+    pub fn negate(self: Vector2) Vector2 {
+        return math.vector2Negate(self);
+    }
+
+    pub fn divide(self: Vector2, v2: Vector2) Vector2 {
+        return math.vector2Divide(self, v2);
+    }
+
+    pub fn normalize(self: Vector2) Vector2 {
+        return math.vector2Normalize(self);
+    }
+
+    pub fn transform(self: Vector2, mat: Matrix) Vector2 {
+        return math.vector2Transform(self, mat);
+    }
+
+    pub fn lerp(self: Vector2, v2: Vector2, amount: f32) Vector2 {
+        return math.vector2Lerp(self, v2, amount);
+    }
+
+    pub fn reflect(self: Vector2, normal: Vector2) Vector2 {
+        return math.vector2Reflect(self, normal);
+    }
+
+    pub fn min(self: Vector2, v2: Vector2) Vector2 {
+        return math.vector2Min(self, v2);
+    }
+
+    pub fn max(self: Vector2, v2: Vector2) Vector2 {
+        return math.vector2Max(self, v2);
+    }
+
+    pub fn rotate(self: Vector2, angle_: f32) Vector2 {
+        return math.vector2Rotate(self, angle_);
+    }
+
+    pub fn moveTowards(self: Vector2, target: Vector2, maxDistance: f32) Vector2 {
+        return math.vector2MoveTowards(self, target, maxDistance);
+    }
+
+    pub fn invert(self: Vector2) Vector2 {
+        return math.vector2Invert(self);
+    }
+
+    pub fn clamp(self: Vector2, min_: Vector2, max_: Vector2) Vector2 {
+        return math.vector2Clamp(self, min_, max_);
+    }
+
+    pub fn clampValue(self: Vector2, min_: f32, max_: f32) Vector2 {
+        return math.vector2ClampValue(self, min_, max_);
+    }
+
+    pub fn equals(self: Vector2, q: Vector2) i32 {
+        return math.vector2Equals(self, q);
+    }
+
+    pub fn refract(self: Vector2, n: Vector2, r: f32) Vector2 {
+        return math.vector2Refract(self, n, r);
+    }
 };
 
 pub const Vector3 = extern struct {
@@ -25,6 +148,162 @@ pub const Vector3 = extern struct {
 
     pub fn init(x: f32, y: f32, z: f32) Vector3 {
         return Vector3{ .x = x, .y = y, .z = z };
+    }
+
+    pub fn zero() Vector3 {
+        return math.vector3Zero();
+    }
+
+    pub fn one() Vector3 {
+        return math.vector3One();
+    }
+
+    pub fn add(self: Vector3, v: Vector3) Vector3 {
+        return math.vector3Add(self, v);
+    }
+
+    pub fn addValue(self: Vector3, add_: f32) Vector3 {
+        return math.vector3AddValue(self, add_);
+    }
+
+    pub fn subtract(self: Vector3, v: Vector3) Vector3 {
+        return math.vector3Subtract(self, v);
+    }
+
+    pub fn subtractValue(self: Vector3, sub: f32) Vector3 {
+        return math.vector3SubtractValue(self, sub);
+    }
+
+    pub fn scale(self: Vector3, scalar: f32) Vector3 {
+        return math.vector3Scale(self, scalar);
+    }
+
+    pub fn multiply(self: Vector3, v: Vector3) Vector3 {
+        return math.vector3Multiply(self, v);
+    }
+
+    pub fn crossProduct(self: Vector3, v: Vector3) Vector3 {
+        return math.vector3CrossProduct(self, v);
+    }
+
+    pub fn perpendicular(self: Vector3) Vector3 {
+        return math.vector3Perpendicular(self);
+    }
+
+    pub fn length(self: Vector3) f32 {
+        return math.vector3Length(self);
+    }
+
+    pub fn lengthSqr(self: Vector3) f32 {
+        return math.vector3LengthSqr(self);
+    }
+
+    pub fn dotProduct(self: Vector3, v: Vector3) f32 {
+        return math.vector3DotProduct(self, v);
+    }
+
+    pub fn distance(self: Vector3, v: Vector3) f32 {
+        return math.vector3Distance(self, v);
+    }
+
+    pub fn distanceSqr(self: Vector3, v: Vector3) f32 {
+        return math.vector3DistanceSqr(self, v);
+    }
+
+    pub fn angle(self: Vector3, v: Vector3) f32 {
+        return math.vector3Angle(self, v);
+    }
+
+    pub fn negate(self: Vector3) Vector3 {
+        return math.vector3Negate(self);
+    }
+
+    pub fn divide(self: Vector3, v: Vector3) Vector3 {
+        return math.vector3Divide(self, v);
+    }
+
+    pub fn normalize(self: Vector3) Vector3 {
+        return math.vector3Normalize(self);
+    }
+
+    pub fn project(self: Vector3, v: Vector3) Vector3 {
+        return math.vector3Project(self, v);
+    }
+
+    pub fn reject(self: Vector3, v: Vector3) Vector3 {
+        return math.vector3Reject(self, v);
+    }
+
+    pub fn orthoNormalize(self: *Vector3, v: *Vector3) void {
+        math.vector3OrthoNormalize(self, v);
+    }
+
+    pub fn transform(self: Vector3, mat: Matrix) Vector3 {
+        return math.vector3Transform(self, mat);
+    }
+
+    pub fn rotateByQuaternion(self: Vector3, q: Quaternion) Vector3 {
+        return math.vector3RotateByQuaternion(self, q);
+    }
+
+    pub fn rotateByAxisAngle(self: Vector3, axis: Vector3, angle_: f32) Vector3 {
+        return math.vector3RotateByAxisAngle(self, axis, angle_);
+    }
+
+    pub fn moveTowards(self: Vector3, target: Vector3, maxDistance: f32) Vector3 {
+        return math.vector3MoveTowards(self, target, maxDistance);
+    }
+
+    pub fn lerp(self: Vector3, v2: Vector3, amount: f32) Vector3 {
+        return math.vector3Lerp(self, v2, amount);
+    }
+
+    pub fn cubicHermite(self: Vector3, tangent1: Vector3, v: Vector3, tangent2: Vector3, amount: f32) Vector3 {
+        return math.vector3CubicHermite(self, tangent1, v, tangent2, amount);
+    }
+
+    pub fn reflect(self: Vector3, normal: Vector3) Vector3 {
+        return math.vector3Reflect(self, normal);
+    }
+
+    pub fn min(self: Vector3, v: Vector3) Vector3 {
+        return math.vector3Min(self, v);
+    }
+
+    pub fn max(self: Vector3, v: Vector3) Vector3 {
+        return math.vector3Max(self, v);
+    }
+
+    pub fn barycenter(p: Vector3, a: Vector3, b: Vector3, c: Vector3) Vector3 {
+        return math.vector3Barycenter(p, a, b, c);
+    }
+
+    pub fn unproject(source: Vector3, projection: Matrix, view: Matrix) Vector3 {
+        return math.vector3Unproject(source, projection, view);
+    }
+
+    pub fn toFloatV(self: Vector3) math.float3 {
+        return math.vector3ToFloatV(self);
+    }
+
+    pub fn invert(self: Vector3) Vector3 {
+        return math.vector3Invert(self);
+    }
+
+    pub fn clamp(self: Vector3, min_: Vector3, max_: Vector3) Vector3 {
+        return math.vector3Clamp(self, min_, max_);
+    }
+
+    pub fn clampValue(self: Vector3, min_: f32, max_: f32) Vector3 {
+        return math.vector3ClampValue(self, min_, max_);
+    }
+
+    pub fn equals(p: Vector3, q: Vector3) i32 {
+        return math.vector3Equals(p, q);
+    }
+
+    pub fn refract(self: Vector3, n: Vector3, r: f32) Vector3 {
+        return math.vector3Refract(self, n, r);
     }
 };
 
@@ -36,6 +315,142 @@ pub const Vector4 = extern struct {
 
     pub fn init(x: f32, y: f32, z: f32, w: f32) Vector4 {
         return Vector4{ .x = x, .y = y, .z = z, .w = w };
+    }
+
+    pub fn zero() Vector4 {
+        return math.vector4Zero();
+    }
+
+    pub fn one() Vector4 {
+        return math.vector4One();
+    }
+
+    pub fn add(self: Vector4, v: Vector4) Vector4 {
+        return math.vector4Add(self, v);
+    }
+
+    pub fn addValue(self: Vector4, add_: f32) Vector4 {
+        return math.vector4AddValue(self, add_);
+    }
+
+    pub fn subtract(self: Vector4, v: Vector4) Vector4 {
+        return math.vector4Subtract(self, v);
+    }
+
+    pub fn subtractValue(self: Vector4, add_: f32) Vector4 {
+        return math.vector4SubtractValue(self, add_);
+    }
+
+    pub fn length(self: Vector4) f32 {
+        return math.vector4Length(self);
+    }
+
+    pub fn lengthSqr(self: Vector4) f32 {
+        return math.vector4LengthSqr(self);
+    }
+
+    pub fn dotProduct(self: Vector4, v: Vector4) f32 {
+        return math.vector4DotProduct(self, v);
+    }
+
+    pub fn distance(self: Vector4, v: Vector4) f32 {
+        return math.vector4Distance(self, v);
+    }
+
+    pub fn distanceSqr(self: Vector4, v: Vector4) f32 {
+        return math.vector4DistanceSqr(self, v);
+    }
+
+    pub fn scale(self: Vector4, scale_: f32) Vector4 {
+        return math.vector4Scale(self, scale_);
+    }
+
+    pub fn multiply(self: Vector4, v: Vector4) Vector4 {
+        return math.vector4Multiply(self, v);
+    }
+
+    pub fn negate(self: Vector4) Vector4 {
+        return math.vector4Negate(self);
+    }
+
+    pub fn divide(self: Vector4, v: Vector4) Vector4 {
+        return math.vector4Divide(self, v);
+    }
+
+    pub fn normalize(self: Vector4) Vector4 {
+        return math.vector4Normalize(self);
+    }
+
+    pub fn min(self: Vector4, v: Vector4) Vector4 {
+        return math.vector4Min(self, v);
+    }
+
+    pub fn max(self: Vector4, v: Vector4) Vector4 {
+        return math.vector4Max(self, v);
+    }
+
+    pub fn lerp(self: Vector4, v: Vector4, amount: f32) Vector4 {
+        return math.vector4Lerp(self, v, amount);
+    }
+
+    pub fn moveTowards(self: Vector4, target: Vector4, maxDistance: f32) Vector4 {
+        return math.vector4MoveTowards(self, target, maxDistance);
+    }
+
+    pub fn invert(self: Vector4) Vector4 {
+        return math.vector4Invert(self);
+    }
+
+    pub fn equals(p: Vector4, q: Vector4) i32 {
+        return math.vector4Equals(p, q);
+    }
+
+    pub fn identity() Quaternion {
+        return math.quaternionIdentity();
+    }
+
+    pub fn nlerp(self: Quaternion, q: Quaternion, amount: f32) Quaternion {
+        return math.quaternionNlerp(self, q, amount);
+    }
+
+    pub fn slerp(self: Quaternion, q: Quaternion, amount: f32) Quaternion {
+        return math.quaternionSlerp(self, q, amount);
+    }
+
+    pub fn cubicHermiteSpline(self: Quaternion, outTangent1: Quaternion, q: Quaternion, inTangent2: Quaternion, t: f32) Quaternion {
+        return math.quaternionCubicHermiteSpline(self, outTangent1, q, inTangent2, t);
+    }
+
+    pub fn fromVector3ToVector3(from: Vector3, to: Vector3) Quaternion {
+        return math.quaternionFromVector3ToVector3(from, to);
+    }
+
+    pub fn fromMatrix(mat: Matrix) Quaternion {
+        return math.quaternionFromMatrix(mat);
+    }
+
+    pub fn toMatrix(self: Quaternion) Matrix {
+        return math.quaternionToMatrix(self);
+    }
+
+    pub fn fromAxisAngle(axis: Vector3, angle: f32) Quaternion {
+        return math.quaternionFromAxisAngle(axis, angle);
+    }
+
+    pub fn toAxisAngle(self: Quaternion, outAxis: *Vector3, outAngle: *f32) void {
+        math.quaternionToAxisAngle(self, outAxis, outAngle);
+    }
+
+    pub fn fromEuler(pitch: f32, yaw: f32, roll: f32) Quaternion {
+        return math.quaternionFromEuler(pitch, yaw, roll);
+    }
+
+    pub fn toEuler(self: Quaternion) Vector3 {
+        return math.quaternionToEuler(self);
+    }
+
+    pub fn transform(self: Quaternion, mat: Matrix) Quaternion {
+        return math.quaternionTransform(self, mat);
     }
 };
 pub const Quaternion = Vector4;
@@ -57,6 +472,90 @@ pub const Matrix = extern struct {
     m7: f32,
     m11: f32,
     m15: f32,
+
+    pub fn determinant(self: Matrix) f32 {
+        return math.matrixDeterminant(self);
+    }
+
+    pub fn trace(self: Matrix) f32 {
+        return math.matrixTrace(self);
+    }
+
+    pub fn transpose(self: Matrix) Matrix {
+        return math.matrixTranspose(self);
+    }
+
+    pub fn invert(self: Matrix) Matrix {
+        return math.matrixInvert(self);
+    }
+
+    pub fn identity() Matrix {
+        return math.matrixIdentity();
+    }
+
+    pub fn add(self: Matrix, right: Matrix) Matrix {
+        return math.matrixAdd(self, right);
+    }
+
+    pub fn subtract(self: Matrix, right: Matrix) Matrix {
+        return math.matrixSubtract(self, right);
+    }
+
+    pub fn multiply(self: Matrix, right: Matrix) Matrix {
+        return math.matrixMultiply(self, right);
+    }
+
+    pub fn translate(x: f32, y: f32, z: f32) Matrix {
+        return math.matrixTranslate(x, y, z);
+    }
+
+    pub fn rotate(axis: Vector3, angle: f32) Matrix {
+        return math.matrixRotate(axis, angle);
+    }
+
+    pub fn rotateX(angle: f32) Matrix {
+        return math.matrixRotateX(angle);
+    }
+
+    pub fn rotateY(angle: f32) Matrix {
+        return math.matrixRotateY(angle);
+    }
+
+    pub fn rotateZ(angle: f32) Matrix {
+        return math.matrixRotateZ(angle);
+    }
+
+    pub fn rotateXYZ(angle: Vector3) Matrix {
+        return math.matrixRotateXYZ(angle);
+    }
+
+    pub fn rotateZYX(angle: Vector3) Matrix {
+        return math.matrixRotateZYX(angle);
+    }
+
+    pub fn scale(x: f32, y: f32, z: f32) Matrix {
+        return math.matrixScale(x, y, z);
+    }
+
+    pub fn frustum(left: f64, right: f64, bottom: f64, top: f64, near: f64, far: f64) Matrix {
+        return math.matrixFrustum(left, right, bottom, top, near, far);
+    }
+
+    pub fn perspective(fovY: f64, aspect: f64, nearPlane: f64, farPlane: f64) Matrix {
+        return math.matrixPerspective(fovY, aspect, nearPlane, farPlane);
+    }
+
+    pub fn ortho(left: f64, right: f64, bottom: f64, top: f64, nearPlane: f64, farPlane: f64) Matrix {
+        return math.matrixOrtho(left, right, bottom, top, nearPlane, farPlane);
+    }
+
+    pub fn lookAt(eye: Vector3, target: Vector3, up: Vector3) Matrix {
+        return math.matrixLookAt(eye, target, up);
+    }
+
+    pub fn toFloatV(self: Matrix) math.float16 {
+        return math.matrixToFloatV(self);
+    }
 };
 
 pub const Color = extern struct {
@@ -333,7 +832,7 @@ pub const Image = extern struct {
     }
 
     pub fn brightness(self: *Image, b: i32) void {
-        rl.imageColorBrightness(self, @as(c_int, b));
+        rl.imageColorBrightness(self, b);
     }
 
     pub fn replaceColor(self: *Image, color: Color, replace: Color) void {
