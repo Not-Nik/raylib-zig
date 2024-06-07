@@ -38,13 +38,7 @@ const Program = struct {
     desc: []const u8,
 };
 
-fn link(
-    b: *std.Build,
-    exe: *std.Build.Step.Compile,
-    target: std.Build.ResolvedTarget,
-    optimize: std.builtin.Mode,
-    options: Options
-) void {
+fn link(b: *std.Build, exe: *std.Build.Step.Compile, target: std.Build.ResolvedTarget, optimize: std.builtin.Mode, options: Options) void {
     const lib = getRaylib(b, target, optimize, options);
 
     const target_os = exe.rootModuleTarget().os.tag;
@@ -92,19 +86,7 @@ fn link(
 var _raylib_lib_cache: ?*std.Build.Step.Compile = null;
 fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.builtin.Mode, options: Options) *std.Build.Step.Compile {
     if (_raylib_lib_cache) |lib| return lib else {
-        const raylib = b.dependency("raylib", .{
-            .target = target,
-            .optimize = optimize,
-            .raudio = options.raudio,
-            .rmodels = options.rmodels,
-            .rshapes = options.rshapes,
-            .rtext = options.rtext,
-            .rtextures = options.rtextures,
-            .platform_drm = options.platform_drm,
-            .shared = false,
-            .linux_display_backend = options.linux_display_backend,
-            .opengl_version = options.opengl_version
-        });
+        const raylib = b.dependency("raylib", .{ .target = target, .optimize = optimize, .raudio = options.raudio, .rmodels = options.rmodels, .rshapes = options.rshapes, .rtext = options.rtext, .rtextures = options.rtextures, .platform_drm = options.platform_drm, .shared = false, .linux_display_backend = options.linux_display_backend, .opengl_version = options.opengl_version });
 
         const lib = raylib.artifact("raylib");
 
@@ -117,12 +99,15 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
         lib.step.dependOn(&gen_step.step);
 
         const raygui_c_path = gen_step.add("raygui.c", "#define RAYGUI_IMPLEMENTATION\n#include \"raygui.h\"\n");
-        lib.addCSourceFile(.{ .file = raygui_c_path, .flags = &[_][]const u8{
-            "-std=gnu99",
-            "-D_GNU_SOURCE",
-            "-DGL_SILENCE_DEPRECATION=199309L",
-            "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/3674
-        }});
+        lib.addCSourceFile(.{
+            .file = raygui_c_path,
+            .flags = &[_][]const u8{
+                "-std=gnu99",
+                "-D_GNU_SOURCE",
+                "-DGL_SILENCE_DEPRECATION=199309L",
+                "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/3674
+            },
+        });
         lib.addIncludePath(raylib.path("src"));
         lib.addIncludePath(raygui_dep.path("src"));
 
@@ -263,12 +248,14 @@ pub fn build(b: *std.Build) !void {
         .root_source_file = b.path("lib/raylib.zig"),
         .target = target,
         .optimize = optimize,
+        .link_libc = true,
     });
 
     const raygui_test = b.addTest(.{
         .root_source_file = b.path("lib/raygui.zig"),
         .target = target,
         .optimize = optimize,
+        .link_libc = true,
     });
     raygui_test.root_module.addImport("raylib-zig", raylib);
 
