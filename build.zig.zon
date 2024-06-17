@@ -11,7 +11,7 @@
             .hash = "122002d98ca255ec706ef8e5497b3723d6c6e163511761d116dac3aee87747d46cf1",
         }
     },
-    .minimum_zig_version = "0.12.0",
+    .minimum_zig_version = "0.13.0",
     .paths = .{
         "build.zig",
         "build.zig.zon",
