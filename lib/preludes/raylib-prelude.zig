@@ -1852,6 +1852,19 @@ pub fn loadCodepoints(text: [:0]const u8) RaylibError![]i32 {
 }
 
 pub fn textFormat(text: [:0]const u8, args: anytype) [:0]const u8 {
+    comptime {
+        const info = @typeInfo(@TypeOf(args));
+        switch (info) {
+            .Struct => {
+                if (!info.Struct.is_tuple)
+                    @compileError("Args should be in a tuple (call this function like textFormat(.{arg1, arg2, ...});)!");
+            },
+            else => {
+                @compileError("Args should be in a tuple (call this function like textFormat(.{arg1, arg2, ...});)!");
+            }
+        }
+    }
+
     return std.mem.span(@call(.auto, cdef.TextFormat, .{@as([*c]const u8, @ptrCast(text))} ++ args));
 }
 
