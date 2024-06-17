@@ -42,7 +42,7 @@ pub fn build(b: *std.Build) !void {
         return;
     }
 
-    const exe = b.addExecutable(.{ .name = "'$PROJECT_NAME'", .root_source_file = .{ .path = "src/main.zig" }, .optimize = optimize, .target = target });
+    const exe = b.addExecutable(.{ .name = "'$PROJECT_NAME'", .root_source_file = b.path("src/main.zig"), .optimize = optimize, .target = target });
 
     exe.linkLibrary(raylib_artifact);
     exe.root_module.addImport("raylib", raylib);
