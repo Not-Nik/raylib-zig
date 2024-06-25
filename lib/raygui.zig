@@ -436,6 +436,22 @@ pub fn guiListViewEx(bounds: Rectangle, text: [][:0]const u8, scrollIndex: *i32,
     return @as(i32, cdef.GuiListViewEx(bounds, @as([*c][*c]const u8, @ptrCast(text)), @as(c_int, @intCast(text.len)), @as([*c]c_int, @ptrCast(scrollIndex)), @as([*c]c_int, @ptrCast(active)), @as([*c]c_int, @ptrCast(focus))));
 }
 
+pub fn guiPanel(bounds: Rectangle, text: ?[:0]const u8) i32 {
+    var textFinal = @as([*c]const u8, 0);
+    if (text) |textSure| {
+        textFinal = @as([*c]const u8, @ptrCast(textSure));
+    }
+    return @as(i32, cdef.GuiPanel(bounds, textFinal));
+}
+
+pub fn guiScrollPanel(bounds: Rectangle, text: ?[:0]const u8, content: Rectangle, scroll: *Vector2, view: *Rectangle) i32 {
+    var textFinal = @as([*c]const u8, 0);
+    if (text) |textSure| {
+        textFinal = @as([*c]const u8, @ptrCast(textSure));
+    }
+    return @as(i32, cdef.GuiScrollPanel(bounds, textFinal, content, @as([*c]Vector2, @ptrCast(scroll)), @as([*c]Rectangle, @ptrCast(view))));
+}
+
 pub fn guiEnable() void {
     cdef.GuiEnable();
 }
@@ -526,14 +542,6 @@ pub fn guiGroupBox(bounds: Rectangle, text: [:0]const u8) i32 {
 
 pub fn guiLine(bounds: Rectangle, text: [:0]const u8) i32 {
     return @as(i32, cdef.GuiLine(bounds, @as([*c]const u8, @ptrCast(text))));
-}
-
-pub fn guiPanel(bounds: Rectangle, text: [:0]const u8) i32 {
-    return @as(i32, cdef.GuiPanel(bounds, @as([*c]const u8, @ptrCast(text))));
-}
-
-pub fn guiScrollPanel(bounds: Rectangle, text: [:0]const u8, content: Rectangle, scroll: *Vector2, view: *Rectangle) i32 {
-    return @as(i32, cdef.GuiScrollPanel(bounds, @as([*c]const u8, @ptrCast(text)), content, @as([*c]Vector2, @ptrCast(scroll)), @as([*c]Rectangle, @ptrCast(view))));
 }
 
 pub fn guiLabel(bounds: Rectangle, text: [:0]const u8) i32 {

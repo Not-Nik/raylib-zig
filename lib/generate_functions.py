@@ -338,7 +338,9 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
             "DrawTriangleStrip",
             "DrawTriangleStrip3D",
             "GuiTabBar",
-            "GuiListViewEx"
+            "GuiListViewEx",
+            "GuiPanel",
+            "GuiScrollPanel"
         ]
 
         if func_name in manual or "FromMemory" in func_name:
