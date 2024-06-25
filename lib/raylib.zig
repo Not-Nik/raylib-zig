@@ -1815,6 +1815,16 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) RaylibError![]Color {
     return res;
 }
 
+pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: ?[]i32) Font {
+    var fontCharsFinal = @as([*c]c_int, 0);
+    var fontCharsLen: c_int = @as(c_int, 0);
+    if (fontChars) |fontCharsSure| {
+        fontCharsFinal = @as([*c]c_int, @ptrCast(fontCharsSure));
+        fontCharsLen = @as(i32, @intCast(fontCharsSure.len));
+    }
+    return cdef.LoadFontEx(@as([*c]const u8, @ptrCast(fileName)), @as(c_int, fontSize), fontCharsFinal, fontCharsLen);
+}
+
 pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
     var fileDataFinal = @as([*c]const u8, 0);
     var fileDataLen: i32 = 0;
@@ -1937,10 +1947,6 @@ pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
 
 pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
     return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
-}
-
-pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32) Font {
-    return cdef.LoadFontEx(@as([*c]const u8, @ptrCast(fileName)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)));
 }
 
 pub fn genImageFontAtlas(chars: []const GlyphInfo, recs: [][]Rectangle, fontSize: i32, padding: i32, packMethod: i32) Image {
