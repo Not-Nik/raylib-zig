@@ -57,7 +57,7 @@ To build all available examples simply `zig build examples`. To list available e
 * You can copy that folder anywhere you want and edit the source
 * Run `zig build run` at any time to test your project
 
-### In an existing project (e.g. created with `zig init-exe`)
+### In an existing project (e.g. created with `zig init`)
 
 Create a `build.zig.zon` and add raylib-zig as a dependency like so:
 
