@@ -612,7 +612,7 @@ pub fn rlDrawVertexArray(offset: i32, count: i32) void {
     cdef.rlDrawVertexArray(@as(c_int, offset), @as(c_int, count));
 }
 
-pub fn rlDrawVertexArrayElements(offset: i32, count: i32, buffer: *const anyopaque) void {
+pub fn rlDrawVertexArrayElements(offset: i32, count: i32, buffer: ?*const anyopaque) void {
     cdef.rlDrawVertexArrayElements(@as(c_int, offset), @as(c_int, count), buffer);
 }
 
@@ -620,7 +620,7 @@ pub fn rlDrawVertexArrayInstanced(offset: i32, count: i32, instances: i32) void 
     cdef.rlDrawVertexArrayInstanced(@as(c_int, offset), @as(c_int, count), @as(c_int, instances));
 }
 
-pub fn rlDrawVertexArrayElementsInstanced(offset: i32, count: i32, buffer: *const anyopaque, instances: i32) void {
+pub fn rlDrawVertexArrayElementsInstanced(offset: i32, count: i32, buffer: ?*const anyopaque, instances: i32) void {
     cdef.rlDrawVertexArrayElementsInstanced(@as(c_int, offset), @as(c_int, count), buffer, @as(c_int, instances));
 }
 

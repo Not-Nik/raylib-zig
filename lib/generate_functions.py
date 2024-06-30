@@ -45,7 +45,7 @@ def c_to_zig_type(c: str) -> str:
     return const + c
 
 
-def ziggify_type(name: str, t: str) -> str:
+def ziggify_type(name: str, t: str, func_name) -> str:
     NO_STRINGS = ["data", "fileData", "compData"]
 
     single = [
@@ -288,7 +288,16 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
 
             arg_type = c_to_zig_type(arg_type)
             arg_name, arg_type = fix_pointer(arg_name, arg_type)
-            zig_type = ziggify_type(arg_name, arg_type)
+
+            single_opt = [
+                ("rlDrawVertexArrayElements", "buffer"),
+                ("rlDrawVertexArrayElementsInstanced", "buffer")
+            ]
+
+            if arg_type.startswith("*") and (func_name, arg_name) in single_opt:
+                arg_type = "?" + arg_type
+
+            zig_type = ziggify_type(arg_name, arg_type, func_name)
 
             zig_types.add(arg_type)
             zig_c_arguments.append(arg_name + ": " + add_namespace_to_type(arg_type))  # Put everything together.
@@ -346,7 +355,7 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
         if func_name in manual or "FromMemory" in func_name:
             continue
 
-        zig_return = ziggify_type(func_name, return_type)
+        zig_return = ziggify_type(func_name, return_type, func_name)
         return_cast = make_return_cast(return_type, zig_return, f"cdef.{func_name}({zig_call_args})")
 
         if return_cast:

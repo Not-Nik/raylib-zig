@@ -110,9 +110,9 @@ pub extern "c" fn rlSetVertexAttribute(index: c_uint, compSize: c_int, ty: c_int
 pub extern "c" fn rlSetVertexAttributeDivisor(index: c_uint, divisor: c_int) void;
 pub extern "c" fn rlSetVertexAttributeDefault(locIndex: c_int, value: *const anyopaque, attribType: c_int, count: c_int) void;
 pub extern "c" fn rlDrawVertexArray(offset: c_int, count: c_int) void;
-pub extern "c" fn rlDrawVertexArrayElements(offset: c_int, count: c_int, buffer: *const anyopaque) void;
+pub extern "c" fn rlDrawVertexArrayElements(offset: c_int, count: c_int, buffer: ?*const anyopaque) void;
 pub extern "c" fn rlDrawVertexArrayInstanced(offset: c_int, count: c_int, instances: c_int) void;
-pub extern "c" fn rlDrawVertexArrayElementsInstanced(offset: c_int, count: c_int, buffer: *const anyopaque, instances: c_int) void;
+pub extern "c" fn rlDrawVertexArrayElementsInstanced(offset: c_int, count: c_int, buffer: ?*const anyopaque, instances: c_int) void;
 pub extern "c" fn rlLoadTexture(data: *const anyopaque, width: c_int, height: c_int, format: c_int, mipmapCount: c_int) c_uint;
 pub extern "c" fn rlLoadTextureDepth(width: c_int, height: c_int, useRenderBuffer: bool) c_uint;
 pub extern "c" fn rlLoadTextureCubemap(data: *const anyopaque, size: c_int, format: c_int) c_uint;
