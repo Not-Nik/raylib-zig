@@ -65,7 +65,7 @@ Download and add raylib-zig as a dependency by running the following command in 
 zig fetch --save https://github.com/Not-Nik/raylib-zig/archive/devel.tar.gz
 ```
 
-Then add raylib-zig as a dependency and import it's modules and artifact in your `build.zig`:
+Then add raylib-zig as a dependency and import its modules and artifact in your `build.zig`:
 
 ```zig
 const raylib_dep = b.dependency("raylib-zig", .{
