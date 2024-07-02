@@ -624,7 +624,7 @@ pub const Color = extern struct {
         return rl.colorBrightness(self, factor);
     }
 
-    pub fn constrast(self: Color, c: f32) Color {
+    pub fn contrast(self: Color, c: f32) Color {
         return rl.colorContrast(self, c);
     }
 
