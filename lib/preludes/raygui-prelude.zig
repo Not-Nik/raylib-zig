@@ -412,6 +412,7 @@ pub const GuiIconName = enum(c_int) {
     icon_255 = 255,
 };
 
+/// Get raygui icons data pointer
 pub fn guiGetIcons() rl.RaylibError![]u32 {
     var res: []u32 = undefined;
 
@@ -424,18 +425,22 @@ pub fn guiGetIcons() rl.RaylibError![]u32 {
 }
 
 // If you REALLY need the return value of the function, you'll know what to do with it and its size yourself
+/// Load raygui icons file (.rgi) into internal icons data
 pub fn guiLoadIcons(fileName: [*c]const u8, loadIconsName: bool) [*c][*c]u8 {
     return cdef.GuiLoadIcons(fileName, loadIconsName);
 }
 
+/// Tab Bar control, returns TAB to be closed or -1
 pub fn guiTabBar(bounds: Rectangle, text: [][:0]const u8, active: *i32) i32 {
     return @as(i32, cdef.GuiTabBar(bounds, @as([*c][*c]const u8, @ptrCast(text)), @as(c_int, @intCast(text.len)), @as([*c]c_int, @ptrCast(active))));
 }
 
+/// List View with extended parameters
 pub fn guiListViewEx(bounds: Rectangle, text: [][:0]const u8, scrollIndex: *i32, active: *i32, focus: *i32) i32 {
     return @as(i32, cdef.GuiListViewEx(bounds, @as([*c][*c]const u8, @ptrCast(text)), @as(c_int, @intCast(text.len)), @as([*c]c_int, @ptrCast(scrollIndex)), @as([*c]c_int, @ptrCast(active)), @as([*c]c_int, @ptrCast(focus))));
 }
 
+/// Panel control, useful to group controls
 pub fn guiPanel(bounds: Rectangle, text: ?[:0]const u8) i32 {
     var textFinal = @as([*c]const u8, 0);
     if (text) |textSure| {
@@ -444,6 +449,7 @@ pub fn guiPanel(bounds: Rectangle, text: ?[:0]const u8) i32 {
     return @as(i32, cdef.GuiPanel(bounds, textFinal));
 }
 
+/// Scroll Panel control
 pub fn guiScrollPanel(bounds: Rectangle, text: ?[:0]const u8, content: Rectangle, scroll: *Vector2, view: *Rectangle) i32 {
     var textFinal = @as([*c]const u8, 0);
     if (text) |textSure| {

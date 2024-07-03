@@ -55,7 +55,7 @@ def ziggify_type(name: str, t: str, func_name) -> str:
         "position", "mesh", "materialCount", "material", "model", "animCount",
         "wave", "v1", "v2", "outAxis", "outAngle", "fileSize",
         "AutomationEventList", "list", "batch", "glInternalFormat", "glFormat",
-        "glType", "mipmaps", "active", "scroll", "view", "checked", "mouseCell", 
+        "glType", "mipmaps", "active", "scroll", "view", "checked", "mouseCell",
         "scrollIndex", "focus", "secretViewActive", "color", "alpha", "colorHsv"
     ]
     multi = [
@@ -225,7 +225,15 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
         if not line.startswith(prefix):
             continue
 
-        line = line.split(";", 1)[0]
+        split_line = line.split(";", 1)
+
+        line = split_line[0]
+        if len(split_line) > 1:
+            desc = split_line[1].lstrip()
+            inline_comment = ("/" + desc) if len(desc) > 0 else ""
+        else:
+            inline_comment = ""
+
 
         if leftover:
             line = leftover + line
@@ -267,7 +275,7 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
         zig_c_arguments = []
         zig_arguments = []
         zig_call_args = []
-        
+
         if not arguments:
             arguments = "void"
 
@@ -360,6 +368,7 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
 
         if return_cast:
             zig_funcs.append(
+                inline_comment +
                 f"pub fn {zig_name}({zig_arguments}) {zig_return}" +
                 " {\n    " +
                 ("return " if zig_return != "void" else "") +
