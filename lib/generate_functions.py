@@ -310,7 +310,7 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
 
             zig_types.add(arg_type)
             zig_c_arguments.append(arg_name + ": " + add_namespace_to_type(arg_type))  # Put everything together.
-            zig_arguments.append(arg_name + ": " + zig_type,)
+            zig_arguments.append(arg_name + ": " + zig_type)
             if arg_type == zig_type:
                 zig_call_args.append(arg_name)
             else:
