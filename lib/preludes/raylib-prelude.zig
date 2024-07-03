@@ -20,122 +20,156 @@ pub const Vector2 = extern struct {
         return Vector2{ .x = x, .y = y };
     }
 
+    /// Vector with components value 0.0
     pub fn zero() Vector2 {
         return math.vector2Zero();
     }
 
+    /// Vector with components value 1.0
     pub fn one() Vector2 {
         return math.vector2One();
     }
 
+    /// Add two vectors (v1 + v2)
     pub fn add(self: Vector2, v: Vector2) Vector2 {
         return math.vector2Add(self, v);
     }
 
+    /// Add vector and float value
     pub fn addValue(self: Vector2, v: f32) Vector2 {
         return math.vector2AddValue(self, v);
     }
 
+    /// Subtract two vectors (v1 - v2)
     pub fn subtract(self: Vector2, v: Vector2) Vector2 {
         return math.vector2Subtract(self, v);
     }
 
+    /// Subtract vector by float value
     pub fn subtractValue(self: Vector2, v: f32) Vector2 {
         return math.vector2SubtractValue(self, v);
     }
 
+    /// Calculate vector length
     pub fn length(self: Vector2) f32 {
         return math.vector2Length(self);
     }
 
+    /// Calculate vector square length
     pub fn lengthSqr(self: Vector2) f32 {
         return math.vector2LengthSqr(self);
     }
 
+    /// Calculate two vectors dot product
     pub fn dotProduct(self: Vector2, v: Vector2) f32 {
         return math.vector2DotProduct(self, v);
     }
 
+    /// Calculate distance between two vectors
     pub fn distance(self: Vector2, v: Vector2) f32 {
         return math.vector2Distance(self, v);
     }
 
+    /// Calculate square distance between two vectors
     pub fn distanceSqr(self: Vector2, v: Vector2) f32 {
         return math.vector2DistanceSqr(self, v);
     }
 
+    /// Calculate angle from two vectors
     pub fn angle(self: Vector2, v: Vector2) f32 {
         return math.vector2Angle(self, v);
     }
 
+    /// Calculate angle defined by a two vectors line
     pub fn lineAngle(self: Vector2, end: Vector2) f32 {
         return math.vector2LineAngle(self, end);
     }
 
+    /// Scale vector (multiply by value)
     pub fn scale(self: Vector2, scale_: f32) Vector2 {
         return math.vector2Scale(self, scale_);
     }
 
+    /// Multiply vector by vector
     pub fn multiply(self: Vector2, v2: Vector2) Vector2 {
         return math.vector2Multiply(self, v2);
     }
 
+    /// Negate vector
     pub fn negate(self: Vector2) Vector2 {
         return math.vector2Negate(self);
     }
 
+    /// Divide vector by vector
     pub fn divide(self: Vector2, v2: Vector2) Vector2 {
         return math.vector2Divide(self, v2);
     }
 
+    /// Normalize provided vector
     pub fn normalize(self: Vector2) Vector2 {
         return math.vector2Normalize(self);
     }
 
+    /// Transforms a Vector2 by a given Matrix
     pub fn transform(self: Vector2, mat: Matrix) Vector2 {
         return math.vector2Transform(self, mat);
     }
 
+    /// Calculate linear interpolation between two vectors
     pub fn lerp(self: Vector2, v2: Vector2, amount: f32) Vector2 {
         return math.vector2Lerp(self, v2, amount);
     }
 
+    /// Calculate reflected vector to normal
     pub fn reflect(self: Vector2, normal: Vector2) Vector2 {
         return math.vector2Reflect(self, normal);
     }
 
+    /// Get min value for each pair of components
     pub fn min(self: Vector2, v2: Vector2) Vector2 {
         return math.vector2Min(self, v2);
     }
 
+    /// Get max value for each pair of components
     pub fn max(self: Vector2, v2: Vector2) Vector2 {
         return math.vector2Max(self, v2);
     }
 
+    /// Rotate vector by angle
     pub fn rotate(self: Vector2, angle_: f32) Vector2 {
         return math.vector2Rotate(self, angle_);
     }
 
+    /// Move Vector towards target
     pub fn moveTowards(self: Vector2, target: Vector2, maxDistance: f32) Vector2 {
         return math.vector2MoveTowards(self, target, maxDistance);
     }
 
+    /// Invert the given vector
     pub fn invert(self: Vector2) Vector2 {
         return math.vector2Invert(self);
     }
 
+    /// Clamp the components of the vector between min and max values specified by the given vectors
     pub fn clamp(self: Vector2, min_: Vector2, max_: Vector2) Vector2 {
         return math.vector2Clamp(self, min_, max_);
     }
 
+    /// Clamp the magnitude of the vector between two min and max values
     pub fn clampValue(self: Vector2, min_: f32, max_: f32) Vector2 {
         return math.vector2ClampValue(self, min_, max_);
     }
 
+    /// Check whether two given vectors are almost equal
     pub fn equals(self: Vector2, q: Vector2) i32 {
         return math.vector2Equals(self, q);
     }
 
+    /// Compute the direction of a refracted ray
+    /// v: normalized direction of the incoming ray
+    /// n: normalized normal vector of the interface of two optical media
+    /// r: ratio of the refractive index of the medium from where the ray comes
+    ///    to the refractive index of the medium on the other side of the surface
     pub fn refract(self: Vector2, n: Vector2, r: f32) Vector2 {
         return math.vector2Refract(self, n, r);
     }
@@ -150,158 +184,205 @@ pub const Vector3 = extern struct {
         return Vector3{ .x = x, .y = y, .z = z };
     }
 
+    // Vector with components value 0.0
     pub fn zero() Vector3 {
         return math.vector3Zero();
     }
 
+    /// Vector with components value 1.0
     pub fn one() Vector3 {
         return math.vector3One();
     }
 
+    /// Add two vectors
     pub fn add(self: Vector3, v: Vector3) Vector3 {
         return math.vector3Add(self, v);
     }
 
+    /// Add vector and float value
     pub fn addValue(self: Vector3, add_: f32) Vector3 {
         return math.vector3AddValue(self, add_);
     }
 
+    /// Subtract two vectors
     pub fn subtract(self: Vector3, v: Vector3) Vector3 {
         return math.vector3Subtract(self, v);
     }
 
+    /// Subtract vector by float value
     pub fn subtractValue(self: Vector3, sub: f32) Vector3 {
         return math.vector3SubtractValue(self, sub);
     }
 
+    /// Multiply vector by scalar
     pub fn scale(self: Vector3, scalar: f32) Vector3 {
         return math.vector3Scale(self, scalar);
     }
 
+    /// Multiply vector by vector
     pub fn multiply(self: Vector3, v: Vector3) Vector3 {
         return math.vector3Multiply(self, v);
     }
 
+    /// Calculate two vectors cross product
     pub fn crossProduct(self: Vector3, v: Vector3) Vector3 {
         return math.vector3CrossProduct(self, v);
     }
 
+    /// Calculate one vector perpendicular vector
     pub fn perpendicular(self: Vector3) Vector3 {
         return math.vector3Perpendicular(self);
     }
 
+    /// Calculate vector length
     pub fn length(self: Vector3) f32 {
         return math.vector3Length(self);
     }
 
+    /// Calculate vector square length
     pub fn lengthSqr(self: Vector3) f32 {
         return math.vector3LengthSqr(self);
     }
 
+    /// Calculate two vectors dot product
     pub fn dotProduct(self: Vector3, v: Vector3) f32 {
         return math.vector3DotProduct(self, v);
     }
 
+    /// Calculate distance between two vectors
     pub fn distance(self: Vector3, v: Vector3) f32 {
         return math.vector3Distance(self, v);
     }
 
+    /// Calculate square distance between two vectors
     pub fn distanceSqr(self: Vector3, v: Vector3) f32 {
         return math.vector3DistanceSqr(self, v);
     }
 
+    /// Calculate angle between two vectors
     pub fn angle(self: Vector3, v: Vector3) f32 {
         return math.vector3Angle(self, v);
     }
 
+    /// Negate vector (invert direction)
     pub fn negate(self: Vector3) Vector3 {
         return math.vector3Negate(self);
     }
 
+    /// Divide vector by vector
     pub fn divide(self: Vector3, v: Vector3) Vector3 {
         return math.vector3Divide(self, v);
     }
 
+    /// Normalize provided vector
     pub fn normalize(self: Vector3) Vector3 {
         return math.vector3Normalize(self);
     }
 
+    /// Calculate the projection of the vector v1 on to v2
     pub fn project(self: Vector3, v: Vector3) Vector3 {
         return math.vector3Project(self, v);
     }
 
+    /// Calculate the rejection of the vector v1 on to v2
     pub fn reject(self: Vector3, v: Vector3) Vector3 {
         return math.vector3Reject(self, v);
     }
 
+    /// Orthonormalize provided vectors Makes vectors normalized and orthogonal
+    /// to each other Gram-Schmidt function implementation
     pub fn orthoNormalize(self: *Vector3, v: *Vector3) void {
         math.vector3OrthoNormalize(self, v);
     }
 
+    /// Transforms a Vector3 by a given Matrix
     pub fn transform(self: Vector3, mat: Matrix) Vector3 {
         return math.vector3Transform(self, mat);
     }
 
+    /// Transform a vector by quaternion rotation
     pub fn rotateByQuaternion(self: Vector3, q: Quaternion) Vector3 {
         return math.vector3RotateByQuaternion(self, q);
     }
 
+    /// Rotates a vector around an axis
     pub fn rotateByAxisAngle(self: Vector3, axis: Vector3, angle_: f32) Vector3 {
         return math.vector3RotateByAxisAngle(self, axis, angle_);
     }
 
+    /// Move Vector towards target
     pub fn moveTowards(self: Vector3, target: Vector3, maxDistance: f32) Vector3 {
         return math.vector3MoveTowards(self, target, maxDistance);
     }
 
+    /// Calculate linear interpolation between two vectors
     pub fn lerp(self: Vector3, v2: Vector3, amount: f32) Vector3 {
         return math.vector3Lerp(self, v2, amount);
     }
 
+    /// Calculate cubic hermite interpolation between two vectors and their tangents
+    /// as described in the GLTF 2.0 specification
     pub fn cubicHermite(self: Vector3, tangent1: Vector3, v: Vector3, tangent2: Vector3, amount: f32) Vector3 {
         return math.vector3CubicHermite(self, tangent1, v, tangent2, amount);
     }
 
+    /// Calculate reflected vector to normal
     pub fn reflect(self: Vector3, normal: Vector3) Vector3 {
         return math.vector3Reflect(self, normal);
     }
 
+    /// Get min value for each pair of components
     pub fn min(self: Vector3, v: Vector3) Vector3 {
         return math.vector3Min(self, v);
     }
 
+    /// Get max value for each pair of components
     pub fn max(self: Vector3, v: Vector3) Vector3 {
         return math.vector3Max(self, v);
     }
 
+    /// Compute barycenter coordinates (u, v, w) for point p with respect to triangle
+    /// (a, b, c) NOTE: Assumes P is on the plane of the triangle
     pub fn barycenter(p: Vector3, a: Vector3, b: Vector3, c: Vector3) Vector3 {
         return math.vector3Barycenter(p, a, b, c);
     }
 
+    /// Projects a Vector3 from screen space into object space
+    /// NOTE: We are avoiding calling other raymath functions despite available
     pub fn unproject(source: Vector3, projection: Matrix, view: Matrix) Vector3 {
         return math.vector3Unproject(source, projection, view);
     }
 
+    /// Get Vector3 as float array
     pub fn toFloatV(self: Vector3) math.float3 {
         return math.vector3ToFloatV(self);
     }
 
+    /// Invert the given vector
     pub fn invert(self: Vector3) Vector3 {
         return math.vector3Invert(self);
     }
 
+    /// Clamp the components of the vector between min and max values specified by the given vectors
     pub fn clamp(self: Vector3, min_: Vector3, max_: Vector3) Vector3 {
         return math.vector3Clamp(self, min_, max_);
     }
 
+    /// Clamp the magnitude of the vector between two values
     pub fn clampValue(self: Vector3, min_: f32, max_: f32) Vector3 {
         return math.vector3ClampValue(self, min_, max_);
     }
 
+    /// Check whether two given vectors are almost equal
     pub fn equals(p: Vector3, q: Vector3) i32 {
         return math.vector3Equals(p, q);
     }
 
+    /// Compute the direction of a refracted ray
+    /// v: normalized direction of the incoming ray
+    /// n: normalized normal vector of the interface of two optical media
+    /// r: ratio of the refractive index of the medium from where the ray comes
+    ///    to the refractive index of the medium on the other side of the surface
     pub fn refract(self: Vector3, n: Vector3, r: f32) Vector3 {
         return math.vector3Refract(self, n, r);
     }
@@ -317,138 +398,176 @@ pub const Vector4 = extern struct {
         return Vector4{ .x = x, .y = y, .z = z, .w = w };
     }
 
+    /// Vector with components value 0.0
     pub fn zero() Vector4 {
         return math.vector4Zero();
     }
 
+    /// Vector with components value 1.0
     pub fn one() Vector4 {
         return math.vector4One();
     }
 
+    /// Add two vectors
     pub fn add(self: Vector4, v: Vector4) Vector4 {
         return math.vector4Add(self, v);
     }
 
+    /// Add vector and float value
     pub fn addValue(self: Vector4, add_: f32) Vector4 {
         return math.vector4AddValue(self, add_);
     }
 
+    /// Subtract two vectors
     pub fn subtract(self: Vector4, v: Vector4) Vector4 {
         return math.vector4Subtract(self, v);
     }
 
+    /// Subtract vector and float value
     pub fn subtractValue(self: Vector4, add_: f32) Vector4 {
         return math.vector4SubtractValue(self, add_);
     }
 
+    /// Computes the length of a vector
     pub fn length(self: Vector4) f32 {
         return math.vector4Length(self);
     }
 
+    /// Calculate vector square length
     pub fn lengthSqr(self: Vector4) f32 {
         return math.vector4LengthSqr(self);
     }
 
+    /// Calculate two vectors dot product
     pub fn dotProduct(self: Vector4, v: Vector4) f32 {
         return math.vector4DotProduct(self, v);
     }
 
+    /// Calculate distance between two vectors
     pub fn distance(self: Vector4, v: Vector4) f32 {
         return math.vector4Distance(self, v);
     }
 
+    /// Calculate square distance between two vectors
     pub fn distanceSqr(self: Vector4, v: Vector4) f32 {
         return math.vector4DistanceSqr(self, v);
     }
 
+    /// Scale vector by float value
     pub fn scale(self: Vector4, scale_: f32) Vector4 {
         return math.vector4Scale(self, scale_);
     }
 
+    /// Multiply vector by vector
     pub fn multiply(self: Vector4, v: Vector4) Vector4 {
         return math.vector4Multiply(self, v);
     }
 
+    /// Negate vector
     pub fn negate(self: Vector4) Vector4 {
         return math.vector4Negate(self);
     }
 
+    /// Divide two vectors
     pub fn divide(self: Vector4, v: Vector4) Vector4 {
         return math.vector4Divide(self, v);
     }
 
+    /// Normalize vector
     pub fn normalize(self: Vector4) Vector4 {
         return math.vector4Normalize(self);
     }
 
+    /// Get min value for each pair of components
     pub fn min(self: Vector4, v: Vector4) Vector4 {
         return math.vector4Min(self, v);
     }
 
+    /// Get max value for each pair of components
     pub fn max(self: Vector4, v: Vector4) Vector4 {
         return math.vector4Max(self, v);
     }
 
+    /// Calculate linear interpolation between two vectors
     pub fn lerp(self: Vector4, v: Vector4, amount: f32) Vector4 {
         return math.vector4Lerp(self, v, amount);
     }
 
+    /// Move Vector towards target
     pub fn moveTowards(self: Vector4, target: Vector4, maxDistance: f32) Vector4 {
         return math.vector4MoveTowards(self, target, maxDistance);
     }
 
+    /// Invert provided quaternion
     pub fn invert(self: Vector4) Vector4 {
         return math.vector4Invert(self);
     }
 
+    /// Check whether two given quaternions are almost equal
     pub fn equals(p: Vector4, q: Vector4) i32 {
         return math.vector4Equals(p, q);
     }
 
+    /// Get identity quaternion
     pub fn identity() Quaternion {
         return math.quaternionIdentity();
     }
 
+    /// Calculate slerp-optimized interpolation between two quaternions
     pub fn nlerp(self: Quaternion, q: Quaternion, amount: f32) Quaternion {
         return math.quaternionNlerp(self, q, amount);
     }
 
+    /// Calculates spherical linear interpolation between two quaternions
     pub fn slerp(self: Quaternion, q: Quaternion, amount: f32) Quaternion {
         return math.quaternionSlerp(self, q, amount);
     }
 
+    /// Calculate quaternion cubic spline interpolation using Cubic Hermite Spline
+    /// algorithm as described in the GLTF 2.0 specification
     pub fn cubicHermiteSpline(self: Quaternion, outTangent1: Quaternion, q: Quaternion, inTangent2: Quaternion, t: f32) Quaternion {
         return math.quaternionCubicHermiteSpline(self, outTangent1, q, inTangent2, t);
     }
 
+    // Calculate quaternion based on the rotation from one vector to another
     pub fn fromVector3ToVector3(from: Vector3, to: Vector3) Quaternion {
         return math.quaternionFromVector3ToVector3(from, to);
     }
 
+    /// Get a quaternion for a given rotation matrix
     pub fn fromMatrix(mat: Matrix) Quaternion {
         return math.quaternionFromMatrix(mat);
     }
 
+    /// Get a matrix for a given quaternion
     pub fn toMatrix(self: Quaternion) Matrix {
         return math.quaternionToMatrix(self);
     }
 
+    /// Get rotation quaternion for an angle and axis
+    /// NOTE: Angle must be provided in radians
     pub fn fromAxisAngle(axis: Vector3, angle: f32) Quaternion {
         return math.quaternionFromAxisAngle(axis, angle);
     }
 
+    /// Get the rotation angle and axis for a given quaternion
     pub fn toAxisAngle(self: Quaternion, outAxis: *Vector3, outAngle: *f32) void {
         math.quaternionToAxisAngle(self, outAxis, outAngle);
     }
 
+    /// Get the quaternion equivalent to Euler angles
+    /// NOTE: Rotation order is ZYX
     pub fn fromEuler(pitch: f32, yaw: f32, roll: f32) Quaternion {
         return math.quaternionFromEuler(pitch, yaw, roll);
     }
 
+    /// Get the Euler angles equivalent to quaternion (roll, pitch, yaw)
+    /// NOTE: Angles are returned in a Vector3 struct in radians
     pub fn toEuler(self: Quaternion) Vector3 {
         return math.quaternionToEuler(self);
     }
 
+    /// Transform a quaternion given a transformation matrix
     pub fn transform(self: Quaternion, mat: Matrix) Quaternion {
         return math.quaternionTransform(self, mat);
     }
@@ -473,86 +592,115 @@ pub const Matrix = extern struct {
     m11: f32,
     m15: f32,
 
+    /// Compute matrix determinant
     pub fn determinant(self: Matrix) f32 {
         return math.matrixDeterminant(self);
     }
 
+    /// Get the trace of the matrix (sum of the values along the diagonal)
     pub fn trace(self: Matrix) f32 {
         return math.matrixTrace(self);
     }
 
+    /// Transposes provided matrix
     pub fn transpose(self: Matrix) Matrix {
         return math.matrixTranspose(self);
     }
 
+    /// Invert provided matrix
     pub fn invert(self: Matrix) Matrix {
         return math.matrixInvert(self);
     }
 
+    /// Get identity matrix
     pub fn identity() Matrix {
         return math.matrixIdentity();
     }
 
+    /// Add two matrices
     pub fn add(self: Matrix, right: Matrix) Matrix {
         return math.matrixAdd(self, right);
     }
 
+    /// Subtract two matrices (left - right)
     pub fn subtract(self: Matrix, right: Matrix) Matrix {
         return math.matrixSubtract(self, right);
     }
 
+    /// Get two matrix multiplication
+    /// NOTE: When multiplying matrices... the order matters!
     pub fn multiply(self: Matrix, right: Matrix) Matrix {
         return math.matrixMultiply(self, right);
     }
 
+    /// Get translation matrix
     pub fn translate(x: f32, y: f32, z: f32) Matrix {
         return math.matrixTranslate(x, y, z);
     }
 
+    /// Create rotation matrix from axis and angle
+    /// NOTE: Angle should be provided in radians
     pub fn rotate(axis: Vector3, angle: f32) Matrix {
         return math.matrixRotate(axis, angle);
     }
 
+    /// Get x-rotation matrix
+    /// NOTE: Angle must be provided in radians
     pub fn rotateX(angle: f32) Matrix {
         return math.matrixRotateX(angle);
     }
 
+    /// Get y-rotation matrix
+    /// NOTE: Angle must be provided in radians
     pub fn rotateY(angle: f32) Matrix {
         return math.matrixRotateY(angle);
     }
 
+    /// Get z-rotation matrix
+    /// NOTE: Angle must be provided in radians
     pub fn rotateZ(angle: f32) Matrix {
         return math.matrixRotateZ(angle);
     }
 
+    /// Get xyz-rotation matrix
+    /// NOTE: Angle must be provided in radians
     pub fn rotateXYZ(angle: Vector3) Matrix {
         return math.matrixRotateXYZ(angle);
     }
 
+    /// Get zyx-rotation matrix
+    /// NOTE: Angle must be provided in radians
     pub fn rotateZYX(angle: Vector3) Matrix {
         return math.matrixRotateZYX(angle);
     }
 
+    /// Get scaling matrix
     pub fn scale(x: f32, y: f32, z: f32) Matrix {
         return math.matrixScale(x, y, z);
     }
 
+    /// Get perspective projection matrix
     pub fn frustum(left: f64, right: f64, bottom: f64, top: f64, near: f64, far: f64) Matrix {
         return math.matrixFrustum(left, right, bottom, top, near, far);
     }
 
+    /// Get perspective projection matrix
+    /// NOTE: Fovy angle must be provided in radians
     pub fn perspective(fovY: f64, aspect: f64, nearPlane: f64, farPlane: f64) Matrix {
         return math.matrixPerspective(fovY, aspect, nearPlane, farPlane);
     }
 
+    /// Get orthographic projection matrix
     pub fn ortho(left: f64, right: f64, bottom: f64, top: f64, nearPlane: f64, farPlane: f64) Matrix {
         return math.matrixOrtho(left, right, bottom, top, nearPlane, farPlane);
     }
 
+    /// Get camera look-at matrix (view matrix)
     pub fn lookAt(eye: Vector3, target: Vector3, up: Vector3) Matrix {
         return math.matrixLookAt(eye, target, up);
     }
 
+    /// Get float array of matrix data
     pub fn toFloatV(self: Matrix) math.float16 {
         return math.matrixToFloatV(self);
     }
@@ -596,46 +744,57 @@ pub const Color = extern struct {
         return Color{ .r = r, .g = g, .b = b, .a = a };
     }
 
+    /// Get Color from normalized values [0..1]
     pub fn fromNormalized(normalized: Vector4) Color {
         return rl.colorFromNormalized(normalized);
     }
 
+    /// Get a Color from HSV values, hue [0..360], saturation/value [0..1]
     pub fn fromHSV(hue: f32, saturation: f32, value: f32) Color {
         return rl.colorFromHSV(hue, saturation, value);
     }
 
+    /// Get a Color from hexadecimal value
     pub fn fromInt(hexValue: u32) Color {
         return rl.getColor(hexValue);
     }
 
+    /// Get color with alpha applied, alpha goes from 0.0 to 1.0
     pub fn fade(self: Color, a: f32) Color {
         return rl.fade(self, a);
     }
 
+    /// Get color multiplied with another color
     pub fn tint(self: Color, t: Color) Color {
         return rl.colorTint(self, t);
     }
 
+    /// Get Color normalized as float [0..1]
     pub fn normalize(self: Color) Vector4 {
         return rl.colorNormalize(self);
     }
 
+    /// Get color with brightness correction, brightness factor goes from -1.0 to 1.0
     pub fn brightness(self: Color, factor: f32) Color {
         return rl.colorBrightness(self, factor);
     }
 
+    /// Get color with contrast correction, contrast values between -1.0 and 1.0
     pub fn contrast(self: Color, c: f32) Color {
         return rl.colorContrast(self, c);
     }
 
+    /// Get color with alpha applied, alpha goes from 0.0 to 1.0
     pub fn alpha(self: Color, a: f32) Color {
         return rl.colorAlpha(self, a);
     }
 
+    /// Get hexadecimal value for a Color
     pub fn toInt(self: Color) i32 {
         return rl.colorToInt(self);
     }
 
+    /// Get HSV values for a Color, hue [0..360], saturation/value [0..1]
     pub fn toHSV(self: Color) Vector3 {
         return rl.colorToHSV(self);
     }
@@ -651,10 +810,12 @@ pub const Rectangle = extern struct {
         return Rectangle{ .x = x, .y = y, .width = width, .height = height };
     }
 
+    /// Check collision between two rectangles
     pub fn checkCollision(self: Rectangle, rec2: Rectangle) bool {
         return rl.checkCollisionRecs(self, rec2);
     }
 
+    /// Get collision rectangle for two rectangles collision
     pub fn getCollision(self: Rectangle, rec2: Rectangle) Rectangle {
         return rl.getCollisionRec(self, rec2);
     }
@@ -667,262 +828,327 @@ pub const Image = extern struct {
     mipmaps: c_int,
     format: PixelFormat,
 
+    /// Load image from file into CPU memory (RAM)
     pub fn init(fileName: [:0]const u8) Image {
         return rl.loadImage(fileName);
     }
 
+    /// Load image from RAW file data
     pub fn initRaw(fileName: [:0]const u8, width: i32, height: i32, format: PixelFormat, headerSize: i32) Image {
         return rl.loadImageRaw(fileName, width, height, format, headerSize);
     }
 
+    /// Load image sequence from file (frames appended to image.data)
     pub fn initAnim(fileName: [:0]const u8, frames: *i32) Image {
         return rl.loadImageAnim(fileName, frames);
     }
 
+    /// Load image from GPU texture data
     pub fn fromTexture(texture: Texture) Image {
         return rl.loadImageFromTexture(texture);
     }
 
+    /// Load image from screen buffer and (screenshot)
     pub fn fromScreen() Image {
         return rl.loadImageFromScreen();
     }
 
+    /// Unload image from CPU memory (RAM)
     pub fn unload(self: Image) void {
         rl.unloadImage(self);
     }
 
+    /// Create an image from text (default font)
     pub fn initText(text: [:0]const u8, fontSize: i32, color: Color) Image {
         return rl.imageText(text, fontSize, color);
     }
 
+    /// Create an image from text (custom sprite font)
     pub fn initTextEx(font: Font, text: [:0]const u8, fontSize: f32, spacing: f32, t: Color) Image {
         return rl.imageTextEx(font, text, fontSize, spacing, t);
     }
 
+    /// Generate image: plain color
     pub fn genColor(width: i32, height: i32, color: Color) Image {
         return rl.genImageColor(width, height, color);
     }
 
+    /// Generate image: linear gradient, direction in degrees [0..360], 0=Vertical gradient
     pub fn genGradientLinear(width: i32, height: i32, direction: i32, start: Color, end: Color) Image {
         return rl.genImageGradientLinear(width, height, direction, start, end);
     }
 
+    /// Generate image: radial gradient
     pub fn genGradientRadial(width: i32, height: i32, density: f32, inner: Color, outer: Color) Image {
         return rl.genImageGradientRadial(width, height, density, inner, outer);
     }
 
+    /// Generate image: square gradient
     pub fn genGradientSquare(width: i32, height: i32, density: f32, inner: Color, outer: Color) Image {
         return rl.genImageGradientSquare(width, height, density, inner, outer);
     }
 
+    /// Generate image: checked
     pub fn genChecked(width: i32, height: i32, checksX: i32, checksY: i32, col1: Color, col2: Color) Image {
         return rl.genImageChecked(width, height, checksX, checksY, col1, col2);
     }
 
+    /// Generate image: white noise
     pub fn genWhiteNoise(width: i32, height: i32, factor: f32) Image {
         return rl.genImageWhiteNoise(width, height, factor);
     }
 
+    /// Generate image: perlin noise
     pub fn genPerlinNoise(width: i32, height: i32, offsetX: i32, offsetY: i32, scale: f32) Image {
         return rl.genImagePerlinNoise(width, height, offsetX, offsetY, scale);
     }
 
+    /// Generate image: cellular algorithm, bigger tileSize means bigger cells
     pub fn genCellular(width: i32, height: i32, tileSize: i32) Image {
         return rl.genImageCellular(width, height, tileSize);
     }
 
+    /// Generate image: grayscale image from text data
     pub fn genText(width: i32, height: i32, text: [:0]const u8) Image {
         return rl.genImageText(width, height, text);
     }
 
+    /// Create an image duplicate (useful for transformations)
     pub fn copy(self: Image) Image {
         return rl.imageCopy(self);
     }
 
+    /// Create an image from another image piece
     pub fn copyRec(self: Image, rec: Rectangle) Image {
         return rl.imageFromImage(self, rec);
     }
 
+    /// Convert image data to desired format
     pub fn setFormat(self: *Image, newFormat: PixelFormat) void {
         return rl.imageFormat(self, newFormat);
     }
 
+    /// Convert image to POT (power-of-two)
     pub fn toPOT(self: *Image, fill: Color) void {
         rl.imageToPOT(self, fill);
     }
 
+    /// Crop an image to a defined rectangle
     pub fn crop(self: *Image, c: Rectangle) void {
         rl.imageCrop(self, c);
     }
 
+    /// Crop image depending on alpha value
     pub fn alphaCrop(self: *Image, threshold: f32) void {
         rl.imageAlphaCrop(self, threshold);
     }
 
+    /// Clear alpha channel to desired color
     pub fn alphaClear(self: *Image, color: Color, threshold: f32) void {
         rl.imageAlphaClear(self, color, threshold);
     }
 
+    /// Apply alpha mask to image
     pub fn alphaMask(self: *Image, am: Image) void {
         rl.imageAlphaMask(self, am);
     }
 
+    /// Premultiply alpha channel
     pub fn alphaPremultiply(self: *Image) void {
         rl.imageAlphaPremultiply(self);
     }
 
+    /// Apply Gaussian blur using a box blur approximation
     pub fn blurGaussian(self: *Image, blurSize: i32) void {
         rl.imageBlurGaussian(self, blurSize);
     }
 
+    /// Resize image (Bicubic scaling algorithm)
     pub fn resize(self: *Image, newWidth: i32, newHeight: i32) void {
         rl.imageResize(self, newWidth, newHeight);
     }
 
+    /// Resize image (Nearest-Neighbor scaling algorithm)
     pub fn resizeNN(self: *Image, newWidth: i32, newHeight: i32) void {
         rl.imageResizeNN(self, newWidth, newHeight);
     }
 
+    /// Resize canvas and fill with color
     pub fn resizeCanvas(self: *Image, newWidth: i32, newHeight: i32, offsetX: i32, offsetY: i32, fill: Color) void {
         rl.imageResizeCanvas(self, newWidth, newHeight, offsetX, offsetY, fill);
     }
 
+    /// Compute all mipmap levels for a provided image
     pub fn mimaps(self: *Image) void {
         rl.imageMipmaps(self);
     }
 
+    /// Dither image data to 16bpp or lower (Floyd-Steinberg dithering)
     pub fn dither(self: *Image, rBpp: i32, gBpp: i32, bBpp: i32, aBpp: i32) void {
         rl.imageDither(self, rBpp, gBpp, bBpp, aBpp);
     }
 
+    /// Flip image vertically
     pub fn flipVertical(self: *Image) void {
         rl.imageFlipVertical(self);
     }
 
+    /// Flip image horizontally
     pub fn flipHorizontal(self: *Image) void {
         rl.imageFlipHorizontal(self);
     }
 
+    /// Rotate image by input angle in degrees (-359 to 359)
     pub fn rotate(self: *Image, degrees: i32) void {
         rl.imageRotate(self, degrees);
     }
 
+    /// Rotate image clockwise 90deg
     pub fn rotateCW(self: *Image) void {
         rl.imageRotateCW(self);
     }
 
+    /// Rotate image counter-clockwise 90deg
     pub fn rotateCCW(self: *Image) void {
         rl.imageRotateCCW(self);
     }
 
+    /// Modify image color: tint
     pub fn tint(self: *Image, color: Color) void {
         rl.imageColorTint(self, color);
     }
 
+    /// Modify image color: invert
     pub fn invert(self: *Image) void {
         rl.imageColorInvert(self);
     }
 
+    /// Modify image color: grayscale
     pub fn grayscale(self: *Image) void {
         rl.imageColorGrayscale(self);
     }
 
+    /// Modify image color: contrast (-100 to 100)
     pub fn contrast(self: *Image, c: f32) void {
         rl.imageColorContrast(self, c);
     }
 
+    /// Modify image color: brightness (-255 to 255)
     pub fn brightness(self: *Image, b: i32) void {
         rl.imageColorBrightness(self, b);
     }
 
+    /// Modify image color: replace color
     pub fn replaceColor(self: *Image, color: Color, replace: Color) void {
         rl.imageColorReplace(self, color, replace);
     }
 
+    /// Get image alpha border rectangle
     pub fn getAlphaBorder(self: Image, threshold: f32) Rectangle {
         return rl.getImageAlphaBorder(self, threshold);
     }
 
+    /// Get image pixel color at (x, y) position
     pub fn getColor(self: Image, x: i32, y: i32) Color {
         return rl.getImageColor(self, x, y);
     }
 
+    /// Clear image background with given color
     pub fn clearBackground(self: *Image, color: Color) void {
         rl.imageClearBackground(self, color);
     }
 
+    /// Draw pixel within an image
     pub fn drawPixel(self: *Image, posX: i32, posY: i32, color: Color) void {
         rl.imageDrawPixel(self, posX, posY, color);
     }
 
+    /// Draw pixel within an image (Vector version)
     pub fn drawPixelV(self: *Image, position: Vector2, color: Color) void {
         rl.imageDrawPixelV(self, position, color);
     }
 
+    /// Draw line within an image
     pub fn drawLine(self: *Image, startPosX: i32, startPosY: i32, endPosX: i32, endPosY: i32, color: Color) void {
         rl.imageDrawLine(self, startPosX, startPosY, endPosX, endPosY, color);
     }
 
+    /// Draw line within an image (Vector version)
     pub fn drawLineV(self: *Image, start: Vector2, end: Vector2, color: Color) void {
         rl.imageDrawLineV(self, start, end, color);
     }
 
+    /// Draw a filled circle within an image
     pub fn drawCircle(self: *Image, centerX: i32, centerY: i32, radius: i32, color: Color) void {
         rl.imageDrawCircle(self, centerX, centerY, radius, color);
     }
 
+    /// Draw a filled circle within an image (Vector version)
     pub fn drawCircleV(self: *Image, center: Vector2, radius: i32, color: Color) void {
         rl.imageDrawCircleV(self, center, radius, color);
     }
 
+    /// Draw circle outline within an image
     pub fn drawCircleLines(self: *Image, centerX: i32, centerY: i32, radius: i32, color: Color) void {
         rl.imageDrawCircleLines(self, centerX, centerY, radius, color);
     }
 
+    /// Draw circle outline within an image (Vector version)
     pub fn drawCircleLinesV(self: *Image, center: Vector2, radius: i32, color: Color) void {
         rl.imageDrawCircleLinesV(self, center, radius, color);
     }
 
+    /// Draw rectangle within an image
     pub fn drawRectangle(self: *Image, posX: i32, posY: i32, width: i32, height: i32, color: Color) void {
         rl.imageDrawRectangle(self, posX, posY, width, height, color);
     }
 
+    /// Draw rectangle within an image (Vector version)
     pub fn drawRectangleV(self: *Image, position: Vector2, size: Vector2, color: Color) void {
         rl.imageDrawRectangleV(self, position, size, color);
     }
 
+    /// Draw rectangle within an image
     pub fn drawRectangleRec(self: *Image, rec: Rectangle, color: Color) void {
         rl.imageDrawRectangleRec(self, rec, color);
     }
 
+    /// Draw rectangle lines within an image
     pub fn drawRectangleLines(self: *Image, rec: Rectangle, thick: i32, color: Color) void {
         rl.imageDrawRectangleLines(self, rec, thick, color);
     }
 
+    /// Draw a source image within a destination image (tint applied to source)
     pub fn drawImage(self: *Image, src: Image, srcRec: Rectangle, dstRec: Rectangle, t: Color) void {
         rl.imageDraw(self, src, srcRec, dstRec, t);
     }
 
+    /// Draw text (using default font) within an image (destination)
     pub fn drawText(self: *Image, text: [:0]const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
         rl.imageDrawText(self, text, posX, posY, fontSize, color);
     }
 
+    /// Draw text (custom sprite font) within an image (destination)
     pub fn drawTextEx(self: *Image, font: Font, text: [:0]const u8, position: Vector2, fontSize: f32, spacing: f32, t: Color) void {
         rl.imageDrawTextEx(self, font, text, position, fontSize, spacing, t);
     }
 
+    /// Export image data to file, returns true on success
     pub fn exportToFile(self: Image, fileName: [:0]const u8) bool {
         return rl.exportImage(self, fileName);
     }
 
+    /// Export image as code file defining an array of bytes, returns true on success
     pub fn exportAsCode(self: Image, fileName: [:0]const u8) bool {
         return rl.exportImageAsCode(self, fileName);
     }
 
+    /// Set icon for window (single image, RGBA 32bit, only PLATFORM_DESKTOP)
     pub fn useAsWindowIcon(self: Image) void {
         rl.setWindowIcon(self);
     }
 
+    /// Load texture from image data
     pub fn toTexture(self: Image) Texture {
         return Texture.fromImage(self);
     }
@@ -943,38 +1169,47 @@ pub const Texture = extern struct {
         return rl.loadTexture(fileName);
     }
 
+    /// Load texture from image data
     pub fn fromImage(image: Image) Texture {
         return rl.loadTextureFromImage(image);
     }
 
+    /// Load cubemap from image, multiple image cubemap layouts supported
     pub fn fromCubemap(image: Image, layout: CubemapLayout) Texture {
         return rl.loadTextureCubemap(image, layout);
     }
 
+    /// Unload texture from GPU memory (VRAM)
     pub fn unload(self: Texture) void {
         rl.unloadTexture(self);
     }
 
+    /// Draw a Texture2D
     pub fn draw(self: Texture, posX: i32, posY: i32, tint: Color) void {
         rl.drawTexture(self, posX, posY, tint);
     }
 
+    /// Draw a Texture2D with position defined as Vector2
     pub fn drawV(self: Texture, position: Vector2, tint: Color) void {
         rl.drawTextureV(self, position, tint);
     }
 
+    /// Draw a Texture2D with extended parameters
     pub fn drawEx(self: Texture, position: Vector2, rotation: f32, scale: f32, tint: Color) void {
         rl.drawTextureEx(self, position, rotation, scale, tint);
     }
 
+    /// Draw a part of a texture defined by a rectangle
     pub fn drawRec(self: Texture, source: Rectangle, position: Vector2, tint: Color) void {
         rl.drawTextureRec(self, source, position, tint);
     }
 
+    /// Draw a part of a texture defined by a rectangle with 'pro' parameters
     pub fn drawPro(self: Texture, source: Rectangle, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
         rl.drawTexturePro(self, source, dest, origin, rotation, tint);
     }
 
+    /// Draws a texture (or part of it) that stretches or shrinks nicely
     pub fn drawNPatch(self: Texture, nPatchInfo: NPatchInfo, dest: Rectangle, origin: Vector2, rotation: f32, tint: Color) void {
         rl.drawTextureNPatch(self, nPatchInfo, dest, origin, rotation, tint);
     }
@@ -991,14 +1226,17 @@ pub const RenderTexture = extern struct {
         return rl.loadRenderTexture(width, height);
     }
 
+    /// Unload render texture from GPU memory (VRAM)
     pub fn unload(self: RenderTexture) void {
         rl.unloadRenderTexture(self);
     }
 
+    /// Begin drawing to render texture
     pub fn begin(self: RenderTexture2D) void {
         rl.beginTextureMode(self);
     }
 
+    /// Ends drawing to render texture
     pub fn end(_: RenderTexture2D) void {
         rl.endTextureMode();
     }
@@ -1030,30 +1268,37 @@ pub const Font = extern struct {
     recs: [*c]Rectangle,
     glyphs: [*c]GlyphInfo,
 
+    /// Load font from file into GPU memory (VRAM)
     pub fn init(fileName: [:0]const u8) Font {
         return rl.loadFont(fileName);
     }
 
+    /// Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set
     pub fn initEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32) Font {
         return rl.loadFontEx(fileName, fontSize, fontChars);
     }
 
+    /// Load font from Image (XNA style)
     pub fn fromImage(image: Image, key: Color, firstChar: i32) Font {
         return rl.loadFontFromImage(image, key, firstChar);
     }
 
+    /// Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
     pub fn fromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
         return rl.loadFontFromMemory(fileType, fileData, fontSize, fontChars);
     }
 
+    /// Unload font from GPU memory (VRAM)
     pub fn unload(self: Font) void {
         rl.unloadFont(self);
     }
 
+    /// Check if a font is ready
     pub fn isReady(self: Font) bool {
         return rl.isFontReady(self);
     }
 
+    /// Export font as code file, returns true on success
     pub fn exportAsCode(self: Font, fileName: [:0]const u8) bool {
         return rl.exportFontAsCode(self, fileName);
     }
@@ -1066,18 +1311,22 @@ pub const Camera3D = extern struct {
     fovy: f32,
     projection: CameraProjection,
 
+    /// Begin 3D mode with camera
     pub fn begin(self: Camera3D) void {
         rl.beginMode3D(self);
     }
 
+    /// Update camera position for selected mode
     pub fn update(self: *Camera3D, mode: rl.CameraMode) void {
         rl.updateCamera(self, mode);
     }
 
+    /// Get camera transform matrix (view matrix)
     pub fn getMatrix(self: Camera3D) Matrix {
         return rl.getCameraMatrix(self);
     }
 
+    /// Ends 3D mode and returns to default 2D orthographic mode
     pub fn end(_: Camera3D) void {
         rl.endMode3D();
     }
@@ -1090,14 +1339,17 @@ pub const Camera2D = extern struct {
     rotation: f32,
     zoom: f32,
 
+    /// Begin 2D mode with camera
     pub fn begin(self: Camera2D) void {
         rl.beginMode2D(self);
     }
 
+    /// Get camera 2d transform matrix
     pub fn getMatrix(self: Camera2D) Matrix {
         return rl.getCameraMatrix2D(self);
     }
 
+    /// Ends 2D mode with camera
     pub fn end(_: Camera2D) void {
         rl.endMode2D();
     }
@@ -1120,10 +1372,12 @@ pub const Mesh = extern struct {
     vaoId: c_uint,
     vboId: [*c]c_uint,
 
+    /// Draw a 3d mesh with material and transform
     pub fn draw(self: Mesh, material: Material, transform: Matrix) void {
         rl.drawMesh(self, material, transform);
     }
 
+    /// Draw multiple mesh instances with material and different transforms
     pub fn drawInstanced(self: Mesh, material: Material, transforms: []const Matrix) void {
         rl.drawMeshInstanced(self, material, transforms);
     }
@@ -1133,10 +1387,12 @@ pub const Shader = extern struct {
     id: c_uint,
     locs: [*c]c_int,
 
+    /// Begin custom shader drawing
     pub fn activate(self: Shader) void {
         rl.beginShaderMode(self);
     }
 
+    /// End custom shader drawing (use default shader)
     pub fn deactivate(_: Shader) void {
         rl.endShaderMode();
     }
@@ -1176,30 +1432,37 @@ pub const Model = extern struct {
     bones: [*c]BoneInfo,
     bindPose: [*c]Transform,
 
+    /// Load model from file (meshes and materials)
     pub fn init(fileName: [:0]const u8) Model {
         return rl.loadModel(fileName);
     }
 
+    /// Load model from generated mesh (default material)
     pub fn fromMesh(mesh: Mesh) Model {
         return rl.loadModelFromMesh(mesh);
     }
 
+    /// Unload model (including meshes) from memory (RAM and/or VRAM)
     pub fn unload(self: Model) void {
         rl.unloadModel(self);
     }
 
+    /// Draw a model (with texture if set)
     pub fn draw(self: Model, position: Vector3, scale: f32, tint: Color) void {
         return rl.drawModel(self, position, scale, tint);
     }
 
+    /// Draw a model with extended parameters
     pub fn drawEx(self: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
         return rl.drawModelEx(self, position, rotationAxis, rotationAngle, scale, tint);
     }
 
+    /// Draw a model wires (with texture if set)
     pub fn drawWires(self: Model, position: Vector3, scale: f32, tint: Color) void {
         return rl.drawModelWires(self, position, scale, tint);
     }
 
+    /// Draw a model wires (with texture if set) with extended parameters
     pub fn drawWiresEx(self: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
         return rl.drawModelWiresEx(self, position, rotationAxis, rotationAngle, scale, tint);
     }
@@ -1298,11 +1561,7 @@ pub const AutomationEvent = extern struct {
     params: [4]c_int,
 };
 
-pub const AutomationEventList = extern struct {
-    capacity: c_uint,
-    count: c_uint,
-    events: [*c]AutomationEvent
-};
+pub const AutomationEventList = extern struct { capacity: c_uint, count: c_uint, events: [*c]AutomationEvent };
 
 pub const ConfigFlags = packed struct {
     __reserved: bool = false,
@@ -1704,10 +1963,12 @@ pub const SHADER_LOC_MAP_SPECULAR = ShaderLocationIndex.shader_loc_map_metalness
 
 const cdef = @import("raylib-ext.zig");
 
+/// Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
 pub fn setWindowIcons(images: []Image) void {
     cdef.SetWindowIcons(@as([*c]Image, @ptrCast(images)), @as(c_int, @intCast(images.len)));
 }
 
+/// Load shader from files and bind default locations
 pub fn loadShader(vsFileName: ?[:0]const u8, fsFileName: ?[:0]const u8) Shader {
     var vsFileNameFinal = @as([*c]const u8, 0);
     var fsFileNameFinal = @as([*c]const u8, 0);
@@ -1720,6 +1981,7 @@ pub fn loadShader(vsFileName: ?[:0]const u8, fsFileName: ?[:0]const u8) Shader {
     return cdef.LoadShader(vsFileNameFinal, fsFileNameFinal);
 }
 
+/// Load shader from code strings and bind default locations
 pub fn loadShaderFromMemory(vsCode: ?[:0]const u8, fsCode: ?[:0]const u8) Shader {
     var vsCodeFinal = @as([*c]const u8, 0);
     var fsCodeFinal = @as([*c]const u8, 0);
@@ -1732,6 +1994,7 @@ pub fn loadShaderFromMemory(vsCode: ?[:0]const u8, fsCode: ?[:0]const u8) Shader
     return cdef.LoadShaderFromMemory(vsCodeFinal, fsCodeFinal);
 }
 
+/// Load file data as byte array (read)
 pub fn loadFileData(fileName: [:0]const u8) RaylibError![]u8 {
     var bytesRead: i32 = 0;
     var res: []u8 = undefined;
@@ -1744,14 +2007,17 @@ pub fn loadFileData(fileName: [:0]const u8) RaylibError![]u8 {
     return res;
 }
 
+/// Save data to file from byte array (write), returns true on success
 pub fn saveFileData(fileName: [:0]const u8, data: []u8) bool {
     return cdef.SaveFileData(@as([*c]const u8, @ptrCast(fileName)), @as(*anyopaque, @ptrCast(data.ptr)), @as(c_int, @intCast(data.len)));
 }
 
+/// Export data to code (.h), returns true on success
 pub fn exportDataAsCode(data: []const u8, fileName: [:0]const u8) bool {
     return cdef.ExportDataAsCode(@as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)), @as([*c]const u8, @ptrCast(fileName)));
 }
 
+/// Compress data (DEFLATE algorithm), memory must be MemFree()
 pub fn compressData(data: []const u8) []u8 {
     var compDataSize: i32 = 0;
     var res: []u8 = undefined;
@@ -1760,6 +2026,7 @@ pub fn compressData(data: []const u8) []u8 {
     return res;
 }
 
+/// Decompress data (DEFLATE algorithm), memory must be MemFree()
 pub fn decompressData(compData: []const u8) []u8 {
     var dataSize: i32 = 0;
     var res: []u8 = undefined;
@@ -1768,6 +2035,7 @@ pub fn decompressData(compData: []const u8) []u8 {
     return res;
 }
 
+/// Encode data to Base64 string, memory must be MemFree()
 pub fn encodeDataBase64(data: []const u8) []u8 {
     var outputSize: i32 = 0;
     var res: []u8 = undefined;
@@ -1776,6 +2044,7 @@ pub fn encodeDataBase64(data: []const u8) []u8 {
     return res;
 }
 
+/// Decode Base64 string data, memory must be MemFree()
 pub fn decodeDataBase64(data: []const u8) []u8 {
     var outputSize: i32 = 0;
     var res: []u8 = undefined;
@@ -1788,10 +2057,12 @@ pub fn loadImageAnimFromMemory(fileType: [:0]const u8, fileData: []const u8, fra
     return cdef.LoadImageAnimFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)), @as([*c]c_int, @ptrCast(frames)));
 }
 
+/// Load image from memory buffer, fileType refers to extension: i.e. '.png'
 pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: []const u8) Image {
     return cdef.LoadImageFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)));
 }
 
+/// Load color data from image as a Color array (RGBA - 32bit)
 pub fn loadImageColors(image: Image) RaylibError![]Color {
     var res: []Color = undefined;
 
@@ -1803,6 +2074,7 @@ pub fn loadImageColors(image: Image) RaylibError![]Color {
     return res;
 }
 
+/// Load colors palette from image as a Color array (RGBA - 32bit)
 pub fn loadImagePalette(image: Image, maxPaletteSize: i32) RaylibError![]Color {
     var colorCount: i32 = 0;
     var res: []Color = undefined;
@@ -1815,6 +2087,8 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) RaylibError![]Color {
     return res;
 }
 
+/// Load font from file with extended parameters, use null for codepoints and 0
+/// for codepointCount to load the default character set
 pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: ?[]i32) Font {
     var fontCharsFinal = @as([*c]c_int, 0);
     var fontCharsLen: c_int = @as(c_int, 0);
@@ -1825,6 +2099,7 @@ pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: ?[]i32) Font
     return cdef.LoadFontEx(@as([*c]const u8, @ptrCast(fileName)), @as(c_int, fontSize), fontCharsFinal, fontCharsLen);
 }
 
+/// Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
 pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
     var fileDataFinal = @as([*c]const u8, 0);
     var fileDataLen: i32 = 0;
@@ -1835,6 +2110,7 @@ pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSiz
     return cdef.LoadFontFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileDataFinal)), @as(c_int, @intCast(fileDataLen)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)));
 }
 
+/// Load font data for further use
 pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: FontType) RaylibError![]GlyphInfo {
     var res: []GlyphInfo = undefined;
 
@@ -1846,6 +2122,7 @@ pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: F
     return res;
 }
 
+/// Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
 pub fn loadCodepoints(text: [:0]const u8) RaylibError![]i32 {
     if (@sizeOf(c_int) != @sizeOf(i32)) {
         @compileError("Can't cast pointer to c_int array to i32 because they don't have the same size");
@@ -1861,6 +2138,7 @@ pub fn loadCodepoints(text: [:0]const u8) RaylibError![]i32 {
     return res;
 }
 
+/// Text formatting with variables (sprintf() style)
 pub fn textFormat(text: [:0]const u8, args: anytype) [:0]const u8 {
     comptime {
         const info = @typeInfo(@TypeOf(args));
@@ -1871,13 +2149,14 @@ pub fn textFormat(text: [:0]const u8, args: anytype) [:0]const u8 {
             },
             else => {
                 @compileError("Args should be in a tuple (call this function like textFormat(.{arg1, arg2, ...});)!");
-            }
+            },
         }
     }
 
     return std.mem.span(@call(.auto, cdef.TextFormat, .{@as([*c]const u8, @ptrCast(text))} ++ args));
 }
 
+/// Split text into multiple strings
 pub fn textSplit(text: [:0]const u8, delimiter: u8) [][:0]const u8 {
     var count: i32 = 0;
     var res: [][:0]const u8 = undefined;
@@ -1886,10 +2165,12 @@ pub fn textSplit(text: [:0]const u8, delimiter: u8) [][:0]const u8 {
     return res;
 }
 
+/// Draw multiple mesh instances with material and different transforms
 pub fn drawMeshInstanced(mesh: Mesh, material: Material, transforms: []const Matrix) void {
     cdef.DrawMeshInstanced(mesh, material, @as([*c]const Matrix, @ptrCast(transforms)), @as(c_int, @intCast(transforms.len)));
 }
 
+/// Load materials from model file
 pub fn loadMaterials(fileName: [:0]const u8) RaylibError![]Material {
     var materialCount: i32 = 0;
     var res: []Material = undefined;
@@ -1902,6 +2183,7 @@ pub fn loadMaterials(fileName: [:0]const u8) RaylibError![]Material {
     return res;
 }
 
+/// Load model animations from file
 pub fn loadModelAnimations(fileName: [:0]const u8) RaylibError![]ModelAnimation {
     var animCount: i32 = 0;
     var res: []ModelAnimation = undefined;
@@ -1914,14 +2196,17 @@ pub fn loadModelAnimations(fileName: [:0]const u8) RaylibError![]ModelAnimation 
     return res;
 }
 
+/// Unload animation data
 pub fn unloadModelAnimations(animations: []ModelAnimation) void {
     cdef.UnloadModelAnimations(@as([*c]ModelAnimation, @ptrCast(animations)), @as(c_int, @intCast(animations.len)));
 }
 
+/// Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
 pub fn loadWaveFromMemory(fileType: [:0]const u8, fileData: []const u8) Wave {
     return cdef.LoadWaveFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)));
 }
 
+/// Load samples data from wave as a 32bit float data array
 pub fn loadWaveSamples(wave: Wave) []f32 {
     var res: []f32 = undefined;
     res.ptr = @as([*]f32, @ptrCast(cdef.LoadWaveSamples(wave)));
@@ -1929,46 +2214,57 @@ pub fn loadWaveSamples(wave: Wave) []f32 {
     return res;
 }
 
+/// Load music stream from data
 pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music {
     return cdef.LoadMusicStreamFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)));
 }
 
+/// Draw lines sequence (using gl lines)
 pub fn drawLineStrip(points: []Vector2, color: Color) void {
     cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
+/// Draw a triangle fan defined by points (first vertex is the center)
 pub fn drawTriangleFan(points: []Vector2, color: Color) void {
     cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
+/// Draw a triangle strip defined by points
 pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
     cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
+/// Check if point is within a polygon described by array of vertices
 pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
     return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
 }
 
+/// Generate image font atlas using chars info
 pub fn genImageFontAtlas(chars: []const GlyphInfo, recs: [][]Rectangle, fontSize: i32, padding: i32, packMethod: i32) Image {
     return cdef.GenImageFontAtlas(@as([*c]const GlyphInfo, @ptrCast(chars)), @as([*c][*c]Rectangle, @ptrCast(recs)), @as(c_int, @intCast(recs.len)), @as(c_int, fontSize), @as(c_int, padding), @as(c_int, packMethod));
 }
 
+/// Unload font chars info data (RAM)
 pub fn unloadFontData(chars: []GlyphInfo) void {
     cdef.UnloadFontData(@as([*c]GlyphInfo, @ptrCast(chars)), @as(c_int, @intCast(chars.len)));
 }
 
+/// Load UTF-8 text encoded from codepoints array
 pub fn loadUTF8(codepoints: []const c_int) [:0]u8 {
     return std.mem.span(cdef.LoadUTF8(@as([*c]const c_int, @ptrCast(codepoints)), @as(c_int, @intCast(codepoints.len))));
 }
 
+/// Join text strings with delimiter
 pub fn textJoin(textList: [][:0]const u8, delimiter: [:0]const u8) [:0]const u8 {
     return std.mem.span(cdef.TextJoin(@as([*c][*c]const u8, @ptrCast(textList)), @as(c_int, @intCast(textList.len)), @as([*c]const u8, @ptrCast(delimiter))));
 }
 
+/// Draw a triangle strip defined by points
 pub fn drawTriangleStrip3D(points: []Vector3, color: Color) void {
     cdef.DrawTriangleStrip3D(@as([*c]Vector3, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
+/// Internal memory allocator
 fn alloc(_: *anyopaque, len: usize, _: u8, _: usize) ?[*]u8 {
     std.debug.assert(len > 0);
     return @ptrCast(cdef.MemAlloc(@intCast(len)));
@@ -1978,6 +2274,7 @@ fn resize(_: *anyopaque, buf: []u8, _: u8, new_len: usize, _: usize) bool {
     return (new_len <= buf.len);
 }
 
+/// Internal memory free
 fn free(_: *anyopaque, buf: []u8, _: u8, _: usize) void {
     cdef.MemFree(buf.ptr);
 }
