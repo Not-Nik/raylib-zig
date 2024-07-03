@@ -226,14 +226,13 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
             continue
 
         split_line = line.split(";", 1)
+        if len(split_line) == 1:
+            split_line.append("")
 
         line = split_line[0]
         inline_comment = ""
-        if len(split_line) > 1:
-            inline_comment = '/' + split_line[1].lstrip()
-            # sanity check
-            if inline_comment == "/":
-                inline_comment = ""
+        if split_line[1].startswith("//"):
+            inline_comment = '/' + split_line[1]
 
 
         if leftover:
@@ -369,7 +368,7 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
 
         if return_cast:
             zig_funcs.append(
-                (inline_comment if inline_comment != "" else "") +
+                inline_comment +
                 f"pub fn {zig_name}({zig_arguments}) {zig_return}" +
                 " {\n    " +
                 ("return " if zig_return != "void" else "") +
