@@ -226,13 +226,13 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
             continue
 
         split_line = line.split(";", 1)
-        if len(split_line) == 1:
-            split_line.append("")
 
         line = split_line[0]
-        inline_comment = ""
-        if split_line[1].startswith("//"):
-            inline_comment = '/' + split_line[1]
+        if len(split_line) > 1:
+            desc = split_line[1].lstrip()
+            inline_comment = ("/" + desc) if len(desc) > 0 else ""
+        else:
+            inline_comment = ""
 
 
         if leftover:
