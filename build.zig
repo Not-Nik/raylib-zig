@@ -13,6 +13,7 @@ pub const Options = struct {
     rtext: bool = true,
     rtextures: bool = true,
     platform_drm: bool = false,
+    shared: bool = false,
     linux_display_backend: LinuxDisplayBackend = .X11,
     opengl_version: OpenglVersion = .auto,
 };
@@ -101,7 +102,7 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
             .rtext = options.rtext,
             .rtextures = options.rtextures,
             .platform_drm = options.platform_drm,
-            .shared = false,
+            .shared = options.shared,
             .linux_display_backend = options.linux_display_backend,
             .opengl_version = options.opengl_version
         });
@@ -169,6 +170,7 @@ pub fn build(b: *std.Build) !void {
         .rtext = b.option(bool, "rtext", "Compile with text support") orelse defaults.rtext,
         .rtextures = b.option(bool, "rtextures", "Compile with textures support") orelse defaults.rtextures,
         .rshapes = b.option(bool, "rshapes", "Compile with shapes support") orelse defaults.rshapes,
+        .shared = b.option(bool, "shared", "Compile as shared library") orelse defaults.shared,
         .linux_display_backend = b.option(LinuxDisplayBackend, "linux_display_backend", "Linux display backend to use") orelse defaults.linux_display_backend,
         .opengl_version = b.option(OpenglVersion, "opengl_version", "OpenGL version to use") orelse defaults.opengl_version,
     };
