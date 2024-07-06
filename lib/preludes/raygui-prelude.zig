@@ -6,6 +6,10 @@ test {
     std.testing.refAllDeclsRecursive(@This());
 }
 
+pub const RayguiError = error{
+    GetIcons
+};
+
 const Vector2 = rl.Vector2;
 const Vector3 = rl.Vector3;
 const Color = rl.Color;
@@ -413,11 +417,11 @@ pub const GuiIconName = enum(c_int) {
 };
 
 /// Get raygui icons data pointer
-pub fn guiGetIcons() rl.RaylibError![]u32 {
+pub fn guiGetIcons() RayguiError![]u32 {
     var res: []u32 = undefined;
 
     const ptr = cdef.GuiGetIcons();
-    if (ptr == 0) return rl.RaylibError.GenericError;
+    if (ptr == 0) return RayguiError.GetIcons;
 
     res.ptr = @as([*]u32, @ptrCast(ptr));
     res.len = @as(usize, @intCast(256 * 256)); // RAYGUI_ICON_MAX_ICONS * RAYGUI_ICON_MAX_ICONS

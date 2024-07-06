@@ -10,7 +10,15 @@ test {
     std.testing.refAllDeclsRecursive(@This());
 }
 
-pub const RaylibError = error{GenericError};
+pub const RaylibError = error{
+    LoadFileData,
+    LoadImageColors,
+    LoadImagePalette,
+    LoadFontData,
+    LoadCodepoints,
+    LoadMaterials,
+    LoadModelAnimations
+};
 
 pub const Vector2 = extern struct {
     x: f32,
@@ -2000,7 +2008,7 @@ pub fn loadFileData(fileName: [:0]const u8) RaylibError![]u8 {
     var res: []u8 = undefined;
 
     const ptr = cdef.LoadFileData(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_int, @ptrCast(&bytesRead)));
-    if (ptr == 0) return RaylibError.GenericError;
+    if (ptr == 0) return RaylibError.LoadFileData;
 
     res.ptr = @as([*]u8, @ptrCast(ptr));
     res.len = @as(usize, @intCast(bytesRead));
@@ -2067,7 +2075,7 @@ pub fn loadImageColors(image: Image) RaylibError![]Color {
     var res: []Color = undefined;
 
     const ptr = cdef.LoadImageColors(image);
-    if (ptr == 0) return RaylibError.GenericError;
+    if (ptr == 0) return RaylibError.LoadImageColors;
 
     res.ptr = @as([*]Color, @ptrCast(ptr));
     res.len = @as(usize, @intCast(image.width * image.height));
@@ -2080,7 +2088,7 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) RaylibError![]Color {
     var res: []Color = undefined;
 
     const ptr = cdef.LoadImagePalette(image, @as(c_int, maxPaletteSize), @as([*c]c_int, @ptrCast(&colorCount)));
-    if (ptr == 0) return RaylibError.GenericError;
+    if (ptr == 0) return RaylibError.LoadImagePalette;
 
     res.ptr = @as([*]Color, @ptrCast(ptr));
     res.len = @as(usize, @intCast(colorCount));
@@ -2115,7 +2123,7 @@ pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: F
     var res: []GlyphInfo = undefined;
 
     const ptr = cdef.LoadFontData(@as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)), @as(c_int, fontSize), @as([*c]c_int, @ptrCast(fontChars)), @as(c_int, @intCast(fontChars.len)), ty);
-    if (ptr == 0) return RaylibError.GenericError;
+    if (ptr == 0) return RaylibError.LoadFontData;
 
     res.ptr = @as([*]GlyphInfo, @ptrCast(ptr));
     res.len = @as(usize, @intCast(fontChars.len));
@@ -2131,7 +2139,7 @@ pub fn loadCodepoints(text: [:0]const u8) RaylibError![]i32 {
     var res: []i32 = undefined;
 
     const ptr = cdef.LoadCodepoints(@as([*c]const u8, @ptrCast(text)), @as([*c]c_int, @ptrCast(&count)));
-    if (ptr == 0) return RaylibError.GenericError;
+    if (ptr == 0) return RaylibError.LoadCodepoints;
 
     res.ptr = @as([*]i32, @ptrCast(ptr));
     res.len = @as(usize, @intCast(count));
@@ -2176,7 +2184,7 @@ pub fn loadMaterials(fileName: [:0]const u8) RaylibError![]Material {
     var res: []Material = undefined;
 
     const ptr = cdef.LoadMaterials(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_int, @ptrCast(&materialCount)));
-    if (ptr == 0) return RaylibError.GenericError;
+    if (ptr == 0) return RaylibError.LoadMaterials;
 
     res.ptr = @as([*]Material, @ptrCast(ptr));
     res.len = @as(usize, @intCast(materialCount));
@@ -2189,7 +2197,7 @@ pub fn loadModelAnimations(fileName: [:0]const u8) RaylibError![]ModelAnimation 
     var res: []ModelAnimation = undefined;
 
     const ptr = cdef.LoadModelAnimations(@as([*c]const u8, @ptrCast(fileName)), @as([*c]c_int, @ptrCast(&animCount)));
-    if (ptr == 0) return RaylibError.GenericError;
+    if (ptr == 0) return RaylibError.LoadModelAnimations;
 
     res.ptr = @as([*]ModelAnimation, @ptrCast(ptr));
     res.len = @as(usize, @intCast(animCount));
