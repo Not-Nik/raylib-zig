@@ -837,17 +837,17 @@ pub const Image = extern struct {
     format: PixelFormat,
 
     /// Load image from file into CPU memory (RAM)
-    pub fn init(fileName: [:0]const u8) Image {
+    pub fn init(fileName: [*:0]const u8) Image {
         return rl.loadImage(fileName);
     }
 
     /// Load image from RAW file data
-    pub fn initRaw(fileName: [:0]const u8, width: i32, height: i32, format: PixelFormat, headerSize: i32) Image {
+    pub fn initRaw(fileName: [*:0]const u8, width: i32, height: i32, format: PixelFormat, headerSize: i32) Image {
         return rl.loadImageRaw(fileName, width, height, format, headerSize);
     }
 
     /// Load image sequence from file (frames appended to image.data)
-    pub fn initAnim(fileName: [:0]const u8, frames: *i32) Image {
+    pub fn initAnim(fileName: [*:0]const u8, frames: *i32) Image {
         return rl.loadImageAnim(fileName, frames);
     }
 
@@ -867,12 +867,12 @@ pub const Image = extern struct {
     }
 
     /// Create an image from text (default font)
-    pub fn initText(text: [:0]const u8, fontSize: i32, color: Color) Image {
+    pub fn initText(text: [*:0]const u8, fontSize: i32, color: Color) Image {
         return rl.imageText(text, fontSize, color);
     }
 
     /// Create an image from text (custom sprite font)
-    pub fn initTextEx(font: Font, text: [:0]const u8, fontSize: f32, spacing: f32, t: Color) Image {
+    pub fn initTextEx(font: Font, text: [*:0]const u8, fontSize: f32, spacing: f32, t: Color) Image {
         return rl.imageTextEx(font, text, fontSize, spacing, t);
     }
 
@@ -917,7 +917,7 @@ pub const Image = extern struct {
     }
 
     /// Generate image: grayscale image from text data
-    pub fn genText(width: i32, height: i32, text: [:0]const u8) Image {
+    pub fn genText(width: i32, height: i32, text: [*:0]const u8) Image {
         return rl.genImageText(width, height, text);
     }
 
@@ -1132,22 +1132,22 @@ pub const Image = extern struct {
     }
 
     /// Draw text (using default font) within an image (destination)
-    pub fn drawText(self: *Image, text: [:0]const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
+    pub fn drawText(self: *Image, text: [*:0]const u8, posX: i32, posY: i32, fontSize: i32, color: Color) void {
         rl.imageDrawText(self, text, posX, posY, fontSize, color);
     }
 
     /// Draw text (custom sprite font) within an image (destination)
-    pub fn drawTextEx(self: *Image, font: Font, text: [:0]const u8, position: Vector2, fontSize: f32, spacing: f32, t: Color) void {
+    pub fn drawTextEx(self: *Image, font: Font, text: [*:0]const u8, position: Vector2, fontSize: f32, spacing: f32, t: Color) void {
         rl.imageDrawTextEx(self, font, text, position, fontSize, spacing, t);
     }
 
     /// Export image data to file, returns true on success
-    pub fn exportToFile(self: Image, fileName: [:0]const u8) bool {
+    pub fn exportToFile(self: Image, fileName: [*:0]const u8) bool {
         return rl.exportImage(self, fileName);
     }
 
     /// Export image as code file defining an array of bytes, returns true on success
-    pub fn exportAsCode(self: Image, fileName: [:0]const u8) bool {
+    pub fn exportAsCode(self: Image, fileName: [*:0]const u8) bool {
         return rl.exportImageAsCode(self, fileName);
     }
 
@@ -1173,7 +1173,7 @@ pub const Texture = extern struct {
     mipmaps: c_int,
     format: PixelFormat,
 
-    pub fn init(fileName: [:0]const u8) Texture {
+    pub fn init(fileName: [*:0]const u8) Texture {
         return rl.loadTexture(fileName);
     }
 
@@ -1277,12 +1277,12 @@ pub const Font = extern struct {
     glyphs: [*c]GlyphInfo,
 
     /// Load font from file into GPU memory (VRAM)
-    pub fn init(fileName: [:0]const u8) Font {
+    pub fn init(fileName: [*:0]const u8) Font {
         return rl.loadFont(fileName);
     }
 
     /// Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set
-    pub fn initEx(fileName: [:0]const u8, fontSize: i32, fontChars: []i32) Font {
+    pub fn initEx(fileName: [*:0]const u8, fontSize: i32, fontChars: []i32) Font {
         return rl.loadFontEx(fileName, fontSize, fontChars);
     }
 
@@ -1292,7 +1292,7 @@ pub const Font = extern struct {
     }
 
     /// Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
-    pub fn fromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
+    pub fn fromMemory(fileType: [*:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
         return rl.loadFontFromMemory(fileType, fileData, fontSize, fontChars);
     }
 
@@ -1307,7 +1307,7 @@ pub const Font = extern struct {
     }
 
     /// Export font as code file, returns true on success
-    pub fn exportAsCode(self: Font, fileName: [:0]const u8) bool {
+    pub fn exportAsCode(self: Font, fileName: [*:0]const u8) bool {
         return rl.exportFontAsCode(self, fileName);
     }
 };
@@ -1441,7 +1441,7 @@ pub const Model = extern struct {
     bindPose: [*c]Transform,
 
     /// Load model from file (meshes and materials)
-    pub fn init(fileName: [:0]const u8) Model {
+    pub fn init(fileName: [*:0]const u8) Model {
         return rl.loadModel(fileName);
     }
 
@@ -1977,7 +1977,7 @@ pub fn setWindowIcons(images: []Image) void {
 }
 
 /// Load shader from files and bind default locations
-pub fn loadShader(vsFileName: ?[:0]const u8, fsFileName: ?[:0]const u8) Shader {
+pub fn loadShader(vsFileName: ?[*:0]const u8, fsFileName: ?[*:0]const u8) Shader {
     var vsFileNameFinal = @as([*c]const u8, 0);
     var fsFileNameFinal = @as([*c]const u8, 0);
     if (vsFileName) |vsFileNameSure| {
@@ -1990,7 +1990,7 @@ pub fn loadShader(vsFileName: ?[:0]const u8, fsFileName: ?[:0]const u8) Shader {
 }
 
 /// Load shader from code strings and bind default locations
-pub fn loadShaderFromMemory(vsCode: ?[:0]const u8, fsCode: ?[:0]const u8) Shader {
+pub fn loadShaderFromMemory(vsCode: ?[*:0]const u8, fsCode: ?[*:0]const u8) Shader {
     var vsCodeFinal = @as([*c]const u8, 0);
     var fsCodeFinal = @as([*c]const u8, 0);
     if (vsCode) |vsCodeSure| {
@@ -2003,7 +2003,7 @@ pub fn loadShaderFromMemory(vsCode: ?[:0]const u8, fsCode: ?[:0]const u8) Shader
 }
 
 /// Load file data as byte array (read)
-pub fn loadFileData(fileName: [:0]const u8) RaylibError![]u8 {
+pub fn loadFileData(fileName: [*:0]const u8) RaylibError![]u8 {
     var bytesRead: i32 = 0;
     var res: []u8 = undefined;
 
@@ -2016,12 +2016,12 @@ pub fn loadFileData(fileName: [:0]const u8) RaylibError![]u8 {
 }
 
 /// Save data to file from byte array (write), returns true on success
-pub fn saveFileData(fileName: [:0]const u8, data: []u8) bool {
+pub fn saveFileData(fileName: [*:0]const u8, data: []u8) bool {
     return cdef.SaveFileData(@as([*c]const u8, @ptrCast(fileName)), @as(*anyopaque, @ptrCast(data.ptr)), @as(c_int, @intCast(data.len)));
 }
 
 /// Export data to code (.h), returns true on success
-pub fn exportDataAsCode(data: []const u8, fileName: [:0]const u8) bool {
+pub fn exportDataAsCode(data: []const u8, fileName: [*:0]const u8) bool {
     return cdef.ExportDataAsCode(@as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)), @as([*c]const u8, @ptrCast(fileName)));
 }
 
@@ -2061,12 +2061,12 @@ pub fn decodeDataBase64(data: []const u8) []u8 {
     return res;
 }
 
-pub fn loadImageAnimFromMemory(fileType: [:0]const u8, fileData: []const u8, frames: *i32) Image {
+pub fn loadImageAnimFromMemory(fileType: [*:0]const u8, fileData: []const u8, frames: *i32) Image {
     return cdef.LoadImageAnimFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)), @as([*c]c_int, @ptrCast(frames)));
 }
 
 /// Load image from memory buffer, fileType refers to extension: i.e. '.png'
-pub fn loadImageFromMemory(fileType: [:0]const u8, fileData: []const u8) Image {
+pub fn loadImageFromMemory(fileType: [*:0]const u8, fileData: []const u8) Image {
     return cdef.LoadImageFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)));
 }
 
@@ -2097,7 +2097,7 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) RaylibError![]Color {
 
 /// Load font from file with extended parameters, use null for codepoints and 0
 /// for codepointCount to load the default character set
-pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: ?[]i32) Font {
+pub fn loadFontEx(fileName: [*:0]const u8, fontSize: i32, fontChars: ?[]i32) Font {
     var fontCharsFinal = @as([*c]c_int, 0);
     var fontCharsLen: c_int = @as(c_int, 0);
     if (fontChars) |fontCharsSure| {
@@ -2108,7 +2108,7 @@ pub fn loadFontEx(fileName: [:0]const u8, fontSize: i32, fontChars: ?[]i32) Font
 }
 
 /// Load font from memory buffer, fileType refers to extension: i.e. '.ttf'
-pub fn loadFontFromMemory(fileType: [:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
+pub fn loadFontFromMemory(fileType: [*:0]const u8, fileData: ?[]const u8, fontSize: i32, fontChars: []i32) Font {
     var fileDataFinal = @as([*c]const u8, 0);
     var fileDataLen: i32 = 0;
     if (fileData) |fileDataSure| {
@@ -2131,7 +2131,7 @@ pub fn loadFontData(fileData: []const u8, fontSize: i32, fontChars: []i32, ty: F
 }
 
 /// Load all codepoints from a UTF-8 text string, codepoints count returned by parameter
-pub fn loadCodepoints(text: [:0]const u8) RaylibError![]i32 {
+pub fn loadCodepoints(text: [*:0]const u8) RaylibError![]i32 {
     if (@sizeOf(c_int) != @sizeOf(i32)) {
         @compileError("Can't cast pointer to c_int array to i32 because they don't have the same size");
     }
@@ -2147,7 +2147,7 @@ pub fn loadCodepoints(text: [:0]const u8) RaylibError![]i32 {
 }
 
 /// Text formatting with variables (sprintf() style)
-pub fn textFormat(text: [:0]const u8, args: anytype) [:0]const u8 {
+pub fn textFormat(text: [*:0]const u8, args: anytype) [*:0]const u8 {
     comptime {
         const info = @typeInfo(@TypeOf(args));
         switch (info) {
@@ -2165,10 +2165,10 @@ pub fn textFormat(text: [:0]const u8, args: anytype) [:0]const u8 {
 }
 
 /// Split text into multiple strings
-pub fn textSplit(text: [:0]const u8, delimiter: u8) [][:0]const u8 {
+pub fn textSplit(text: [*:0]const u8, delimiter: u8) [][*:0]const u8 {
     var count: i32 = 0;
-    var res: [][:0]const u8 = undefined;
-    res.ptr = @as([*][:0]const u8, @ptrCast(cdef.TextSplit(@as([*c]const u8, @ptrCast(text)), delimiter, @as([*c]c_int, @ptrCast(&count)))));
+    var res: [][*:0]const u8 = undefined;
+    res.ptr = @as([*][*:0]const u8, @ptrCast(cdef.TextSplit(@as([*c]const u8, @ptrCast(text)), delimiter, @as([*c]c_int, @ptrCast(&count)))));
     res.len = @as(usize, @intCast(count));
     return res;
 }
@@ -2179,7 +2179,7 @@ pub fn drawMeshInstanced(mesh: Mesh, material: Material, transforms: []const Mat
 }
 
 /// Load materials from model file
-pub fn loadMaterials(fileName: [:0]const u8) RaylibError![]Material {
+pub fn loadMaterials(fileName: [*:0]const u8) RaylibError![]Material {
     var materialCount: i32 = 0;
     var res: []Material = undefined;
 
@@ -2192,7 +2192,7 @@ pub fn loadMaterials(fileName: [:0]const u8) RaylibError![]Material {
 }
 
 /// Load model animations from file
-pub fn loadModelAnimations(fileName: [:0]const u8) RaylibError![]ModelAnimation {
+pub fn loadModelAnimations(fileName: [*:0]const u8) RaylibError![]ModelAnimation {
     var animCount: i32 = 0;
     var res: []ModelAnimation = undefined;
 
@@ -2210,7 +2210,7 @@ pub fn unloadModelAnimations(animations: []ModelAnimation) void {
 }
 
 /// Load wave from memory buffer, fileType refers to extension: i.e. '.wav'
-pub fn loadWaveFromMemory(fileType: [:0]const u8, fileData: []const u8) Wave {
+pub fn loadWaveFromMemory(fileType: [*:0]const u8, fileData: []const u8) Wave {
     return cdef.LoadWaveFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(fileData)), @as(c_int, @intCast(fileData.len)));
 }
 
@@ -2223,7 +2223,7 @@ pub fn loadWaveSamples(wave: Wave) []f32 {
 }
 
 /// Load music stream from data
-pub fn loadMusicStreamFromMemory(fileType: [:0]const u8, data: []const u8) Music {
+pub fn loadMusicStreamFromMemory(fileType: [*:0]const u8, data: []const u8) Music {
     return cdef.LoadMusicStreamFromMemory(@as([*c]const u8, @ptrCast(fileType)), @as([*c]const u8, @ptrCast(data)), @as(c_int, @intCast(data.len)));
 }
 
@@ -2258,12 +2258,12 @@ pub fn unloadFontData(chars: []GlyphInfo) void {
 }
 
 /// Load UTF-8 text encoded from codepoints array
-pub fn loadUTF8(codepoints: []const c_int) [:0]u8 {
+pub fn loadUTF8(codepoints: []const c_int) [*:0]u8 {
     return std.mem.span(cdef.LoadUTF8(@as([*c]const c_int, @ptrCast(codepoints)), @as(c_int, @intCast(codepoints.len))));
 }
 
 /// Join text strings with delimiter
-pub fn textJoin(textList: [][:0]const u8, delimiter: [:0]const u8) [:0]const u8 {
+pub fn textJoin(textList: [][*:0]const u8, delimiter: [*:0]const u8) [*:0]const u8 {
     return std.mem.span(cdef.TextJoin(@as([*c][*c]const u8, @ptrCast(textList)), @as(c_int, @intCast(textList.len)), @as([*c]const u8, @ptrCast(delimiter))));
 }
 
