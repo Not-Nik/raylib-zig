@@ -88,6 +88,16 @@ exe.root_module.addImport("raygui", raygui);
 
 If you additionally want to support Web as a platform with emscripten, you will need to use `emcc.zig` by importing raylib-zig's build script with `const rlz = @import("raylib-zig");` and then accessing its functions with `rlz.emcc`. Refer to raylib-zig's project template on how to use them.
 
+### Defining feature macros
+
+Raylib lets the user enable and disable options for different features, loading different file formats for images,
+fonts, 3D models and audio, linkage variants. You can specify these options for your raylib-zig build by defining the
+corresponding C macro before you link with it, e.g.:
+
+```zig
+raylib_artifact.defineCMacro("SUPPORT_FILEFORMAT_JPG", null);
+```
+
 ## Exporting for web
 To export your project for the web, first install emsdk.
 Once emsdk is installed, set it up by running
