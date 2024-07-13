@@ -6,7 +6,8 @@ Manually tweaked, auto-generated [raylib](https://github.com/raysan5/raylib) bin
 
 Bindings tested on raylib version 5.1-dev and Zig 0.13.0
 
-Thanks to all the [contributors](https://github.com/Not-Nik/raylib-zig/graphs/contributors) for their help with this binding.
+Thanks to all the [contributors](https://github.com/Not-Nik/raylib-zig/graphs/contributors) for their help with this
+binding.
 
 ## Example
 
@@ -47,7 +48,8 @@ pub fn main() anyerror!void {
 
 ## Building the examples
 
-To build all available examples simply `zig build examples`. To list available examples run `zig build --help`. If you want to run an example, say `basic_window` run `zig build basic_window`
+To build all available examples simply `zig build examples`. To list available examples run `zig build --help`. If you
+want to run an example, say `basic_window` run `zig build basic_window`
 
 ## Building and using
 
@@ -86,7 +88,9 @@ exe.root_module.addImport("raylib", raylib);
 exe.root_module.addImport("raygui", raygui);
 ```
 
-If you additionally want to support Web as a platform with emscripten, you will need to use `emcc.zig` by importing raylib-zig's build script with `const rlz = @import("raylib-zig");` and then accessing its functions with `rlz.emcc`. Refer to raylib-zig's project template on how to use them.
+If you additionally want to support Web as a platform with emscripten, you will need to use `emcc.zig` by importing
+raylib-zig's build script with `const rlz = @import("raylib-zig");` and then accessing its functions with `rlz.emcc`.
+Refer to raylib-zig's project template on how to use them.
 
 ### Defining feature macros
 
@@ -112,7 +116,8 @@ once that is finished, the exported project should be located at `zig-out/htmlou
 
 ### When is the binding updated?
 
-I plan on updating it every mayor release (2.5, 3.0, etc.). Keep in mind these are technically header files, so any implementation stuff should be updatable with some hacks on your side.
+I plan on updating it every mayor release (2.5, 3.0, etc.). Keep in mind these are technically header files, so any
+implementation stuff should be updatable with some hacks on your side.
 
 ### What needs to be done?
 
