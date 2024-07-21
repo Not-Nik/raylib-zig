@@ -1282,7 +1282,7 @@ pub const Font = extern struct {
     }
 
     /// Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set
-    pub fn initEx(fileName: [*:0]const u8, fontSize: i32, fontChars: []i32) Font {
+    pub fn initEx(fileName: [*:0]const u8, fontSize: i32, fontChars: ?[]i32) Font {
         return rl.loadFontEx(fileName, fontSize, fontChars);
     }
 
