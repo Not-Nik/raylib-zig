@@ -3173,8 +3173,8 @@ pub fn getMouseWheelMoveV() Vector2 {
 }
 
 /// Set mouse cursor
-pub fn setMouseCursor(cursor: i32) void {
-    cdef.SetMouseCursor(@as(c_int, cursor));
+pub fn setMouseCursor(cursor: MouseCursor) void {
+    cdef.SetMouseCursor(cursor);
 }
 
 /// Get touch position X for touch point 0 (relative to screen size)
@@ -3968,8 +3968,8 @@ pub fn setTextureFilter(texture: Texture2D, filter: TextureFilter) void {
 }
 
 /// Set texture wrapping mode
-pub fn setTextureWrap(texture: Texture2D, wrap: i32) void {
-    cdef.SetTextureWrap(texture, @as(c_int, wrap));
+pub fn setTextureWrap(texture: Texture2D, wrap: TextureWrap) void {
+    cdef.SetTextureWrap(texture, wrap);
 }
 
 /// Draw a Texture2D

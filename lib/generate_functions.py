@@ -181,7 +181,7 @@ def fix_enums(arg_name, arg_type, func_name):
             arg_type = "FontType"
         elif arg_name == "uniformType":
             arg_type = "ShaderUniformDataType"
-        elif arg_name == "Cursor":
+        elif arg_name == "cursor":
             arg_type = "MouseCursor"
         elif arg_name == "newFormat":
             arg_type = "PixelFormat"
@@ -189,7 +189,7 @@ def fix_enums(arg_name, arg_type, func_name):
             arg_type = "CubemapLayout"
         elif arg_name == "filter" and func_name == "SetTextureFilter":
             arg_type = "TextureFilter"
-        elif arg_name == "TextureWrap":
+        elif arg_name == "wrap" and func_name == "SetTextureWrap":
             arg_type = "TextureWrap"
         elif arg_name == "format":
             arg_type = "PixelFormat"
