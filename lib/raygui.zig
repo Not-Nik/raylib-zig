@@ -513,13 +513,13 @@ pub fn guiGetFont() Font {
 }
 
 /// Set one style property
-pub fn guiSetStyle(control: i32, property: i32, value: i32) void {
-    cdef.GuiSetStyle(@as(c_int, control), @as(c_int, property), @as(c_int, value));
+pub fn guiSetStyle(control: GuiState, property: GuiControlProperty, value: i32) void {
+    cdef.GuiSetStyle(control, property, @as(c_int, value));
 }
 
 /// Get one style property
-pub fn guiGetStyle(control: i32, property: i32) i32 {
-    return @as(i32, cdef.GuiGetStyle(@as(c_int, control), @as(c_int, property)));
+pub fn guiGetStyle(control: GuiState, property: GuiControlProperty) i32 {
+    return @as(i32, cdef.GuiGetStyle(control, property));
 }
 
 /// Load style file over global style variable (.rgs)

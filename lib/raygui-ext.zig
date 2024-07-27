@@ -1,4 +1,7 @@
+// raylib-zig (c) Nikolas Wipper 2024
+
 const rl = @import("raylib-zig");
+const rgui = @import("raygui.zig");
 
 pub extern "c" fn GuiEnable() void;
 pub extern "c" fn GuiDisable() void;
@@ -10,8 +13,8 @@ pub extern "c" fn GuiSetState(state: c_int) void;
 pub extern "c" fn GuiGetState() c_int;
 pub extern "c" fn GuiSetFont(font: rl.Font) void;
 pub extern "c" fn GuiGetFont() rl.Font;
-pub extern "c" fn GuiSetStyle(control: c_int, property: c_int, value: c_int) void;
-pub extern "c" fn GuiGetStyle(control: c_int, property: c_int) c_int;
+pub extern "c" fn GuiSetStyle(control: rgui.GuiState, property: rgui.GuiControlProperty, value: c_int) void;
+pub extern "c" fn GuiGetStyle(control: rgui.GuiState, property: rgui.GuiControlProperty) c_int;
 pub extern "c" fn GuiLoadStyle(fileName: [*c]const u8) void;
 pub extern "c" fn GuiLoadStyleDefault() void;
 pub extern "c" fn GuiEnableTooltip() void;
