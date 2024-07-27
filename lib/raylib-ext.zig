@@ -188,7 +188,7 @@ pub extern "c" fn SetMouseOffset(offsetX: c_int, offsetY: c_int) void;
 pub extern "c" fn SetMouseScale(scaleX: f32, scaleY: f32) void;
 pub extern "c" fn GetMouseWheelMove() f32;
 pub extern "c" fn GetMouseWheelMoveV() rl.Vector2;
-pub extern "c" fn SetMouseCursor(cursor: c_int) void;
+pub extern "c" fn SetMouseCursor(cursor: rl.MouseCursor) void;
 pub extern "c" fn GetTouchX() c_int;
 pub extern "c" fn GetTouchY() c_int;
 pub extern "c" fn GetTouchPosition(index: c_int) rl.Vector2;
@@ -355,7 +355,7 @@ pub extern "c" fn UpdateTexture(texture: rl.Texture2D, pixels: *const anyopaque)
 pub extern "c" fn UpdateTextureRec(texture: rl.Texture2D, rec: rl.Rectangle, pixels: *const anyopaque) void;
 pub extern "c" fn GenTextureMipmaps(texture: [*c]rl.Texture2D) void;
 pub extern "c" fn SetTextureFilter(texture: rl.Texture2D, filter: rl.TextureFilter) void;
-pub extern "c" fn SetTextureWrap(texture: rl.Texture2D, wrap: c_int) void;
+pub extern "c" fn SetTextureWrap(texture: rl.Texture2D, wrap: rl.TextureWrap) void;
 pub extern "c" fn DrawTexture(texture: rl.Texture2D, posX: c_int, posY: c_int, tint: rl.Color) void;
 pub extern "c" fn DrawTextureV(texture: rl.Texture2D, position: rl.Vector2, tint: rl.Color) void;
 pub extern "c" fn DrawTextureEx(texture: rl.Texture2D, position: rl.Vector2, rotation: f32, scale: f32, tint: rl.Color) void;

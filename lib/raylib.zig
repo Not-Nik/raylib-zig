@@ -1281,7 +1281,7 @@ pub const Font = extern struct {
         return rl.loadFont(fileName);
     }
 
-    /// Load font from file with extended parameters, use NULL for codepoints and 0 for codepointCount to load the default character set
+    /// Load font from file with extended parameters, use null for fontChars to load the default character set
     pub fn initEx(fileName: [*:0]const u8, fontSize: i32, fontChars: ?[]i32) Font {
         return rl.loadFontEx(fileName, fontSize, fontChars);
     }
@@ -1325,7 +1325,7 @@ pub const Camera3D = extern struct {
     }
 
     /// Update camera position for selected mode
-    pub fn update(self: *Camera3D, mode: rl.CameraMode) void {
+    pub fn update(self: *Camera3D, mode: CameraMode) void {
         rl.updateCamera(self, mode);
     }
 
@@ -2095,8 +2095,7 @@ pub fn loadImagePalette(image: Image, maxPaletteSize: i32) RaylibError![]Color {
     return res;
 }
 
-/// Load font from file with extended parameters, use null for codepoints and 0
-/// for codepointCount to load the default character set
+/// Load font from file with extended parameters, use null for fontChars to load the default character set
 pub fn loadFontEx(fileName: [*:0]const u8, fontSize: i32, fontChars: ?[]i32) Font {
     var fontCharsFinal = @as([*c]c_int, 0);
     var fontCharsLen: c_int = @as(c_int, 0);
@@ -3174,8 +3173,8 @@ pub fn getMouseWheelMoveV() Vector2 {
 }
 
 /// Set mouse cursor
-pub fn setMouseCursor(cursor: i32) void {
-    cdef.SetMouseCursor(@as(c_int, cursor));
+pub fn setMouseCursor(cursor: MouseCursor) void {
+    cdef.SetMouseCursor(cursor);
 }
 
 /// Get touch position X for touch point 0 (relative to screen size)
@@ -3969,8 +3968,8 @@ pub fn setTextureFilter(texture: Texture2D, filter: TextureFilter) void {
 }
 
 /// Set texture wrapping mode
-pub fn setTextureWrap(texture: Texture2D, wrap: i32) void {
-    cdef.SetTextureWrap(texture, @as(c_int, wrap));
+pub fn setTextureWrap(texture: Texture2D, wrap: TextureWrap) void {
+    cdef.SetTextureWrap(texture, wrap);
 }
 
 /// Draw a Texture2D
