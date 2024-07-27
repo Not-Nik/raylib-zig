@@ -147,6 +147,28 @@ def fix_pointer(name: str, t: str):
     return name, t
 
 
+_fix_enums_data = [
+    # arg_name,     new_type,                func_name_regex
+    ("key",         "KeyboardKey",           r".*"),
+    ("mode",        "CameraMode",            r"UpdateCamera"),
+    ("mode",        "BlendMode",             r"BeginBlendMode"),
+    ("gesture",     "Gesture",               r".*"),
+    ("logLevel",    "TraceLogLevel",         r".*"),
+    ("ty",          "FontType",              r".*"),
+    ("uniformType", "ShaderUniformDataType", r".*"),
+    ("cursor",      "MouseCursor",           r".*"),
+    ("format",      "PixelFormat",           r".*"),
+    ("newFormat",   "PixelFormat",           r".*"),
+    ("layout",      "CubemapLayout",         r".*"),
+    ("mapType",     "MaterialMapIndex",      r".*"),
+    ("filter",      "TextureFilter",         r"SetTextureFilter"),
+    ("wrap",        "TextureWrap",           r"SetTextureWrap"),
+    ("flags",       "ConfigFlags",           r"SetWindowState|ClearWindowState|SetConfigFlags"),
+    ("flag",        "ConfigFlags",           r"IsWindowState"),
+    ("flags",       "Gesture",               r"SetGesturesEnabled"),
+    ("button",      "GamepadButton",         r".*GamepadButton.*"),
+    ("button",      "MouseButton",           r".*MouseButton.*"),
+]
 def fix_enums(arg_name, arg_type, func_name):
     if func_name.startswith("rl"):
         return arg_type
@@ -154,47 +176,9 @@ def fix_enums(arg_name, arg_type, func_name):
     # Hacking specific enums in here.
     # Raylib doesn't use the enums but rather the resulting ints.
     if arg_type == "int" or arg_type == "unsigned int":
-        if arg_name == "key":
-            arg_type = "KeyboardKey"
-        elif arg_name == "button":
-            if "Gamepad" in func_name:
-                arg_type = "GamepadButton"
-            else:
-                arg_type = "MouseButton"
-        elif arg_name == "mode":
-            if func_name == "UpdateCamera":
-                arg_type = "CameraMode"
-            elif func_name == "BeginBlendMode":
-                arg_type = "BlendMode"
-        elif arg_name == "gesture":
-            arg_type = "Gesture"
-        elif arg_name == "flags" or arg_name == "flag":
-            if func_name in [
-                    "SetWindowState", "ClearWindowState", "SetConfigFlags", "IsWindowState"
-            ]:
-                arg_type = "ConfigFlags"
-            elif func_name == "SetGesturesEnabled":
-                arg_type = "Gesture"
-        elif arg_name == "logLevel":
-            arg_type = "TraceLogLevel"
-        elif arg_name == "ty":
-            arg_type = "FontType"
-        elif arg_name == "uniformType":
-            arg_type = "ShaderUniformDataType"
-        elif arg_name == "cursor":
-            arg_type = "MouseCursor"
-        elif arg_name == "newFormat":
-            arg_type = "PixelFormat"
-        elif arg_name == "layout":
-            arg_type = "CubemapLayout"
-        elif arg_name == "filter" and func_name == "SetTextureFilter":
-            arg_type = "TextureFilter"
-        elif arg_name == "wrap" and func_name == "SetTextureWrap":
-            arg_type = "TextureWrap"
-        elif arg_name == "format":
-            arg_type = "PixelFormat"
-        elif arg_name == "mapType":
-            arg_type = "MaterialMapIndex"
+        for target_arg_name,new_type,func_name_regex in _fix_enums_data:
+            if arg_name==target_arg_name and re.fullmatch(func_name_regex,func_name):
+                return new_type
     return arg_type
 
 
