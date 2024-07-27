@@ -2241,9 +2241,38 @@ pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
     cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
+/// Draw spline: Linear, minimum 2 points
+pub fn drawSplineLinear(points: []Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineLinear(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
+}
+
+/// Draw spline: B-Spline, minimum 4 points
+pub fn drawSplineBasis(points: []Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineBasis(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
+}
+
+/// Draw spline: Catmull-Rom, minimum 4 points
+pub fn drawSplineCatmullRom(points: []Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineCatmullRom(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
+}
+
+/// Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
+pub fn drawSplineBezierQuadratic(points: []Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineBezierQuadratic(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
+}
+
+/// Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
+pub fn drawSplineBezierCubic(points: []Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineBezierCubic(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
+}
+
 /// Check if point is within a polygon described by array of vertices
 pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
     return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
+}
+
+pub fn imageKernelConvolution(image: *Image, kernel: []f32) void {
+    cdef.ImageKernelConvolution(@as([*c]Image, @ptrCast(image)), @as([*c]f32, @ptrCast(kernel)), @as(c_int, @intCast(kernel.len)));
 }
 
 /// Generate image font atlas using chars info
@@ -3437,31 +3466,6 @@ pub fn drawPolyLinesEx(center: Vector2, sides: i32, radius: f32, rotation: f32, 
     cdef.DrawPolyLinesEx(center, @as(c_int, sides), radius, rotation, lineThick, color);
 }
 
-/// Draw spline: Linear, minimum 2 points
-pub fn drawSplineLinear(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
-    cdef.DrawSplineLinear(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
-}
-
-/// Draw spline: B-Spline, minimum 4 points
-pub fn drawSplineBasis(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
-    cdef.DrawSplineBasis(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
-}
-
-/// Draw spline: Catmull-Rom, minimum 4 points
-pub fn drawSplineCatmullRom(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
-    cdef.DrawSplineCatmullRom(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
-}
-
-/// Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
-pub fn drawSplineBezierQuadratic(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
-    cdef.DrawSplineBezierQuadratic(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
-}
-
-/// Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
-pub fn drawSplineBezierCubic(points: []Vector2, pointCount: i32, thick: f32, color: Color) void {
-    cdef.DrawSplineBezierCubic(@as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), thick, color);
-}
-
 /// Draw spline segment: Linear, 2 points
 pub fn drawSplineSegmentLinear(p1: Vector2, p2: Vector2, thick: f32, color: Color) void {
     cdef.DrawSplineSegmentLinear(p1, p2, thick, color);
@@ -3720,11 +3724,6 @@ pub fn imageAlphaPremultiply(image: *Image) void {
 /// Apply Gaussian blur using a box blur approximation
 pub fn imageBlurGaussian(image: *Image, blurSize: i32) void {
     cdef.ImageBlurGaussian(@as([*c]Image, @ptrCast(image)), @as(c_int, blurSize));
-}
-
-/// Apply Custom Square image convolution kernel
-pub fn imageKernelConvolution(image: *Image, kernel: []f32, kernelSize: i32) void {
-    cdef.ImageKernelConvolution(@as([*c]Image, @ptrCast(image)), @as([*c]f32, @ptrCast(kernel)), @as(c_int, kernelSize));
 }
 
 /// Resize image (Bicubic scaling algorithm)
