@@ -289,13 +289,22 @@ def parse_header(header_name: str, output_file: str, ext_file: str, prefix: str,
 
             single_opt = [
                 ("rlDrawVertexArrayElements", "buffer"),
-                ("rlDrawVertexArrayElementsInstanced", "buffer")
+                ("rlDrawVertexArrayElementsInstanced", "buffer"),
+                ("rlEnableStatePointer", "buffer"),
+                ("rlSetRenderBatchActive", "batch"),
+                ("rlLoadTexture", "data"),
+                ("rlLoadTextureCubemap", "data"),
+                ("rlLoadShaderBuffer", "data"),
+                ("rlLoadShaderCode", "vsCode"),
+                ("rlLoadShaderCode", "fsCode"),
             ]
 
-            if arg_type.startswith("*") and (func_name, arg_name) in single_opt:
-                arg_type = "?" + arg_type
-
             zig_type = ziggify_type(arg_name, arg_type, func_name)
+
+            if zig_type.startswith("*") and (func_name, arg_name) in single_opt:
+                if not arg_type.startswith("[*c]"):
+                    arg_type = "?" + arg_type
+                zig_type = "?" + zig_type
 
             zig_types.add(arg_type)
             zig_c_arguments.append(arg_name + ": " + add_namespace_to_type(arg_type))  # Put everything together.

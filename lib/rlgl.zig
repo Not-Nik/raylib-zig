@@ -347,7 +347,7 @@ pub fn rlDisableVertexAttribute(index: u32) void {
 }
 
 /// Enable attribute state pointer
-pub fn rlEnableStatePointer(vertexAttribType: i32, buffer: *anyopaque) void {
+pub fn rlEnableStatePointer(vertexAttribType: i32, buffer: ?*anyopaque) void {
     cdef.rlEnableStatePointer(@as(c_int, vertexAttribType), buffer);
 }
 
@@ -642,7 +642,7 @@ pub fn rlDrawRenderBatch(batch: *rlRenderBatch) void {
 }
 
 /// Set the active render batch for rlgl (NULL for default internal)
-pub fn rlSetRenderBatchActive(batch: *rlRenderBatch) void {
+pub fn rlSetRenderBatchActive(batch: ?*rlRenderBatch) void {
     cdef.rlSetRenderBatchActive(@as([*c]rlRenderBatch, @ptrCast(batch)));
 }
 
@@ -732,7 +732,7 @@ pub fn rlDrawVertexArrayElementsInstanced(offset: i32, count: i32, buffer: ?*con
 }
 
 /// Load texture data
-pub fn rlLoadTexture(data: *const anyopaque, width: i32, height: i32, format: i32, mipmapCount: i32) u32 {
+pub fn rlLoadTexture(data: ?*const anyopaque, width: i32, height: i32, format: i32, mipmapCount: i32) u32 {
     return @as(u32, cdef.rlLoadTexture(data, @as(c_int, width), @as(c_int, height), @as(c_int, format), @as(c_int, mipmapCount)));
 }
 
@@ -742,7 +742,7 @@ pub fn rlLoadTextureDepth(width: i32, height: i32, useRenderBuffer: bool) u32 {
 }
 
 /// Load texture cubemap data
-pub fn rlLoadTextureCubemap(data: *const anyopaque, size: i32, format: i32) u32 {
+pub fn rlLoadTextureCubemap(data: ?*const anyopaque, size: i32, format: i32) u32 {
     return @as(u32, cdef.rlLoadTextureCubemap(data, @as(c_int, size), @as(c_int, format)));
 }
 
@@ -862,7 +862,7 @@ pub fn rlComputeShaderDispatch(groupX: u32, groupY: u32, groupZ: u32) void {
 }
 
 /// Load shader storage buffer object (SSBO)
-pub fn rlLoadShaderBuffer(size: u32, data: *const anyopaque, usageHint: i32) u32 {
+pub fn rlLoadShaderBuffer(size: u32, data: ?*const anyopaque, usageHint: i32) u32 {
     return @as(u32, cdef.rlLoadShaderBuffer(@as(c_uint, size), data, @as(c_int, usageHint)));
 }
 
