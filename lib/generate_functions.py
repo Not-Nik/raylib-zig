@@ -34,6 +34,9 @@ IGNORE_TYPES = [
     "[*c]ModelAnimation",
     "[*c]f32",
 ]
+MAKE_CONST = [
+    "points"
+]
 # Some C types have a different sizes on different systems and Zig
 # knows that so we tell it to get the system specific size for us.
 def c_to_zig_type(c: str) -> str:
@@ -140,6 +143,9 @@ def fix_pointer(name: str, t: str):
     while name.startswith("*"):
         name = name[1:]
         pre += "[*c]"
+
+    if name in MAKE_CONST:
+        pre += "const "
     t = pre + t
 
     if t == "[*c]const void":

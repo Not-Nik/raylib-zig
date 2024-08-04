@@ -2227,48 +2227,48 @@ pub fn loadMusicStreamFromMemory(fileType: [*:0]const u8, data: []const u8) Musi
 }
 
 /// Draw lines sequence (using gl lines)
-pub fn drawLineStrip(points: []Vector2, color: Color) void {
-    cdef.DrawLineStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+pub fn drawLineStrip(points: []const Vector2, color: Color) void {
+    cdef.DrawLineStrip(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
 /// Draw a triangle fan defined by points (first vertex is the center)
-pub fn drawTriangleFan(points: []Vector2, color: Color) void {
-    cdef.DrawTriangleFan(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+pub fn drawTriangleFan(points: []const Vector2, color: Color) void {
+    cdef.DrawTriangleFan(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
 /// Draw a triangle strip defined by points
-pub fn drawTriangleStrip(points: []Vector2, color: Color) void {
-    cdef.DrawTriangleStrip(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+pub fn drawTriangleStrip(points: []const Vector2, color: Color) void {
+    cdef.DrawTriangleStrip(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
 /// Draw spline: Linear, minimum 2 points
-pub fn drawSplineLinear(points: []Vector2, thick: f32, color: Color) void {
-    cdef.DrawSplineLinear(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
+pub fn drawSplineLinear(points: []const Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineLinear(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
 }
 
 /// Draw spline: B-Spline, minimum 4 points
-pub fn drawSplineBasis(points: []Vector2, thick: f32, color: Color) void {
-    cdef.DrawSplineBasis(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
+pub fn drawSplineBasis(points: []const Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineBasis(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
 }
 
 /// Draw spline: Catmull-Rom, minimum 4 points
-pub fn drawSplineCatmullRom(points: []Vector2, thick: f32, color: Color) void {
-    cdef.DrawSplineCatmullRom(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
+pub fn drawSplineCatmullRom(points: []const Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineCatmullRom(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
 }
 
 /// Draw spline: Quadratic Bezier, minimum 3 points (1 control point): [p1, c2, p3, c4...]
-pub fn drawSplineBezierQuadratic(points: []Vector2, thick: f32, color: Color) void {
-    cdef.DrawSplineBezierQuadratic(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
+pub fn drawSplineBezierQuadratic(points: []const Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineBezierQuadratic(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
 }
 
 /// Draw spline: Cubic Bezier, minimum 4 points (2 control points): [p1, c2, c3, p4, c5, c6...]
-pub fn drawSplineBezierCubic(points: []Vector2, thick: f32, color: Color) void {
-    cdef.DrawSplineBezierCubic(@as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
+pub fn drawSplineBezierCubic(points: []const Vector2, thick: f32, color: Color) void {
+    cdef.DrawSplineBezierCubic(@as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)), thick, color);
 }
 
 /// Check if point is within a polygon described by array of vertices
-pub fn checkCollisionPointPoly(point: Vector2, points: []Vector2) bool {
-    return cdef.CheckCollisionPointPoly(point, @as([*c]Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
+pub fn checkCollisionPointPoly(point: Vector2, points: []const Vector2) bool {
+    return cdef.CheckCollisionPointPoly(point, @as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
 }
 
 pub fn imageKernelConvolution(image: *Image, kernel: []f32) void {
@@ -2296,8 +2296,8 @@ pub fn textJoin(textList: [][*:0]const u8, delimiter: [*:0]const u8) [*:0]const 
 }
 
 /// Draw a triangle strip defined by points
-pub fn drawTriangleStrip3D(points: []Vector3, color: Color) void {
-    cdef.DrawTriangleStrip3D(@as([*c]Vector3, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
+pub fn drawTriangleStrip3D(points: []const Vector3, color: Color) void {
+    cdef.DrawTriangleStrip3D(@as([*c]const Vector3, @ptrCast(points)), @as(c_int, @intCast(points.len)), color);
 }
 
 /// Internal memory allocator
