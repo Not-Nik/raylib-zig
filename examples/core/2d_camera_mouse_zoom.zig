@@ -1,7 +1,6 @@
 // port of raylib example https://github.com/raysan5/raylib/blob/master/examples/core/core_2d_camera_mouse_zoom.c
 
 const rl = @import("raylib");
-const gl = rl.gl;
 
 pub fn main() anyerror!void {
     // Initialization
@@ -98,11 +97,11 @@ pub fn main() anyerror!void {
             camera.begin();
             defer camera.end();
 
-            gl.rlPushMatrix();
-            gl.rlTranslatef(0, 25 * 50, 0);
-            gl.rlRotatef(90, 1, 0, 0);
+            rl.gl.rlPushMatrix();
+            rl.gl.rlTranslatef(0, 25 * 50, 0);
+            rl.gl.rlRotatef(90, 1, 0, 0);
             rl.drawGrid(100, 50);
-            gl.rlPopMatrix();
+            rl.gl.rlPopMatrix();
 
             rl.drawCircle(screenWidth / 2, screenHeight / 2, 50, rl.Color.maroon);
         }
