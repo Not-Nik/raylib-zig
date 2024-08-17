@@ -220,7 +220,13 @@ pub fn build(b: *std.Build) !void {
             .name = "3d_camera_first_person",
             .path = "examples/core/3d_camera_first_person.zig",
             .desc = "Simple first person demo",
+        },        
+        .{
+            .name = "2d_camera_mouse_zoom",
+            .path = "examples/core/2d_camera_mouse_zoom.zig",
+            .desc = "Shows mouse zoom demo",
         },
+
         .{
             .name = "window_flags",
             .path = "examples/core/window_flags.zig",
