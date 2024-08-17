@@ -2285,6 +2285,11 @@ pub fn unloadFontData(chars: []GlyphInfo) void {
     cdef.UnloadFontData(@as([*c]GlyphInfo, @ptrCast(chars)), @as(c_int, @intCast(chars.len)));
 }
 
+/// Draw multiple character (codepoint)
+pub fn drawTextCodepoints(font: Font, codepoints: []const c_int, position: Vector2, fontSize: f32, spacing: f32, tint: Color) void {
+    cdef.DrawTextCodepoints(font, @as([*c]const c_int, @ptrCast(codepoints)), @as(c_int, @intCast(codepoints.len)), position, fontSize, spacing, tint);
+}
+
 /// Load UTF-8 text encoded from codepoints array
 pub fn loadUTF8(codepoints: []const c_int) [*:0]u8 {
     return std.mem.span(cdef.LoadUTF8(@as([*c]const c_int, @ptrCast(codepoints)), @as(c_int, @intCast(codepoints.len))));
