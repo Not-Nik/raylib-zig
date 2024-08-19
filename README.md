@@ -63,8 +63,14 @@ want to run an example, say `basic_window` run `zig build basic_window`
 
 Download and add raylib-zig as a dependency by running the following command in your project root:
 
-```
+```sh
 zig fetch --save https://github.com/Not-Nik/raylib-zig/archive/devel.tar.gz
+```
+
+or to pin this dependency and avoid a possible disruption after the next release, you can use a url with the git sha:
+
+```sh
+zig fetch --save https://github.com/Not-Nik/raylib-zig/archive/58df62807f62bef1db79538d04b37b9f79909d0a.tar.gz
 ```
 
 Then add raylib-zig as a dependency and import its modules and artifact in your `build.zig`:
