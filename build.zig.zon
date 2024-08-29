@@ -3,13 +3,14 @@
     .version = "5.1.0",
     .dependencies = .{
         .raylib = .{
-            .url = "https://github.com/raysan5/raylib/archive/5767c4cd059e07355ae5588966d0aee97038a86b.tar.gz",
-            .hash = "1220aa75240ee6459499456ef520ab7e8bddffaed8a5055441da457b198fc4e92b26",
+            // .url = "https://github.com/raysan5/raylib/archive/5767c4cd059e07355ae5588966d0aee97038a86b.tar.gz",
+            // .hash = "1220aa75240ee6459499456ef520ab7e8bddffaed8a5055441da457b198fc4e92b26",
+            .path = "../raylib",
         },
         .raygui = .{
             .url = "https://github.com/raysan5/raygui/archive/4b3d94f5df6a5a2aa86286350f7e20c0ca35f516.tar.gz",
             .hash = "122002d98ca255ec706ef8e5497b3723d6c6e163511761d116dac3aee87747d46cf1",
-        }
+        },
     },
     .minimum_zig_version = "0.13.0",
     .paths = .{
@@ -23,6 +24,6 @@
         "lib/rlgl.zig",
         "lib/rlgl-ext.zig",
         "lib/raygui.zig",
-        "lib/raygui-ext.zig"
+        "lib/raygui-ext.zig",
     },
 }

@@ -3,6 +3,10 @@
 const std = @import("std");
 const builtin = @import("builtin");
 
+pub const LinkOptions = struct {
+    shell_file: ?[]const u8 = null,
+};
+
 const emccOutputDir = "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str;
 const emccOutputFile = "index.html";
 pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
@@ -48,12 +52,12 @@ pub fn compileForEmscripten(
     });
 
     // There are some symbols that need to be defined in C.
-    const webhack_c_file_step = b.addWriteFiles();
-    const webhack_c_file = webhack_c_file_step.add("webhack.c", webhack_c);
-    exe_lib.addCSourceFile(.{ .file = webhack_c_file, .flags = &[_][]u8{} });
+    // const webhack_c_file_step = b.addWriteFiles();
+    // const webhack_c_file = webhack_c_file_step.add("webhack.c", webhack_c);
+    // exe_lib.addCSourceFile(.{ .file = webhack_c_file, .flags = &[_][]u8{} });
     // Since it's creating a static library, the symbols raylib uses to webgl
     // and glfw don't need to be linked by emscripten yet.
-    exe_lib.step.dependOn(&webhack_c_file_step.step);
+    // exe_lib.step.dependOn(&webhack_c_file_step.step);
     return exe_lib;
 }
 
@@ -72,6 +76,7 @@ pub fn compileForEmscripten(
 pub fn linkWithEmscripten(
     b: *std.Build,
     itemsToLink: []const *std.Build.Step.Compile,
+    options: LinkOptions,
 ) !*std.Build.Step.Run {
     // Raylib uses --sysroot in order to find emscripten, so do the same here.
     if (b.sysroot == null) {
@@ -102,15 +107,31 @@ pub fn linkWithEmscripten(
     }
     // This puts the file in zig-out/htmlout/index.html.
     emcc_command.step.dependOn(&mkdir_command.step);
-    emcc_command.addArgs(&[_][]const u8{
-        "-o",
-        emccOutputDir ++ emccOutputFile,
-        "-sFULL-ES3=1",
-        "-sUSE_GLFW=3",
-        "-sASYNCIFY",
-        "-O3",
-        "--emrun",
-    });
+    if (options.shell_file) |path| {
+        emcc_command.addArgs(&[_][]const u8{
+            "--shell-file",
+            path,
+            "-o",
+            emccOutputDir ++ emccOutputFile,
+            "-sUSE_OFFSET_CONVERTER",
+            "-sFULL-ES3=1",
+            "-sUSE_GLFW=3",
+            "-sASYNCIFY",
+            "-O3",
+            "--emrun",
+        });
+    } else {
+        emcc_command.addArgs(&[_][]const u8{
+            "-o",
+            emccOutputDir ++ emccOutputFile,
+            "-sUSE_OFFSET_CONVERTER",
+            "-sFULL-ES3=1",
+            "-sUSE_GLFW=3",
+            "-sASYNCIFY",
+            "-O3",
+            "--emrun",
+        });
+    }
     return emcc_command;
 }
 
@@ -124,16 +145,16 @@ fn lastIndexOf(string: []const u8, character: u8) usize {
     return string.len - 1;
 }
 
-const webhack_c =
-    \\// Zig adds '__stack_chk_guard', '__stack_chk_fail', and 'errno',
-    \\// which emscripten doesn't actually support.
-    \\// Seems that zig ignores disabling stack checking,
-    \\// and I honestly don't know why emscripten doesn't have errno.
-    \\// TODO: when the updateTargetForWeb workaround gets removed, see if those are nessesary anymore
-    \\#include <stdint.h>
-    \\uintptr_t __stack_chk_guard;
-    \\//I'm not certain if this means buffer overflows won't be detected,
-    \\// However, zig is pretty safe from those, so don't worry about it too much.
-    \\void __stack_chk_fail(void){}
-    \\int errno;
-;
+// const webhack_c =
+//     \\// Zig adds '__stack_chk_guard', '__stack_chk_fail', and 'errno',
+//     \\// which emscripten doesn't actually support.
+//     \\// Seems that zig ignores disabling stack checking,
+//     \\// and I honestly don't know why emscripten doesn't have errno.
+//     \\// TODO: when the updateTargetForWeb workaround gets removed, see if those are nessesary anymore
+//     \\#include <stdint.h>
+//     \\uintptr_t __stack_chk_guard;
+//     \\//I'm not certain if this means buffer overflows won't be detected,
+//     \\// However, zig is pretty safe from those, so don't worry about it too much.
+//     \\void __stack_chk_fail(void){}
+//     \\int errno;
+// ;
