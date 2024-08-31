@@ -44,7 +44,7 @@ fn link(
     exe: *std.Build.Step.Compile,
     target: std.Build.ResolvedTarget,
     optimize: std.builtin.Mode,
-    options: Options
+    options: Options,
 ) void {
     const lib = getRaylib(b, target, optimize, options);
 
@@ -104,7 +104,7 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
             .platform_drm = options.platform_drm,
             .shared = options.shared,
             .linux_display_backend = options.linux_display_backend,
-            .opengl_version = options.opengl_version
+            .opengl_version = options.opengl_version,
         });
 
         const lib = raylib.artifact("raylib");
@@ -118,12 +118,15 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
         lib.step.dependOn(&gen_step.step);
 
         const raygui_c_path = gen_step.add("raygui.c", "#define RAYGUI_IMPLEMENTATION\n#include \"raygui.h\"\n");
-        lib.addCSourceFile(.{ .file = raygui_c_path, .flags = &[_][]const u8{
-            "-std=gnu99",
-            "-D_GNU_SOURCE",
-            "-DGL_SILENCE_DEPRECATION=199309L",
-            "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/3674
-        }});
+        lib.addCSourceFile(.{
+            .file = raygui_c_path,
+            .flags = &[_][]const u8{
+                "-std=gnu99",
+                "-D_GNU_SOURCE",
+                "-DGL_SILENCE_DEPRECATION=199309L",
+                "-fno-sanitize=undefined", // https://github.com/raysan5/raylib/issues/3674
+            },
+        });
         lib.addIncludePath(raylib.path("src"));
         lib.addIncludePath(raygui_dep.path("src"));
 
@@ -220,7 +223,7 @@ pub fn build(b: *std.Build) !void {
             .name = "3d_camera_first_person",
             .path = "examples/core/3d_camera_first_person.zig",
             .desc = "Simple first person demo",
-        },        
+        },
         .{
             .name = "2d_camera_mouse_zoom",
             .path = "examples/core/2d_camera_mouse_zoom.zig",
@@ -251,6 +254,11 @@ pub fn build(b: *std.Build) !void {
             .name = "textures_background_scrolling",
             .path = "examples/textures/textures_background_scrolling.zig",
             .desc = "Background scrolling & parallax demo",
+        },
+        .{
+            .name = "text_format_text",
+            .path = "examples/text/text_format_text.zig",
+            .desc = "Renders variables as text",
         },
         // .{
         //     .name = "models_loading",
