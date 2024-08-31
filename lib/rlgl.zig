@@ -142,7 +142,11 @@ pub const rlShaderUniformDataType = enum(c_uint) {
     rl_shader_uniform_ivec2 = 5,
     rl_shader_uniform_ivec3 = 6,
     rl_shader_uniform_ivec4 = 7,
-    rl_shader_uniform_sampler2d = 8,
+    rl_shader_uniform_uint = 8,
+    rl_shader_uniform_uivec2 = 9,
+    rl_shader_uniform_uivec3 = 10,
+    rl_shader_uniform_uivec4 = 11,
+    rl_shader_uniform_sampler2d = 12,
 };
 
 pub const rlShaderAttributeDataType = enum(c_uint) {
@@ -242,8 +246,8 @@ pub fn rlViewport(x: i32, y: i32, width: i32, height: i32) void {
 }
 
 /// Set clip planes distances
-pub fn rlSetClipPlanes(near: f64, far: f64) void {
-    cdef.rlSetClipPlanes(near, far);
+pub fn rlSetClipPlanes(nearPlane: f64, farPlane: f64) void {
+    cdef.rlSetClipPlanes(nearPlane, farPlane);
 }
 
 /// Get cull plane distance near
@@ -506,7 +510,7 @@ pub fn rlEnablePointMode() void {
     cdef.rlEnablePointMode();
 }
 
-/// Disable wire mode ( and point ) maybe rename
+/// Disable wire (and point) mode
 pub fn rlDisableWireMode() void {
     cdef.rlDisableWireMode();
 }

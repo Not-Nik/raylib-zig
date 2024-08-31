@@ -474,8 +474,8 @@ pub fn matrixScale(x: f32, y: f32, z: f32) Matrix {
     return cdef.MatrixScale(x, y, z);
 }
 
-pub fn matrixFrustum(left: f64, right: f64, bottom: f64, top: f64, near: f64, far: f64) Matrix {
-    return cdef.MatrixFrustum(left, right, bottom, top, near, far);
+pub fn matrixFrustum(left: f64, right: f64, bottom: f64, top: f64, nearPlane: f64, farPlane: f64) Matrix {
+    return cdef.MatrixFrustum(left, right, bottom, top, nearPlane, farPlane);
 }
 
 pub fn matrixPerspective(fovY: f64, aspect: f64, nearPlane: f64, farPlane: f64) Matrix {
@@ -588,4 +588,8 @@ pub fn quaternionTransform(q: Quaternion, mat: Matrix) Quaternion {
 
 pub fn quaternionEquals(p: Quaternion, q: Quaternion) i32 {
     return @as(i32, cdef.QuaternionEquals(p, q));
+}
+
+pub fn matrixDecompose(mat: Matrix, translation: *Vector3, rotation: *Quaternion, scale: *Vector3) void {
+    cdef.MatrixDecompose(mat, @as([*c]Vector3, @ptrCast(translation)), @as([*c]Quaternion, @ptrCast(rotation)), @as([*c]Vector3, @ptrCast(scale)));
 }

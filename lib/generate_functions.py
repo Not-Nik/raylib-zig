@@ -34,9 +34,6 @@ IGNORE_TYPES = [
     "[*c]ModelAnimation",
     "[*c]f32",
 ]
-MAKE_CONST = [
-    "points"
-]
 # Some C types have a different sizes on different systems and Zig
 # knows that so we tell it to get the system specific size for us.
 def c_to_zig_type(c: str) -> str:
@@ -61,7 +58,8 @@ def ziggify_type(name: str, t: str, func_name) -> str:
         "wave", "v1", "v2", "outAxis", "outAngle", "fileSize",
         "AutomationEventList", "list", "batch", "glInternalFormat", "glFormat",
         "glType", "mipmaps", "active", "scroll", "view", "checked", "mouseCell",
-        "scrollIndex", "focus", "secretViewActive", "color", "alpha", "colorHsv"
+        "scrollIndex", "focus", "secretViewActive", "color", "alpha", "colorHsv",
+        "translation", "rotation", "scale"
     ]
     multi = [
         "data", "compData", "points", "fileData", "colors", "pixels",
@@ -144,8 +142,6 @@ def fix_pointer(name: str, t: str):
         name = name[1:]
         pre += "[*c]"
 
-    if name in MAKE_CONST:
-        pre += "const "
     t = pre + t
 
     if t == "[*c]const void":

@@ -142,7 +142,11 @@ pub const rlShaderUniformDataType = enum(c_uint) {
     rl_shader_uniform_ivec2 = 5,
     rl_shader_uniform_ivec3 = 6,
     rl_shader_uniform_ivec4 = 7,
-    rl_shader_uniform_sampler2d = 8,
+    rl_shader_uniform_uint = 8,
+    rl_shader_uniform_uivec2 = 9,
+    rl_shader_uniform_uivec3 = 10,
+    rl_shader_uniform_uivec4 = 11,
+    rl_shader_uniform_sampler2d = 12,
 };
 
 pub const rlShaderAttributeDataType = enum(c_uint) {

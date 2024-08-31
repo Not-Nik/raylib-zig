@@ -217,7 +217,7 @@ pub extern "c" fn DrawLineBezier(startPos: rl.Vector2, endPos: rl.Vector2, thick
 pub extern "c" fn DrawCircle(centerX: c_int, centerY: c_int, radius: f32, color: rl.Color) void;
 pub extern "c" fn DrawCircleSector(center: rl.Vector2, radius: f32, startAngle: f32, endAngle: f32, segments: c_int, color: rl.Color) void;
 pub extern "c" fn DrawCircleSectorLines(center: rl.Vector2, radius: f32, startAngle: f32, endAngle: f32, segments: c_int, color: rl.Color) void;
-pub extern "c" fn DrawCircleGradient(centerX: c_int, centerY: c_int, radius: f32, color1: rl.Color, color2: rl.Color) void;
+pub extern "c" fn DrawCircleGradient(centerX: c_int, centerY: c_int, radius: f32, inner: rl.Color, outer: rl.Color) void;
 pub extern "c" fn DrawCircleV(center: rl.Vector2, radius: f32, color: rl.Color) void;
 pub extern "c" fn DrawCircleLines(centerX: c_int, centerY: c_int, radius: f32, color: rl.Color) void;
 pub extern "c" fn DrawCircleLinesV(center: rl.Vector2, radius: f32, color: rl.Color) void;
@@ -229,9 +229,9 @@ pub extern "c" fn DrawRectangle(posX: c_int, posY: c_int, width: c_int, height: 
 pub extern "c" fn DrawRectangleV(position: rl.Vector2, size: rl.Vector2, color: rl.Color) void;
 pub extern "c" fn DrawRectangleRec(rec: rl.Rectangle, color: rl.Color) void;
 pub extern "c" fn DrawRectanglePro(rec: rl.Rectangle, origin: rl.Vector2, rotation: f32, color: rl.Color) void;
-pub extern "c" fn DrawRectangleGradientV(posX: c_int, posY: c_int, width: c_int, height: c_int, color1: rl.Color, color2: rl.Color) void;
-pub extern "c" fn DrawRectangleGradientH(posX: c_int, posY: c_int, width: c_int, height: c_int, color1: rl.Color, color2: rl.Color) void;
-pub extern "c" fn DrawRectangleGradientEx(rec: rl.Rectangle, col1: rl.Color, col2: rl.Color, col3: rl.Color, col4: rl.Color) void;
+pub extern "c" fn DrawRectangleGradientV(posX: c_int, posY: c_int, width: c_int, height: c_int, top: rl.Color, bottom: rl.Color) void;
+pub extern "c" fn DrawRectangleGradientH(posX: c_int, posY: c_int, width: c_int, height: c_int, left: rl.Color, right: rl.Color) void;
+pub extern "c" fn DrawRectangleGradientEx(rec: rl.Rectangle, topLeft: rl.Color, bottomLeft: rl.Color, topRight: rl.Color, bottomRight: rl.Color) void;
 pub extern "c" fn DrawRectangleLines(posX: c_int, posY: c_int, width: c_int, height: c_int, color: rl.Color) void;
 pub extern "c" fn DrawRectangleLinesEx(rec: rl.Rectangle, lineThick: f32, color: rl.Color) void;
 pub extern "c" fn DrawRectangleRounded(rec: rl.Rectangle, roundness: f32, segments: c_int, color: rl.Color) void;
@@ -294,6 +294,7 @@ pub extern "c" fn GenImageCellular(width: c_int, height: c_int, tileSize: c_int)
 pub extern "c" fn GenImageText(width: c_int, height: c_int, text: [*c]const u8) rl.Image;
 pub extern "c" fn ImageCopy(image: rl.Image) rl.Image;
 pub extern "c" fn ImageFromImage(image: rl.Image, rec: rl.Rectangle) rl.Image;
+pub extern "c" fn ImageFromChannel(image: rl.Image, selectedChannel: c_int) rl.Image;
 pub extern "c" fn ImageText(text: [*c]const u8, fontSize: c_int, color: rl.Color) rl.Image;
 pub extern "c" fn ImageTextEx(font: rl.Font, text: [*c]const u8, fontSize: f32, spacing: f32, tint: rl.Color) rl.Image;
 pub extern "c" fn ImageFormat(image: [*c]rl.Image, newFormat: rl.PixelFormat) void;
@@ -304,7 +305,7 @@ pub extern "c" fn ImageAlphaClear(image: [*c]rl.Image, color: rl.Color, threshol
 pub extern "c" fn ImageAlphaMask(image: [*c]rl.Image, alphaMask: rl.Image) void;
 pub extern "c" fn ImageAlphaPremultiply(image: [*c]rl.Image) void;
 pub extern "c" fn ImageBlurGaussian(image: [*c]rl.Image, blurSize: c_int) void;
-pub extern "c" fn ImageKernelConvolution(image: [*c]rl.Image, kernel: [*c]f32, kernelSize: c_int) void;
+pub extern "c" fn ImageKernelConvolution(image: [*c]rl.Image, kernel: [*c]const f32, kernelSize: c_int) void;
 pub extern "c" fn ImageResize(image: [*c]rl.Image, newWidth: c_int, newHeight: c_int) void;
 pub extern "c" fn ImageResizeNN(image: [*c]rl.Image, newWidth: c_int, newHeight: c_int) void;
 pub extern "c" fn ImageResizeCanvas(image: [*c]rl.Image, newWidth: c_int, newHeight: c_int, offsetX: c_int, offsetY: c_int, fill: rl.Color) void;
@@ -332,6 +333,7 @@ pub extern "c" fn ImageDrawPixel(dst: [*c]rl.Image, posX: c_int, posY: c_int, co
 pub extern "c" fn ImageDrawPixelV(dst: [*c]rl.Image, position: rl.Vector2, color: rl.Color) void;
 pub extern "c" fn ImageDrawLine(dst: [*c]rl.Image, startPosX: c_int, startPosY: c_int, endPosX: c_int, endPosY: c_int, color: rl.Color) void;
 pub extern "c" fn ImageDrawLineV(dst: [*c]rl.Image, start: rl.Vector2, end: rl.Vector2, color: rl.Color) void;
+pub extern "c" fn ImageDrawLineEx(dst: [*c]rl.Image, start: rl.Vector2, end: rl.Vector2, thick: c_int, color: rl.Color) void;
 pub extern "c" fn ImageDrawCircle(dst: [*c]rl.Image, centerX: c_int, centerY: c_int, radius: c_int, color: rl.Color) void;
 pub extern "c" fn ImageDrawCircleV(dst: [*c]rl.Image, center: rl.Vector2, radius: c_int, color: rl.Color) void;
 pub extern "c" fn ImageDrawCircleLines(dst: [*c]rl.Image, centerX: c_int, centerY: c_int, radius: c_int, color: rl.Color) void;
@@ -340,6 +342,11 @@ pub extern "c" fn ImageDrawRectangle(dst: [*c]rl.Image, posX: c_int, posY: c_int
 pub extern "c" fn ImageDrawRectangleV(dst: [*c]rl.Image, position: rl.Vector2, size: rl.Vector2, color: rl.Color) void;
 pub extern "c" fn ImageDrawRectangleRec(dst: [*c]rl.Image, rec: rl.Rectangle, color: rl.Color) void;
 pub extern "c" fn ImageDrawRectangleLines(dst: [*c]rl.Image, rec: rl.Rectangle, thick: c_int, color: rl.Color) void;
+pub extern "c" fn ImageDrawTriangle(dst: [*c]rl.Image, v1: rl.Vector2, v2: rl.Vector2, v3: rl.Vector2, color: rl.Color) void;
+pub extern "c" fn ImageDrawTriangleEx(dst: [*c]rl.Image, v1: rl.Vector2, v2: rl.Vector2, v3: rl.Vector2, c1: rl.Color, c2: rl.Color, c3: rl.Color) void;
+pub extern "c" fn ImageDrawTriangleLines(dst: [*c]rl.Image, v1: rl.Vector2, v2: rl.Vector2, v3: rl.Vector2, color: rl.Color) void;
+pub extern "c" fn ImageDrawTriangleFan(dst: [*c]rl.Image, points: [*c]rl.Vector2, pointCount: c_int, color: rl.Color) void;
+pub extern "c" fn ImageDrawTriangleStrip(dst: [*c]rl.Image, points: [*c]rl.Vector2, pointCount: c_int, color: rl.Color) void;
 pub extern "c" fn ImageDraw(dst: [*c]rl.Image, src: rl.Image, srcRec: rl.Rectangle, dstRec: rl.Rectangle, tint: rl.Color) void;
 pub extern "c" fn ImageDrawText(dst: [*c]rl.Image, text: [*c]const u8, posX: c_int, posY: c_int, fontSize: c_int, color: rl.Color) void;
 pub extern "c" fn ImageDrawTextEx(dst: [*c]rl.Image, font: rl.Font, text: [*c]const u8, position: rl.Vector2, fontSize: f32, spacing: f32, tint: rl.Color) void;
@@ -458,8 +465,10 @@ pub extern "c" fn DrawModel(model: rl.Model, position: rl.Vector3, scale: f32, t
 pub extern "c" fn DrawModelEx(model: rl.Model, position: rl.Vector3, rotationAxis: rl.Vector3, rotationAngle: f32, scale: rl.Vector3, tint: rl.Color) void;
 pub extern "c" fn DrawModelWires(model: rl.Model, position: rl.Vector3, scale: f32, tint: rl.Color) void;
 pub extern "c" fn DrawModelWiresEx(model: rl.Model, position: rl.Vector3, rotationAxis: rl.Vector3, rotationAngle: f32, scale: rl.Vector3, tint: rl.Color) void;
+pub extern "c" fn DrawModelPoints(model: rl.Model, position: rl.Vector3, scale: f32, tint: rl.Color) void;
+pub extern "c" fn DrawModelPointsEx(model: rl.Model, position: rl.Vector3, rotationAxis: rl.Vector3, rotationAngle: f32, scale: rl.Vector3, tint: rl.Color) void;
 pub extern "c" fn DrawBoundingBox(box: rl.BoundingBox, color: rl.Color) void;
-pub extern "c" fn DrawBillboard(camera: rl.Camera, texture: rl.Texture2D, position: rl.Vector3, size: f32, tint: rl.Color) void;
+pub extern "c" fn DrawBillboard(camera: rl.Camera, texture: rl.Texture2D, position: rl.Vector3, scale: f32, tint: rl.Color) void;
 pub extern "c" fn DrawBillboardRec(camera: rl.Camera, texture: rl.Texture2D, source: rl.Rectangle, position: rl.Vector3, size: rl.Vector2, tint: rl.Color) void;
 pub extern "c" fn DrawBillboardPro(camera: rl.Camera, texture: rl.Texture2D, source: rl.Rectangle, position: rl.Vector3, up: rl.Vector3, size: rl.Vector2, origin: rl.Vector2, rotation: f32, tint: rl.Color) void;
 pub extern "c" fn UploadMesh(mesh: [*c]rl.Mesh, dynamic: bool) void;

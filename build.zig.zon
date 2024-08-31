@@ -1,9 +1,9 @@
 .{
     .name = "raylib-zig",
-    .version = "5.1.0",
+    .version = "5.5.0",
     .dependencies = .{
         .raylib = .{
-            .url = "https://github.com/raysan5/raylib/archive/5767c4cd059e07355ae5588966d0aee97038a86b.tar.gz",
+            .url = "https://github.com/raysan5/raylib/archive/5f49ec3d6448502d798d4d404e08e354ec48012a.tar.gz",
             .hash = "1220aa75240ee6459499456ef520ab7e8bddffaed8a5055441da457b198fc4e92b26",
         },
         .raygui = .{

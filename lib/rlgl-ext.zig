@@ -14,7 +14,7 @@ pub extern "c" fn rlMultMatrixf(matf: [*c]const f32) void;
 pub extern "c" fn rlFrustum(left: f64, right: f64, bottom: f64, top: f64, znear: f64, zfar: f64) void;
 pub extern "c" fn rlOrtho(left: f64, right: f64, bottom: f64, top: f64, znear: f64, zfar: f64) void;
 pub extern "c" fn rlViewport(x: c_int, y: c_int, width: c_int, height: c_int) void;
-pub extern "c" fn rlSetClipPlanes(near: f64, far: f64) void;
+pub extern "c" fn rlSetClipPlanes(nearPlane: f64, farPlane: f64) void;
 pub extern "c" fn rlGetCullDistanceNear() f64;
 pub extern "c" fn rlGetCullDistanceFar() f64;
 pub extern "c" fn rlBegin(mode: c_int) void;

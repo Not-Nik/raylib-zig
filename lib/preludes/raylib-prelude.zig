@@ -1956,9 +1956,9 @@ pub const SaveFileTextCallback = *const fn ([*c]const u8, [*c]u8) callconv(.C) b
 pub const AudioCallback = ?*const fn (?*anyopaque, c_uint) callconv(.C) void;
 
 pub const RAYLIB_VERSION_MAJOR = @as(i32, 5);
-pub const RAYLIB_VERSION_MINOR = @as(i32, 1);
+pub const RAYLIB_VERSION_MINOR = @as(i32, 5);
 pub const RAYLIB_VERSION_PATCH = @as(i32, 0);
-pub const RAYLIB_VERSION = "5.1-dev";
+pub const RAYLIB_VERSION = "5.5-dev";
 
 pub const MAX_TOUCH_POINTS = 10;
 pub const MAX_MATERIAL_MAPS = 12;
@@ -2271,8 +2271,8 @@ pub fn checkCollisionPointPoly(point: Vector2, points: []const Vector2) bool {
     return cdef.CheckCollisionPointPoly(point, @as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
 }
 
-pub fn imageKernelConvolution(image: *Image, kernel: []f32) void {
-    cdef.ImageKernelConvolution(@as([*c]Image, @ptrCast(image)), @as([*c]f32, @ptrCast(kernel)), @as(c_int, @intCast(kernel.len)));
+pub fn imageKernelConvolution(image: *Image, kernel: []const f32) void {
+    cdef.ImageKernelConvolution(@as([*c]Image, @ptrCast(image)), @as([*c]const f32, @ptrCast(kernel)), @as(c_int, @intCast(kernel.len)));
 }
 
 /// Generate image font atlas using chars info

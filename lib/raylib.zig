@@ -1956,9 +1956,9 @@ pub const SaveFileTextCallback = *const fn ([*c]const u8, [*c]u8) callconv(.C) b
 pub const AudioCallback = ?*const fn (?*anyopaque, c_uint) callconv(.C) void;
 
 pub const RAYLIB_VERSION_MAJOR = @as(i32, 5);
-pub const RAYLIB_VERSION_MINOR = @as(i32, 1);
+pub const RAYLIB_VERSION_MINOR = @as(i32, 5);
 pub const RAYLIB_VERSION_PATCH = @as(i32, 0);
-pub const RAYLIB_VERSION = "5.1-dev";
+pub const RAYLIB_VERSION = "5.5-dev";
 
 pub const MAX_TOUCH_POINTS = 10;
 pub const MAX_MATERIAL_MAPS = 12;
@@ -2271,8 +2271,8 @@ pub fn checkCollisionPointPoly(point: Vector2, points: []const Vector2) bool {
     return cdef.CheckCollisionPointPoly(point, @as([*c]const Vector2, @ptrCast(points)), @as(c_int, @intCast(points.len)));
 }
 
-pub fn imageKernelConvolution(image: *Image, kernel: []f32) void {
-    cdef.ImageKernelConvolution(@as([*c]Image, @ptrCast(image)), @as([*c]f32, @ptrCast(kernel)), @as(c_int, @intCast(kernel.len)));
+pub fn imageKernelConvolution(image: *Image, kernel: []const f32) void {
+    cdef.ImageKernelConvolution(@as([*c]Image, @ptrCast(image)), @as([*c]const f32, @ptrCast(kernel)), @as(c_int, @intCast(kernel.len)));
 }
 
 /// Generate image font atlas using chars info
@@ -2396,12 +2396,12 @@ pub fn clearWindowState(flags: ConfigFlags) void {
     cdef.ClearWindowState(flags);
 }
 
-/// Toggle window state: fullscreen/windowed (only PLATFORM_DESKTOP)
+/// Toggle window state: fullscreen/windowed [resizes monitor to match window resolution] (only PLATFORM_DESKTOP)
 pub fn toggleFullscreen() void {
     cdef.ToggleFullscreen();
 }
 
-/// Toggle window state: borderless windowed (only PLATFORM_DESKTOP)
+/// Toggle window state: borderless windowed [resizes window to match monitor resolution] (only PLATFORM_DESKTOP)
 pub fn toggleBorderlessWindowed() void {
     cdef.ToggleBorderlessWindowed();
 }
@@ -3347,8 +3347,8 @@ pub fn drawCircleSectorLines(center: Vector2, radius: f32, startAngle: f32, endA
 }
 
 /// Draw a gradient-filled circle
-pub fn drawCircleGradient(centerX: i32, centerY: i32, radius: f32, color1: Color, color2: Color) void {
-    cdef.DrawCircleGradient(@as(c_int, centerX), @as(c_int, centerY), radius, color1, color2);
+pub fn drawCircleGradient(centerX: i32, centerY: i32, radius: f32, inner: Color, outer: Color) void {
+    cdef.DrawCircleGradient(@as(c_int, centerX), @as(c_int, centerY), radius, inner, outer);
 }
 
 /// Draw a color-filled circle (Vector version)
@@ -3407,18 +3407,18 @@ pub fn drawRectanglePro(rec: Rectangle, origin: Vector2, rotation: f32, color: C
 }
 
 /// Draw a vertical-gradient-filled rectangle
-pub fn drawRectangleGradientV(posX: i32, posY: i32, width: i32, height: i32, color1: Color, color2: Color) void {
-    cdef.DrawRectangleGradientV(@as(c_int, posX), @as(c_int, posY), @as(c_int, width), @as(c_int, height), color1, color2);
+pub fn drawRectangleGradientV(posX: i32, posY: i32, width: i32, height: i32, top: Color, bottom: Color) void {
+    cdef.DrawRectangleGradientV(@as(c_int, posX), @as(c_int, posY), @as(c_int, width), @as(c_int, height), top, bottom);
 }
 
 /// Draw a horizontal-gradient-filled rectangle
-pub fn drawRectangleGradientH(posX: i32, posY: i32, width: i32, height: i32, color1: Color, color2: Color) void {
-    cdef.DrawRectangleGradientH(@as(c_int, posX), @as(c_int, posY), @as(c_int, width), @as(c_int, height), color1, color2);
+pub fn drawRectangleGradientH(posX: i32, posY: i32, width: i32, height: i32, left: Color, right: Color) void {
+    cdef.DrawRectangleGradientH(@as(c_int, posX), @as(c_int, posY), @as(c_int, width), @as(c_int, height), left, right);
 }
 
 /// Draw a gradient-filled rectangle with custom vertex colors
-pub fn drawRectangleGradientEx(rec: Rectangle, col1: Color, col2: Color, col3: Color, col4: Color) void {
-    cdef.DrawRectangleGradientEx(rec, col1, col2, col3, col4);
+pub fn drawRectangleGradientEx(rec: Rectangle, topLeft: Color, bottomLeft: Color, topRight: Color, bottomRight: Color) void {
+    cdef.DrawRectangleGradientEx(rec, topLeft, bottomLeft, topRight, bottomRight);
 }
 
 /// Draw rectangle outline
@@ -3681,6 +3681,11 @@ pub fn imageFromImage(image: Image, rec: Rectangle) Image {
     return cdef.ImageFromImage(image, rec);
 }
 
+/// Create an image from a selected channel of another image (GRAYSCALE)
+pub fn imageFromChannel(image: Image, selectedChannel: i32) Image {
+    return cdef.ImageFromChannel(image, @as(c_int, selectedChannel));
+}
+
 /// Create an image from text (default font)
 pub fn imageText(text: [*:0]const u8, fontSize: i32, color: Color) Image {
     return cdef.ImageText(@as([*c]const u8, @ptrCast(text)), @as(c_int, fontSize), color);
@@ -3856,6 +3861,11 @@ pub fn imageDrawLineV(dst: *Image, start: Vector2, end: Vector2, color: Color) v
     cdef.ImageDrawLineV(@as([*c]Image, @ptrCast(dst)), start, end, color);
 }
 
+/// Draw a line defining thickness within an image
+pub fn imageDrawLineEx(dst: *Image, start: Vector2, end: Vector2, thick: i32, color: Color) void {
+    cdef.ImageDrawLineEx(@as([*c]Image, @ptrCast(dst)), start, end, @as(c_int, thick), color);
+}
+
 /// Draw a filled circle within an image
 pub fn imageDrawCircle(dst: *Image, centerX: i32, centerY: i32, radius: i32, color: Color) void {
     cdef.ImageDrawCircle(@as([*c]Image, @ptrCast(dst)), @as(c_int, centerX), @as(c_int, centerY), @as(c_int, radius), color);
@@ -3894,6 +3904,31 @@ pub fn imageDrawRectangleRec(dst: *Image, rec: Rectangle, color: Color) void {
 /// Draw rectangle lines within an image
 pub fn imageDrawRectangleLines(dst: *Image, rec: Rectangle, thick: i32, color: Color) void {
     cdef.ImageDrawRectangleLines(@as([*c]Image, @ptrCast(dst)), rec, @as(c_int, thick), color);
+}
+
+/// Draw triangle within an image
+pub fn imageDrawTriangle(dst: *Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) void {
+    cdef.ImageDrawTriangle(@as([*c]Image, @ptrCast(dst)), v1, v2, v3, color);
+}
+
+/// Draw triangle with interpolated colors within an image
+pub fn imageDrawTriangleEx(dst: *Image, v1: Vector2, v2: Vector2, v3: Vector2, c1: Color, c2: Color, c3: Color) void {
+    cdef.ImageDrawTriangleEx(@as([*c]Image, @ptrCast(dst)), v1, v2, v3, c1, c2, c3);
+}
+
+/// Draw triangle outline within an image
+pub fn imageDrawTriangleLines(dst: *Image, v1: Vector2, v2: Vector2, v3: Vector2, color: Color) void {
+    cdef.ImageDrawTriangleLines(@as([*c]Image, @ptrCast(dst)), v1, v2, v3, color);
+}
+
+/// Draw a triangle fan defined by points within an image (first vertex is the center)
+pub fn imageDrawTriangleFan(dst: *Image, points: []Vector2, pointCount: i32, color: Color) void {
+    cdef.ImageDrawTriangleFan(@as([*c]Image, @ptrCast(dst)), @as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
+}
+
+/// Draw a triangle strip defined by points within an image
+pub fn imageDrawTriangleStrip(dst: *Image, points: []Vector2, pointCount: i32, color: Color) void {
+    cdef.ImageDrawTriangleStrip(@as([*c]Image, @ptrCast(dst)), @as([*c]Vector2, @ptrCast(points)), @as(c_int, pointCount), color);
 }
 
 /// Draw a source image within a destination image (tint applied to source)
@@ -4426,14 +4461,24 @@ pub fn drawModelWiresEx(model: Model, position: Vector3, rotationAxis: Vector3, 
     cdef.DrawModelWiresEx(model, position, rotationAxis, rotationAngle, scale, tint);
 }
 
+/// Draw a model as points
+pub fn drawModelPoints(model: Model, position: Vector3, scale: f32, tint: Color) void {
+    cdef.DrawModelPoints(model, position, scale, tint);
+}
+
+/// Draw a model as points with extended parameters
+pub fn drawModelPointsEx(model: Model, position: Vector3, rotationAxis: Vector3, rotationAngle: f32, scale: Vector3, tint: Color) void {
+    cdef.DrawModelPointsEx(model, position, rotationAxis, rotationAngle, scale, tint);
+}
+
 /// Draw bounding box (wires)
 pub fn drawBoundingBox(box: BoundingBox, color: Color) void {
     cdef.DrawBoundingBox(box, color);
 }
 
 /// Draw a billboard texture
-pub fn drawBillboard(camera: Camera, texture: Texture2D, position: Vector3, size: f32, tint: Color) void {
-    cdef.DrawBillboard(camera, texture, position, size, tint);
+pub fn drawBillboard(camera: Camera, texture: Texture2D, position: Vector3, scale: f32, tint: Color) void {
+    cdef.DrawBillboard(camera, texture, position, scale, tint);
 }
 
 /// Draw a billboard texture defined by source

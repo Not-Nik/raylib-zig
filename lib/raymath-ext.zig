@@ -116,7 +116,7 @@ pub extern "c" fn MatrixRotateZ(angle: f32) rl.Matrix;
 pub extern "c" fn MatrixRotateXYZ(angle: rl.Vector3) rl.Matrix;
 pub extern "c" fn MatrixRotateZYX(angle: rl.Vector3) rl.Matrix;
 pub extern "c" fn MatrixScale(x: f32, y: f32, z: f32) rl.Matrix;
-pub extern "c" fn MatrixFrustum(left: f64, right: f64, bottom: f64, top: f64, near: f64, far: f64) rl.Matrix;
+pub extern "c" fn MatrixFrustum(left: f64, right: f64, bottom: f64, top: f64, nearPlane: f64, farPlane: f64) rl.Matrix;
 pub extern "c" fn MatrixPerspective(fovY: f64, aspect: f64, nearPlane: f64, farPlane: f64) rl.Matrix;
 pub extern "c" fn MatrixOrtho(left: f64, right: f64, bottom: f64, top: f64, nearPlane: f64, farPlane: f64) rl.Matrix;
 pub extern "c" fn MatrixLookAt(eye: rl.Vector3, target: rl.Vector3, up: rl.Vector3) rl.Matrix;
@@ -145,3 +145,4 @@ pub extern "c" fn QuaternionFromEuler(pitch: f32, yaw: f32, roll: f32) rl.Quater
 pub extern "c" fn QuaternionToEuler(q: rl.Quaternion) rl.Vector3;
 pub extern "c" fn QuaternionTransform(q: rl.Quaternion, mat: rl.Matrix) rl.Quaternion;
 pub extern "c" fn QuaternionEquals(p: rl.Quaternion, q: rl.Quaternion) c_int;
+pub extern "c" fn MatrixDecompose(mat: rl.Matrix, translation: [*c]rl.Vector3, rotation: [*c]rl.Quaternion, scale: [*c]rl.Vector3) void;
