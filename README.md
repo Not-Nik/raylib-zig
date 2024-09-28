@@ -92,9 +92,23 @@ If you additionally want to support Web as a platform with emscripten, you will 
 raylib-zig's build script with `const rlz = @import("raylib-zig");` and then accessing its functions with `rlz.emcc`.
 Refer to raylib-zig's project template on how to use them.
 
+### Passing build options
+
+raylib allows customisations of certain parts of its build process such as choosing an OpenGL version, building as a
+shared library or not including certain modules. You can optionally pass these options to raylib-zig dependency like so
+
+```zig
+const raylib_dep = b.dependency("raylib-zig", .{
+    .target = target,
+    .optimize = optimize,
+    .shared = true, // Build raylib as a shared library
+    .opengl_version = rlz.OpenglVersion.gl_2_1, // Use OpenGL 2.1 (requires importing raylib-zig's build script)
+});
+```
+
 ### Defining feature macros
 
-Raylib lets the user enable and disable options for different features, loading different file formats for images,
+raylib lets the user enable and disable options for different features, loading different file formats for images,
 fonts, 3D models and audio, linkage variants. You can specify these options for your raylib-zig build by defining the
 corresponding C macro before you link with it, e.g.:
 
@@ -103,6 +117,7 @@ raylib_artifact.defineCMacro("SUPPORT_FILEFORMAT_JPG", null);
 ```
 
 ## Exporting for web
+
 To export your project for the web, first install emsdk.
 Once emsdk is installed, set it up by running
 
