@@ -41,24 +41,13 @@ pub fn compileForEmscripten(
     // the make function of the step. However it might also be a bad idea since
     // it messes with the build system itself.
 
-    //const new_target = updateTargetForWeb(target);
-
     // The project is built as a library and linked later.
-    const exe_lib = b.addStaticLibrary(.{
+    return b.addStaticLibrary(.{
         .name = name,
         .root_source_file = b.path(root_source_file),
         .target = target,
         .optimize = optimize,
     });
-
-    // There are some symbols that need to be defined in C.
-    const webhack_c_file_step = b.addWriteFiles();
-    const webhack_c_file = webhack_c_file_step.add("webhack.c", webhack_c);
-    exe_lib.addCSourceFile(.{ .file = webhack_c_file, .flags = &[_][]u8{} });
-    // Since it's creating a static library, the symbols raylib uses to webgl
-    // and glfw don't need to be linked by emscripten yet.
-    exe_lib.step.dependOn(&webhack_c_file_step.step);
-    return exe_lib;
 }
 
 // Links a set of items together using emscripten.
@@ -127,17 +116,3 @@ fn lastIndexOf(string: []const u8, character: u8) usize {
     }
     return string.len - 1;
 }
-
-const webhack_c =
-    \\// Zig adds '__stack_chk_guard', '__stack_chk_fail', and 'errno',
-    \\// which emscripten doesn't actually support.
-    \\// Seems that zig ignores disabling stack checking,
-    \\// and I honestly don't know why emscripten doesn't have errno.
-    \\// TODO: when the updateTargetForWeb workaround gets removed, see if those are nessesary anymore
-    \\#include <stdint.h>
-    \\uintptr_t __stack_chk_guard;
-    \\//I'm not certain if this means buffer overflows won't be detected,
-    \\// However, zig is pretty safe from those, so don't worry about it too much.
-    \\void __stack_chk_fail(void){}
-    \\int errno;
-;
