@@ -6,10 +6,6 @@ const builtin = @import("builtin");
 const emccOutputDir = "zig-out" ++ std.fs.path.sep_str ++ "htmlout" ++ std.fs.path.sep_str;
 const emccOutputFile = "index.html";
 pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
-    // Find emrun.
-    if (b.sysroot == null) {
-        @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
-    }
     // If compiling on windows , use emrun.bat.
     const emrunExe = switch (builtin.os.tag) {
         .windows => "emrun.bat",
@@ -18,7 +14,15 @@ pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
     const emrun_run_arg = try b.allocator.alloc(u8, b.sysroot.?.len + emrunExe.len + 1);
     defer b.allocator.free(emrun_run_arg);
 
-    _ = try std.fmt.bufPrint(emrun_run_arg, "{s}" ++ std.fs.path.sep_str ++ "{s}", .{ b.sysroot.?, emrunExe });
+    if (b.sysroot == null) {
+        emrun_run_arg = emrunExe;
+    } else {
+        emrun_run_arg = try std.fmt.bufPrint(
+            emrun_run_arg,
+            "{s}" ++ std.fs.path.sep_str ++ "{s}",
+            .{ b.sysroot.?, emrunExe }
+        );
+    }
 
     const run_cmd = b.addSystemCommand(&[_][]const u8{ emrun_run_arg, emccOutputDir ++ emccOutputFile });
     return run_cmd;
@@ -73,10 +77,6 @@ pub fn linkWithEmscripten(
     b: *std.Build,
     itemsToLink: []const *std.Build.Step.Compile,
 ) !*std.Build.Step.Run {
-    // Raylib uses --sysroot in order to find emscripten, so do the same here.
-    if (b.sysroot == null) {
-        @panic("Pass '--sysroot \"[path to emsdk installation]/upstream/emscripten\"'");
-    }
     const emccExe = switch (builtin.os.tag) {
         .windows => "emcc.bat",
         else => "emcc",
@@ -84,11 +84,15 @@ pub fn linkWithEmscripten(
     var emcc_run_arg = try b.allocator.alloc(u8, b.sysroot.?.len + emccExe.len + 1);
     defer b.allocator.free(emcc_run_arg);
 
-    emcc_run_arg = try std.fmt.bufPrint(
-        emcc_run_arg,
-        "{s}" ++ std.fs.path.sep_str ++ "{s}",
-        .{ b.sysroot.?, emccExe },
-    );
+    if (b.sysroot == null) {
+        emcc_run_arg = emccExe;
+    } else {
+        emcc_run_arg = try std.fmt.bufPrint(
+            emcc_run_arg,
+            "{s}" ++ std.fs.path.sep_str ++ "{s}",
+            .{ b.sysroot.?, emccExe },
+        );
+    }
 
     // Create the output directory because emcc can't do it.
     const mkdir_command = b.addSystemCommand(&[_][]const u8{ "mkdir", "-p", emccOutputDir });
