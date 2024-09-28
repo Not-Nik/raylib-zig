@@ -11,11 +11,15 @@ pub fn emscriptenRunStep(b: *std.Build) !*std.Build.Step.Run {
         .windows => "emrun.bat",
         else => "emrun",
     };
-    const emrun_run_arg = try b.allocator.alloc(u8, b.sysroot.?.len + emrunExe.len + 1);
+    var emrun_run_arg = try b.allocator.alloc(u8, b.sysroot.?.len + emrunExe.len + 1);
     defer b.allocator.free(emrun_run_arg);
 
     if (b.sysroot == null) {
-        emrun_run_arg = emrunExe;
+        emrun_run_arg = try std.fmt.bufPrint(
+            emrun_run_arg,
+            "{s}",
+            .{ emrunExe }
+        );
     } else {
         emrun_run_arg = try std.fmt.bufPrint(
             emrun_run_arg,
@@ -74,7 +78,11 @@ pub fn linkWithEmscripten(
     defer b.allocator.free(emcc_run_arg);
 
     if (b.sysroot == null) {
-        emcc_run_arg = emccExe;
+        emcc_run_arg = try std.fmt.bufPrint(
+            emcc_run_arg,
+            "{s}",
+            .{ emccExe }
+        );
     } else {
         emcc_run_arg = try std.fmt.bufPrint(
             emcc_run_arg,
