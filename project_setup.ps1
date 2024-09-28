@@ -34,6 +34,9 @@ pub fn build(b: *std.Build) !void {
 
         // Note that raylib itself is not actually added to the exe_lib output file, so it also needs to be linked with emscripten.
         const link_step = try rlz.emcc.linkWithEmscripten(b, &[_]*std.Build.Step.Compile{ exe_lib, raylib_artifact });
+        //this lets your program access files like "resources/my-image.png":
+        link_step.addArg("--embed-file");
+        link_step.addArg("resources/");
 
         b.getInstallStep().dependOn(&link_step.step);
         const run_step = try rlz.emcc.emscriptenRunStep(b);
@@ -77,5 +80,7 @@ $ZON_FILE = @"
 New-Item -Name "build.zig.zon" -ItemType "file" -Value $ZON_FILE -Force
 
 New-Item -Name "src" -ItemType "directory"
+New-Item -Name "resources" -ItemType "directory"
+New-Item -Name "resources/placeholder.txt" -ItemType "file" -Value "" -Force
 
 Copy-Item -Path "../examples/core/basic_window.zig" -Destination "src/main.zig"
