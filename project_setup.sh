@@ -54,19 +54,15 @@ pub fn build(b: *std.Build) !void {
     b.installArtifact(exe);
 }' >> build.zig
 
-HASH=$(zig fetch https://github.com/Not-Nik/raylib-zig/archive/devel.tar.gz)
-
 echo '.{
     .name = "'$PROJECT_NAME'",
     .version = "0.0.1",
     .dependencies = .{
-        .@"raylib-zig" = .{
-            .url = "https://github.com/Not-Nik/raylib-zig/archive/devel.tar.gz",
-            .hash = "'$HASH'",
-        },
     },
     .paths = .{""},
 }' >> build.zig.zon
+
+zig fetch --save git+https://github.com/Not-Nik/raylib-zig#devel
 
 mkdir src
 cp ../examples/core/basic_window.zig src/main.zig
