@@ -3,6 +3,8 @@
 const rl = @This();
 const std = @import("std");
 
+pub const cdef = @import("raylib-ext.zig");
+
 pub const gl = @import("rlgl.zig");
 pub const math = @import("raymath.zig");
 
@@ -1968,8 +1970,6 @@ pub const MATERIAL_MAP_DIFFUSE = MaterialMapIndex.material_map_albedo;
 pub const MATERIAL_MAP_SPECULAR = MaterialMapIndex.material_map_metalness;
 pub const SHADER_LOC_MAP_DIFFUSE = ShaderLocationIndex.shader_loc_map_albedo;
 pub const SHADER_LOC_MAP_SPECULAR = ShaderLocationIndex.shader_loc_map_metalness;
-
-const cdef = @import("raylib-ext.zig");
 
 /// Set icon for window (multiple images, RGBA 32bit, only PLATFORM_DESKTOP)
 pub fn setWindowIcons(images: []Image) void {

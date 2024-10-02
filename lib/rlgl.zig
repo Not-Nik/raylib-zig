@@ -1,8 +1,9 @@
 // raylib-zig (c) Nikolas Wipper 2024
 
 const rl = @import("raylib.zig");
-const cdef = @import("rlgl-ext.zig");
 const std = @import("std");
+
+pub const cdef = @import("rlgl-ext.zig");
 
 test {
     std.testing.refAllDeclsRecursive(@This());

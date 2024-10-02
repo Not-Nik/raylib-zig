@@ -1,14 +1,13 @@
 const rl = @import("raylib-zig");
 const std = @import("std");
-const cdef = @import("raygui-ext.zig");
+
+pub const cdef = @import("raygui-ext.zig");
 
 test {
     std.testing.refAllDeclsRecursive(@This());
 }
 
-pub const RayguiError = error{
-    GetIcons
-};
+pub const RayguiError = error{GetIcons};
 
 const Vector2 = rl.Vector2;
 const Vector3 = rl.Vector3;
