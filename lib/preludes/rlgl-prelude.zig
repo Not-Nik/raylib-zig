@@ -37,14 +37,7 @@ pub const rlRenderBatch = extern struct {
     currentDepth: f32,
 };
 
-pub const rlGlVersion = enum(c_int) {
-    rl_opengl_11 = 1,
-    rl_opengl_21 = 2,
-    rl_opengl_33 = 3,
-    rl_opengl_43 = 4,
-    rl_opengl_es_20 = 5,
-    rl_opengl_es_30 = 6
-};
+pub const rlGlVersion = enum(c_int) { rl_opengl_11 = 1, rl_opengl_21 = 2, rl_opengl_33 = 3, rl_opengl_43 = 4, rl_opengl_es_20 = 5, rl_opengl_es_30 = 6 };
 
 pub const rlTraceLogLevel = enum(c_int) {
     rl_log_all = 0,
@@ -149,12 +142,7 @@ pub const rlShaderUniformDataType = enum(c_uint) {
     rl_shader_uniform_sampler2d = 12,
 };
 
-pub const rlShaderAttributeDataType = enum(c_uint) {
-    rl_shader_attrib_float = 0,
-    rl_shader_attrib_vec2 = 1,
-    rl_shader_attrib_vec3 = 2,
-    rl_shader_attrib_vec4 = 3
-};
+pub const rlShaderAttributeDataType = enum(c_uint) { rl_shader_attrib_float = 0, rl_shader_attrib_vec2 = 1, rl_shader_attrib_vec3 = 2, rl_shader_attrib_vec4 = 3 };
 
 pub const rlFramebufferAttachType = enum(c_uint) {
     rl_attachment_color_channel0 = 0,
@@ -185,9 +173,83 @@ pub const rlCullMode = enum(c_uint) {
     rl_cull_face_back = 1,
 };
 
-pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_POSITION = @as(i32, 0);
-pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD = @as(i32, 1);
-pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_NORMAL = @as(i32, 2);
-pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_COLOR = @as(i32, 3);
-pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_TANGENT = @as(i32, 4);
-pub const RL_DEFAULT_SHADER_ATTRIB_LOCATION_TEXCOORD2 = @as(i32, 5);
+pub const rl_default_batch_buffer_elements = @as(i32, 8192);
+pub const rl_default_batch_buffers = @as(i32, 1);
+pub const rl_default_batch_drawcalls = @as(i32, 256);
+pub const rl_default_batch_max_texture_units = @as(i32, 4);
+pub const rl_max_matrix_stack_size = @as(i32, 32);
+pub const rl_max_shader_locations = @as(i32, 32);
+pub const rl_cull_distance_near = @as(f64, 0.01);
+pub const rl_cull_distance_far = @as(f64, 1000.0);
+pub const rl_texture_wrap_s = @as(i32, 0x2802);
+pub const rl_texture_wrap_t = @as(i32, 0x2803);
+pub const rl_texture_mag_filter = @as(i32, 0x2800);
+pub const rl_texture_min_filter = @as(i32, 0x2801);
+pub const rl_texture_filter_nearest = @as(i32, 0x2600);
+pub const rl_texture_filter_linear = @as(i32, 0x2601);
+pub const rl_texture_filter_mip_nearest = @as(i32, 0x2700);
+pub const rl_texture_filter_nearest_mip_linear = @as(i32, 0x2702);
+pub const rl_texture_filter_linear_mip_nearest = @as(i32, 0x2701);
+pub const rl_texture_filter_mip_linear = @as(i32, 0x2703);
+pub const rl_texture_filter_anisotropic = @as(i32, 0x3000);
+pub const rl_texture_mipmap_bias_ratio = @as(i32, 0x4000);
+pub const rl_texture_wrap_repeat = @as(i32, 0x2901);
+pub const rl_texture_wrap_clamp = @as(i32, 0x812f);
+pub const rl_texture_wrap_mirror_repeat = @as(i32, 0x8370);
+pub const rl_texture_wrap_mirror_clamp = @as(i32, 0x8742);
+pub const rl_modelview = @as(i32, 0x1700);
+pub const rl_projection = @as(i32, 0x1701);
+pub const rl_texture = @as(i32, 0x1702);
+pub const rl_lines = @as(i32, 0x0001);
+pub const rl_triangles = @as(i32, 0x0004);
+pub const rl_quads = @as(i32, 0x0007);
+pub const rl_unsigned_byte = @as(i32, 0x1401);
+pub const rl_float = @as(i32, 0x1406);
+pub const rl_stream_draw = @as(i32, 0x88e0);
+pub const rl_stream_read = @as(i32, 0x88e1);
+pub const rl_stream_copy = @as(i32, 0x88e2);
+pub const rl_static_draw = @as(i32, 0x88e4);
+pub const rl_static_read = @as(i32, 0x88e5);
+pub const rl_static_copy = @as(i32, 0x88e6);
+pub const rl_dynamic_draw = @as(i32, 0x88e8);
+pub const rl_dynamic_read = @as(i32, 0x88e9);
+pub const rl_dynamic_copy = @as(i32, 0x88ea);
+pub const rl_fragment_shader = @as(i32, 0x8b30);
+pub const rl_vertex_shader = @as(i32, 0x8b31);
+pub const rl_compute_shader = @as(i32, 0x91b9);
+pub const rl_zero = @as(i32, 0);
+pub const rl_one = @as(i32, 1);
+pub const rl_src_color = @as(i32, 0x0300);
+pub const rl_one_minus_src_color = @as(i32, 0x0301);
+pub const rl_src_alpha = @as(i32, 0x0302);
+pub const rl_one_minus_src_alpha = @as(i32, 0x0303);
+pub const rl_dst_alpha = @as(i32, 0x0304);
+pub const rl_one_minus_dst_alpha = @as(i32, 0x0305);
+pub const rl_dst_color = @as(i32, 0x0306);
+pub const rl_one_minus_dst_color = @as(i32, 0x0307);
+pub const rl_src_alpha_saturate = @as(i32, 0x0308);
+pub const rl_constant_color = @as(i32, 0x8001);
+pub const rl_one_minus_constant_color = @as(i32, 0x8002);
+pub const rl_constant_alpha = @as(i32, 0x8003);
+pub const rl_one_minus_constant_alpha = @as(i32, 0x8004);
+pub const rl_func_add = @as(i32, 0x8006);
+pub const rl_min = @as(i32, 0x8007);
+pub const rl_max = @as(i32, 0x8008);
+pub const rl_func_subtract = @as(i32, 0x800a);
+pub const rl_func_reverse_subtract = @as(i32, 0x800b);
+pub const rl_blend_equation = @as(i32, 0x8009);
+pub const rl_blend_equation_rgb = @as(i32, 0x8009);
+pub const rl_blend_equation_alpha = @as(i32, 0x883d);
+pub const rl_blend_dst_rgb = @as(i32, 0x80c8);
+pub const rl_blend_src_rgb = @as(i32, 0x80c9);
+pub const rl_blend_dst_alpha = @as(i32, 0x80ca);
+pub const rl_blend_src_alpha = @as(i32, 0x80cb);
+pub const rl_blend_color = @as(i32, 0x8005);
+pub const rl_read_framebuffer = @as(i32, 0x8ca8);
+pub const rl_draw_framebuffer = @as(i32, 0x8ca9);
+pub const rl_default_shader_attrib_location_position = @as(i32, 0);
+pub const rl_default_shader_attrib_location_texcoord = @as(i32, 1);
+pub const rl_default_shader_attrib_location_normal = @as(i32, 2);
+pub const rl_default_shader_attrib_location_color = @as(i32, 3);
+pub const rl_default_shader_attrib_location_tangent = @as(i32, 4);
+pub const rl_default_shader_attrib_location_texcoord2 = @as(i32, 5);
