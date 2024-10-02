@@ -174,8 +174,8 @@ _fix_enums_data = [
     ("flags",       "Gesture",               r"SetGesturesEnabled"),
     ("button",      "GamepadButton",         r".*GamepadButton.*"),
     ("button",      "MouseButton",           r".*MouseButton.*"),
-    ("control",     "GuiState",              r"Gui.etStyle"),
-    ("property",    "GuiControlProperty",    r"Gui.etStyle"),
+    ("control",     "GuiControl",            r"Gui.etStyle"),
+#    ("property",    "GuiControlProperty",    r"Gui.etStyle"),
 ]
 def fix_enums(arg_name, arg_type, func_name):
     if func_name.startswith("rl"):
