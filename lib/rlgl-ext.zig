@@ -135,6 +135,7 @@ pub extern "c" fn rlGetLocationUniform(shaderId: c_uint, uniformName: [*c]const 
 pub extern "c" fn rlGetLocationAttrib(shaderId: c_uint, attribName: [*c]const u8) c_int;
 pub extern "c" fn rlSetUniform(locIndex: c_int, value: *const anyopaque, uniformType: c_int, count: c_int) void;
 pub extern "c" fn rlSetUniformMatrix(locIndex: c_int, mat: rl.Matrix) void;
+pub extern "c" fn rlSetUniformMatrices(locIndex: c_int, mat: [*c]const rl.Matrix, count: c_int) void;
 pub extern "c" fn rlSetUniformSampler(locIndex: c_int, textureId: c_uint) void;
 pub extern "c" fn rlSetShader(id: c_uint, locs: [*c]c_int) void;
 pub extern "c" fn rlLoadComputeShaderProgram(shaderId: c_uint) c_uint;

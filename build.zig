@@ -12,7 +12,7 @@ pub const Options = struct {
     rshapes: bool = true,
     rtext: bool = true,
     rtextures: bool = true,
-    platform_drm: bool = false,
+    platform: PlatformBackend = .glfw,
     shared: bool = false,
     linux_display_backend: LinuxDisplayBackend = .X11,
     opengl_version: OpenglVersion = .auto,
@@ -31,6 +31,13 @@ pub const OpenglVersion = enum {
 pub const LinuxDisplayBackend = enum {
     X11,
     Wayland,
+};
+
+pub const PlatformBackend = enum {
+    glfw,
+    rgfw,
+    sdl,
+    drm,
 };
 
 const Program = struct {
@@ -101,7 +108,7 @@ fn getRaylib(b: *std.Build, target: std.Build.ResolvedTarget, optimize: std.buil
             .rshapes = options.rshapes,
             .rtext = options.rtext,
             .rtextures = options.rtextures,
-            .platform_drm = options.platform_drm,
+            .platform = options.platform,
             .shared = options.shared,
             .linux_display_backend = options.linux_display_backend,
             .opengl_version = options.opengl_version,
@@ -167,7 +174,7 @@ pub fn build(b: *std.Build) !void {
 
     const defaults = Options{};
     const options = Options{
-        .platform_drm = b.option(bool, "platform_drm", "Compile raylib in native mode (no X11)") orelse defaults.platform_drm,
+        .platform = b.option(PlatformBackend, "platform", "Compile raylib in native mode (no X11)") orelse defaults.platform,
         .raudio = b.option(bool, "raudio", "Compile with audio support") orelse defaults.raudio,
         .rmodels = b.option(bool, "rmodels", "Compile with models support") orelse defaults.rmodels,
         .rtext = b.option(bool, "rtext", "Compile with text support") orelse defaults.rtext,

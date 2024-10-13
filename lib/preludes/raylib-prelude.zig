@@ -1379,8 +1379,8 @@ pub const Mesh = extern struct {
     animNormals: [*c]f32,
     boneIds: [*c]u8,
     boneWeights: [*c]f32,
-    vaoId: c_uint,
-    vboId: [*c]c_uint,
+    boneMatrices: [*c]Matrix,
+    boneCount: c_int,
 
     /// Draw a 3d mesh with material and transform
     pub fn draw(self: Mesh, material: Material, transform: Matrix) void {
@@ -1827,6 +1827,9 @@ pub const ShaderLocationIndex = enum(c_int) {
     shader_loc_map_irradiance = 23,
     shader_loc_map_prefilter = 24,
     shader_loc_map_brdf = 25,
+    shader_loc_vertex_boneids = 26,
+    shader_loc_vertex_boneweights = 27,
+    shader_loc_bone_matrices = 28
 };
 
 pub const ShaderUniformDataType = enum(c_int) {

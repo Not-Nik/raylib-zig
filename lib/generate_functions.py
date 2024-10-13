@@ -59,7 +59,7 @@ def ziggify_type(name: str, t: str, func_name) -> str:
         "AutomationEventList", "list", "batch", "glInternalFormat", "glFormat",
         "glType", "mipmaps", "active", "scroll", "view", "checked", "mouseCell",
         "scrollIndex", "focus", "secretViewActive", "color", "alpha", "colorHsv",
-        "translation", "rotation", "scale"
+        "translation", "rotation", "scale", "mat"
     ]
     multi = [
         "data", "compData", "points", "fileData", "colors", "pixels",

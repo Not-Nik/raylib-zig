@@ -908,6 +908,11 @@ pub fn rlSetUniformMatrix(locIndex: i32, mat: Matrix) void {
     cdef.rlSetUniformMatrix(@as(c_int, locIndex), mat);
 }
 
+/// Set shader value matrices
+pub fn rlSetUniformMatrices(locIndex: i32, mat: *const Matrix, count: i32) void {
+    cdef.rlSetUniformMatrices(@as(c_int, locIndex), @as([*c]const Matrix, @ptrCast(mat)), @as(c_int, count));
+}
+
 /// Set shader value sampler
 pub fn rlSetUniformSampler(locIndex: i32, textureId: u32) void {
     cdef.rlSetUniformSampler(@as(c_int, locIndex), @as(c_uint, textureId));

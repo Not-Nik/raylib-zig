@@ -127,6 +127,8 @@ pub const GuiComboBoxProperty = enum(c_int) {
 pub const GuiDropdownBoxProperty = enum(c_int) {
     arrow_padding = 16,
     dropdown_items_spacing,
+    dropdown_arrow_hidden,
+    dropdown_roll_up,
 };
 
 pub const GuiTextBoxProperty = enum(c_int) {
@@ -143,6 +145,7 @@ pub const GuiListViewProperty = enum(c_int) {
     list_items_spacing,
     scrollbar_width,
     scrollbar_side,
+    list_items_border_width,
 };
 
 pub const GuiColorPickerProperty = enum(c_int) {

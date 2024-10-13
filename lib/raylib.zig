@@ -1379,8 +1379,8 @@ pub const Mesh = extern struct {
     animNormals: [*c]f32,
     boneIds: [*c]u8,
     boneWeights: [*c]f32,
-    vaoId: c_uint,
-    vboId: [*c]c_uint,
+    boneMatrices: [*c]Matrix,
+    boneCount: c_int,
 
     /// Draw a 3d mesh with material and transform
     pub fn draw(self: Mesh, material: Material, transform: Matrix) void {
@@ -1827,6 +1827,9 @@ pub const ShaderLocationIndex = enum(c_int) {
     shader_loc_map_irradiance = 23,
     shader_loc_map_prefilter = 24,
     shader_loc_map_brdf = 25,
+    shader_loc_vertex_boneids = 26,
+    shader_loc_vertex_boneweights = 27,
+    shader_loc_bone_matrices = 28
 };
 
 pub const ShaderUniformDataType = enum(c_int) {
@@ -2957,6 +2960,11 @@ pub fn getApplicationDirectory() [*:0]const u8 {
     return std.mem.span(cdef.GetApplicationDirectory());
 }
 
+/// Create directories (including full path requested), returns 0 on success
+pub fn makeDirectory(dirPath: [*:0]const u8) i32 {
+    return @as(i32, cdef.MakeDirectory(@as([*c]const u8, @ptrCast(dirPath))));
+}
+
 /// Change working directory, return true on success
 pub fn changeDirectory(dir: [*:0]const u8) bool {
     return cdef.ChangeDirectory(@as([*c]const u8, @ptrCast(dir)));
@@ -2977,7 +2985,7 @@ pub fn loadDirectoryFiles(dirPath: [*:0]const u8) FilePathList {
     return cdef.LoadDirectoryFiles(@as([*c]const u8, @ptrCast(dirPath)));
 }
 
-/// Load directory filepaths with extension filtering and recursive directory scan
+/// Load directory filepaths with extension filtering and recursive directory scan. Use 'DIR' in the filter string to include directories in the result
 pub fn loadDirectoryFilesEx(basePath: [*:0]const u8, filter: [*:0]const u8, scanSubdirs: bool) FilePathList {
     return cdef.LoadDirectoryFilesEx(@as([*c]const u8, @ptrCast(basePath)), @as([*c]const u8, @ptrCast(filter)), scanSubdirs);
 }
@@ -3302,12 +3310,12 @@ pub fn getShapesTextureRectangle() Rectangle {
     return cdef.GetShapesTextureRectangle();
 }
 
-/// Draw a pixel
+/// Draw a pixel using geometry [Can be slow, use with care]
 pub fn drawPixel(posX: i32, posY: i32, color: Color) void {
     cdef.DrawPixel(@as(c_int, posX), @as(c_int, posY), color);
 }
 
-/// Draw a pixel (Vector version)
+/// Draw a pixel using geometry (Vector version) [Can be slow, use with care]
 pub fn drawPixelV(position: Vector2, color: Color) void {
     cdef.DrawPixelV(position, color);
 }
@@ -3580,11 +3588,6 @@ pub fn loadImage(fileName: [*:0]const u8) Image {
 /// Load image from RAW file data
 pub fn loadImageRaw(fileName: [*:0]const u8, width: i32, height: i32, format: PixelFormat, headerSize: i32) Image {
     return cdef.LoadImageRaw(@as([*c]const u8, @ptrCast(fileName)), @as(c_int, width), @as(c_int, height), format, @as(c_int, headerSize));
-}
-
-/// Load image from SVG file data or string with specified size
-pub fn loadImageSvg(fileNameOrString: [*:0]const u8, width: i32, height: i32) Image {
-    return cdef.LoadImageSvg(@as([*c]const u8, @ptrCast(fileNameOrString)), @as(c_int, width), @as(c_int, height));
 }
 
 /// Load image sequence from file (frames appended to image.data)
@@ -4100,6 +4103,11 @@ pub fn colorAlpha(color: Color, alpha: f32) Color {
 /// Get src alpha-blended into dst color with tint
 pub fn colorAlphaBlend(dst: Color, src: Color, tint: Color) Color {
     return cdef.ColorAlphaBlend(dst, src, tint);
+}
+
+/// Get color lerp interpolation between two colors, factor [0.0f..1.0f]
+pub fn colorLerp(color1: Color, color2: Color, factor: f32) Color {
+    return cdef.ColorLerp(color1, color2, factor);
 }
 
 /// Get Color structure from hexadecimal value
@@ -4625,6 +4633,11 @@ pub fn unloadModelAnimation(anim: ModelAnimation) void {
 /// Check model animation skeleton match
 pub fn isModelAnimationValid(model: Model, anim: ModelAnimation) bool {
     return cdef.IsModelAnimationValid(model, anim);
+}
+
+/// Update model animation mesh bone matrices (Note GPU skinning does not work on Mac)
+pub fn updateModelAnimationBoneMatrices(model: Model, anim: ModelAnimation, frame: i32) void {
+    cdef.UpdateModelAnimationBoneMatrices(model, anim, @as(c_int, frame));
 }
 
 /// Check collision between two spheres
