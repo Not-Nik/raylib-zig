@@ -61,21 +61,17 @@ pub fn build(b: *std.Build) !void {
 
 New-Item -Name "build.zig" -ItemType "file" -Value $BUILD_DOT_ZIG -Force
 
-$HASH = $(zig fetch https://github.com/Not-Nik/raylib-zig/archive/devel.tar.gz)
-
 $ZON_FILE = @"
 .{
     .name = "$PROJECT_NAME",
     .version = "0.0.1",
     .dependencies = .{
-        .@"raylib-zig" = .{
-            .url = "https://github.com/Not-Nik/raylib-zig/archive/devel.tar.gz",
-            .hash = "$HASH",
-        },
     },
     .paths = .{""},
 }
 "@
+
+zig fetch --save git+https://github.com/Not-Nik/raylib-zig#devel
 
 New-Item -Name "build.zig.zon" -ItemType "file" -Value $ZON_FILE -Force
 
