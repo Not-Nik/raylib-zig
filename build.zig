@@ -241,7 +241,11 @@ pub fn build(b: *std.Build) !void {
             .path = "examples/core/2d_camera_mouse_zoom.zig",
             .desc = "Shows mouse zoom demo",
         },
-
+        .{
+            .name = "3d_picking",
+            .path = "examples/core/3d_picking.zig",
+            .desc = "Shows picking in 3d mode",
+        },
         .{
             .name = "window_flags",
             .path = "examples/core/window_flags.zig",
