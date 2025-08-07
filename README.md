@@ -1,3 +1,6 @@
+> Development of raylib-zig has moved to [its own organisation](https://github.com/raylib-zig/raylib-zig).
+> Please update your `build.zig.zon` files and other links accordingly.
+
 ![logo](https://github.com/raylib-zig/raylib-zig/raw/devel/logo/logo.png)
 
 # raylib-zig

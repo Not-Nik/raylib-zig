@@ -71,6 +71,12 @@ const gui = struct {
 };
 
 pub fn build(b: *std.Build) !void {
+    const stdout = std.io.getStdOut().writer();
+    try stdout.print(
+        \\Development of raylib-zig has moved to its own organisation (https://github.com/raylib-zig/raylib-zig).
+        \\Please update your `build.zig.zon` files and other links accordingly.
+        \\
+        , .{});
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
